@@ -13,8 +13,6 @@ module.exports = async ({
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
   // const keystore = await jose.JWK.asKeyStore({ keys: jwks })
 
-  console.log(client_secret)
-
   const client = new moneyhubIssuer.Client({
     client_id,
     client_secret,
@@ -27,12 +25,11 @@ module.exports = async ({
   // } = await Swagger({ url: resourceServerUrl })
 
   const moneyhub = {
-    getAuthorizeUrl: ({ state, nonce, scope, claims }) => {
+    getAuthorizeUrl: ({ state, scope, claims }) => {
       const authParams = {
         client_id: client_id,
         scope,
         state,
-        nonce,
         redirect_uri: redirect_uri,
         response_type: "code",
         prompt: "consent",
@@ -52,7 +49,6 @@ module.exports = async ({
     },
     getAuthorizeUrlForCreatedUser: async ({ bankId, state, userId }) => {
       const scope = `id:${bankId} openid`
-      const nonce = uuid.v4()
       const claims = {
         id_token: {
           sub: {
@@ -64,14 +60,18 @@ module.exports = async ({
 
       const url = await moneyhub.getAuthorizeUrl({
         state,
-        nonce,
         scope,
         claims,
       })
-      return { url, nonce, state }
+      return url
     },
-    exchangeCodeForTokens: params => {},
-    refreshTokens: refreshToken => {},
+    exchangeCodeForTokens: ({ state, code }) => {
+      const verify = { state }
+      const requestObj = { state, code }
+      return client.authorizationCallback(redirect_uri, requestObj, verify)
+    },
+    refreshTokens: refreshToken => client.refresh(refreshToken),
+
     getClientCredentialTokens: ({ scope, sub }) =>
       client.grant({
         grant_type: "client_credentials",
@@ -92,6 +92,7 @@ module.exports = async ({
       const { access_token } = await moneyhub.getClientCredentialTokens({
         scope: "user:create",
       })
+      console.log(access_token)
       return moneyhub.registerUserWithToken(id, access_token)
     },
     getUsers: async () => {
