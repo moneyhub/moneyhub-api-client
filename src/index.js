@@ -117,6 +117,21 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body"))
     },
+    getAccounts: token =>
+      got(resourceServerUrl + "/accounts", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        json: true,
+      }),
+    getTransactions: token =>
+      got(resourceServerUrl + "/transactions", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        json: true,
+      }),
+
     listConnections: () =>
       got(
         "http://identity.dev.127.0.0.1.nip.io/oidc/.well-known/all-connections",

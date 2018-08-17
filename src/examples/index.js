@@ -1,7 +1,7 @@
 const Moneyhub = require("../index")
 
 const config = {
-  resourceServerUrl: "http://apimock.dev.127.0.0.1.nip.io",
+  resourceServerUrl: "https://api-dev.moneyhub.co.uk",
   identityServiceUrl: "https://identity-dev.moneyhub.co.uk/oidc",
   client: {
     client_id: "898c529b-c062-4f26-a136-fd8bc462d583",
@@ -20,12 +20,20 @@ const start = async () => {
     // console.log(user)
     // const users = await moneyhub.getUsers()
 
-    const data = await moneyhub.getAuthorizeUrlForCreatedUser({
-      userId: "ebbf1eb5a58bda8d6832a0e8",
-      state: "foo",
-      bankId: "4ddeccd5a66881eb25223d5ff8b2e2c1",
+    // const data = await moneyhub.getAuthorizeUrlForCreatedUser({
+    //   userId: "ebbf1eb5a58bda8d6832a0e8",
+    //   state: "foo",
+    //   bankId: "4ddeccd5a66881eb25223d5ff8b2e2c1",
+    // })
+    // console.log(data)
+
+    const { access_token } = await moneyhub.getClientCredentialTokens({
+      scope: "accounts:read",
+      sub: "ebbf1eb5a58bda8d6832a0e8",
     })
-    console.log(data)
+    console.log(access_token)
+    const accounts = await moneyhub.getAccounts(access_token)
+    console.log(accounts)
   } catch (e) {
     console.log(e)
   }
