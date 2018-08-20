@@ -79,7 +79,7 @@ After a user has succesfully authorised they will be redirected to your redirect
 ```javascript
 const tokens = await moneyhub.exchangeCodeForTokens({
   state: "your state value",
-  code: "the authorization code ,
+  code: "the authorization code",
 })
 ```
 
