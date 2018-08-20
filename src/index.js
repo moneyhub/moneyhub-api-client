@@ -1,9 +1,9 @@
 const { Issuer } = require("openid-client")
-const jose = require("node-jose")
-const Swagger = require("swagger-client")
+// const jose = require("node-jose")
+// const Swagger = require("swagger-client")
 const got = require("got")
 const R = require("ramda")
-const uuid = require("uuid")
+// const uuid = require("uuid")
 
 module.exports = async ({
   resourceServerUrl,
@@ -92,7 +92,6 @@ module.exports = async ({
       const { access_token } = await moneyhub.getClientCredentialTokens({
         scope: "user:create",
       })
-      console.log(access_token)
       return moneyhub.registerUserWithToken(id, access_token)
     },
     getUsers: async () => {
