@@ -1,8 +1,8 @@
 {
   "name": "@mft/moneyhub-api-client",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Node.JS client for the Moneyhub API",
+  "main": "src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
