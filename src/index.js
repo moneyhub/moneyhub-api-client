@@ -133,7 +133,7 @@ module.exports = async ({
 
     listConnections: () =>
       got(
-        "http://identity.dev.127.0.0.1.nip.io/oidc/.well-known/all-connections",
+        identityServiceUrl + "/.well-known/all-connections",
         { json: true }
       ),
     getOpenIdConfig: () =>
