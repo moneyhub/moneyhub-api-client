@@ -30,7 +30,7 @@ This module exposes a single factory function that accepts the following configu
 ```javascript
 const Moneyhub = require("@mft/moenyhub-api-cient")
 const moneyhub = Moneyhub({
-  resourceServerUrl: "https://api.moneyhub.co.uk",
+  resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
   identityServiceUrl: "https://identity.moneyhub.co.uk/oidc",
   client: {
     client_id: "your client id",
