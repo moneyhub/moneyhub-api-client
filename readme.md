@@ -28,7 +28,7 @@ To use this API client you will need:
 This module exposes a single factory function that accepts the following configuration:
 
 ```javascript
-const Moneyhub = require("@mft/moenyhub-api-cient")
+const Moneyhub = require("@mft/moneyhub-api-client")
 const moneyhub = Moneyhub({
   resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
   identityServiceUrl: "https://identity.moneyhub.co.uk/oidc",
@@ -147,7 +147,7 @@ const accounts = await moneyhub.getAccounts(token)
 
 ### `listConnections`
 
-This method will resolve with a list of all the avaialble connections (banks, etc.) that a user can connect to.
+This method will resolve with a list of all the available connections (banks, etc.) that a user can connect to.
 
 ```javascript
 const availableConnections = await moneyhub.listConnections()

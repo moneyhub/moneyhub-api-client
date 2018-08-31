@@ -55,6 +55,9 @@ module.exports = async ({
             essential: true,
             value: userId,
           },
+        "mh:con_id": {
+            essential: true,
+          },
         },
       }
 
@@ -65,6 +68,30 @@ module.exports = async ({
       })
       return url
     },
+
+    getReauthAuthorizeUrlForCreatedUser: async ({userId, connectionId, state}) => {
+      const scope = `openid reauth`
+      const claims = {
+        id_token: {
+          sub: {
+            essential: true,
+            value: userId,
+          },
+          "mh:con_id": {
+            essential: true,
+            value: connectionId,
+          },
+        },
+      }
+
+      const url = await moneyhub.getAuthorizeUrl({
+        state,
+        scope,
+        claims,
+      })
+      return url
+    },
+
     exchangeCodeForTokens: ({ state, code }) => {
       const verify = { state }
       const requestObj = { state, code }
@@ -122,14 +149,14 @@ module.exports = async ({
           Authorization: `Bearer ${token}`,
         },
         json: true,
-      }),
+      }).then(R.prop("body")),
     getTransactions: token =>
       got(resourceServerUrl + "/transactions", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
         json: true,
-      }),
+      }).then(R.prop("body")),
 
     listConnections: () =>
       got(
