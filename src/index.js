@@ -92,6 +92,29 @@ module.exports = async ({
       return url
     },
 
+    getRefreshAuthorizeUrlForCreatedUser: async ({userId, connectionId, state}) => {
+      const scope = `openid refresh`
+      const claims = {
+        id_token: {
+          sub: {
+            essential: true,
+            value: userId,
+          },
+          "mh:con_id": {
+            essential: true,
+            value: connectionId,
+          },
+        },
+      }
+
+      const url = await moneyhub.getAuthorizeUrl({
+        state,
+        scope,
+        claims,
+      })
+      return url
+    },
+
     exchangeCodeForTokens: ({ state, code }) => {
       const verify = { state }
       const requestObj = { state, code }

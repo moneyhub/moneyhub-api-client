@@ -3,7 +3,7 @@ const config = require("./config")
 
 const DEFAULT_STATE = "foo"
 
-console.log("\n\nUsage: `node get-refresh-url-for-user.js userId connectionId state[optional]` \n\n")
+console.log("\n\nUsage: `node get-reauth-authorize-url-for-user.js userId connectionId state[optional]` \n\n")
 
 const [userId, connectionId, state = DEFAULT_STATE] = process.argv.slice(2)
 
@@ -13,7 +13,7 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
-    const data = await moneyhub.getRefreshAuthorizeUrlForCreatedUser({
+    const data = await moneyhub.getReauthAuthorizeUrlForCreatedUser({
       userId,
       state,
       connectionId,
