@@ -26,6 +26,18 @@ module.exports = async ({
 
   const moneyhub = {
     getAuthorizeUrl: ({ state, scope, claims }) => {
+      const defaultClaims = {
+        id_token: {
+          sub: {
+            essential: true,
+          },
+        "mh:con_id": {
+            essential: true,
+          },
+        },
+      }
+      const _claims = R.mergeDeepRight(defaultClaims, claims)
+
       const authParams = {
         client_id: client_id,
         scope,
@@ -38,7 +50,7 @@ module.exports = async ({
       return client
         .requestObject({
           ...authParams,
-          claims,
+          claims: _claims,
           max_age: 86400,
         })
         .then(request => ({
