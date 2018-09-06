@@ -4,7 +4,7 @@
   "description": "Node.JS client for the Moneyhub API",
   "main": "src/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "lint": "eslint src/ examples/"
   },
   "author": "",
   "license": "ISC",
@@ -12,5 +12,9 @@
     "got": "^9.0.0",
     "openid-client": "^2.2.1",
     "ramda": "^0.25.0"
+  },
+  "devDependencies": {
+    "@mft/eslint-config-momentumft": "^4.0.0",
+    "eslint": "^5.5.0"
   }
 }
