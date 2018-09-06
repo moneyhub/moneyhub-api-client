@@ -69,6 +69,37 @@ const url = await moneyhub.getAuthorizeUrlForCreatedUser({
   bankId: "the bank id to connect to",
   state: "your state value",
   userId: "the user id retruned from the registerUser call",
+  claims: claimsObject,
+})
+```
+
+#### `getReauthAuthorizeUrlForCreatedUser`
+
+This is a helper function that returns an authorize url for a specific user to re authorize and existing connection.
+
+Example:
+
+```javascript
+const url = await moneyhub.getReauthAuthorizeUrlForCreatedUser({
+  userId: "the user id",
+  connectionId: "connection Id to re authorize",
+  state: "your state value",
+  claims: claimsObject,
+})
+```
+
+#### `getRefreshAuthorizeUrlForCreatedUser`
+
+This is a helper function that returns an authorize url for a specific user to refresh and existing connection.  (Only relevant for legacy connections)
+
+Example:
+
+```javascript
+const url = await moneyhub.getRefreshAuthorizeUrlForCreatedUser({
+  userId: "the user id",
+  connectionId: "connection Id to re authorize",
+  state: "your state value",
+  claims: claimsObject,
 })
 ```
 
