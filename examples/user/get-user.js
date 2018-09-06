@@ -1,5 +1,5 @@
-const Moneyhub = require("../src/index")
-const config = require("./config")
+const Moneyhub = require("../../src/index")
+const config = require("../config")
 
 console.log("\n\nUsage: `node get-user.js userId` \n\n")
 

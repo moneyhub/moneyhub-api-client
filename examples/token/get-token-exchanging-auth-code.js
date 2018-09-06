@@ -1,9 +1,9 @@
-const Moneyhub = require("../src/index")
-const config = require("./config")
+const Moneyhub = require("../../src/index")
+const config = require("../config")
 
 const DEFAULT_STATE = "foo"
 
-console.log("\n\nUsage: `node exchange-code.js code state[optional]` \n\n")
+console.log("\n\nUsage: `node get-token-exchanging-auth-code.js code state[optional]` \n\n")
 
 const [code, state = DEFAULT_STATE] = process.argv.slice(2)
 

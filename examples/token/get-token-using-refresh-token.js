@@ -1,10 +1,10 @@
-const Moneyhub = require("../src/index")
-const config = require("./config")
+const Moneyhub = require("../../src/index")
+const config = require("../config")
 
-console.log("\n\nUsage: `node refresh-token.js refreshToken` \n\n")
+console.log("\n\nUsage: `node get-token-using-refresh-token.js refreshToken` \n\n")
 
 const [
-  refreshToken
+  refreshToken,
 ] = process.argv.slice(2)
 
 if (!refreshToken) throw new Error("refreshToken needs to be provided")
