@@ -1,4 +1,4 @@
-const { Issuer } = require("openid-client")
+const {Issuer} = require("openid-client")
 // const jose = require("node-jose")
 // const Swagger = require("swagger-client")
 const got = require("got")
@@ -8,7 +8,7 @@ const R = require("ramda")
 module.exports = async ({
   resourceServerUrl,
   identityServiceUrl,
-  client: { client_id, client_secret, id_token_signing_alg, redirect_uri },
+  client: {client_id, client_secret, id_token_signing_alg, redirect_uri},
 }) => {
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
   // const keystore = await jose.JWK.asKeyStore({ keys: jwks })
@@ -25,13 +25,13 @@ module.exports = async ({
   // } = await Swagger({ url: resourceServerUrl })
 
   const moneyhub = {
-    getAuthorizeUrl: ({ state, scope, claims }) => {
+    getAuthorizeUrl: ({state, scope, claims = {}}) => {
       const defaultClaims = {
-        id_token: {
+        "id_token": {
           sub: {
             essential: true,
           },
-        "mh:con_id": {
+          "mh:con_id": {
             essential: true,
           },
         },
@@ -39,10 +39,10 @@ module.exports = async ({
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
       const authParams = {
-        client_id: client_id,
+        client_id,
         scope,
         state,
-        redirect_uri: redirect_uri,
+        redirect_uri,
         response_type: "code",
         prompt: "consent",
       }
@@ -51,7 +51,7 @@ module.exports = async ({
         .requestObject({
           ...authParams,
           claims: _claims,
-          max_age: 86400,
+          "max_age": 86400,
         })
         .then(request => ({
           ...authParams,
@@ -59,32 +59,32 @@ module.exports = async ({
         }))
         .then(client.authorizationUrl.bind(client))
     },
-    getAuthorizeUrlForCreatedUser: async ({ bankId, state, userId }) => {
+    getAuthorizeUrlForCreatedUser: async ({bankId, state, userId, claims = {}}) => {
       const scope = `id:${bankId} openid`
-      const claims = {
-        id_token: {
+      const defaultClaims = {
+        "id_token": {
           sub: {
             essential: true,
             value: userId,
           },
-        "mh:con_id": {
+          "mh:con_id": {
             essential: true,
           },
         },
       }
-
+      const _claims = R.mergeDeepRight(defaultClaims, claims)
       const url = await moneyhub.getAuthorizeUrl({
         state,
         scope,
-        claims,
+        claims: _claims,
       })
       return url
     },
 
-    getReauthAuthorizeUrlForCreatedUser: async ({userId, connectionId, state}) => {
-      const scope = `openid reauth`
-      const claims = {
-        id_token: {
+    getReauthAuthorizeUrlForCreatedUser: async ({userId, connectionId, state, claims = {}}) => {
+      const scope = "openid reauth"
+      const defaultClaims = {
+        "id_token": {
           sub: {
             essential: true,
             value: userId,
@@ -95,19 +95,20 @@ module.exports = async ({
           },
         },
       }
+      const _claims = R.mergeDeepRight(defaultClaims, claims)
 
       const url = await moneyhub.getAuthorizeUrl({
         state,
         scope,
-        claims,
+        claims: _claims,
       })
       return url
     },
 
-    getRefreshAuthorizeUrlForCreatedUser: async ({userId, connectionId, state}) => {
-      const scope = `openid refresh`
-      const claims = {
-        id_token: {
+    getRefreshAuthorizeUrlForCreatedUser: async ({userId, connectionId, state, claims = {}}) => {
+      const scope = "openid refresh"
+      const defaultClaims = {
+        "id_token": {
           sub: {
             essential: true,
             value: userId,
@@ -118,25 +119,26 @@ module.exports = async ({
           },
         },
       }
+      const _claims = R.mergeDeepRight(defaultClaims, claims)
 
       const url = await moneyhub.getAuthorizeUrl({
         state,
         scope,
-        claims,
+        claims: _claims,
       })
       return url
     },
 
-    exchangeCodeForTokens: ({ state, code }) => {
-      const verify = { state }
-      const requestObj = { state, code }
+    exchangeCodeForTokens: ({state, code}) => {
+      const verify = {state}
+      const requestObj = {state, code}
       return client.authorizationCallback(redirect_uri, requestObj, verify)
     },
     refreshTokens: refreshToken => client.refresh(refreshToken),
 
-    getClientCredentialTokens: ({ scope, sub }) =>
+    getClientCredentialTokens: ({scope, sub}) =>
       client.grant({
-        grant_type: "client_credentials",
+        "grant_type": "client_credentials",
         scope,
         sub,
       }),
@@ -147,17 +149,17 @@ module.exports = async ({
             Authorization: `Bearer ${token}`,
           },
           json: true,
-          body: { clientUserId: id },
+          body: {clientUserId: id},
         })
         .then(R.prop("body")),
     registerUser: async id => {
-      const { access_token } = await moneyhub.getClientCredentialTokens({
+      const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "user:create",
       })
       return moneyhub.registerUserWithToken(id, access_token)
     },
     getUsers: async () => {
-      const { access_token } = await moneyhub.getClientCredentialTokens({
+      const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "user:read",
       })
       return got(identityServiceUrl.replace("oidc", "users"), {
@@ -168,7 +170,7 @@ module.exports = async ({
       }).then(R.prop("body"))
     },
     getUser: async id => {
-      const { access_token } = await moneyhub.getClientCredentialTokens({
+      const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "user:read",
       })
       return got(identityServiceUrl.replace("oidc", `users/${id}`), {
@@ -196,8 +198,9 @@ module.exports = async ({
     listConnections: () =>
       got(
         identityServiceUrl + "/.well-known/all-connections",
-        { json: true }
-      ),
+        {json: true}
+      ).then(R.prop("body")),
+
     getOpenIdConfig: () =>
       got(identityServiceUrl + "/.well-known/openid-configuration", {
         json: true,
