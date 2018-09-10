@@ -1,9 +1,8 @@
 const {Issuer} = require("openid-client")
-// const jose = require("node-jose")
-// const Swagger = require("swagger-client")
 const got = require("got")
 const R = require("ramda")
-// const uuid = require("uuid")
+
+Issuer.defaultHttpOptions = {timeout: 5000}
 
 module.exports = async ({
   resourceServerUrl,
@@ -11,7 +10,6 @@ module.exports = async ({
   client: {client_id, client_secret, id_token_signing_alg, redirect_uri},
 }) => {
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
-  // const keystore = await jose.JWK.asKeyStore({ keys: jwks })
 
   const client = new moneyhubIssuer.Client({
     client_id,
@@ -20,14 +18,10 @@ module.exports = async ({
     redirect_uri,
   })
 
-  // const {
-  //   client: { apis },
-  // } = await Swagger({ url: resourceServerUrl })
-
   const moneyhub = {
     getAuthorizeUrl: ({state, scope, claims = {}}) => {
       const defaultClaims = {
-        "id_token": {
+        id_token: {
           sub: {
             essential: true,
           },
@@ -51,7 +45,7 @@ module.exports = async ({
         .requestObject({
           ...authParams,
           claims: _claims,
-          "max_age": 86400,
+          max_age: 86400,
         })
         .then(request => ({
           ...authParams,
@@ -59,10 +53,15 @@ module.exports = async ({
         }))
         .then(client.authorizationUrl.bind(client))
     },
-    getAuthorizeUrlForCreatedUser: async ({bankId, state, userId, claims = {}}) => {
+    getAuthorizeUrlForCreatedUser: async ({
+      bankId,
+      state,
+      userId,
+      claims = {},
+    }) => {
       const scope = `id:${bankId} openid`
       const defaultClaims = {
-        "id_token": {
+        id_token: {
           sub: {
             essential: true,
             value: userId,
@@ -81,10 +80,15 @@ module.exports = async ({
       return url
     },
 
-    getReauthAuthorizeUrlForCreatedUser: async ({userId, connectionId, state, claims = {}}) => {
+    getReauthAuthorizeUrlForCreatedUser: async ({
+      userId,
+      connectionId,
+      state,
+      claims = {},
+    }) => {
       const scope = "openid reauth"
       const defaultClaims = {
-        "id_token": {
+        id_token: {
           sub: {
             essential: true,
             value: userId,
@@ -105,10 +109,15 @@ module.exports = async ({
       return url
     },
 
-    getRefreshAuthorizeUrlForCreatedUser: async ({userId, connectionId, state, claims = {}}) => {
+    getRefreshAuthorizeUrlForCreatedUser: async ({
+      userId,
+      connectionId,
+      state,
+      claims = {},
+    }) => {
       const scope = "openid refresh"
       const defaultClaims = {
-        "id_token": {
+        id_token: {
           sub: {
             essential: true,
             value: userId,
@@ -138,7 +147,7 @@ module.exports = async ({
 
     getClientCredentialTokens: ({scope, sub}) =>
       client.grant({
-        "grant_type": "client_credentials",
+        grant_type: "client_credentials",
         scope,
         sub,
       }),
@@ -196,10 +205,9 @@ module.exports = async ({
       }).then(R.prop("body")),
 
     listConnections: () =>
-      got(
-        identityServiceUrl + "/.well-known/all-connections",
-        {json: true}
-      ).then(R.prop("body")),
+      got(identityServiceUrl + "/.well-known/all-connections", {
+        json: true,
+      }).then(R.prop("body")),
 
     getOpenIdConfig: () =>
       got(identityServiceUrl + "/.well-known/openid-configuration", {

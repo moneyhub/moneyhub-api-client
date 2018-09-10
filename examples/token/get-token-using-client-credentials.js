@@ -1,13 +1,16 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
-const DEFAULT_SCOPES = "accounts:read accounts:write transactions:read:all transactions:write categories:read categories:write"
+const DEFAULT_SCOPES =
+  "accounts:read accounts:write transactions:read:all transactions:write categories:read categories:write"
 
-console.log("\n\nUsage: `node get-token-using-client-credentials.js userId scopes[optional]` \n\n")
+console.log(
+  "\n\nUsage: `node get-token-using-client-credentials.js userId scopes[optional]` \n\n"
+)
 
 const [userId, scopes = DEFAULT_SCOPES] = process.argv.slice(2)
 
-if (!userId) throw new Error("userId needs to be provided")
+// if (!userId) throw new Error("userId needs to be provided")
 
 const start = async () => {
   try {
