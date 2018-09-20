@@ -7,14 +7,14 @@ Issuer.defaultHttpOptions = {timeout: 5000}
 module.exports = async ({
   resourceServerUrl,
   identityServiceUrl,
-  client: {client_id, client_secret, id_token_signing_alg, redirect_uri},
+  client: {client_id, client_secret, id_token_signed_response_alg, redirect_uri},
 }) => {
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
 
   const client = new moneyhubIssuer.Client({
     client_id,
     client_secret,
-    id_token_signing_alg,
+    id_token_signed_response_alg,
     redirect_uri,
   })
 
