@@ -1,6 +1,7 @@
 const {Issuer} = require("openid-client")
 const got = require("got")
 const R = require("ramda")
+const querystring = require("querystring")
 
 Issuer.defaultHttpOptions = {timeout: 5000}
 
@@ -167,11 +168,14 @@ module.exports = async ({
       })
       return moneyhub.registerUserWithToken(id, access_token)
     },
-    getUsers: async () => {
+    getUsers: async ({limit, offset} = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "user:read",
       })
-      return got(identityServiceUrl.replace("oidc", "users"), {
+      const params = Object.assign({}, limit && {limit}, offset && {offset})
+      const url = `${identityServiceUrl.replace("oidc", "users")}?${querystring.stringify(params)}`
+
+      return got(url, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
