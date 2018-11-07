@@ -1,8 +1,8 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
-const DEFAULT_BANK_ID = "4ddeccd5a66881eb25223d5ff8b2e2c1" // dag bank
-// const DEFAULT_BANK_ID = "3f0640be935f170febc1f35afb38a415" // monzo
+const DEFAULT_BANK_ID = "1b3cd579899b5f5b666c15561a48c8b6" // dag bank
+// const DEFAULT_BANK_ID = "fa37a6ecc38eea38bdf3dd0fdcb68fab" // monzo
 const DEFAULT_STATE = "foo"
 const DEFAULT_DATA_SCOPES =
   "accounts:read accounts:write transactions:read:all transactions:write categories:read categories:write"
