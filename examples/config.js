@@ -6,7 +6,7 @@ const config = {
     client_id: "your client id",
     client_secret: "your client secret",
     token_endpoint_auth_method: "client_secret_basic",
-    id_token_signing_alg: "RS256",
+    id_token_signed_response_alg: "RS256",
     redirect_uri: "https://your-redirect-uri",
   },
 }
