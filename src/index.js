@@ -1,26 +1,35 @@
 const {Issuer} = require("openid-client")
+const {JWK} = require("node-jose")
 const got = require("got")
 const R = require("ramda")
 const querystring = require("querystring")
 
-Issuer.defaultHttpOptions = {timeout: 5000}
+Issuer.defaultHttpOptions = {timeout: 10000}
+
+const filterUndefined = R.reject(R.isNil)
 
 module.exports = async ({
   resourceServerUrl,
   identityServiceUrl,
-  client: {client_id, client_secret, id_token_signed_response_alg, redirect_uri},
+  client: {
+    client_id, client_secret, id_token_signed_response_alg,
+    request_object_signing_alg, redirect_uri, response_type,
+    keys, token_endpoint_auth_method,
+  },
 }) => {
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
+  const keystore = await JWK.asKeyStore({keys})
 
   const client = new moneyhubIssuer.Client({
     client_id,
     client_secret,
     id_token_signed_response_alg,
     redirect_uri,
-  })
+    token_endpoint_auth_method,
+  }, keystore)
 
   const moneyhub = {
-    getAuthorizeUrl: ({state, scope, claims = {}}) => {
+    getAuthorizeUrl: ({state, scope, nonce, claims = {}}) => {
       const defaultClaims = {
         id_token: {
           sub: {
@@ -33,20 +42,23 @@ module.exports = async ({
       }
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const authParams = {
+      const authParams = filterUndefined({
         client_id,
         scope,
         state,
+        nonce,
         redirect_uri,
-        response_type: "code",
+        response_type,
         prompt: "consent",
-      }
+      })
 
       return client
         .requestObject({
           ...authParams,
           claims: _claims,
           max_age: 86400,
+        }, {
+          sign: request_object_signing_alg,
         })
         .then(request => ({
           ...authParams,
@@ -57,6 +69,7 @@ module.exports = async ({
     getAuthorizeUrlForCreatedUser: async ({
       bankId,
       state,
+      nonce,
       userId,
       claims = {},
     }) => {
@@ -75,6 +88,7 @@ module.exports = async ({
       const _claims = R.mergeDeepRight(defaultClaims, claims)
       const url = await moneyhub.getAuthorizeUrl({
         state,
+        nonce,
         scope,
         claims: _claims,
       })
@@ -85,6 +99,7 @@ module.exports = async ({
       userId,
       connectionId,
       state,
+      nonce,
       claims = {},
     }) => {
       const scope = "openid reauth"
@@ -104,6 +119,7 @@ module.exports = async ({
 
       const url = await moneyhub.getAuthorizeUrl({
         state,
+        nonce,
         scope,
         claims: _claims,
       })
@@ -114,6 +130,7 @@ module.exports = async ({
       userId,
       connectionId,
       state,
+      nonce,
       claims = {},
     }) => {
       const scope = "openid refresh"
@@ -134,14 +151,15 @@ module.exports = async ({
       const url = await moneyhub.getAuthorizeUrl({
         state,
         scope,
+        nonce,
         claims: _claims,
       })
       return url
     },
 
-    exchangeCodeForTokens: ({state, code}) => {
-      const verify = {state}
-      const requestObj = {state, code}
+    exchangeCodeForTokens: ({state, code, nonce, id_token}) => {
+      const verify = filterUndefined({state, nonce})
+      const requestObj = filterUndefined({state, code, id_token, nonce})
       return client.authorizationCallback(redirect_uri, requestObj, verify)
     },
     refreshTokens: refreshToken => client.refresh(refreshToken),

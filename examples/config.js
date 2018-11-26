@@ -7,7 +7,10 @@ const config = {
     client_secret: "your client secret",
     token_endpoint_auth_method: "client_secret_basic",
     id_token_signed_response_alg: "RS256",
+    request_object_signing_alg: "none",
     redirect_uri: "https://your-redirect-uri",
+    response_type: "code",
+    keys: [/* your jwks */],
   },
 }
 

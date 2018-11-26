@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "got": "^9.0.0",
+    "node-jose": "^1.1.0",
     "openid-client": "^2.2.1",
     "ramda": "^0.25.0"
   },
