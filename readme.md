@@ -13,7 +13,7 @@ This is an Node.JS client for the Moneyhub API. It currently supports the follow
 - Getting accounts for a user
 - Getting transactions for a user
 
-Currently this library supports `client_secret_basic` authentication, shortly we will add support for `client_secret_jwt` and `private_key_jwt`
+Currently this library supports `client_secret_basic` and `private_key_jwt` authentication, shortly we will add support for `client_secret_jwt`
 
 ### Prerequisites
 
@@ -35,9 +35,18 @@ const moneyhub = Moneyhub({
   client: {
     client_id: "your client id",
     client_secret: "your client secret",
+    
+    // or private_key_jwt, requires jwks
     token_endpoint_auth_method: "client_secret_basic",
     id_token_signed_response_alg: "RS256",
+    
+    // eg RS256, the alg to sign the request object with, requires jwks
+    request_object_signing_alg: "none",
     redirect_uri: "https://your-redirect-uri",
+    response_type: "code", // or code id_token
+    keys: [
+      // jwks keys
+    ],
   },
 })
 ```
@@ -52,7 +61,8 @@ Example:
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrl({
-  state: " your state value",
+  state: "your state value",
+  nonce: "your nonce",
   scope: "openid other-scope-values",
   claims: claimsObject,
 })
@@ -68,6 +78,7 @@ Example:
 const url = await moneyhub.getAuthorizeUrlForCreatedUser({
   bankId: "the bank id to connect to",
   state: "your state value",
+  nonce: "your nonce",
   userId: "the user id retruned from the registerUser call",
   claims: claimsObject,
 })
@@ -84,6 +95,7 @@ const url = await moneyhub.getReauthAuthorizeUrlForCreatedUser({
   userId: "the user id",
   connectionId: "connection Id to re authorize",
   state: "your state value",
+  nonce: "your nonce",
   claims: claimsObject,
 })
 ```
@@ -111,6 +123,8 @@ After a user has succesfully authorised they will be redirected to your redirect
 const tokens = await moneyhub.exchangeCodeForTokens({
   state: "your state value",
   code: "the authorization code",
+  nonce: "your nonce",
+  id_token: "the id_token", // if using code id_token response type
 })
 ```
 
