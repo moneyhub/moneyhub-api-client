@@ -1,10 +1,7 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
-const DEFAULT_BANK_ID = "1b3cd579899b5f5b666c15561a48c8b6" // dag bank
-// const DEFAULT_BANK_ID = "fa37a6ecc38eea38bdf3dd0fdcb68fab" // monzo
-const DEFAULT_STATE = "foo"
-
+const {DEFAULT_BANK_ID, DEFAULT_STATE} = require("../constants")
 console.log(
   "\n\nUsage: `node get-authorize-url.js bankId[optional] state[optional]` \n\n"
 )

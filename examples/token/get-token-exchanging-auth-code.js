@@ -1,7 +1,7 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
-const DEFAULT_STATE = "foo"
+const {DEFAULT_STATE} = require("../constants")
 
 console.log("\n\nUsage: `node get-token-exchanging-auth-code.js code state[optional]` \n\n")
 
