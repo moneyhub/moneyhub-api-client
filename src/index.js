@@ -189,6 +189,7 @@ module.exports = async ({
     deleteUserConnection: async (userId, connectionId) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "user:delete",
+        sub: userId,
       })
       return moneyhub.deleteUserConnectionWithToken(userId, connectionId, access_token)
     },
