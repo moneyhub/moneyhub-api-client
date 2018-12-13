@@ -95,9 +95,15 @@ const start = async () => {
     res.send(`
   <h4>Moneyhub API Test Server</h4>
   <a href="/data">Connect to a bank to retrieve balance data</a><br />
-  <a href="/payees">Add a payee and initiate a payment</a>
+  <a href="/payees">Add a payee and initiate a payment</a><br />
+  <a href="/payments">View payments made</a>
   `)
   )
+
+  app.get("/payments", async (req, res) => {
+    const payments = await moneyhub.getPayments()
+    res.json(payments)
+  })
 
   app.get("/data", (req, res) =>
     res.send(`

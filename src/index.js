@@ -55,7 +55,7 @@ module.exports = async ({
       return client.requestObject(authParams)
     },
 
-    getRequestUri: async  (requestObject) => {
+    getRequestUri: async requestObject => {
       const {body} = await got.post(
         identityServiceUrl.replace("oidc", "request"),
         {
@@ -69,10 +69,10 @@ module.exports = async ({
     },
 
     getAuthorizeUrlFromRequestUri: ({request_uri}) => {
-      return `${client.issuer.authorization_endpoint}?request_uri=${request_uri}`
+      return `${
+        client.issuer.authorization_endpoint
+      }?request_uri=${request_uri}`
     },
-
-
 
     getAuthorizeUrl: ({state, scope, nonce, claims = {}}) => {
       const defaultClaims = {
@@ -239,16 +239,25 @@ module.exports = async ({
         scope: "user:delete",
         sub: userId,
       })
-      return moneyhub.deleteUserConnectionWithToken(userId, connectionId, access_token)
+      return moneyhub.deleteUserConnectionWithToken(
+        userId,
+        connectionId,
+        access_token
+      )
     },
     deleteUserConnectionWithToken: async (userId, connectionId, token) => {
-      return got
-        .delete(identityServiceUrl.replace("oidc", `users/${userId}/connection/${connectionId}`), {
+      return got.delete(
+        identityServiceUrl.replace(
+          "oidc",
+          `users/${userId}/connection/${connectionId}`
+        ),
+        {
           headers: {
             Authorization: `Bearer ${token}`,
           },
           json: true,
-        })
+        }
+      )
     },
     getUsers: async ({limit, offset} = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
@@ -320,6 +329,17 @@ module.exports = async ({
       }).then(R.prop("body"))
     },
 
+    getPayments: async () => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "payment:read",
+      })
+      return got(identityServiceUrl.replace("oidc", "payments"), {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
 
     listConnections: () =>
       got(identityServiceUrl + "/.well-known/all-connections", {
