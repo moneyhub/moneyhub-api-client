@@ -17,8 +17,8 @@ const start = async () => {
   <ul>
   ${payees
     .map(
-      ({id, sortCode, accountNumber}) =>
-        `<li><a href="/pay/${id}">Make payment to: ${accountNumber}:${sortCode}</a></li>`
+      ({id, sortCode, accountNumber, name}) =>
+        `<li><a href="/pay/${id}">Make payment to: ${name} (${accountNumber}:${sortCode})</a></li>`
     )
     .join("")}
     <li><a href="/add-payee">Add new payee</a></li>
@@ -60,6 +60,7 @@ const start = async () => {
   <body>
   <h4>Create a payee</h4>
   <form method="POST" action="/payee">
+    <input type="text" maxlength="200" required name="name" placeholder="Name" /><br />
     <input pattern="[0-9]{8,8}" type="text" minlength="8" maxlength="8" required name="accountNumber" placeholder="Account Number" /><br />
     <input type="text" minlength="6" maxlength="6" required name="sortCode" placeholder="Sort Code" /><br />
     <button type="submit">Create Payee</button>

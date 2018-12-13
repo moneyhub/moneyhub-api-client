@@ -302,7 +302,7 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body")),
 
-    addPayee: async ({accountNumber, sortCode}) => {
+    addPayee: async ({accountNumber, sortCode, name}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "payee:create",
       })
@@ -312,7 +312,7 @@ module.exports = async ({
             Authorization: `Bearer ${access_token}`,
           },
           json: true,
-          body: {accountNumber, sortCode},
+          body: {accountNumber, sortCode, name},
         })
         .then(R.prop("body"))
     },
