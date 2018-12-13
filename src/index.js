@@ -12,23 +12,68 @@ module.exports = async ({
   resourceServerUrl,
   identityServiceUrl,
   client: {
-    client_id, client_secret, id_token_signed_response_alg,
-    request_object_signing_alg, redirect_uri, response_type,
-    keys, token_endpoint_auth_method,
+    client_id,
+    client_secret,
+    id_token_signed_response_alg,
+    request_object_signing_alg,
+    redirect_uri,
+    response_type,
+    keys,
+    token_endpoint_auth_method,
   },
 }) => {
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
   const keystore = await JWK.asKeyStore({keys})
 
-  const client = new moneyhubIssuer.Client({
-    client_id,
-    client_secret,
-    id_token_signed_response_alg,
-    redirect_uri,
-    token_endpoint_auth_method,
-  }, keystore)
+  const client = new moneyhubIssuer.Client(
+    {
+      client_id,
+      client_secret,
+      id_token_signed_response_alg,
+      redirect_uri,
+      token_endpoint_auth_method,
+      request_object_signing_alg,
+    },
+    keystore
+  )
 
   const moneyhub = {
+    keys: () => keystore.toJSON(),
+
+    requestObject: (scope, state, claims) => {
+      const authParams = {
+        client_id,
+        scope,
+        state,
+        claims,
+        exp: Math.round(Date.now() / 1000) + 300,
+        redirect_uri,
+        response_type: "code",
+        prompt: "consent",
+      }
+
+      return client.requestObject(authParams)
+    },
+
+    getRequestUri: async  (requestObject) => {
+      const {body} = await got.post(
+        identityServiceUrl.replace("oidc", "request"),
+        {
+          body: requestObject,
+          headers: {
+            "Content-Type": "application/jws",
+          },
+        }
+      )
+      return body
+    },
+
+    getAuthorizeUrlFromRequestUri: ({request_uri}) => {
+      return `${client.issuer.authorization_endpoint}?request_uri=${request_uri}`
+    },
+
+
+
     getAuthorizeUrl: ({state, scope, nonce, claims = {}}) => {
       const defaultClaims = {
         id_token: {
@@ -53,13 +98,16 @@ module.exports = async ({
       })
 
       return client
-        .requestObject({
-          ...authParams,
-          claims: _claims,
-          max_age: 86400,
-        }, {
-          sign: request_object_signing_alg,
-        })
+        .requestObject(
+          {
+            ...authParams,
+            claims: _claims,
+            max_age: 86400,
+          },
+          {
+            sign: request_object_signing_alg,
+          }
+        )
         .then(request => ({
           ...authParams,
           request,
@@ -207,7 +255,10 @@ module.exports = async ({
         scope: "user:read",
       })
       const params = Object.assign({}, limit && {limit}, offset && {offset})
-      const url = `${identityServiceUrl.replace("oidc", "users")}?${querystring.stringify(params)}`
+      const url = `${identityServiceUrl.replace(
+        "oidc",
+        "users"
+      )}?${querystring.stringify(params)}`
 
       return got(url, {
         headers: {
@@ -242,8 +293,41 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body")),
 
+    addPayee: async ({accountNumber, sortCode}) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "payee:create",
+      })
+      return got
+        .post(identityServiceUrl.replace("oidc", "payees"), {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+          json: true,
+          body: {accountNumber, sortCode},
+        })
+        .then(R.prop("body"))
+    },
+
+    getPayees: async () => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "payee:read",
+      })
+      return got(identityServiceUrl.replace("oidc", "payees"), {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+
+
     listConnections: () =>
       got(identityServiceUrl + "/.well-known/all-connections", {
+        json: true,
+      }).then(R.prop("body")),
+
+    listAPIConnections: () =>
+      got(identityServiceUrl + "/.well-known/api-connections", {
         json: true,
       }).then(R.prop("body")),
 
