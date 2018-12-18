@@ -3,9 +3,16 @@ const bodyParser = require("body-parser")
 const Moneyhub = require("../../src")
 const config = require("../config")
 
+const getBanks = async (moneyhub) => {
+  const banks = await moneyhub.listAPIConnections()
+  const testBanks = await moneyhub.listTestConnections()
+  return banks.concat(testBanks)
+}
+
 const start = async () => {
   const moneyhub = await Moneyhub(config)
-  const banks = await moneyhub.listAPIConnections()
+  const banks = await getBanks(moneyhub)
+
   const app = express()
 
   app.get("/keys", (req, res) => res.json(moneyhub.keys()))

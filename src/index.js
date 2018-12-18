@@ -351,6 +351,11 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body")),
 
+    listTestConnections: () =>
+      got(identityServiceUrl + "/.well-known/test-connections", {
+        json: true,
+      }).then(R.prop("body")),
+
     getOpenIdConfig: () =>
       got(identityServiceUrl + "/.well-known/openid-configuration", {
         json: true,
