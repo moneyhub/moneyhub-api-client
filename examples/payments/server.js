@@ -37,6 +37,9 @@ const start = async () => {
     const scope = `payment openid id:${req.params.bankId}`
     const claims = {
       id_token: {
+        "mh:con_id": {
+          essential: true,
+        },
         "mh:payment": {
           essential: true,
           value: {
@@ -51,9 +54,8 @@ const start = async () => {
     try {
       const request = await moneyhub.requestObject(scope, "foobar", claims)
       const uri = await moneyhub.getRequestUri(request)
-      const redirect = await moneyhub.getAuthorizeUrlFromRequestUri({
+      const redirect = moneyhub.getAuthorizeUrlFromRequestUri({
         request_uri: uri,
-        scope,
       })
       res.redirect(redirect)
     } catch (e) {
@@ -139,7 +141,7 @@ const start = async () => {
       state: "foobar",
       code: req.query.code,
     })
-    res.json(tokens)
+    res.json({tokens, claims: tokens.claims})
   })
 
   app.listen(3001, () => console.log("Test Server started on port 3001"))
