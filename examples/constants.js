@@ -1,6 +1,6 @@
 
 const DEFAULT_DATA_SCOPES =
-"accounts:read accounts:write transactions:read:all transactions:write categories:read categories:write"
+"accounts:read accounts:write:all transactions:read:all transactions:write:all categories:read categories:write spending_goals:read spending_goals:write:all savings_goals:read savings_goals:write:all"
 
 const BANK_IDS = {
   MONZO: "fa37a6ecc38eea38bdf3dd0fdcb68fab",
