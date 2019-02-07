@@ -42,7 +42,9 @@ const moneyhub = Moneyhub({
     request_object_signing_alg: "none",
     redirect_uri: "https://your-redirect-uri",
     response_type: "code",
-    keys: [/* your jwks */],
+    keys: [
+      /* your jwks */
+    ],
   },
 })
 ```
@@ -52,7 +54,6 @@ Once the api client has been initialised it provides a simple promise based inte
 #### `getAuthorizeUrl`
 
 This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`.
-
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrl({
@@ -66,7 +67,6 @@ const url = await moneyhub.getAuthorizeUrl({
 #### `getAuthorizeUrlForCreatedUser`
 
 This is a helper function that returns an authorize url for a specific user to connect to a specific bank.
-
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrlForCreatedUser({
@@ -82,7 +82,6 @@ const url = await moneyhub.getAuthorizeUrlForCreatedUser({
 
 This is a helper function that returns an authorize url for a specific user to re authorize and existing connection.
 
-
 ```javascript
 const url = await moneyhub.getReauthAuthorizeUrlForCreatedUser({
   userId: "the user id",
@@ -95,8 +94,7 @@ const url = await moneyhub.getReauthAuthorizeUrlForCreatedUser({
 
 #### `getRefreshAuthorizeUrlForCreatedUser`
 
-This is a helper function that returns an authorize url for a specific user to refresh and existing connection.  (Only relevant for legacy connections)
-
+This is a helper function that returns an authorize url for a specific user to refresh and existing connection. (Only relevant for legacy connections)
 
 ```javascript
 const url = await moneyhub.getRefreshAuthorizeUrlForCreatedUser({
@@ -112,20 +110,18 @@ const url = await moneyhub.getRefreshAuthorizeUrlForCreatedUser({
 
 After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
 
-
 ```javascript
 const tokens = await moneyhub.exchangeCodeForTokens({
   state: "your state value",
   code: "the authorization code",
   nonce: "your nonce value",
-  id_token: "your id token" // optional
+  id_token: "your id token", // optional
 })
 ```
 
 ### `getClientCredentialTokens`
 
 Use this to get a client credentials access token.
-
 
 ```javascript
 const tokens = await moneyhub.getClientCredentialTokens({
@@ -138,18 +134,16 @@ const tokens = await moneyhub.getClientCredentialTokens({
 
 Use this to register a new user
 
-
 ```javascript
-const user = await moneyhub.registerUserWithToken({
-  id: "your user id" //optional ,
-  token: "an access token with the user:crate scope",
-})
+const user = await moneyhub.registerUserWithToken(
+  "your user id", //optional ,
+  "an access token with the user:crate scope"
+)
 ```
 
 ### `registerUser`
 
 Helper method that gets the correct client credentials access token and then registers a user.
-
 
 ```javascript
 const user = await moneyhub.registerUser("your user id" /* optional */)
@@ -159,7 +153,6 @@ const user = await moneyhub.registerUser("your user id" /* optional */)
 
 Returns all the users registered for your api-client
 
-
 ```javascript
 const users = await moneyhub.getUsers()
 ```
@@ -167,7 +160,6 @@ const users = await moneyhub.getUsers()
 ### `getUser`
 
 Get a single user by their id
-
 
 ```javascript
 const user = await moneyhub.getUser("user-id")
@@ -177,7 +169,6 @@ const user = await moneyhub.getUser("user-id")
 
 Get all accounts for a user. This call requires an access token with the `accounts:read` scope.
 
-
 ```javascript
 const accounts = await moneyhub.getAccounts("access.token")
 ```
@@ -186,15 +177,13 @@ const accounts = await moneyhub.getAccounts("access.token")
 
 Get all transactions for a user. This call requires an access token with a scope that allows it to read transactions.
 
-
 ```javascript
-const accounts = await moneyhub.getAccounts("access.token")
+const accounts = await moneyhub.getTransactions("access.token")
 ```
 
 ### `deleteUserConnection`
 
 Helper method that gets the correct client credentials access token and then deletes a user connection.
-
 
 ```javascript
 const user = await moneyhub.deleteUserConnection("user-id", "connection-id")
@@ -204,33 +193,33 @@ const user = await moneyhub.deleteUserConnection("user-id", "connection-id")
 
 Deletes a user connection. This calls requires an access token with the `user:delete` scope
 
-
 ```javascript
-const user = await moneyhub.deleteUserConnectionWithToken("user-id", "connection-id", "access.token")
+const user = await moneyhub.deleteUserConnectionWithToken(
+  "user-id",
+  "connection-id",
+  "access.token"
+)
 ```
 
 ### `deleteUser`
 
 Helper method that gets the correct client credentials access token and then deletes a user.
 
-
 ```javascript
-const user = await moneyhub.deleteUserConnection("user-id")
+const user = await moneyhub.deleteUser("user-id")
 ```
 
 ### `deleteUserWithToken`
 
 Deletes a user. This calls requires an access token with the `user:delete` scope.
 
-
 ```javascript
-const user = await moneyhub.deleteUserConnectionWithToken("user-id", "access.token")
+const user = await moneyhub.deleteUserWithToken("user-id", "access.token")
 ```
 
 ### `listConnections`
 
 This method will resolve with a list of all the available connections (banks, etc.) that a user can connect to.
-
 
 ```javascript
 const availableConnections = await moneyhub.listConnections()
@@ -240,7 +229,6 @@ const availableConnections = await moneyhub.listConnections()
 
 This method will resolve with a list of all the API connections that a user can connect to.
 
-
 ```javascript
 const availableConnections = await moneyhub.listAPIConnections()
 ```
@@ -248,7 +236,6 @@ const availableConnections = await moneyhub.listAPIConnections()
 ### `listTestConnections`
 
 This method will resolve with a list of all the Test connections that a user can connect to.
-
 
 ```javascript
 const availableConnections = await moneyhub.listTestConnections()
@@ -258,11 +245,9 @@ const availableConnections = await moneyhub.listTestConnections()
 
 This method will resolve with our open id configuration.
 
-
 ```javascript
 const availableConnections = await moneyhub.getOpenIdConfig()
 ```
-
 
 ### Examples
 
