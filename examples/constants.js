@@ -1,5 +1,6 @@
-
-const DEFAULT_DATA_SCOPES =
+const DEFAULT_DATA_SCOPES_USE_CASE_1 =
+"accounts:read transactions:read:all categories:read categories:write spending_goals:read savings_goals:read"
+const DEFAULT_DATA_SCOPES_USE_CASE_2 =
 "accounts:read accounts:write:all transactions:read:all transactions:write:all categories:read categories:write spending_goals:read spending_goals:write:all savings_goals:read savings_goals:write:all"
 
 const BANK_IDS = {
@@ -14,5 +15,6 @@ module.exports = {
   BANK_IDS,
   DEFAULT_BANK_ID,
   DEFAULT_STATE,
-  DEFAULT_DATA_SCOPES,
+  DEFAULT_DATA_SCOPES_USE_CASE_1,
+  DEFAULT_DATA_SCOPES_USE_CASE_2,
 }

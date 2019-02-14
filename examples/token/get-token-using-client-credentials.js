@@ -1,13 +1,13 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
-const {DEFAULT_DATA_SCOPES} = require("../constants")
+const {DEFAULT_DATA_SCOPES_USE_CASE_2} = require("../constants")
 
 console.log(
   "\n\nUsage: `node get-token-using-client-credentials.js userId scopes[optional]` \n\n"
 )
 
-const [userId, scopes = DEFAULT_DATA_SCOPES] = process.argv.slice(2)
+const [userId, scopes = DEFAULT_DATA_SCOPES_USE_CASE_2] = process.argv.slice(2)
 
 if (!userId) throw new Error("userId needs to be provided")
 
