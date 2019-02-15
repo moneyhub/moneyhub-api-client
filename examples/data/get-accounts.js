@@ -6,6 +6,8 @@ console.log("\n\nUsage: `node get-accounts.js userId` \n\n")
 
 const [userId] = process.argv.slice(2)
 
+if (!userId) throw new Error("UserId needs to be provided")
+
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
