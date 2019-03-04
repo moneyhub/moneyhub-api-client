@@ -4,7 +4,7 @@ const got = require("got")
 const R = require("ramda")
 const querystring = require("querystring")
 
-Issuer.defaultHttpOptions = {timeout: 10000}
+Issuer.defaultHttpOptions = {timeout: 60000}
 
 const filterUndefined = R.reject(R.isNil)
 
