@@ -2,7 +2,7 @@
 
 ### Introduction
 
-This is an Node.JS client for the Moneyhub API. It currently supports the following features:
+This is an Node.JS client for the [Moneyhub API](https://moneyhub.github.io/api-docs). It currently supports the following features:
 
 - Getting the list of supported banks
 - Registering users
@@ -25,7 +25,7 @@ To use this API client you will need:
 - The url of the Moneyhub identity service for the environment you are connecting to
 - The url for the API gateway for the environment that you are connecting to
 
-#### To install
+### To install
 
 `npm install @mft/moneyhub-api-client`
 
