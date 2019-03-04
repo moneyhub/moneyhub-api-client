@@ -59,55 +59,122 @@ Once the api client has been initialised it provides a simple promise based inte
 
 This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`.
 
+[Data access scopes](https://moneyhub.github.io/api-docs/#data-access)
+
+[Financial institution scopes](https://moneyhub.github.io/api-docs/#financial-institutions)
+
+[Bank ids](https://moneyhub.github.io/api-docs/#bank-connections)
+
+
 ```javascript
 const url = await moneyhub.getAuthorizeUrl({
-  state: " your state value",
-  scope: "openid other-scope-values",
-  nonce: "your nonce value",
-  claims: claimsObject,
+  scope: "openid bank-id-scope other-data-scopes",
+  state: " your state value", // optional
+  nonce: "your nonce value", //optional
+  claims: claimsObject, // optional
 })
+
+// Default claims if none are provided
+const defaultClaims = {
+  id_token: {
+    "sub": {
+      essential: true,
+    },
+    "mh:con_id": {
+      essential: true,
+    },
+  },
+}
 ```
+
+
 
 #### `getAuthorizeUrlForCreatedUser`
 
-This is a helper function that returns an authorize url for a specific user to connect to a specific bank.
+This is a helper function that returns an authorize url for a specific user to connect to a specific bank. This function uses the following scope with the value of the bankId provided `id:${bankId} openid`.
+
+[Bank ids](https://moneyhub.github.io/api-docs/#bank-connections)
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrlForCreatedUser({
-  bankId: "the bank id to connect to",
-  state: "your state value",
-  userId: "the user id returned from the registerUser call",
-  nonce: "your nonce value",
-  claims: claimsObject,
+  bankId: "bank id to connect to",
+  userId: "user id returned from the registerUser call",
+  state: "your state value", // optional
+  nonce: "your nonce value", // optional
+  claims: claimsObject, // optional
 })
+
+// Scope used with the bankId provided
+const scope = `id:${bankId} openid`
+
+// Default claims if none are provided
+const defaultClaims = {
+  id_token: {
+    "sub": {
+      essential: true,
+      value: userId, // userId provided
+    },
+    "mh:con_id": {
+      essential: true,
+    },
+  },
+}
 ```
 
 #### `getReauthAuthorizeUrlForCreatedUser`
 
-This is a helper function that returns an authorize url for a specific user to re authorize and existing connection.
+This is a helper function that returns an authorize url for a specific user to re authorize and existing connection. This function uses the scope `openid reauth`.
 
 ```javascript
 const url = await moneyhub.getReauthAuthorizeUrlForCreatedUser({
   userId: "the user id",
   connectionId: "connection Id to re authorize",
-  state: "your state value",
-  nonce: "your nonce value",
-  claims: claimsObject,
+  state: "your state value", // optional
+  nonce: "your nonce value", // optional
+  claims: claimsObject, // optional
 })
+
+// Default claims if none are provided
+const defaultClaims = {
+  id_token: {
+    sub: {
+      essential: true,
+      value: userId, // userId provided
+    },
+    "mh:con_id": {
+      essential: true,
+      value: connectionId, // connectionId provided
+    },
+  },
+}
 ```
 
 #### `getRefreshAuthorizeUrlForCreatedUser`
 
-This is a helper function that returns an authorize url for a specific user to refresh and existing connection. (Only relevant for legacy connections)
+This is a helper function that returns an authorize url for a specific user to refresh and existing connection. This function uses the scope `openid refresh`. (Only relevant for legacy connections)
 
 ```javascript
 const url = await moneyhub.getRefreshAuthorizeUrlForCreatedUser({
   userId: "the user id",
-  connectionId: "connection Id to re authorize",
-  state: "your state value",
-  nonce: "your nonce value",
-  claims: claimsObject,
+  connectionId: "connection Id to re refresh",
+  state: "your state value", // optional
+  nonce: "your nonce value", // optional
+  claims: claimsObject, // optional
 })
+
+// Default claims if none are provided
+const defaultClaims = {
+  id_token: {
+    sub: {
+      essential: true,
+      value: userId, // userId provided
+    },
+    "mh:con_id": {
+      essential: true,
+      value: connectionId, // connectionId provided
+    },
+  },
+}
 ```
 
 #### `exchangeCodeForTokens`
@@ -116,9 +183,9 @@ After a user has succesfully authorised they will be redirected to your redirect
 
 ```javascript
 const tokens = await moneyhub.exchangeCodeForTokens({
-  state: "your state value",
   code: "the authorization code",
-  nonce: "your nonce value",
+  nonce: "your nonce value", // optional
+  state: "your state value", // optional
   id_token: "your id token", // optional
 })
 ```
@@ -141,7 +208,7 @@ Use this to register a new user
 ```javascript
 const user = await moneyhub.registerUserWithToken(
   "your user id", //optional ,
-  "an access token with the user:crate scope"
+  "an access token with the user:create scope"
 )
 ```
 
