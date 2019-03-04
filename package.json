@@ -6,7 +6,16 @@
   "scripts": {
     "lint": "eslint src/ examples/"
   },
-  "author": "",
+  "keywords": [
+    "moneyhub",
+    "financial",
+    "technology",
+    "api",
+    "openid"
+  ],
+  "author": "Moneyub Financial Technology",
+  "homepage": "https://github.com/moneyhub/moneyhub-api-client",
+  "repository": "moneyhub/moneyhub-api-client",
   "license": "ISC",
   "dependencies": {
     "got": "^9.0.0",

@@ -25,6 +25,10 @@ To use this API client you will need:
 - The url of the Moneyhub identity service for the environment you are connecting to
 - The url for the API gateway for the environment that you are connecting to
 
+#### To install
+
+`npm install @mft/moneyhub-api-client`
+
 ### Usage
 
 This module exposes a single factory function that accepts the following configuration:
