@@ -4,7 +4,7 @@ const Moneyhub = require("../../src")
 
 const config = require("../config")
 const LOCAL_IDENTITY_URL = "http://identity.dev.127.0.0.1.nip.io/oidc"
-const LOCAL_ACCOUNT_CONNECT_URL = "http://localhost:8080/account-connect.js" // Bank chooser
+const LOCAL_ACCOUNT_CONNECT_URL = "http://bankchooser.dev.127.0.0.1.nip.io/account-connect.js" // Bank chooser
 const LOCAL_REDIRECT_URI = "http://localhost:3001"
 
 // Make sure to set 'http://localhost:3001' as redirect_uri for your API client
