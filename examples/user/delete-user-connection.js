@@ -6,6 +6,8 @@ console.log("\n\nUsage: `node delete-user-connection.js userId connectionId` \n\
 
 const [userId, connectionId] = process.argv.slice(2)
 
+if (!userId || !connectionId) throw new Error("userId and connectionId needs to be provided")
+
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
