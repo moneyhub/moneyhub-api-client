@@ -281,11 +281,10 @@ module.exports = async ({
         }
       )
     },
-    getUsers: async ({limit, offset} = {}) => {
+    getUsers: async (params = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "user:read",
       })
-      const params = Object.assign({}, limit && {limit}, offset && {offset})
       const url = `${identityServiceUrl.replace(
         "oidc",
         "users"

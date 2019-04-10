@@ -225,7 +225,7 @@ const user = await moneyhub.registerUser("your user id" /* optional */)
 Returns all the users registered for your api-client
 
 ```javascript
-const users = await moneyhub.getUsers()
+const users = await moneyhub.getUsers({limit, offset, isDemo})
 ```
 
 ### `getUser`
