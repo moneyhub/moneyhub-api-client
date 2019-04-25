@@ -252,6 +252,15 @@ Get all transactions for a user. This call requires an access token with a scope
 const accounts = await moneyhub.getTransactions("access.token")
 ```
 
+### `getUserConnections`
+
+Helper method that gets the correct client credentials access token and then gets all user connections.
+
+```javascript
+const user = await moneyhub.getUserConnections("user-id")
+```
+
+
 ### `deleteUserConnection`
 
 Helper method that gets the correct client credentials access token and then deletes a user connection.

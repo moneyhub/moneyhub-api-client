@@ -234,6 +234,29 @@ module.exports = async ({
       })
       return moneyhub.registerUserWithToken(id, access_token)
     },
+    getUserConnections: async (userId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "user:read",
+      })
+      return moneyhub.getUserConnectionsWithToken(
+        userId,
+        access_token
+      )
+    },
+    getUserConnectionsWithToken: async (userId, token) => {
+      return got.get(
+        identityServiceUrl.replace(
+          "oidc",
+          `users/${userId}/connections`
+        ),
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          json: true,
+        }
+      )
+    },
     deleteUserConnection: async (userId, connectionId) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "user:delete",
