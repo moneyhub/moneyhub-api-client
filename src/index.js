@@ -55,6 +55,15 @@ module.exports = async ({
       return client.requestObject(authParams)
     },
 
+    createJWKS: async ({keyAlg = "RSA", keySize = 2048, keyUse = "sig", alg = "RS256"}) => {
+      const keystore = JWK.createKeyStore()
+      await keystore.generate(keyAlg, keySize, {use: keyUse})
+      const public = keystore.toJSON()
+      const private = keystore.toJSON(true)
+      public.keys[0].alg = alg
+      return {public, private}
+    },
+
     getRequestUri: async requestObject => {
       const {body} = await got.post(
         identityServiceUrl.replace("oidc", "request"),

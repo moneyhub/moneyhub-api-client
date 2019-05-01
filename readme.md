@@ -55,6 +55,22 @@ const moneyhub = Moneyhub({
 
 Once the api client has been initialised it provides a simple promise based interface with the following methods:
 
+#### `createJWKS`
+
+This method creates a JWKS that can be used when configuring your Moneyhub API client. The public keys should be used in the configuration
+of the API client in the Moneyhub Admin portal. The private keys should
+be used in the config when creating an instance of this client.
+
+```javascript
+const url = await moneyhub.createJWKS({
+  keyAlg, // default 'RSA'
+  keySize, // default 2048
+  keyUse, // default 'sig'
+  alg, // default 'RS256'
+})
+
+```
+
 #### `getAuthorizeUrl`
 
 This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`.
