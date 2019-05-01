@@ -1,11 +1,11 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
-const {DEFAULT_STATE} = require("../constants")
+const {DEFAULT_STATE, DEFAULT_NONCE} = require("../constants")
 
 console.log("\n\nUsage: `node get-token-exchanging-auth-code.js code state[optional]` \n\n")
 
-const [code, state = DEFAULT_STATE] = process.argv.slice(2)
+const [code, state = DEFAULT_STATE, nonce = DEFAULT_NONCE, id_token] = process.argv.slice(2)
 
 if (!code) throw new Error("Code needs to be provided")
 
@@ -16,6 +16,8 @@ const start = async () => {
     const result = await moneyhub.exchangeCodeForTokens({
       state,
       code,
+      nonce,
+      id_token,
     })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {

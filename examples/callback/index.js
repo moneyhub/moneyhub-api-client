@@ -12,7 +12,7 @@ const run = async () => {
 
   app.get("/", async (req, res) => {
     const data = req.query
-    console.log(data, null, 2)
+    console.log(JSON.stringify(data, null, 2))
     const result = await moneyhub.exchangeCodeForTokens(data)
     console.log(result)
     res.send(`
