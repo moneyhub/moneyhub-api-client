@@ -26,6 +26,8 @@
   "devDependencies": {
     "@mft/eslint-config-momentumft": "^4.0.0",
     "body-parser": "^1.18.3",
+    "command-line-args": "^5.1.1",
+    "command-line-usage": "^5.0.5",
     "eslint": "^5.5.0",
     "express": "^4.16.4"
   }

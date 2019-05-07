@@ -1,20 +1,34 @@
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
 const Moneyhub = require("../src/index")
 const config = require("./config")
 
+const optionDefinitions = [
+  {name: "key-alg", type: String},
+  {name: "key-use", type: String},
+  {name: "key-size", type: Number},
+  {name: "alg", type: String},
+]
 
-console.log("\n\nUsage: `node create-jwks.js` \n\n")
+const usage = commandLineUsage(
+  {
+    header: "Options",
+    optionList: optionDefinitions,
+  }
+)
+const options = commandLineArgs(optionDefinitions)
 
-const [keyAlg, keySize, keyUse, alg] = process.argv.slice(2)
+console.log(usage)
 
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
     const jwks = await moneyhub.createJWKS({
-      keyAlg,
-      keySize,
-      keyUse,
-      alg,
+      keyAlg: options["key-alg"],
+      keySize: options["key-size"],
+      keyUse: options["key-use"],
+      alg: options.alg,
     })
 
     console.log("Public keys")
