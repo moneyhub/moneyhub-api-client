@@ -40,17 +40,18 @@ module.exports = async ({
   const moneyhub = {
     keys: () => keystore.toJSON(),
 
-    requestObject: (scope, state, claims) => {
-      const authParams = {
+    requestObject: ({scope, state, claims, nonce}) => {
+      const authParams = filterUndefined({
         client_id,
         scope,
         state,
+        nonce,
         claims,
         exp: Math.round(Date.now() / 1000) + 300,
         redirect_uri,
-        response_type: "code",
+        response_type,
         prompt: "consent",
-      }
+      })
 
       return client.requestObject(authParams)
     },
@@ -210,6 +211,42 @@ module.exports = async ({
         scope,
         nonce,
         claims: _claims,
+      })
+      return url
+    },
+
+    getPaymentAuthorizeUrl: async ({
+      bankId,
+      payeeId,
+      amount,
+      payeeRef,
+      payerRef,
+      state,
+      nonce,
+    }) => {
+
+      const scope = `payment openid id:${bankId}`
+      const claims = {
+        id_token: {
+          "mh:con_id": {
+            essential: true,
+          },
+          "mh:payment": {
+            essential: true,
+            value: {
+              amount,
+              payeeRef,
+              payerRef,
+              payeeId,
+            },
+          },
+        },
+      }
+
+      const request = await moneyhub.requestObject({scope, state, claims, nonce})
+      const requestUri = await moneyhub.getRequestUri(request)
+      const url = moneyhub.getAuthorizeUrlFromRequestUri({
+        request_uri: requestUri,
       })
       return url
     },

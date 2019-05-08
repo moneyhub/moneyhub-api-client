@@ -34,30 +34,16 @@ const start = async () => {
   })
 
   app.get("/pay/:payeeId/:bankId", async (req, res) => {
-    const scope = `payment openid id:${req.params.bankId}`
-    const claims = {
-      id_token: {
-        "mh:con_id": {
-          essential: true,
-        },
-        "mh:payment": {
-          essential: true,
-          value: {
-            amount: 100,
-            payeeRef: "payee ref 123",
-            payerRef: "payer ref 546",
-            payeeId: req.params.payeeId,
-          },
-        },
-      },
-    }
     try {
-      const request = await moneyhub.requestObject(scope, "foobar", claims)
-      const uri = await moneyhub.getRequestUri(request)
-      const redirect = moneyhub.getAuthorizeUrlFromRequestUri({
-        request_uri: uri,
+      const url = await moneyhub.getPaymentAuthorizeUrl({
+        bankId: req.params.bankId,
+        payeeId: req.params.payeeId,
+        amount: 100,
+        payeeRef: "payee ref 123",
+        payerRef: "payer ref 546",
+        state: "foo",
       })
-      res.redirect(redirect)
+      res.redirect(url)
     } catch (e) {
       res.send(e)
     }
@@ -73,7 +59,7 @@ const start = async () => {
     <input pattern="[0-9]{8,8}" type="text" minlength="8" maxlength="8" required name="accountNumber" placeholder="Account Number" /><br />
     <input type="text" minlength="6" maxlength="6" required name="sortCode" placeholder="Sort Code" /><br />
     <button type="submit">Create Payee</button>
-  </form>  
+  </form>
   `)
   )
 
