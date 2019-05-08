@@ -55,6 +55,8 @@ const moneyhub = Moneyhub({
 
 Once the api client has been initialised it provides a simple promise based interface with the following methods:
 
+### JWKS
+
 #### `createJWKS`
 
 This method creates a JWKS that can be used when configuring your Moneyhub API client. The public keys should be used in the configuration
@@ -70,6 +72,8 @@ const url = await moneyhub.createJWKS({
 })
 
 ```
+
+### Auth API
 
 #### `getAuthorizeUrl`
 
@@ -102,8 +106,6 @@ const defaultClaims = {
   },
 }
 ```
-
-
 
 #### `getAuthorizeUrlForCreatedUser`
 
@@ -193,6 +195,134 @@ const defaultClaims = {
 }
 ```
 
+#### `exchangeCodeForTokens`
+
+After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
+
+```javascript
+const tokens = await moneyhub.exchangeCodeForTokens({
+  code: "the authorization code",
+  nonce: "your nonce value", // optional
+  state: "your state value", // optional
+  id_token: "your id token", // optional
+})
+```
+
+#### `getClientCredentialTokens`
+
+Use this to get a client credentials access token.
+
+```javascript
+const tokens = await moneyhub.getClientCredentialTokens({
+  scope: "the-required-scope",
+  sub: "the user id", // optional
+})
+```
+
+### User Management
+
+#### `registerUser`
+
+Helper method that gets the correct client credentials access token and then registers a user.
+
+```javascript
+const user = await moneyhub.registerUser("your user id" /* optional */)
+```
+
+#### `getUsers`
+
+Returns all the users registered for your api-client
+
+```javascript
+const users = await moneyhub.getUsers({limit, offset, isDemo})
+```
+
+#### `getUser`
+
+Get a single user by their id
+
+```javascript
+const user = await moneyhub.getUser("user-id")
+```
+
+#### `deleteUser`
+
+Helper method that gets the correct client credentials access token and then deletes a user.
+
+```javascript
+const user = await moneyhub.deleteUser("user-id")
+```
+
+#### `registerUserWithToken`
+
+Use this to register a new user
+
+```javascript
+const user = await moneyhub.registerUserWithToken(
+  "your user id", //optional ,
+  "an access token with the user:create scope"
+)
+```
+
+#### `deleteUserWithToken`
+
+Deletes a user. This calls requires an access token with the `user:delete` scope.
+
+```javascript
+const user = await moneyhub.deleteUserWithToken("user-id", "access.token")
+```
+
+### User Connections
+
+#### `getUserConnections`
+
+Helper method that gets the correct client credentials access token and then gets all user connections.
+
+```javascript
+const user = await moneyhub.getUserConnections("user-id")
+```
+
+#### `deleteUserConnection`
+
+Helper method that gets the correct client credentials access token and then deletes a user connection.
+
+```javascript
+const user = await moneyhub.deleteUserConnection("user-id", "connection-id")
+```
+
+#### `deleteUserConnectionWithToken`
+
+Deletes a user connection. This calls requires an access token with the `user:delete` scope
+
+```javascript
+const user = await moneyhub.deleteUserConnectionWithToken(
+  "user-id",
+  "connection-id",
+  "access.token"
+)
+```
+
+### Data API
+
+#### `getAccounts`
+
+Get all accounts for a user. This call requires an access token with the `accounts:read` scope.
+
+```javascript
+const accounts = await moneyhub.getAccounts("access.token")
+```
+
+#### `getTransactions`
+
+Get all transactions for a user. This call requires an access token with a scope that allows it to read transactions.
+
+```javascript
+const accounts = await moneyhub.getTransactions("access.token")
+```
+
+
+### Payments
+
 #### `getPaymentAuthorizeUrl`
 
 This is a helper function that returns an authorize url to authorize a payment to the payee with the bank selected. This function uses the following scope with the value of the bankId provided `payment openid id:${bankId}`.
@@ -232,125 +362,42 @@ const defaultClaims = {
 }
 ```
 
-#### `exchangeCodeForTokens`
+#### `addPayee`
 
-After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
+This method will add a Payee. This will return an id that it is
+required to be used as `payeeId` when initiating a payment. This function uses the scope `payee:create`
 
 ```javascript
-const tokens = await moneyhub.exchangeCodeForTokens({
-  code: "the authorization code",
-  nonce: "your nonce value", // optional
-  state: "your state value", // optional
-  id_token: "your id token", // optional
+const tokens = await moneyhub.addPayee({
+  accountNumber: "your account number",
+  sortCode: "your sort code",
+  name: "name of Payee",
 })
 ```
 
-#### `getClientCredentialTokens`
+#### `getPayees`
 
-Use this to get a client credentials access token.
+This method returns a list of registered payees. This function uses the scope `payee:read`
 
 ```javascript
-const tokens = await moneyhub.getClientCredentialTokens({
-  scope: "the-required-scope",
-  sub: "the user id", // optional
+const tokens = await moneyhub.getPayees({
+  limit: "limit", // optional
+  offset: "offset", // optional
 })
 ```
 
-#### `registerUserWithToken`
+#### `getPayments`
 
-Use this to register a new user
-
-```javascript
-const user = await moneyhub.registerUserWithToken(
-  "your user id", //optional ,
-  "an access token with the user:create scope"
-)
-```
-
-#### `registerUser`
-
-Helper method that gets the correct client credentials access token and then registers a user.
+This method returns a list of initiated payments. This function uses the scope `payment:read`
 
 ```javascript
-const user = await moneyhub.registerUser("your user id" /* optional */)
+const tokens = await moneyhub.getPayments({
+  limit: "limit", // optional
+  offset: "offset", // optional
+})
 ```
 
-#### `getUsers`
-
-Returns all the users registered for your api-client
-
-```javascript
-const users = await moneyhub.getUsers({limit, offset, isDemo})
-```
-
-#### `getUser`
-
-Get a single user by their id
-
-```javascript
-const user = await moneyhub.getUser("user-id")
-```
-
-### `getAccounts`
-
-Get all accounts for a user. This call requires an access token with the `accounts:read` scope.
-
-```javascript
-const accounts = await moneyhub.getAccounts("access.token")
-```
-
-#### `getTransactions`
-
-Get all transactions for a user. This call requires an access token with a scope that allows it to read transactions.
-
-```javascript
-const accounts = await moneyhub.getTransactions("access.token")
-```
-
-#### `getUserConnections`
-
-Helper method that gets the correct client credentials access token and then gets all user connections.
-
-```javascript
-const user = await moneyhub.getUserConnections("user-id")
-```
-
-
-#### `deleteUserConnection`
-
-Helper method that gets the correct client credentials access token and then deletes a user connection.
-
-```javascript
-const user = await moneyhub.deleteUserConnection("user-id", "connection-id")
-```
-
-#### `deleteUserConnectionWithToken`
-
-Deletes a user connection. This calls requires an access token with the `user:delete` scope
-
-```javascript
-const user = await moneyhub.deleteUserConnectionWithToken(
-  "user-id",
-  "connection-id",
-  "access.token"
-)
-```
-
-#### `deleteUser`
-
-Helper method that gets the correct client credentials access token and then deletes a user.
-
-```javascript
-const user = await moneyhub.deleteUser("user-id")
-```
-
-#### `deleteUserWithToken`
-
-Deletes a user. This calls requires an access token with the `user:delete` scope.
-
-```javascript
-const user = await moneyhub.deleteUserWithToken("user-id", "access.token")
-```
+### Financial Connections
 
 #### `listConnections`
 
@@ -375,6 +422,8 @@ This method will resolve with a list of all the Test connections that a user can
 ```javascript
 const availableConnections = await moneyhub.listTestConnections()
 ```
+
+### OpenID Config
 
 #### `getOpenIdConfig`
 
