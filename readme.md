@@ -14,16 +14,19 @@ This is an Node.JS client for the [Moneyhub API](https://moneyhub.github.io/api-
 - Getting access tokens with client credentials
 - Getting accounts for a user
 - Getting transactions for a user
+- Generate authorisation url for payments
+- Add Payees
+- Get Payees and payments
 
-Currently this library supports `client_secret_basic` authentication, shortly we will add support for `client_secret_jwt` and `private_key_jwt`
+Currently this library supports `client_secret_basic`,  `client_secret_jwt` and `private_key_jwt` authentication.
 
 ### Prerequisites
 
 To use this API client you will need:
 
 - A `client_id`, `client_secret` and `redirect_uri` of a registered API client
-- The url of the Moneyhub identity service for the environment you are connecting to
-- The url for the API gateway for the environment that you are connecting to
+- The url of the Moneyhub identity service for the environment you are connecting to (https://identity.moneyhub.co.uk/oidc)
+- The url for the API gateway for the environment that you are connecting to (https://api.moneyhub.co.uk/v2.0)
 
 ### To install
 
