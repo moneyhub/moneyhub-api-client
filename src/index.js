@@ -223,10 +223,11 @@ module.exports = async ({
       payerRef,
       state,
       nonce,
+      claims = {},
     }) => {
 
       const scope = `payment openid id:${bankId}`
-      const claims = {
+      const defaultClaims = {
         id_token: {
           "mh:con_id": {
             essential: true,
@@ -243,7 +244,9 @@ module.exports = async ({
         },
       }
 
-      const request = await moneyhub.requestObject({scope, state, claims, nonce})
+      const _claims = R.mergeDeepRight(defaultClaims, claims)
+
+      const request = await moneyhub.requestObject({scope, state, claims: _claims, nonce})
       const requestUri = await moneyhub.getRequestUri(request)
       const url = moneyhub.getAuthorizeUrlFromRequestUri({
         request_uri: requestUri,
