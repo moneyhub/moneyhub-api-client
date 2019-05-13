@@ -315,6 +315,14 @@ Get all accounts for a user. This call requires an access token with the `accoun
 const accounts = await moneyhub.getAccounts("access.token")
 ```
 
+### `getAccount`
+
+Get a single account for a user by the accountId. This function uses the scope `accounts:read`.
+
+```javascript
+const account = await moneyhub.getAccount("accountId", "userId")
+```
+
 #### `getTransactions`
 
 Get all transactions for a user. This call requires an access token with a scope that allows it to read transactions.
