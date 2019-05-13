@@ -393,7 +393,7 @@ module.exports = async ({
         sub: userId,
       })
 
-      return got(resourceServerUrl + "/accounts/" + accountId, {
+      return got(`${resourceServerUrl}/accounts/${accountId}`, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
