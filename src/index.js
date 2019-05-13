@@ -445,6 +445,23 @@ module.exports = async ({
       }).then(R.prop("body"))
     },
 
+    getPayment: async (id) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "payment:read",
+      })
+      const url = `${identityServiceUrl.replace(
+        "oidc",
+        "payments"
+      )}/${id}`
+
+      return got(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+
     listConnections: () =>
       got(identityServiceUrl + "/.well-known/all-connections", {
         json: true,

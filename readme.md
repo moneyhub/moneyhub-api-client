@@ -400,6 +400,14 @@ const tokens = await moneyhub.getPayments({
 })
 ```
 
+#### `getPayment`
+
+Get a single payment by its id . This function uses the scope `payment:read`
+
+```javascript
+const tokens = await moneyhub.getPayment("payment-id")
+```
+
 ### Financial Connections
 
 #### `listConnections`
