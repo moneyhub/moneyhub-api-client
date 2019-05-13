@@ -320,7 +320,7 @@ const accounts = await moneyhub.getAccounts("access.token")
 Get a single account for a user by the accountId. This function uses the scope `accounts:read`.
 
 ```javascript
-const account = await moneyhub.getAccount("accountId", "userId")
+const account = await moneyhub.getAccount("userId", "accountId")
 ```
 
 #### `getTransactions`
