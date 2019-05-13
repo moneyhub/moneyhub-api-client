@@ -387,9 +387,10 @@ module.exports = async ({
         },
         json: true,
       }).then(R.prop("body")),
-    getAccount: async accountId => {
+    getAccount: async (accountId, userId) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "accounts:read",
+        sub: userId,
       })
 
       return got(resourceServerUrl + "/accounts/" + accountId, {
