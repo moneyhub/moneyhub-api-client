@@ -1,7 +1,7 @@
 const DEFAULT_DATA_SCOPES_USE_CASE_1 =
 "accounts:read transactions:read:all categories:read categories:write spending_goals:read savings_goals:read"
 const DEFAULT_DATA_SCOPES_USE_CASE_2 =
-"accounts:read accounts:write:all transactions:read:all transactions:write:all categories:read categories:write spending_goals:read spending_goals:write:all savings_goals:read savings_goals:write:all"
+"accounts:read accounts:write:all transactions:read:all transactions:write:all categories:read categories:write spending_goals:read spending_goals:write:all savings_goals:read savings_goals:write:all spending_analysis:read"
 
 const BANK_IDS = {
   ALL: "all",
