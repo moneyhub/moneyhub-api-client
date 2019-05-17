@@ -1,22 +1,36 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
-const {DEFAULT_BANK_ID, DEFAULT_STATE, DEFAULT_DATA_SCOPES_USE_CASE_1} = require("../constants")
+const {DEFAULT_BANK_ID, DEFAULT_STATE, DEFAULT_NONCE, DEFAULT_DATA_SCOPES_USE_CASE_1} = require("../constants")
 
-console.log(
-  "\n\nUsage: `node get-authorize-url.js bankId[optional] state[optional]` \n\n"
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
+
+const optionDefinitions = [
+  {name: "state", alias: "s", defaultValue: DEFAULT_STATE, type: String},
+  {name: "bankId", alias: "b", defaultValue: DEFAULT_BANK_ID, type: String},
+  {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
+  {name: "data-scopes", alias: "d", defaultValue: DEFAULT_DATA_SCOPES_USE_CASE_1, type: String},
+]
+
+const usage = commandLineUsage(
+  {
+    header: "Options",
+    optionList: optionDefinitions,
+  }
 )
+console.log(usage)
 
-const [bankId = DEFAULT_BANK_ID, state = DEFAULT_STATE] = process.argv.slice(2)
-
-if (!bankId) throw new Error("bank id needs to be provided")
+const options = commandLineArgs(optionDefinitions)
+const {state, bankId, nonce, "data-scopes": dataScopes} = options
 
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
     const data = await moneyhub.getAuthorizeUrl({
       state,
-      scope: `openid offline_access id:${bankId} ${DEFAULT_DATA_SCOPES_USE_CASE_1}`,
+      nonce,
+      scope: `openid offline_access id:${bankId} ${dataScopes}`,
     })
     console.log(data)
   } catch (e) {

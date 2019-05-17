@@ -3,9 +3,26 @@ const config = require("../config")
 
 const {DEFAULT_STATE, DEFAULT_NONCE} = require("../constants")
 
-console.log("\n\nUsage: `node get-reauth-authorize-url-for-user.js userId connectionId state[optional]` \n\n")
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
 
-const [userId, connectionId, state = DEFAULT_STATE, nonce = DEFAULT_NONCE] = process.argv.slice(2)
+const optionDefinitions = [
+  {name: "userId", alias: "u", type: String, description: "required"},
+  {name: "connectionId", alias: "c", type: String, description: "required"},
+  {name: "state", alias: "s", defaultValue: DEFAULT_STATE, type: String},
+  {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
+]
+
+const usage = commandLineUsage(
+  {
+    header: "Options",
+    optionList: optionDefinitions,
+  }
+)
+console.log(usage)
+
+const options = commandLineArgs(optionDefinitions)
+const {userId, state, connectionId, nonce} = options
 
 if (!userId || !connectionId) throw new Error("UserId and connectionId needs to be provided")
 

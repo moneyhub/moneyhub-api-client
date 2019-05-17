@@ -3,11 +3,26 @@ const config = require("../config")
 
 const {DEFAULT_STATE, DEFAULT_DATA_SCOPES_USE_CASE_2} = require("../constants")
 
-console.log(
-  "\n\nUsage: `node get-request-object.js bankId[optional] state[optional]` \n\n"
-)
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
 
-const [scope =  `openid id:all ${DEFAULT_DATA_SCOPES_USE_CASE_2}`, state = DEFAULT_STATE] = process.argv.slice(2)
+const optionDefinitions = [
+  {name: "state", alias: "s", defaultValue: DEFAULT_STATE, type: String},
+  {name: "data-scopes", alias: "d", defaultValue: DEFAULT_DATA_SCOPES_USE_CASE_2, type: String},
+]
+
+const usage = commandLineUsage(
+  {
+    header: "Options",
+    optionList: optionDefinitions,
+  }
+)
+console.log(usage)
+
+const options = commandLineArgs(optionDefinitions)
+const {state, "data-scopes": dataScopes} = options
+
+const scope =  `openid id:all ${dataScopes}`
 
 const defaultClaims = {
   id_token: {

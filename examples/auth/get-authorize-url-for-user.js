@@ -3,15 +3,33 @@ const config = require("../config")
 
 const {DEFAULT_BANK_ID, DEFAULT_STATE, DEFAULT_NONCE} = require("../constants")
 
-console.log("\n\nUsage: `node get-authorize-url-for-user.js userId bankId[optional] state[optional] nonce[optional]` \n\n")
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
 
-const [userId, bankId = DEFAULT_BANK_ID, state = DEFAULT_STATE, nonce = DEFAULT_NONCE] = process.argv.slice(2)
+const optionDefinitions = [
+  {name: "userId", alias: "u", type: String, description: "required"},
+  {name: "state", alias: "s", defaultValue: DEFAULT_STATE, type: String},
+  {name: "bankId", alias: "b", defaultValue: DEFAULT_BANK_ID, type: String},
+  {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
+]
 
-if (!userId) throw new Error("UserId needs to be provided")
+const usage = commandLineUsage(
+  {
+    header: "Options",
+    optionList: optionDefinitions,
+  }
+)
+console.log(usage)
+
+const options = commandLineArgs(optionDefinitions)
+const {userId, state, bankId, nonce} = options
+
+if (!userId) throw new Error("userId is required")
 
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
+
 
     const data = await moneyhub.getAuthorizeUrlForCreatedUser({
       userId,
