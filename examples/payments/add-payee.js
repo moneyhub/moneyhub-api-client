@@ -15,9 +15,9 @@ const usage = commandLineUsage(
     optionList: optionDefinitions,
   }
 )
-const options = commandLineArgs(optionDefinitions)
-
 console.log(usage)
+
+const options = commandLineArgs(optionDefinitions)
 
 const start = async () => {
   try {
