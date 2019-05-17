@@ -1,4 +1,9 @@
 
+2.1.0 / 2019-05-17
+==================
+
+  * Allow passing params to getAccounts and getTransactions
+
 2.0.0 / 2019-05-17
 ==================
 

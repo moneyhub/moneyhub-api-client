@@ -312,7 +312,8 @@ const user = await moneyhub.deleteUserConnectionWithToken(
 Get all accounts for a user. This function uses the scope `accounts:read`.
 
 ```javascript
-const accounts = await moneyhub.getAccounts("userId")
+const queryParams = {limit: 10, offset: 5}
+const accounts = await moneyhub.getAccounts("userId", queryParams)
 ```
 
 #### `getAccountsWithToken`
@@ -336,7 +337,8 @@ const account = await moneyhub.getAccount("userId", "accountId")
 Get all transactions for a user. This function uses the scope `transactions:read:all`..
 
 ```javascript
-const accounts = await moneyhub.getTransactions("userId")
+const queryParams = {limit: 10, offset: 5}
+const accounts = await moneyhub.getTransactions("userId", queryParams)
 ```
 
 #### `getTransactionsWithToken`
