@@ -380,21 +380,23 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body"))
     },
-    getAccounts: async (userId) => {
+    getAccounts: async (userId, params = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "accounts:read",
         sub: userId,
       })
 
-      return  got(resourceServerUrl + "/accounts", {
+      const url = `${resourceServerUrl}/accounts?${querystring.stringify(params)}`
+
+      return  got(url, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
         json: true,
       }).then(R.prop("body"))
     },
-    getAccountsWithToken: (token) =>
-      got(resourceServerUrl + "/accounts", {
+    getAccountsWithToken: (token, params = {}) =>
+      got(`${resourceServerUrl}/accounts?${querystring.stringify(params)}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -413,21 +415,23 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body"))
     },
-    getTransactions: async (userId) => {
+    getTransactions: async (userId, params = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "transactions:read:all",
         sub: userId,
       })
 
-      return got(resourceServerUrl + "/transactions", {
+      const url = `${resourceServerUrl}/transactions?${querystring.stringify(params)}`
+
+      return got(url, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
         json: true,
       }).then(R.prop("body"))
     },
-    getTransactionsWithToken: token =>
-      got(resourceServerUrl + "/transactions", {
+    getTransactionsWithToken: (token, params = {}) =>
+      got(`${resourceServerUrl}/transactions?${querystring.stringify(params)}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
