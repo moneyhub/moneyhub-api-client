@@ -3,9 +3,22 @@ const config = require("../config")
 
 const DEFAULT_CLIENT_USER_ID = "some-client-user-id"
 
-console.log("\n\nUsage: `node register-user.js clientUserId[optional]` \n\n")
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
 
-const [clientUserId = DEFAULT_CLIENT_USER_ID] = process.argv.slice(2)
+const optionDefinitions = [
+  {name: "clientUserId", alias: "u", defaultValue: DEFAULT_CLIENT_USER_ID, type: String, description: "required"},
+]
+
+const usage = commandLineUsage(
+  {
+    header: "Options",
+    optionList: optionDefinitions,
+  }
+)
+console.log(usage)
+
+const {clientUserId} = commandLineArgs(optionDefinitions)
 
 const start = async () => {
   try {

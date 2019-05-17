@@ -1,9 +1,24 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
-console.log("\n\nUsage: `node get-users.js limit offset` \n\n")
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
 
-const [limit, offset] = process.argv.slice(2)
+const optionDefinitions = [
+  {name: "limit", alias: "l", type: Number},
+  {name: "offset", alias: "o", type: Number},
+]
+
+const usage = commandLineUsage(
+  {
+    header: "Options",
+    optionList: optionDefinitions,
+  }
+)
+
+console.log(usage)
+
+const {limit, offset} = commandLineArgs(optionDefinitions)
 
 const start = async () => {
   try {

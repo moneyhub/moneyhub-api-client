@@ -1,12 +1,25 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
 
-console.log("\n\nUsage: `node delete-user-connection.js userId connectionId` \n\n")
+const optionDefinitions = [
+  {name: "userId", alias: "u", type: String, description: "required"},
+  {name: "connectionId", alias: "c", type: String, description: "required"},
+]
 
-const [userId, connectionId] = process.argv.slice(2)
+const usage = commandLineUsage(
+  {
+    header: "Options",
+    optionList: optionDefinitions,
+  }
+)
+console.log(usage)
 
-if (!userId || !connectionId) throw new Error("userId and connectionId needs to be provided")
+const {userId, connectionId} = commandLineArgs(optionDefinitions)
+
+if (!userId || !connectionId) throw new Error("userId  and connectionId are required")
 
 const start = async () => {
   try {
