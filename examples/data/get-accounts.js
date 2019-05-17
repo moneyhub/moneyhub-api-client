@@ -1,25 +1,28 @@
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
 const Moneyhub = require("../../src/index")
 const config = require("../config")
-const {DEFAULT_DATA_SCOPES_USE_CASE_1} = require("../constants")
 
-console.log("\n\nUsage: `node get-accounts.js userId` \n\n")
+const optionDefinitions = [
+  {name: "userId", alias: "u", type: String, description: "required"},
+]
 
-const [userId] = process.argv.slice(2)
+const usage = commandLineUsage(
+  {
+    header: "Options",
+    optionList: optionDefinitions,
+  }
+)
+console.log(usage)
 
-if (!userId) throw new Error("UserId needs to be provided")
+const options = commandLineArgs(optionDefinitions)
+
 
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
-    const tokens = await moneyhub.getClientCredentialTokens({
-      scope: DEFAULT_DATA_SCOPES_USE_CASE_1,
-      sub: userId,
-    })
-    console.log(JSON.stringify(tokens, null, 2))
-    const {access_token: accessToken} = tokens
-
-    const result = await moneyhub.getAccounts(accessToken)
+    const result = await moneyhub.getAccounts(options.userId)
     console.log(JSON.stringify(result, null, 2))
 
   } catch (e) {

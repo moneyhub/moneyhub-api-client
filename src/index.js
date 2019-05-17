@@ -380,7 +380,20 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body"))
     },
-    getAccounts: token =>
+    getAccounts: async (userId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "accounts:read",
+        sub: userId,
+      })
+
+      return  got(resourceServerUrl + "/accounts", {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+    getAccountsWithToken: (token) =>
       got(resourceServerUrl + "/accounts", {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -400,7 +413,20 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body"))
     },
-    getTransactions: token =>
+    getTransactions: async (userId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "transactions:read:all",
+        sub: userId,
+      })
+
+      return got(resourceServerUrl + "/transactions", {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+    getTransactionsWithToken: token =>
       got(resourceServerUrl + "/transactions", {
         headers: {
           Authorization: `Bearer ${token}`,

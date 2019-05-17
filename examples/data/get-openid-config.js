@@ -1,8 +1,6 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
 
-console.log("\n\nUsage: `node get-openid-config.js` \n\n")
-
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
