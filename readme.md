@@ -354,7 +354,7 @@ const accounts = await moneyhub.getTransactionsWithToken("access.token")
 
 #### `getPaymentAuthorizeUrl`
 
-This is a helper function that returns an authorize url to authorize a payment to the payee with the bank selected. This function uses the following scope with the value of the bankId provided `payment openid id:${bankId}`.
+This is a helper function that returns an authorize url to authorize a payment to the payee with the bank selected. This function uses the following scope with the value of the bankId provided `payment openid id:${bankId}`. It also requires the authentication to be `client_secret_jwt` or `private_key_jwt`.
 
 
 ```javascript
