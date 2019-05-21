@@ -2,6 +2,7 @@ const express = require("express")
 const Moneyhub = require("../../src")
 
 const config = require("../config")
+const port = 3001
 // Example callback server that handles exchanging the authorization code on a callback
 
 // Make sure to set 'http://localhost:3001' as redirect_uri for your API client
@@ -19,8 +20,7 @@ const run = async () => {
       ${JSON.stringify(result, null, 2)}
     `)
   })
-
-  app.listen(3001, () => console.log("Example callback server listening on 3001"))
+  app.listen(port, () => console.log(`Example callback server listening on ${port}`))
 }
 
 run()
