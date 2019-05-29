@@ -1,3 +1,4 @@
+/* eslint-disable max-statements*/
 const express = require("express")
 const bodyParser = require("body-parser")
 const Moneyhub = require("../../src")
@@ -34,20 +35,41 @@ const start = async () => {
   })
 
   app.get("/pay/:payeeId/:bankId", async (req, res) => {
-    try {
-      const url = await moneyhub.getPaymentAuthorizeUrl({
-        bankId: req.params.bankId,
-        payeeId: req.params.payeeId,
-        amount: 100,
-        payeeRef: "payee ref 123",
-        payerRef: "payer ref 546",
-        state: "foo",
-      })
-      res.redirect(url)
-    } catch (e) {
-      res.send(e)
-    }
+
+    res.send(`
+      <html>
+      <body>
+      <h4>Send payment</h4>
+      <form method="POST" action="/pay/${req.params.payeeId}/${req.params.bankId}">
+        <input type="text" minlength="1" maxlength="100" required name="amount" value="100" /><br />
+        <input type="text" maxlength="200" required name="payeeRef" value="Payee ref 123" /><br />
+        <input type="text" maxlength="200" required name="payerRef" value="Payer ref 456" /><br />
+        <button type="submit">Submit payment</button>
+      </form>
+  `)
+
   })
+
+  app.post("/pay/:payeeId/:bankId",
+    bodyParser.urlencoded({extended: false}),
+    bodyParser.json(),
+    async (req, res) => {
+      const {amount, payeeRef, payerRef} = req.body
+      const {bankId, payeeId} = req.params
+      try {
+        const url = await moneyhub.getPaymentAuthorizeUrl({
+          bankId,
+          payeeId,
+          amount: parseInt(amount, 10),
+          payeeRef,
+          payerRef,
+          state: "foo",
+        })
+        res.redirect(url)
+      } catch (e) {
+        res.send(e)
+      }
+    })
 
   app.get("/add-payee", (req, res) =>
     res.send(`
