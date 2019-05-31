@@ -4,7 +4,7 @@ const Moneyhub = require("../../src")
 
 const config = require("../config")
 const LOCAL_IDENTITY_URL = "http://identity.dev.127.0.0.1.nip.io/oidc"
-const LOCAL_ACCOUNT_CONNECT_URL = "http://bankchooser.dev.127.0.0.1.nip.io/account-connect.js" // Bank chooser
+const LOCAL_ACCOUNT_CONNECT_URL = "http://localhost:8080/account-connect.js" // Bank chooser
 const LOCAL_REDIRECT_URI = "http://localhost:3001"
 
 // Make sure to set 'http://localhost:3001' as redirect_uri for your API client
@@ -21,10 +21,11 @@ const run = async () => {
   const {
     identityServiceUrl = LOCAL_IDENTITY_URL,
     accountConnectUrl = LOCAL_ACCOUNT_CONNECT_URL,
-    client: {
-      client_id: clientId,
-      redirect_uri = LOCAL_REDIRECT_URI,
-    },
+    accountConnectJsUrl = LOCAL_ACCOUNT_CONNECT_URL.replace(
+      "connect.js",
+      "connect-js.js"
+    ),
+    client: {client_id: clientId, redirect_uri = LOCAL_REDIRECT_URI},
   } = config
   const moneyhub = await Moneyhub(config)
   const app = express()
@@ -48,6 +49,33 @@ const run = async () => {
     data-identityuri="${identityUrl}"
     src="${accountConnectUrl}"></script>
 
+    `)
+  })
+
+  app.get("/dynamic", (req, res) => {
+    const {userId = DEFAULT_USER_ID} = req.query || {}
+
+    res.send(`
+    <html>
+    <head>
+      <script src="${accountConnectJsUrl}"></script>
+    </head>
+    <body>
+    <h3>Example page</h3>
+    <p>Widget should appear below here:</p>
+    <div id="test"></div>
+    <script>
+      window.moneyhubAccountConnectWidget(document.querySelectorAll("#test")[0], {
+        clientid:"${clientId}",
+        redirecturi:"${redirect_uri}",
+        userid:"${userId}",
+        posturi:"/result",
+        finishuri:"/finish",
+        type:"test",
+        identityuri:"${identityUrl}"
+      })
+    </script>
+    
     `)
   })
 
