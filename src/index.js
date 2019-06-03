@@ -56,7 +56,12 @@ module.exports = async ({
       return client.requestObject(authParams)
     },
 
-    createJWKS: async ({keyAlg = "RSA", keySize = 2048, keyUse = "sig", alg = "RS256"}) => {
+    createJWKS: async ({
+      keyAlg = "RSA",
+      keySize = 2048,
+      keyUse = "sig",
+      alg = "RS256",
+    }) => {
       const keystore = JWK.createKeyStore()
       await keystore.generate(keyAlg, keySize, {use: keyUse})
       const public = keystore.toJSON()
@@ -225,7 +230,6 @@ module.exports = async ({
       nonce,
       claims = {},
     }) => {
-
       const scope = `payment openid id:${bankId}`
       const defaultClaims = {
         id_token: {
@@ -246,7 +250,12 @@ module.exports = async ({
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const request = await moneyhub.requestObject({scope, state, claims: _claims, nonce})
+      const request = await moneyhub.requestObject({
+        scope,
+        state,
+        claims: _claims,
+        nonce,
+      })
       const requestUri = await moneyhub.getRequestUri(request)
       const url = moneyhub.getAuthorizeUrlFromRequestUri({
         request_uri: requestUri,
@@ -283,21 +292,15 @@ module.exports = async ({
       })
       return moneyhub.registerUserWithToken(id, access_token)
     },
-    getUserConnections: async (userId) => {
+    getUserConnections: async userId => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "user:read",
       })
-      return moneyhub.getUserConnectionsWithToken(
-        userId,
-        access_token
-      )
+      return moneyhub.getUserConnectionsWithToken(userId, access_token)
     },
     getUserConnectionsWithToken: async (userId, token) => {
       return got.get(
-        identityServiceUrl.replace(
-          "oidc",
-          `users/${userId}/connections`
-        ),
+        identityServiceUrl.replace("oidc", `users/${userId}/connections`),
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -330,28 +333,19 @@ module.exports = async ({
         }
       )
     },
-    deleteUser: async (userId) => {
+    deleteUser: async userId => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "user:delete",
       })
-      return moneyhub.deleteUserWithToken(
-        userId,
-        access_token
-      )
+      return moneyhub.deleteUserWithToken(userId, access_token)
     },
     deleteUserWithToken: async (userId, token) => {
-      return got.delete(
-        identityServiceUrl.replace(
-          "oidc",
-          `users/${userId}`
-        ),
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-          json: true,
-        }
-      )
+      return got.delete(identityServiceUrl.replace("oidc", `users/${userId}`), {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        json: true,
+      })
     },
     getUsers: async (params = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
@@ -386,9 +380,11 @@ module.exports = async ({
         sub: userId,
       })
 
-      const url = `${resourceServerUrl}/accounts?${querystring.stringify(params)}`
+      const url = `${resourceServerUrl}/accounts?${querystring.stringify(
+        params
+      )}`
 
-      return  got(url, {
+      return got(url, {
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
@@ -421,7 +417,9 @@ module.exports = async ({
         sub: userId,
       })
 
-      const url = `${resourceServerUrl}/transactions?${querystring.stringify(params)}`
+      const url = `${resourceServerUrl}/transactions?${querystring.stringify(
+        params
+      )}`
 
       return got(url, {
         headers: {
@@ -431,12 +429,15 @@ module.exports = async ({
       }).then(R.prop("body"))
     },
     getTransactionsWithToken: (token, params = {}) =>
-      got(`${resourceServerUrl}/transactions?${querystring.stringify(params)}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        json: true,
-      }).then(R.prop("body")),
+      got(
+        `${resourceServerUrl}/transactions?${querystring.stringify(params)}`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+          json: true,
+        }
+      ).then(R.prop("body")),
 
     addPayee: async ({accountNumber, sortCode, name}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
@@ -488,14 +489,11 @@ module.exports = async ({
       }).then(R.prop("body"))
     },
 
-    getPayment: async (id) => {
+    getPayment: async id => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "payment:read",
       })
-      const url = `${identityServiceUrl.replace(
-        "oidc",
-        "payments"
-      )}/${id}`
+      const url = `${identityServiceUrl.replace("oidc", "payments")}/${id}`
 
       return got(url, {
         headers: {
