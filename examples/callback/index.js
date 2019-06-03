@@ -2,6 +2,8 @@ const express = require("express")
 const Moneyhub = require("../../src")
 
 const config = require("../config")
+const {DEFAULT_NONCE} = require("../constants")
+
 const port = 3001
 // Example callback server that handles exchanging the authorization code on a callback
 
@@ -14,13 +16,18 @@ const run = async () => {
   app.get("/", async (req, res) => {
     const data = req.query
     console.log(JSON.stringify(data, null, 2))
-    const result = await moneyhub.exchangeCodeForTokens(data)
+    const result = await moneyhub.exchangeCodeForTokens({
+      ...data,
+      nonce: DEFAULT_NONCE,
+    })
     console.log(result)
     res.send(`
       ${JSON.stringify(result, null, 2)}
     `)
   })
-  app.listen(port, () => console.log(`Example callback server listening on ${port}`))
+  app.listen(port, () =>
+    console.log(`Example callback server listening on ${port}`)
+  )
 }
 
 run()
