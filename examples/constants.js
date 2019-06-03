@@ -1,7 +1,7 @@
 const DEFAULT_DATA_SCOPES_USE_CASE_1 =
-"accounts:read transactions:read:all categories:read categories:write spending_goals:read savings_goals:read"
+  "accounts:read transactions:read:all categories:read categories:write spending_goals:read savings_goals:read"
 const DEFAULT_DATA_SCOPES_USE_CASE_2 =
-"accounts:read accounts:write:all transactions:read:all transactions:write:all categories:read categories:write spending_goals:read spending_goals:write:all savings_goals:read savings_goals:write:all spending_analysis:read"
+  "accounts:read accounts:write:all transactions:read:all transactions:write:all categories:read categories:write spending_goals:read spending_goals:write:all savings_goals:read savings_goals:write:all spending_analysis:read"
 
 const BANK_IDS = {
   ALL: "all",
@@ -13,7 +13,7 @@ const BANK_IDS = {
   MODELO_OPEN_BANKING_TEST: "b74f1a79f0be8bdb857d82d0f041d7d2",
   MONEYHUB_OPEN_BANKING_TEST: "1ffe704d39629a929c8e293880fb449a",
 }
-const DEFAULT_BANK_ID = BANK_IDS.MODELO_OPEN_BANKING_TEST
+const DEFAULT_BANK_ID = BANK_IDS.MONEYHUB_OPEN_BANKING_TEST
 const DEFAULT_STATE = "foo"
 const DEFAULT_NONCE = "bar"
 
