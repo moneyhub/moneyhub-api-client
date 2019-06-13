@@ -69,6 +69,7 @@ const run = async () => {
         clientid:"${clientId}",
         redirecturi:"${redirect_uri}",
         userid:"${userId}",
+        meta: "test-meta-value",
         posturi:"/result",
         finishuri:"/finish",
         type:"test",
@@ -91,7 +92,10 @@ const run = async () => {
     console.log(data)
     const tokens = await moneyhub.exchangeCodeForTokens(data)
     console.log(tokens)
-    res.send("OK")
+    setTimeout(() => {
+      res.send("OK")
+      console.log("sent")
+    }, 20 * 1000)
   })
 
   app.listen(3001, () => console.log("Example widget server listening on 3001"))
