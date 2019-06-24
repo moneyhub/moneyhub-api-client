@@ -391,6 +391,7 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body"))
     },
+
     getAccountsWithToken: (token, params = {}) =>
       got(`${resourceServerUrl}/accounts?${querystring.stringify(params)}`, {
         headers: {
@@ -411,6 +412,13 @@ module.exports = async ({
         json: true,
       }).then(R.prop("body"))
     },
+    getAccountWithToken: (token, accountId) =>
+      got(`${resourceServerUrl}/accounts/${accountId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        json: true,
+      }).then(R.prop("body")),
     getTransactions: async (userId, params = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "transactions:read:all",
