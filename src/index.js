@@ -480,6 +480,20 @@ module.exports = async ({
       }).then(R.prop("body"))
     },
 
+    getPayee: async id => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "payee:read",
+      })
+      const url = `${identityServiceUrl.replace("oidc", "payees")}/${id}`
+
+      return got(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+
     getPayments: async (params = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "payment:read",
