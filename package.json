@@ -18,17 +18,17 @@
   "repository": "moneyhub/moneyhub-api-client",
   "license": "ISC",
   "dependencies": {
-    "got": "^9.0.0",
-    "node-jose": "^1.1.0",
-    "openid-client": "^2.2.1",
+    "got": "^9.6.0",
+    "node-jose": "^1.1.3",
+    "openid-client": "^2.5.0",
     "ramda": "^0.25.0"
   },
   "devDependencies": {
     "@mft/eslint-config-momentumft": "^4.0.0",
-    "body-parser": "^1.18.3",
+    "body-parser": "^1.19.0",
     "command-line-args": "^5.1.1",
     "command-line-usage": "^5.0.5",
-    "eslint": "^5.5.0",
-    "express": "^4.16.4"
+    "eslint": "^5.16.0",
+    "express": "^4.17.1"
   }
 }
