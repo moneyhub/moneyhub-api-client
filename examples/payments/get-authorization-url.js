@@ -2,24 +2,46 @@ const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
 const Moneyhub = require("../../src/index")
 const config = require("../config")
-const {BANK_IDS} = require("../constants")
+const {BANK_IDS, DEFAULT_NONCE, DEFAULT_STATE} = require("../constants")
 
 const optionDefinitions = [
-  {name: "bank-id", alias: "b", defaultValue: BANK_IDS.MODELO_OPEN_BANKING_TEST, type: String, description: "required"},
+  {
+    name: "bank-id",
+    alias: "b",
+    defaultValue: BANK_IDS.MONEYHUB_OPEN_BANKING_TEST,
+    type: String,
+    description: "required",
+  },
   {name: "payee-id", alias: "p", type: String, description: "required"},
   {name: "amount", alias: "a", defaultValue: 100, description: "required"},
-  {name: "payee-ref", alias: "e", defaultValue: "Payee ref", type: String, description: "required"},
-  {name: "payer-ref", alias: "r", defaultValue: "Payer ref", type: String, description: "required"},
-  {name: "state", alias: "s", defaultValue: "foobar", type: String, description: "required"},
-  {name: "nonce", alias: "n", type: String},
+  {
+    name: "payee-ref",
+    alias: "e",
+    defaultValue: "Payee ref",
+    type: String,
+    description: "required",
+  },
+  {
+    name: "payer-ref",
+    alias: "r",
+    defaultValue: "Payer ref",
+    type: String,
+    description: "required",
+  },
+  {
+    name: "state",
+    alias: "s",
+    defaultValue: DEFAULT_STATE,
+    type: String,
+    description: "required",
+  },
+  {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
 ]
 
-const usage = commandLineUsage(
-  {
-    header: "Options",
-    optionList: optionDefinitions,
-  }
-)
+const usage = commandLineUsage({
+  header: "Options",
+  optionList: optionDefinitions,
+})
 const options = commandLineArgs(optionDefinitions)
 
 console.log(usage)
