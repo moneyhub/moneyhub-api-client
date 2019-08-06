@@ -3,8 +3,9 @@ const express = require("express")
 const bodyParser = require("body-parser")
 const Moneyhub = require("../../src")
 const config = require("../config")
+const {DEFAULT_STATE, DEFAULT_NONCE} = require("../constants")
 
-const getBanks = async (moneyhub) => {
+const getBanks = async moneyhub => {
   const banks = await moneyhub.listAPIConnections()
   const testBanks = await moneyhub.listTestConnections()
   return banks.concat(testBanks)
@@ -35,22 +36,23 @@ const start = async () => {
   })
 
   app.get("/pay/:payeeId/:bankId", async (req, res) => {
-
     res.send(`
       <html>
       <body>
       <h4>Send payment</h4>
-      <form method="POST" action="/pay/${req.params.payeeId}/${req.params.bankId}">
+      <form method="POST" action="/pay/${req.params.payeeId}/${
+  req.params.bankId
+}">
         <input type="text" minlength="1" maxlength="100" required name="amount" value="100" /><br />
         <input type="text" maxlength="200" required name="payeeRef" value="Payee ref 123" /><br />
         <input type="text" maxlength="200" required name="payerRef" value="Payer ref 456" /><br />
         <button type="submit">Submit payment</button>
       </form>
   `)
-
   })
 
-  app.post("/pay/:payeeId/:bankId",
+  app.post(
+    "/pay/:payeeId/:bankId",
     bodyParser.urlencoded({extended: false}),
     bodyParser.json(),
     async (req, res) => {
@@ -63,13 +65,15 @@ const start = async () => {
           amount: parseInt(amount, 10),
           payeeRef,
           payerRef,
-          state: "foo",
+          state: DEFAULT_STATE,
+          nonce: DEFAULT_NONCE,
         })
         res.redirect(url)
       } catch (e) {
         res.send(e)
       }
-    })
+    }
+  )
 
   app.get("/add-payee", (req, res) =>
     res.send(`
@@ -135,7 +139,7 @@ const start = async () => {
 
   app.get("/data/:id", async (req, res) => {
     const url = await moneyhub.getAuthorizeUrl({
-      state: "foobar",
+      state: DEFAULT_STATE,
       scope: `openid offline_access id:${
         req.params.id
       } accounts:read transactions:read:all`,
@@ -144,10 +148,11 @@ const start = async () => {
   })
 
   app.get("/auth/callback", async (req, res) => {
-    console.log("got code", req.query.code)
+    const data = req.query
+    console.log("got code,state,id_token", data)
     const tokens = await moneyhub.exchangeCodeForTokens({
-      state: "foobar",
-      code: req.query.code,
+      ...data,
+      nonce: DEFAULT_NONCE,
     })
     res.json({tokens, claims: tokens.claims})
   })
