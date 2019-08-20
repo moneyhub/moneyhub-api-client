@@ -18,7 +18,7 @@ This is an Node.JS client for the [Moneyhub API](https://moneyhub.github.io/api-
 - Add Payees
 - Get Payees and payments
 
-Currently this library supports `client_secret_basic`,  `client_secret_jwt` and `private_key_jwt` authentication.
+Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
 
 ### Prerequisites
 
@@ -73,7 +73,6 @@ const url = await moneyhub.createJWKS({
   keyUse, // default 'sig'
   alg, // default 'RS256'
 })
-
 ```
 
 ### Auth API
@@ -88,7 +87,6 @@ This method returns an authorize url for your API client. You can redirect a use
 
 [Bank ids](https://moneyhub.github.io/api-docs/#bank-connections)
 
-
 ```javascript
 const url = await moneyhub.getAuthorizeUrl({
   scope: "openid bank-id-scope other-data-scopes",
@@ -100,7 +98,7 @@ const url = await moneyhub.getAuthorizeUrl({
 // Default claims if none are provided
 const defaultClaims = {
   id_token: {
-    "sub": {
+    sub: {
       essential: true,
     },
     "mh:con_id": {
@@ -131,7 +129,7 @@ const scope = `id:${bankId} openid`
 // Default claims if none are provided
 const defaultClaims = {
   id_token: {
-    "sub": {
+    sub: {
       essential: true,
       value: userId, // userId provided
     },
@@ -332,6 +330,22 @@ Get a single account for a user by the accountId. This function uses the scope `
 const account = await moneyhub.getAccount("userId", "accountId")
 ```
 
+#### `getAccountHoldingsWithToken`
+
+Get account holdings for a user. This call requires an access token with the `accounts:read` scope.
+
+```javascript
+const accounts = await moneyhub.getAccountsWithToken("access.token")
+```
+
+### `getAccountHoldings`
+
+Get account holdings for a user. This function uses the scope `accounts:read`.
+
+```javascript
+const account = await moneyhub.getAccount("userId", "accountId")
+```
+
 #### `getTransactions`
 
 Get all transactions for a user. This function uses the scope `transactions:read:all`..
@@ -349,13 +363,11 @@ Get all transactions for a user. This call requires an access token with a scope
 const accounts = await moneyhub.getTransactionsWithToken("access.token")
 ```
 
-
 ### Payments
 
 #### `getPaymentAuthorizeUrl`
 
 This is a helper function that returns an authorize url to authorize a payment to the payee with the bank selected. This function uses the following scope with the value of the bankId provided `payment openid id:${bankId}`. It also requires the authentication to be `client_secret_jwt` or `private_key_jwt`.
-
 
 ```javascript
 const url = await moneyhub.getPaymentAuthorizeUrl({
