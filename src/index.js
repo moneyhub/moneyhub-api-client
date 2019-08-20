@@ -84,9 +84,7 @@ module.exports = async ({
     },
 
     getAuthorizeUrlFromRequestUri: ({request_uri}) => {
-      return `${
-        client.issuer.authorization_endpoint
-      }?request_uri=${request_uri}`
+      return `${client.issuer.authorization_endpoint}?request_uri=${request_uri}`
     },
 
     getAuthorizeUrl: ({state, scope, nonce, claims = {}}) => {
@@ -414,6 +412,25 @@ module.exports = async ({
     },
     getAccountWithToken: (token, accountId) =>
       got(`${resourceServerUrl}/accounts/${accountId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        json: true,
+      }).then(R.prop("body")),
+    getAccountHoldings: async (userId, accountId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "accounts:read",
+        sub: userId,
+      })
+      return got(`${resourceServerUrl}/accounts/${accountId}/holdings`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+    getAccountHoldingsWithToken: (token, accountId) =>
+      got(`${resourceServerUrl}/accounts/${accountId}/holdings`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
