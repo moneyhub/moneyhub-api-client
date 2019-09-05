@@ -11,6 +11,7 @@ const optionDefinitions = [
   {name: "connectionId", alias: "c", type: String, description: "required"},
   {name: "state", alias: "s", defaultValue: DEFAULT_STATE, type: String},
   {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
+  {name: "claims", alias: "c", type: String},
 ]
 
 const usage = commandLineUsage(
@@ -23,6 +24,7 @@ console.log(usage)
 
 const options = commandLineArgs(optionDefinitions)
 const {userId, state, connectionId, nonce} = options
+const claims = options.claims && JSON.parse(options.claims)
 
 if (!userId || !connectionId) throw new Error("UserId and connectionId needs to be provided")
 
@@ -35,6 +37,7 @@ const start = async () => {
       state,
       nonce,
       connectionId,
+      claims,
     })
     console.log(data)
 

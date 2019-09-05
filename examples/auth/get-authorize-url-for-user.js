@@ -11,6 +11,7 @@ const optionDefinitions = [
   {name: "state", alias: "s", defaultValue: DEFAULT_STATE, type: String},
   {name: "bankId", alias: "b", defaultValue: DEFAULT_BANK_ID, type: String},
   {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
+  {name: "claims", alias: "c", type: String},
 ]
 
 const usage = commandLineUsage(
@@ -25,6 +26,7 @@ const options = commandLineArgs(optionDefinitions)
 const {userId, state, bankId, nonce} = options
 
 if (!userId) throw new Error("userId is required")
+const claims = options.claims && JSON.parse(options.claims)
 
 const start = async () => {
   try {
@@ -36,6 +38,7 @@ const start = async () => {
       state,
       bankId,
       nonce,
+      claims,
     })
     console.log(data)
 
