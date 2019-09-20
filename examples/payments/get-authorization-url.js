@@ -9,6 +9,7 @@ const optionDefinitions = [
     name: "bank-id",
     alias: "b",
     defaultValue: BANK_IDS.MONEYHUB_OPEN_BANKING_TEST,
+    // defaultValue: BANK_IDS.MODELO_OPEN_BANKING_TEST,
     type: String,
     description: "required",
   },

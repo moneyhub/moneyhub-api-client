@@ -5,16 +5,14 @@ const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
 
 const optionDefinitions = [
-  {name: "limit", alias: "l", type: Number},
-  {name: "offset", alias: "o", type: Number},
+  {name: "limit", alias: "l", type: Number, defaultValue: 10},
+  {name: "offset", alias: "o", type: Number, defaultValue: 0},
 ]
 
-const usage = commandLineUsage(
-  {
-    header: "Options",
-    optionList: optionDefinitions,
-  }
-)
+const usage = commandLineUsage({
+  header: "Options",
+  optionList: optionDefinitions,
+})
 
 console.log(usage)
 
