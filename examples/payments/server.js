@@ -5,6 +5,9 @@ const Moneyhub = require("../../src")
 const config = require("../config")
 const {DEFAULT_STATE, DEFAULT_NONCE} = require("../constants")
 
+// API CLIENT SHOULD HAVE THE REDIRECT URL SET TO:
+// 'http://localhost:3001/auth/callback'
+
 const getBanks = async moneyhub => {
   const banks = await moneyhub.listAPIConnections()
   const testBanks = await moneyhub.listTestConnections()
@@ -20,7 +23,7 @@ const start = async () => {
   app.get("/keys", (req, res) => res.json(moneyhub.keys()))
 
   app.get("/payees", async (req, res) => {
-    const payees = await moneyhub.getPayees()
+    const {data: payees} = await moneyhub.getPayees()
     res.send(`
     <h3>Payees</h3>
   <ul>
@@ -40,9 +43,7 @@ const start = async () => {
       <html>
       <body>
       <h4>Send payment</h4>
-      <form method="POST" action="/pay/${req.params.payeeId}/${
-  req.params.bankId
-}">
+      <form method="POST" action="/pay/${req.params.payeeId}/${req.params.bankId}">
         <input type="text" minlength="1" maxlength="100" required name="amount" value="100" /><br />
         <input type="text" maxlength="200" required name="payeeRef" value="Payee ref 123" /><br />
         <input type="text" maxlength="200" required name="payerRef" value="Payer ref 456" /><br />
@@ -104,9 +105,7 @@ const start = async () => {
   ${banks
     .map(
       ({id, name}) =>
-        `<li><a href="/pay/${
-          req.params.payeeId
-        }/${id}">Pay with ${name}</a></li>`
+        `<li><a href="/pay/${req.params.payeeId}/${id}">Pay with ${name}</a></li>`
     )
     .join("")}
   </ul>
@@ -123,7 +122,7 @@ const start = async () => {
   )
 
   app.get("/payments", async (req, res) => {
-    const payments = await moneyhub.getPayments()
+    const {data: payments} = await moneyhub.getPayments()
     res.json(payments)
   })
 
@@ -140,9 +139,7 @@ const start = async () => {
   app.get("/data/:id", async (req, res) => {
     const url = await moneyhub.getAuthorizeUrl({
       state: DEFAULT_STATE,
-      scope: `openid offline_access id:${
-        req.params.id
-      } accounts:read transactions:read:all`,
+      scope: `openid offline_access id:${req.params.id} accounts:read transactions:read:all`,
     })
     res.send(`<a href=${url}>Click me</a>`)
   })
