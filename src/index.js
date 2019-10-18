@@ -422,12 +422,45 @@ module.exports = async ({
         scope: "accounts:read",
         sub: userId,
       })
-      return got(`${resourceServerUrl}/accounts/${accountId}/holdings`, {
-        headers: {
-          Authorization: `Bearer ${access_token}`,
-        },
-        json: true,
-      }).then(R.prop("body"))
+      return got(
+        `${resourceServerUrl}/accounts/${accountId}/holdings`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+          json: true,
+        }
+      ).then(R.prop("body"))
+    },
+    getAccountHoldingsWithMatches: async (userId, accountId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "accounts:read",
+        sub: userId,
+      })
+      return got(
+        `${resourceServerUrl}/accounts/${accountId}/holdings-with-matches`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+          json: true,
+        }
+      ).then(R.prop("body"))
+    },
+    getAccountHolding: async (userId, accountId, holdingId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "accounts:read",
+        sub: userId,
+      })
+      return got(
+        `${resourceServerUrl}/accounts/${accountId}/holdings/${holdingId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+          json: true,
+        }
+      ).then(R.prop("body"))
     },
     getAccountHoldingsWithToken: (token, accountId) =>
       got(`${resourceServerUrl}/accounts/${accountId}/holdings`, {
