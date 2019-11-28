@@ -335,7 +335,7 @@ const account = await moneyhub.getAccount("userId", "accountId")
 Get account holdings for a user. This call requires an access token with the `accounts:read` scope.
 
 ```javascript
-const accounts = await moneyhub.getAccountsWithToken("access.token")
+const accounts = await moneyhub.getAccountHoldingsWithToken("access.token", "accountId)
 ```
 
 ### `getAccountHoldings`
@@ -343,7 +343,15 @@ const accounts = await moneyhub.getAccountsWithToken("access.token")
 Get account holdings for a user. This function uses the scope `accounts:read`.
 
 ```javascript
-const account = await moneyhub.getAccount("userId", "accountId")
+const account = await moneyhub.getAccountHoldings("userId", "accountId")
+```
+
+### `getAccountHoldingsWithMatches`
+
+Get account holdings with ISIN codes matchers for a user. This function uses the scope `accounts:read`.
+
+```javascript
+const account = await moneyhub.getAccountHoldingsWithMatches("userId", "accountId")
 ```
 
 #### `getTransactions`
