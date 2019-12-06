@@ -2,14 +2,13 @@ const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
 const Moneyhub = require("../../src/index")
 const config = require("../config")
-const {BANK_IDS, DEFAULT_NONCE, DEFAULT_STATE} = require("../constants")
+const {DEFAULT_NONCE, DEFAULT_STATE, DEFAULT_BANK_ID} = require("../constants")
 
 const optionDefinitions = [
   {
     name: "bank-id",
     alias: "b",
-    defaultValue: BANK_IDS.MONEYHUB_OPEN_BANKING_TEST,
-    // defaultValue: BANK_IDS.MODELO_OPEN_BANKING_TEST,
+    defaultValue: DEFAULT_BANK_ID,
     type: String,
     description: "required",
   },

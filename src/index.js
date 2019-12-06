@@ -422,15 +422,12 @@ module.exports = async ({
         scope: "accounts:read",
         sub: userId,
       })
-      return got(
-        `${resourceServerUrl}/accounts/${accountId}/holdings`,
-        {
-          headers: {
-            Authorization: `Bearer ${access_token}`,
-          },
-          json: true,
-        }
-      ).then(R.prop("body"))
+      return got(`${resourceServerUrl}/accounts/${accountId}/holdings`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
     },
     getAccountHoldingsWithMatches: async (userId, accountId) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
@@ -496,6 +493,46 @@ module.exports = async ({
           json: true,
         }
       ).then(R.prop("body")),
+
+    syncUserConnectionWithToken: async ({
+      accessToken,
+      connectionId,
+      customerIpAddress,
+      customerLastLoggedTime,
+    }) => {
+
+      const url = `${resourceServerUrl}/sync/${connectionId}`
+      const body = filterUndefined({customerIpAddress, customerLastLoggedTime})
+
+      return got
+        .post(url, {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+          body,
+          json: true,
+        })
+        .then(R.prop("body"))
+    },
+
+    syncUserConnection: async ({
+      userId,
+      connectionId,
+      customerIpAddress,
+      customerLastLoggedTime,
+    }) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "accounts:read accounts:write:all",
+        sub: userId,
+      })
+
+      return moneyhub.syncUserConnectionWithToken({
+        accessToken: access_token,
+        connectionId,
+        customerIpAddress,
+        customerLastLoggedTime,
+      })
+    },
 
     addPayee: async ({accountNumber, sortCode, name}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({

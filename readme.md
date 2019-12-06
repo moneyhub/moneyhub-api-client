@@ -283,6 +283,34 @@ Helper method that gets the correct client credentials access token and then get
 const user = await moneyhub.getUserConnections("user-id")
 ```
 
+
+#### `syncUserConnection`
+
+Sync an existing user connection. This process will fetch the latest balances and transactions of the accounts attached to the connection. This method only returns the status of the syncing.
+
+```javascript
+const tokens = await moneyhub.syncUserConnection({
+  userId,
+  connectionId,
+  customerIpAddress, // optional
+  customerLastLoggedTime, // optional
+})
+```
+
+#### `syncUserConnectionWithToken`
+
+Sync an existing user connection. This process will fetch the latest balances and transactions of the accounts attached to the connection. This method only returns the status of the syncing.
+This calls requires an access token with the `accounts:read` and one of `accounts:write` or `accounts:write:all` scopes.
+
+```javascript
+const tokens = await moneyhub.syncUserConnectionWithToken({
+  accessToken,
+  connectionId,
+  customerIpAddress, // optional
+  customerLastLoggedTime, // optional
+})
+```
+
 #### `deleteUserConnection`
 
 Helper method that gets the correct client credentials access token and then deletes a user connection.
