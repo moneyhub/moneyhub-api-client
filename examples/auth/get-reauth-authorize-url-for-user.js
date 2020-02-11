@@ -11,7 +11,7 @@ const optionDefinitions = [
   {name: "connectionId", alias: "c", type: String, description: "required"},
   {name: "state", alias: "s", defaultValue: DEFAULT_STATE, type: String},
   {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
-  {name: "claims", alias: "c", type: String},
+  {name: "claims", alias: "l", type: String},
 ]
 
 const usage = commandLineUsage(
