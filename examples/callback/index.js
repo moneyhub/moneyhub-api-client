@@ -16,6 +16,11 @@ const run = async () => {
   app.get("/", async (req, res) => {
     const data = req.query
     console.log(JSON.stringify(data, null, 2))
+    if (data.error)
+      return res.send(`
+      ${JSON.stringify(data, null, 2)}
+    `)
+
     const result = await moneyhub.exchangeCodeForTokens({
       ...data,
       nonce: DEFAULT_NONCE,
