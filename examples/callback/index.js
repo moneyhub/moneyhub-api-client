@@ -26,7 +26,7 @@ const run = async () => {
       nonce: DEFAULT_NONCE,
     })
     console.log(result)
-    res.send(`
+    return res.send(`
       ${JSON.stringify(result, null, 2)}
     `)
   })
