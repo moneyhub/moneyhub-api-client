@@ -37,6 +37,8 @@ module.exports = async ({
     keystore
   )
 
+  client.CLOCK_TOLERANCE = 10
+
   const moneyhub = {
     keys: () => keystore.toJSON(),
 
