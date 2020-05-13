@@ -3,6 +3,7 @@ const {JWK} = require("node-jose")
 const got = require("got")
 const R = require("ramda")
 const querystring = require("querystring")
+const exchangeCodeForTokensFactory = require("./exchange-code-for-token")
 
 Issuer.defaultHttpOptions = {timeout: 60000}
 
@@ -34,10 +35,15 @@ module.exports = async ({
       token_endpoint_auth_method,
       request_object_signing_alg,
     },
-    keystore
+    keystore,
   )
 
   client.CLOCK_TOLERANCE = 10
+
+  const exchangeCodeForTokens = exchangeCodeForTokensFactory({
+    client,
+    redirectUri: redirect_uri,
+  })
 
   const moneyhub = {
     keys: () => keystore.toJSON(),
@@ -263,12 +269,51 @@ module.exports = async ({
       return url
     },
 
-    exchangeCodeForTokens: ({state, code, nonce, id_token}) => {
+    exchangeCodeForTokensLegacy: ({state, code, nonce, id_token}) => {
       const verify = filterUndefined({state, nonce})
       const requestObj = filterUndefined({state, code, id_token, nonce})
       return client.authorizationCallback(redirect_uri, requestObj, verify)
     },
-    refreshTokens: refreshToken => client.refresh(refreshToken),
+
+    exchangeCodeForTokens: ({paramsFromCallback, localParams}) => {
+      if (!paramsFromCallback || !localParams) {
+        console.error(`Missing Parameters in exchangeCodeForTokens method. 
+        
+The signature for this method changed in v3. 
+The previous function is available at 'exchangeCodeForTokensLegacy'
+
+This function now requires an object with the following properties:
+
+{
+  paramsFromCallback: {
+    An object with all the params received at your redirect uri. 
+    The following properties are allowed:
+      "code",
+      "error",
+      "error_description",
+      "error_uri",
+      "id_token",
+      "state",
+      "session_state",
+  },
+  localParams: {
+    An object with params that you have in the local session for the user.
+    The following properties are supported:
+      "state", // required
+      "nonce", // required when using 'code id_token'
+      "sub", // optional, but without this param, requests where there are missing cookies will fail
+      "max_age", // optional
+      "response_type" // recommended
+      "code_verifier" // required for PKCE
+  }            
+}`
+        )
+        throw new Error("Missing parameters")
+      }
+      return exchangeCodeForTokens({paramsFromCallback, localParams})
+    },
+
+    refreshTokens: (refreshToken) => client.refresh(refreshToken),
 
     getClientCredentialTokens: ({scope, sub}) =>
       client.grant({

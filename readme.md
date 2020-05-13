@@ -196,8 +196,52 @@ const defaultClaims = {
 }
 ```
 
+#### `exchangeCodeForTokensLegacy`
+
+This is a legacy method to get tokens for a user. 
+After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
+
+```javascript
+const tokens = await moneyhub.exchangeCodeForTokens({
+  code: "the authorization code",
+  nonce: "your nonce value", // optional
+  state: "your state value", // optional
+  id_token: "your id token", // optional
+})
+```
+
 #### `exchangeCodeForTokens`
 
+After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this method to retrieve access, refresh and id tokens for the user.
+
+The signature for this method changed in v3. 
+The previous function is available at 'exchangeCodeForTokensLegacy'
+
+This method requires an object with two properties: 
+ - `paramsFromCallback` :  an object with all the params received at your redirect uri
+ - `localParams` : an object with params that you have in the local session for the user.
+
+```javascript
+const tokens = await moneyhub.exchangeCodeForTokens({
+  paramsFromCallback: {
+    "code": "the auth code",
+    "id_token": "the id_token", // when code id_token response type is used
+    "state": "state",
+  },
+  localParams: {
+    "state": "state", // this must be from the local session not the redirect uri
+    "nonce": "nonce", // this must be from the local session
+    "sub": "the user id", // optional, but without this param, requests where there are missing cookies will fail
+    "max_age", // optional, not normally required
+    "response_type" // recommended to enhance securirty
+    "code_verifier" // required if PKCE is used
+  }   
+})
+```
+
+#### `exchangeCodeForTokensLegacy`
+
+This is a legacy method to get tokens for a user. 
 After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
 
 ```javascript
