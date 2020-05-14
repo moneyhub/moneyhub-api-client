@@ -30,11 +30,11 @@ module.exports = ({client, redirectUri}) => ({paramsFromCallback, localParams}) 
     checks.max_age = client.default_max_age
 
   if (!params.state && checks.state) {
-    return Promise.reject(new Error("state missing from the response"))
+    return Promise.reject(new Error("paramsFromCallback.state is missing"))
   }
 
   if (params.state && !checks.state) {
-    return Promise.reject(new Error("checks.state argument is missing"))
+    return Promise.reject(new Error("localParams.state argument is missing"))
   }
 
   if (checks.state !== params.state) {
@@ -43,6 +43,10 @@ module.exports = ({client, redirectUri}) => ({paramsFromCallback, localParams}) 
 
   if (params.error) {
     return Promise.reject(new Error(params.error))
+  }
+
+  if (!params.code) {
+    return Promise.reject(new Error("paramsFromCallback.code is missing"))
   }
 
   if (checks.response_type) {
