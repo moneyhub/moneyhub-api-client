@@ -489,7 +489,7 @@ This method will add a Payee. This will return an id that it is
 required to be used as `payeeId` when initiating a payment. This function uses the scope `payee:create`
 
 ```javascript
-const tokens = await moneyhub.addPayee({
+const payee = await moneyhub.addPayee({
   accountNumber: "your account number",
   sortCode: "your sort code",
   name: "name of Payee",
@@ -501,7 +501,7 @@ const tokens = await moneyhub.addPayee({
 This method returns a list of registered payees. This function uses the scope `payee:read`
 
 ```javascript
-const tokens = await moneyhub.getPayees({
+const payees = await moneyhub.getPayees({
   limit: "limit", // optional
   offset: "offset", // optional
 })
@@ -512,7 +512,7 @@ const tokens = await moneyhub.getPayees({
 This method returns a list of initiated payments. This function uses the scope `payment:read`
 
 ```javascript
-const tokens = await moneyhub.getPayments({
+const payments = await moneyhub.getPayments({
   limit: "limit", // optional
   offset: "offset", // optional
 })
@@ -523,8 +523,19 @@ const tokens = await moneyhub.getPayments({
 Get a single payment by its id . This function uses the scope `payment:read`
 
 ```javascript
-const tokens = await moneyhub.getPayment("payment-id")
+const paymentData = await moneyhub.getPayment("payment-id")
 ```
+
+#### `getPaymentFromIDToken`
+
+When a payment flow is completed and you call `exchangeCodeForTokens` 
+you will receive back an ID Token that contains the payment id. This is a utility function to get the payment data using the id in the ID Token.
+
+```javascript
+const paymentData = await moneyhub.getPayment("eyJhbGciOiJSUz...")
+```
+
+
 
 ### Financial Connections
 

@@ -659,6 +659,16 @@ This function now requires an object with the following properties:
       }).then(R.prop("body"))
     },
 
+    getPaymentFromIDToken: async idToken => {
+      try {
+        const payload = JSON.parse(Buffer.from(idToken.split(".")[1], "base64").toString())
+        const paymentId = payload["mh:payment"]
+        return moneyhub.getPayment(paymentId)
+      } catch (e) {
+        throw new Error("Error retrieving payment from passed in ID Token: " + e.message)
+      }
+    },
+
     listConnections: () =>
       got(identityServiceUrl + "/.well-known/all-connections", {
         json: true,
