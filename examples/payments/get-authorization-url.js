@@ -13,6 +13,9 @@ const optionDefinitions = [
     description: "required",
   },
   {name: "payee-id", alias: "p", type: String, description: "required"},
+  {name: "payee-type", type: String},
+  {name: "payer-id", type: String},
+  {name: "payer-type", type: String},
   {name: "amount", alias: "a", defaultValue: 100, description: "required"},
   {
     name: "payee-ref",
@@ -54,11 +57,14 @@ const start = async () => {
     const url = await moneyhub.getPaymentAuthorizeUrl({
       bankId: options["bank-id"],
       payeeId: options["payee-id"],
+      payeeType: options["payee-type"],
       amount: options.amount,
       payeeRef: options["payee-ref"],
       payerRef: options["payer-ref"],
       state: options.state,
       nonce: options.nonce,
+      payerType: options["payer-type"],
+      payerId: options["payer-id"],
     })
 
     console.log(url)
