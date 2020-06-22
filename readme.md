@@ -198,7 +198,7 @@ const defaultClaims = {
 
 #### `exchangeCodeForTokensLegacy`
 
-This is a legacy method to get tokens for a user. 
+This is a legacy method to get tokens for a user.
 After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
 
 ```javascript
@@ -214,10 +214,10 @@ const tokens = await moneyhub.exchangeCodeForTokens({
 
 After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this method to retrieve access, refresh and id tokens for the user.
 
-The signature for this method changed in v3. 
+The signature for this method changed in v3.
 The previous function is available at 'exchangeCodeForTokensLegacy'
 
-This method requires an object with two properties: 
+This method requires an object with two properties:
  - `paramsFromCallback` :  an object with all the params received at your redirect uri
  - `localParams` : an object with params that you have in the local session for the user.
 
@@ -235,13 +235,13 @@ const tokens = await moneyhub.exchangeCodeForTokens({
     "max_age", // optional, not normally required
     "response_type" // recommended to enhance securirty
     "code_verifier" // required if PKCE is used
-  }   
+  }
 })
 ```
 
 #### `exchangeCodeForTokensLegacy`
 
-This is a legacy method to get tokens for a user. 
+This is a legacy method to get tokens for a user.
 After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
 
 ```javascript
@@ -452,7 +452,10 @@ This is a helper function that returns an authorize url to authorize a payment t
 ```javascript
 const url = await moneyhub.getPaymentAuthorizeUrl({
   bankId: "Bank id to authorise payment from",
-  payeeId: "Id of payee previously added"
+  payeeId: "Id of payee"
+  payeeType: "Payee type [api-payee|mh-user-account]" // optional - defaults to api-payee
+  payerId: "Id of payer" // optional
+  payerType: "Payer type [mh-user-account]" // optional
   amount: "Amount in pence to authorize payment"
   payeeRef: "Payee reference",
   payerRef: "Payer reference",
@@ -477,6 +480,9 @@ const defaultClaims = {
         payeeRef,
         payerRef,
         payeeId,
+        payeeType,
+        payerId,
+        payerType,
       },
     },
   },
@@ -528,7 +534,7 @@ const paymentData = await moneyhub.getPayment("payment-id")
 
 #### `getPaymentFromIDToken`
 
-When a payment flow is completed and you call `exchangeCodeForTokens` 
+When a payment flow is completed and you call `exchangeCodeForTokens`
 you will receive back an ID Token that contains the payment id. This is a utility function to get the payment data using the id in the ID Token.
 
 ```javascript
