@@ -452,11 +452,11 @@ This is a helper function that returns an authorize url to authorize a payment t
 ```javascript
 const url = await moneyhub.getPaymentAuthorizeUrl({
   bankId: "Bank id to authorise payment from",
-  payeeId: "Id of payee"
-  payeeType: "Payee type [api-payee|mh-user-account]" // optional - defaults to api-payee
-  payerId: "Id of payer" // optional
-  payerType: "Payer type [mh-user-account]" // optional
-  amount: "Amount in pence to authorize payment"
+  payeeId: "Id of payee",
+  payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
+  payerId: "Id of payer", // optional
+  payerType: "Payer type [mh-user-account]", // optional
+  amount: "Amount in pence to authorize payment",
   payeeRef: "Payee reference",
   payerRef: "Payer reference",
   state: "your state value", // optional
