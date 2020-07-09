@@ -261,13 +261,20 @@ module.exports = async ({
       }
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
-
+      console.log({
+        scope,
+        state,
+        claims: _claims,
+        nonce,
+      })
       const request = await moneyhub.requestObject({
         scope,
         state,
         claims: _claims,
         nonce,
       })
+
+      console.log(request)
       const requestUri = await moneyhub.getRequestUri(request)
       const url = moneyhub.getAuthorizeUrlFromRequestUri({
         request_uri: requestUri,
@@ -283,16 +290,16 @@ module.exports = async ({
 
     exchangeCodeForTokens: ({paramsFromCallback, localParams}) => {
       if (!paramsFromCallback || !localParams) {
-        console.error(`Missing Parameters in exchangeCodeForTokens method. 
-        
-The signature for this method changed in v3. 
+        console.error(`Missing Parameters in exchangeCodeForTokens method.
+
+The signature for this method changed in v3.
 The previous function is available at 'exchangeCodeForTokensLegacy'
 
 This function now requires an object with the following properties:
 
 {
   paramsFromCallback: {
-    An object with all the params received at your redirect uri. 
+    An object with all the params received at your redirect uri.
     The following properties are allowed:
       "code",
       "error",
@@ -311,7 +318,7 @@ This function now requires an object with the following properties:
       "max_age", // optional
       "response_type" // recommended
       "code_verifier" // required for PKCE
-  }            
+  }
 }`
         )
         throw new Error("Missing parameters")
@@ -519,6 +526,18 @@ This function now requires an object with the following properties:
         },
         json: true,
       }).then(R.prop("body")),
+    getAccountCounterparties: async (userId, accountId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "accounts:read transactions:read:all",
+        sub: userId,
+      })
+      return got(`${resourceServerUrl}/accounts/${accountId}/counterparties`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
     getTransactions: async (userId, params = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "transactions:read:all",
