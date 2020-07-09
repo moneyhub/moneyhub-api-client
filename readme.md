@@ -17,6 +17,7 @@ This is an Node.JS client for the [Moneyhub API](https://moneyhub.github.io/api-
 - Generate authorisation url for payments
 - Add Payees
 - Get Payees and payments
+- CRUD actions on projects
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
 
@@ -578,6 +579,60 @@ This method will resolve with our open id configuration.
 ```javascript
 const availableConnections = await moneyhub.getOpenIdConfig()
 ```
+
+### Projects
+
+#### `getProjects`
+
+This method returns a list of projects. This function uses the scope `projects:read`
+
+```javascript
+const projects = await moneyhub.getProjects("userId", {
+  limit: "limit", // optional
+  offset: "offset", // optional
+})
+```
+
+#### `getProject`
+
+Get a single project for a user by the projectId. This function uses the scope `projects:read`.
+
+```javascript
+const project = await moneyhub.getProject("userId", "projectId")
+```
+
+#### `addProject`
+
+Create a new project for a user. This function uses the scope `projects.write`. This will return the new project.
+
+```javascript
+const project = await moneyhub.addProject("userId", {
+  name: "Project Name",
+  accountIds: "id1,id2", // comma-separated list of account IDs
+  type: "PropertyProject",
+})
+```
+
+#### `updateProject`
+
+Update a project for a user. This function uses the scope `projects.write`. This will return the newly updated project.
+
+```javascript
+const project = await moneyhub.updateProject("userId", "projectId", {
+  name: "Updated Project Name",
+  accountIds: "id1,id2", // comma-separated list of account IDs
+  type: "PropertyProject",
+  archived: false,
+})
+```
+
+#### `deleteProject`
+Delete a project for a user given a project ID. This function uses the scope `projects.delete`.
+
+```javascript
+const result = await moneyhub.deleteProject("userId", "projectId")
+```
+
 
 ### Examples
 

@@ -675,6 +675,81 @@ This function now requires an object with the following properties:
       }
     },
 
+    getProjects: async (userId, params = {}) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "projects:read",
+        sub: userId,
+      })
+      const url = `${resourceServerUrl}/projects?${querystring.stringify(params)}`
+      return got(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+
+    getProject: async (userId, projectId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "projects:read",
+        sub: userId,
+      })
+      const url = `${resourceServerUrl}/projects/${projectId}`
+      return got(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+
+    addProject: async (userId, projectBody) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "projects:write",
+        sub: userId,
+      })
+
+      const url = `${resourceServerUrl}/projects`
+      return got.post(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        body: projectBody,
+        json: true,
+      }).then(R.prop("body"))
+    },
+
+    updateProject: async (userId, projectId, projectBody) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "projects:write",
+        sub: userId,
+      })
+
+      const url = `${resourceServerUrl}/projects/${projectId}`
+      return got.patch(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        body: projectBody,
+        json: true,
+      }).then(R.prop("body"))
+    },
+
+    deleteProject: async (userId, projectId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "projects:delete",
+        sub: userId,
+      })
+
+      const url = `${resourceServerUrl}/projects/${projectId}`
+      return got.delete(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("statusCode"))
+    },
+
     listConnections: () =>
       got(identityServiceUrl + "/.well-known/all-connections", {
         json: true,
