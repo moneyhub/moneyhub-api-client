@@ -3,6 +3,7 @@
 ==================
 
   * Add CRUD project actions
+  * Project ID query added to transaction end point
 
 3.2.0 / 2020-05-26
 ==================
