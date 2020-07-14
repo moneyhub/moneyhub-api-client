@@ -538,6 +538,18 @@ This function now requires an object with the following properties:
         json: true,
       }).then(R.prop("body"))
     },
+    getAccountRecurringTransactions: async (userId, accountId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "accounts:read transactions:read:all",
+        sub: userId,
+      })
+      return got.post(`${resourceServerUrl}/accounts/${accountId}/recurring-transactions`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
     getTransactions: async (userId, params = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "transactions:read:all",
