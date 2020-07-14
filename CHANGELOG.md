@@ -1,4 +1,10 @@
 
+3.5.0 / 2020-07-14
+==================
+
+  * Add getAccountCounterparties
+  * Add getAccountRecurringTransactions
+
 3.4.0 / 2020-07-09
 ==================
 

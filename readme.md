@@ -427,6 +427,22 @@ Get account holdings with ISIN codes matchers for a user. This function uses the
 const account = await moneyhub.getAccountHoldingsWithMatches("userId", "accountId")
 ```
 
+### `getAccountCounterparties`
+
+Get account counterparties for a user. This function uses the scope `accounts:read transactions:read`.
+
+```javascript
+const account = await moneyhub.getAccountCounterparties("userId", "accountId")
+```
+
+### `getAccountRecurringTransactions`
+
+Get account recurring transactions for a user. This function uses the scope `accounts:read transactions:read`.
+
+```javascript
+const account = await moneyhub.getAccountCounterparties("userId", "accountId")
+```
+
 #### `getTransactions`
 
 Get all transactions for a user. This function uses the scope `transactions:read:all`..
