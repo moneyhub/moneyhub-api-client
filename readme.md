@@ -440,7 +440,7 @@ const account = await moneyhub.getAccountCounterparties("userId", "accountId")
 Get account recurring transactions for a user. This function uses the scope `accounts:read transactions:read`.
 
 ```javascript
-const account = await moneyhub.getAccountCounterparties("userId", "accountId")
+const account = await moneyhub.getAccountRecurringTransactions("userId", "accountId")
 ```
 
 #### `getTransactions`
