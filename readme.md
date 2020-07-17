@@ -2,7 +2,7 @@
 
 ### Introduction
 
-This is an Node.JS client for the [Moneyhub API](https://moneyhub.github.io/api-docs). It currently supports the following features:
+This is an Node.JS client for the [Moneyhub API](https://www.notion.so/Moneyhub-API-Docs-26fa35dba2a64cf08116cbd6fe844488). It currently supports the following features:
 
 - Getting the list of supported banks
 - Registering users
