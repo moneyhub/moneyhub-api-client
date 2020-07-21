@@ -7,7 +7,7 @@ const optionDefinitions = [
   {name: "userId", alias: "u", type: String, description: "required"},
   {name: "name", alias: "n", type: String, description: "required"},
   {name: "type", alias: "t", type: String, description: "required"},
-  {name: "accountIds", alias: "a", type: String, description: "required"},
+  {name: "accountIds", alias: "a", type: String, description: "optional"},
 ]
 
 const usage = commandLineUsage(
@@ -25,7 +25,7 @@ const start = async () => {
 
     const result = await moneyhub.addProject(options.userId, {
       name: options.name,
-      accountIds: options.accountIds.split(","),
+      accountIds: options.accountIds && options.accountIds.split(","),
       type: options.type,
     })
 
