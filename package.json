@@ -20,6 +20,7 @@
   "repository": "moneyhub/moneyhub-api-client",
   "license": "ISC",
   "dependencies": {
+    "form-data": "^3.0.0",
     "got": "^9.6.0",
     "jose": "^1.27.0",
     "node-jose": "^1.1.3",
