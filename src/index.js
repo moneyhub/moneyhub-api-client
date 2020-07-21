@@ -4,6 +4,7 @@ const got = require("got")
 const R = require("ramda")
 const querystring = require("querystring")
 const exchangeCodeForTokensFactory = require("./exchange-code-for-token")
+const FormData = require("form-data")
 
 Issuer.defaultHttpOptions = {timeout: 60000}
 
@@ -773,6 +774,68 @@ This function now requires an object with the following properties:
       })
 
       const url = `${resourceServerUrl}/projects/${projectId}`
+      return got.delete(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("statusCode"))
+    },
+
+    addFileToTransaction: async (userId, transactionId, fileData) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "transactions:read:all transactions:write",
+        sub: userId,
+      })
+
+      const url = `${resourceServerUrl}/transactions/${transactionId}/files`
+      const form = new FormData()
+      form.append("file", fileData)
+      return got.post(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        body: form,
+      }).then(R.compose(JSON.parse, R.prop("body")))
+    },
+
+    getTransactionFiles: async (userId, transactionId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "transactions:read:all transactions:write",
+        sub: userId,
+      })
+
+      const url = `${resourceServerUrl}/transactions/${transactionId}/files`
+      return got.get(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+
+    getTransactionFile: async (userId, transactionId, fileId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "transactions:read:all transactions:write",
+        sub: userId,
+      })
+
+      const url = `${resourceServerUrl}/transactions/${transactionId}/files/${fileId}`
+      return got.get(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+
+    deleteTransactionFile: async (userId, transactionId, fileId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "transactions:read:all transactions:write",
+        sub: userId,
+      })
+
+      const url = `${resourceServerUrl}/transactions/${transactionId}/files/${fileId}`
       return got.delete(url, {
         headers: {
           Authorization: `Bearer ${access_token}`,

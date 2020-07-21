@@ -18,6 +18,7 @@ This is an Node.JS client for the [Moneyhub API](https://www.notion.so/Moneyhub-
 - Add Payees
 - Get Payees and payments
 - CRUD actions on projects
+- CRUD actions on transaction attachments
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
 
@@ -458,6 +459,38 @@ Get all transactions for a user. This call requires an access token with a scope
 
 ```javascript
 const accounts = await moneyhub.getTransactionsWithToken("access.token")
+```
+
+#### `addFileToTransaction`
+
+Add an attachment to a transaction. This call requires an access token with a scope that allows it to read and write transactions.
+
+```javascript
+const file = await money.addFileToTransaction("userId", "transactionId", fs.createReadStream("path/to/file.png"))
+```
+
+#### `getTransactionFiles`
+
+Get all attachments associated with a transaction. This call requires an access token with a scope that allows it to read transactions.
+
+```javascript
+const files = await money.getTransactionFiles("userId", "transactionId")
+```
+
+#### `getTransactionFile`
+
+Get an attachment associated with a transaction. This call requires an access token with a scope that allows it to read transactions.
+
+```javascript
+const files = await money.getTransactionFile("userId", "transactionId", "attachmentId")
+```
+
+#### `deleteTransactionFile`
+
+Delete an attachment associated with a transaction. This call requires an access token with a scope that allows it to read and write transactions.
+
+```javascript
+await money.deleteTransactionFile("userId", "transactionId", "attachmentId")
 ```
 
 ### Payments
