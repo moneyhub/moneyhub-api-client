@@ -463,7 +463,7 @@ const accounts = await moneyhub.getTransactionsWithToken("access.token")
 
 #### `addFileToTransaction`
 
-Add an attachment to a transaction. This call requires an access token with a scope that allows it to read and write transactions.
+Add an attachment to a transaction. This call requires an access token with a scope that allows it to read and write transactions. The third parameter must be a stream, and the size of the file being uploaded can be of max size 10MB.
 
 ```javascript
 const file = await money.addFileToTransaction("userId", "transactionId", fs.createReadStream("path/to/file.png"))
