@@ -240,6 +240,11 @@ module.exports = async ({
       nonce,
       claims = {},
     }) => {
+      if (!state) {
+        console.error("State is required")
+        throw new Error("Missing parameters")
+      }
+
       const scope = `payment openid id:${bankId}`
       const defaultClaims = {
         id_token: {
