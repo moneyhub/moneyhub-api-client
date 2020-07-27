@@ -245,6 +245,11 @@ module.exports = async ({
         throw new Error("Missing parameters")
       }
 
+      if (!payeeId) {
+        console.error("PayeeId is required")
+        throw new Error("Missing parameters")
+      }
+
       const scope = `payment openid id:${bankId}`
       const defaultClaims = {
         id_token: {
