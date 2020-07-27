@@ -493,6 +493,15 @@ Delete an attachment associated with a transaction. This call requires an access
 await money.deleteTransactionFile("userId", "transactionId", "attachmentId")
 ```
 
+#### `getGlobalCounterparties`
+
+Get global counterparties.
+
+```javascript
+
+const accounts = await moneyhub.getGlobalCounterparties()
+```
+
 ### Payments
 
 #### `getPaymentAuthorizeUrl`

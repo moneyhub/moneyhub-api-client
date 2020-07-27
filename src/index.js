@@ -854,6 +854,11 @@ This function now requires an object with the following properties:
       }).then(R.prop("statusCode"))
     },
 
+    getGlobalCounterparties: () =>
+      got(resourceServerUrl + "/global-counterparties", {
+        json: true,
+      }).then(R.prop("body")),
+
     listConnections: () =>
       got(identityServiceUrl + "/.well-known/all-connections", {
         json: true,

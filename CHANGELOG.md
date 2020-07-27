@@ -1,4 +1,9 @@
 
+3.7.0 / 2020-07-27
+==================
+
+* Add getGlobalCounterparties
+
 3.6.0 / 2020-07-21
 ==================
 
@@ -6,7 +11,7 @@
   * Add getTransactionFiles
   * Add getTransactionFile
   * Add deleteTransactionFile
-  
+
 3.5.0 / 2020-07-14
 ==================
 
