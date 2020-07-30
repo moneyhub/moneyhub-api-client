@@ -513,7 +513,7 @@ const url = await moneyhub.getPaymentAuthorizeUrl({
   bankId: "Bank id to authorise payment from",
   payeeId: "Id of payee",
   payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
-  payerId: "Id of payer", // optional
+  payerId: "Id of payer", // requird only if payerType is defined
   payerType: "Payer type [mh-user-account]", // required only if payerId is used
   amount: "Amount in pence to authorize payment",
   payeeRef: "Payee reference",
@@ -597,7 +597,7 @@ When a payment flow is completed and you call `exchangeCodeForTokens`
 you will receive back an ID Token that contains the payment id. This is a utility function to get the payment data using the id in the ID Token.
 
 ```javascript
-const paymentData = await moneyhub.getPayment("eyJhbGciOiJSUz...")
+const paymentData = await moneyhub.getPaymentFromIDToken("eyJhbGciOiJSUz...")
 ```
 
 
