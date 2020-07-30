@@ -25,6 +25,14 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
     const filePath = path.resolve(process.cwd(), options.filePath)
+    if (!fs.existsSync(filePath)) {
+      return console.log("File does not exist")
+    }
+
+    if (fs.lstatSync(filePath).isDirectory()) {
+      return console.log("Path provided is a directory, not a file")
+    }
+
     const fileData = fs.createReadStream(filePath)
     const result = await moneyhub.addFileToTransaction(options.userId, options.transactionId, fileData)
     console.log(JSON.stringify(result, null, 2))
