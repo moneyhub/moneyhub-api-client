@@ -26,11 +26,13 @@ const start = async () => {
     const moneyhub = await Moneyhub(config)
     const filePath = path.resolve(process.cwd(), options.filePath)
     if (!fs.existsSync(filePath)) {
-      return console.log("File does not exist")
+      console.log("File does not exist")
+      return
     }
 
     if (fs.lstatSync(filePath).isDirectory()) {
-      return console.log("Path provided is a directory, not a file")
+      console.log("Path provided is a directory, not a file")
+      return
     }
 
     const fileData = fs.createReadStream(filePath)
