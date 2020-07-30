@@ -493,6 +493,15 @@ Delete an attachment associated with a transaction. This call requires an access
 await money.deleteTransactionFile("userId", "transactionId", "attachmentId")
 ```
 
+#### `getGlobalCounterparties`
+
+Get global counterparties.
+
+```javascript
+
+const accounts = await moneyhub.getGlobalCounterparties()
+```
+
 ### Payments
 
 #### `getPaymentAuthorizeUrl`
@@ -505,11 +514,11 @@ const url = await moneyhub.getPaymentAuthorizeUrl({
   payeeId: "Id of payee",
   payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
   payerId: "Id of payer", // optional
-  payerType: "Payer type [mh-user-account]", // optional
+  payerType: "Payer type [mh-user-account]", // required only if payerId is used
   amount: "Amount in pence to authorize payment",
   payeeRef: "Payee reference",
   payerRef: "Payer reference",
-  state: "your state value", // optional
+  state: "your state value",
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
 })

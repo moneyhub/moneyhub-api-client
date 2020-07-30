@@ -240,6 +240,16 @@ module.exports = async ({
       nonce,
       claims = {},
     }) => {
+      if (!state) {
+        console.error("State is required")
+        throw new Error("Missing parameters")
+      }
+
+      if (!payeeId) {
+        console.error("PayeeId is required")
+        throw new Error("Missing parameters")
+      }
+
       const scope = `payment openid id:${bankId}`
       const defaultClaims = {
         id_token: {
@@ -843,6 +853,11 @@ This function now requires an object with the following properties:
         json: true,
       }).then(R.prop("statusCode"))
     },
+
+    getGlobalCounterparties: () =>
+      got(resourceServerUrl + "/global-counterparties", {
+        json: true,
+      }).then(R.prop("body")),
 
     listConnections: () =>
       got(identityServiceUrl + "/.well-known/all-connections", {
