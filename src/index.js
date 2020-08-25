@@ -854,6 +854,22 @@ This function now requires an object with the following properties:
       }).then(R.prop("statusCode"))
     },
 
+    getTaxReturn: async (userId, startDate, endDate, {accountId, projectId} = {}) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "tax:read",
+        sub: userId,
+      })
+
+      const query = R.reject(R.isNil)({startDate, endDate, accountId, projectId})
+      const url = `${resourceServerUrl}/tax?${querystring.stringify(query)}`
+      return got.get(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+
     getGlobalCounterparties: () =>
       got(resourceServerUrl + "/global-counterparties", {
         json: true,
