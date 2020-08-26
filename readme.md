@@ -19,6 +19,7 @@ This is an Node.JS client for the [Moneyhub API](https://www.notion.so/Moneyhub-
 - Get Payees and payments
 - CRUD actions on projects
 - CRUD actions on transaction attachments
+- Get a tax return for a subset of transactions
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
 
@@ -691,6 +692,17 @@ Delete a project for a user given a project ID. This function uses the scope `pr
 const result = await moneyhub.deleteProject("userId", "projectId")
 ```
 
+### Tax Return
+
+#### `getTaxReturn`
+Get a tax return object for a subset of transactions. This makes use of the `enhancedCategories` on transactions. This functions uses the scope `tax:read`
+
+```javascript
+const result = await moneyhub.getTaxReturn("userId", "2020-01-01", "2020-02-01", {
+  accountId: "accountId",
+  projectId: "projectId"
+})
+```
 
 ### Examples
 
