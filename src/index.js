@@ -1,3 +1,4 @@
+/* eslint-disable no-trailing-spaces */
 const {Issuer} = require("openid-client")
 const {JWK} = require("node-jose")
 const got = require("got")
@@ -868,6 +869,78 @@ This function now requires an object with the following properties:
         },
         json: true,
       }).then(R.prop("body"))
+    },
+    
+    completeAuthRequest: async ({id, authParams}) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "auth_requests:write",
+      })
+      return got
+        .patch(identityServiceUrl.replace("oidc", `auth-requests/${id}`), {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+          json: true,
+          body: {authParams},
+        })
+        .then(R.prop("body"))
+    },
+
+    getAuthRequest: async ({id}) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "auth_requests:read",
+      })
+      return got
+        .get(identityServiceUrl.replace("oidc", `auth-requests/${id}`), {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+          json: true,
+        })
+        .then(R.prop("body"))
+    },
+
+    getAllAuthRequests: async ({limit, offset}) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "auth_requests:read",
+      })
+      return got
+        .get(
+          identityServiceUrl.replace(
+            "oidc",
+            `auth-requests/?limit=${limit}&offset=${offset}`,
+          ),
+          {
+            headers: {
+              Authorization: `Bearer ${access_token}`,
+            },
+            json: true,
+          },
+        )
+        .then(R.prop("body"))
+    },
+
+    createAuthRequest: async ({
+      redirectUri,
+      payment,
+      userId,
+      connectionId,
+      categorisationType,
+      scope,
+    }) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "auth_requests:write",
+      })
+
+      return got
+        .post(identityServiceUrl.replace("oidc", "auth-requests"), {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+          },
+          json: true,
+          body: {redirectUri, payment, userId, connectionId, scope, categorisationType},
+        })
+        .then(R.prop("body"))
     },
 
     getGlobalCounterparties: () =>
