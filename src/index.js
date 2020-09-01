@@ -1,8 +1,8 @@
 /* eslint-disable no-trailing-spaces */
 const {Issuer} = require("openid-client")
-const {JWK} = require("node-jose")
 const got = require("got")
 const R = require("ramda")
+const { JWKS } = require('jose')
 const querystring = require("querystring")
 const exchangeCodeForTokensFactory = require("./exchange-code-for-token")
 const FormData = require("form-data")
@@ -11,22 +11,23 @@ Issuer.defaultHttpOptions = {timeout: 60000}
 
 const filterUndefined = R.reject(R.isNil)
 
-module.exports = async ({
-  resourceServerUrl,
-  identityServiceUrl,
-  client: {
-    client_id,
-    client_secret,
-    id_token_signed_response_alg,
-    request_object_signing_alg,
-    redirect_uri,
-    response_type,
-    keys,
-    token_endpoint_auth_method,
-  },
-}) => {
+module.exports = async (config) => {
+  const {
+    resourceServerUrl,
+    identityServiceUrl,
+    client: {
+      client_id,
+      client_secret,
+      id_token_signed_response_alg,
+      request_object_signing_alg,
+      redirect_uri,
+      response_type,
+      keys,
+      token_endpoint_auth_method,
+    },
+  } = config
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
-  const keystore = await JWK.asKeyStore({keys})
+
 
   const client = new moneyhubIssuer.Client(
     {
@@ -37,7 +38,7 @@ module.exports = async ({
       token_endpoint_auth_method,
       request_object_signing_alg,
     },
-    keystore,
+    {keys},
   )
 
   client.CLOCK_TOLERANCE = 10
@@ -47,8 +48,12 @@ module.exports = async ({
     redirectUri: redirect_uri,
   })
 
+  const request = require("./request")({client})
+  const unauthenticatedRequests = require("./requests/unauthenticated")({request, config})
+
   const moneyhub = {
-    keys: () => keystore.toJSON(),
+    ...unauthenticatedRequests,
+    keys: () => keys && keys.length ? (new JWKS.KeyStore({keys})).toJWKS() : null,
 
     requestObject: ({scope, state, claims, nonce}) => {
       const authParams = filterUndefined({
