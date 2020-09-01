@@ -2,22 +2,33 @@ const Moneyhub = require("../../src/index")
 const config = require("../config")
 const {DEFAULT_BANK_ID} = require("../constants")
 
-const payeeId = ""
-const amount = 1
-const redirectUri = "https://tolocalhost.com"
+const commandLineArgs = require("command-line-args")
+const commandLineUsage = require("command-line-usage")
+
+const optionDefinitions = [
+  {name: "userId", alias: "u", type: String, description: "required"},
+  {name: "bankId", alias: "b", defaultValue: DEFAULT_BANK_ID, type: String},
+]
+
+const usage = commandLineUsage({
+  header: "Options",
+  optionList: optionDefinitions,
+})
+console.log(usage)
+
+const options = commandLineArgs(optionDefinitions)
+
+const {userId, bankId} = options
+
+if (!userId) throw new Error("userId is required")
 
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
     const data = await moneyhub.createAuthRequest({
-      scope: `openid payment id:${DEFAULT_BANK_ID}`,
-      payment: {
-        payeeId,
-        amount,
-        payeeRef: "payee-ref",
-        payerRef: "payer-ref",
-      },
-      redirectUri,
+      scope: `openid id:${bankId}`,
+      redirectUri: config.client.redirect_uri,
+      userId,
     })
     console.log(data)
   } catch (e) {
