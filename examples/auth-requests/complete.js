@@ -13,7 +13,7 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
     const authParams = qs.parse(query)
-    const data = await moneyhub.completeAuthReqiest({
+    const data = await moneyhub.completeAuthRequest({
       id,
       authParams,
     })
