@@ -237,6 +237,8 @@ module.exports = async ({
       payerRef,
       payerId,
       payerType,
+      payerName,
+      payerEmail,
       state,
       nonce,
       claims = {},
@@ -267,18 +269,14 @@ module.exports = async ({
               payeeType,
               payerId,
               payerType,
+              payerName,
+              payerEmail,
             },
           },
         },
       }
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
-      console.log({
-        scope,
-        state,
-        claims: _claims,
-        nonce,
-      })
       const request = await moneyhub.requestObject({
         scope,
         state,
@@ -286,7 +284,6 @@ module.exports = async ({
         nonce,
       })
 
-      console.log(request)
       const requestUri = await moneyhub.getRequestUri(request)
       const url = moneyhub.getAuthorizeUrlFromRequestUri({
         request_uri: requestUri,
@@ -870,7 +867,7 @@ This function now requires an object with the following properties:
         json: true,
       }).then(R.prop("body"))
     },
-    
+
     completeAuthRequest: async ({id, authParams}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "auth_requests:write",
