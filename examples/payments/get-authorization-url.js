@@ -16,6 +16,8 @@ const optionDefinitions = [
   {name: "payee-type", type: String},
   {name: "payer-id", type: String},
   {name: "payer-type", type: String},
+  {name: "payer-name", type: String},
+  {name: "payer-email", type: String},
   {name: "amount", alias: "a", defaultValue: 100, description: "required"},
   {
     name: "payee-ref",
@@ -65,6 +67,8 @@ const start = async () => {
       nonce: options.nonce,
       payerType: options["payer-type"],
       payerId: options["payer-id"],
+      payerName: options["payer-name"],
+      payerEmail: options["payer-email"],
     })
 
     console.log(url)
