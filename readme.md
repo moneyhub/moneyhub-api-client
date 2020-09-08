@@ -519,6 +519,8 @@ const url = await moneyhub.getPaymentAuthorizeUrl({
   amount: "Amount in pence to authorize payment",
   payeeRef: "Payee reference",
   payerRef: "Payer reference",
+  payerName: "Payer Name",
+  payerEmail: "Payer Email",
   state: "your state value",
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
@@ -543,6 +545,8 @@ const defaultClaims = {
         payeeType,
         payerId,
         payerType,
+        payerName,
+        payerEmail,
       },
     },
   },
