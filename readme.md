@@ -563,6 +563,7 @@ const payee = await moneyhub.addPayee({
   accountNumber: "your account number",
   sortCode: "your sort code",
   name: "name of Payee",
+  externalId: "your external id",
 })
 ```
 
