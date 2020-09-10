@@ -627,7 +627,7 @@ This function now requires an object with the following properties:
       })
     },
 
-    addPayee: async ({accountNumber, sortCode, name}) => {
+    addPayee: async ({accountNumber, sortCode, name, externalId}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "payee:create",
       })
@@ -637,7 +637,7 @@ This function now requires an object with the following properties:
             Authorization: `Bearer ${access_token}`,
           },
           json: true,
-          body: {accountNumber, sortCode, name},
+          body: {accountNumber, sortCode, name, externalId},
         })
         .then(R.prop("body"))
     },
