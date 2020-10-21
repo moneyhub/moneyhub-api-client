@@ -6,8 +6,7 @@ const R = require("ramda")
 const querystring = require("querystring")
 const exchangeCodeForTokensFactory = require("./exchange-code-for-token")
 const FormData = require("form-data")
-
-Issuer.defaultHttpOptions = {timeout: 60000}
+const DEFAULT_TIMEOUT = 60000
 
 const filterUndefined = R.reject(R.isNil)
 
@@ -24,7 +23,10 @@ module.exports = async ({
     keys,
     token_endpoint_auth_method,
   },
+  timeout = DEFAULT_TIMEOUT,
 }) => {
+  Issuer.defaultHttpOptions = {timeout}
+
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
   const keystore = await JWK.asKeyStore({keys})
 
@@ -88,6 +90,7 @@ module.exports = async ({
           headers: {
             "Content-Type": "application/jws",
           },
+          timeout,
         }
       )
       return body
@@ -350,6 +353,7 @@ This function now requires an object with the following properties:
             Authorization: `Bearer ${token}`,
           },
           json: true,
+          timeout,
           body: {clientUserId: id},
         })
         .then(R.prop("body")),
@@ -372,6 +376,7 @@ This function now requires an object with the following properties:
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          timeout,
           json: true,
         }
       )
@@ -396,6 +401,7 @@ This function now requires an object with the following properties:
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          timeout,
           json: true,
         }
       )
@@ -411,6 +417,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        timeout,
         json: true,
       })
     },
@@ -427,6 +434,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -438,6 +446,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -455,8 +464,10 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
-      }).then(R.prop("body"))
+      })
+        .then(R.prop("body"))
     },
 
     getAccountsWithToken: (token, params = {}) =>
@@ -464,6 +475,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body")),
     getAccount: async (userId, accountId) => {
@@ -476,6 +488,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -484,6 +497,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body")),
     getAccountHoldings: async (userId, accountId) => {
@@ -495,6 +509,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -509,6 +524,7 @@ This function now requires an object with the following properties:
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
+          timeout,
           json: true,
         }
       ).then(R.prop("body"))
@@ -524,6 +540,7 @@ This function now requires an object with the following properties:
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
+          timeout,
           json: true,
         }
       ).then(R.prop("body"))
@@ -533,6 +550,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body")),
     getAccountCounterparties: async (userId, accountId) => {
@@ -544,6 +562,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -556,6 +575,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -573,6 +593,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -583,6 +604,7 @@ This function now requires an object with the following properties:
           headers: {
             Authorization: `Bearer ${token}`,
           },
+          timeout,
           json: true,
         }
       ).then(R.prop("body")),
@@ -602,6 +624,7 @@ This function now requires an object with the following properties:
           headers: {
             Authorization: `Bearer ${accessToken}`,
           },
+          timeout,
           body,
           json: true,
         })
@@ -636,6 +659,7 @@ This function now requires an object with the following properties:
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
+          timeout,
           json: true,
           body: {accountNumber, sortCode, name, externalId},
         })
@@ -656,6 +680,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -670,6 +695,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -687,6 +713,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -701,6 +728,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -725,6 +753,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -739,6 +768,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -754,6 +784,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         body: projectBody,
         json: true,
       }).then(R.prop("body"))
@@ -770,6 +801,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         body: projectBody,
         json: true,
       }).then(R.prop("body"))
@@ -786,6 +818,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("statusCode"))
     },
@@ -803,6 +836,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         body: form,
       }).then(R.compose(JSON.parse, R.prop("body")))
     },
@@ -818,6 +852,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -833,6 +868,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -848,6 +884,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("statusCode"))
     },
@@ -864,6 +901,7 @@ This function now requires an object with the following properties:
         headers: {
           Authorization: `Bearer ${access_token}`,
         },
+        timeout,
         json: true,
       }).then(R.prop("body"))
     },
@@ -877,6 +915,7 @@ This function now requires an object with the following properties:
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
+          timeout,
           json: true,
           body: {authParams},
         })
@@ -911,6 +950,7 @@ This function now requires an object with the following properties:
             headers: {
               Authorization: `Bearer ${access_token}`,
             },
+            timeout,
             json: true,
           },
         )
@@ -934,6 +974,7 @@ This function now requires an object with the following properties:
           headers: {
             Authorization: `Bearer ${access_token}`,
           },
+          timeout,
           json: true,
           body: {redirectUri, payment, userId, connectionId, scope, categorisationType},
         })
@@ -943,26 +984,31 @@ This function now requires an object with the following properties:
     getGlobalCounterparties: () =>
       got(resourceServerUrl + "/global-counterparties", {
         json: true,
+        timeout,
       }).then(R.prop("body")),
 
     listConnections: () =>
       got(identityServiceUrl + "/.well-known/all-connections", {
         json: true,
+        timeout,
       }).then(R.prop("body")),
 
     listAPIConnections: () =>
       got(identityServiceUrl + "/.well-known/api-connections", {
         json: true,
+        timeout,
       }).then(R.prop("body")),
 
     listTestConnections: () =>
       got(identityServiceUrl + "/.well-known/test-connections", {
         json: true,
+        timeout,
       }).then(R.prop("body")),
 
     getOpenIdConfig: () =>
       got(identityServiceUrl + "/.well-known/openid-configuration", {
         json: true,
+        timeout,
       }),
   }
   return moneyhub

@@ -44,6 +44,7 @@ const Moneyhub = require("@mft/moneyhub-api-client")
 const moneyhub = Moneyhub({
   resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
   identityServiceUrl: "https://identity.moneyhub.co.uk/oidc",
+  timeout: 60000 // Default timeout of 60000 ms
   client: {
     client_id: "your client id",
     client_secret: "your client secret",
