@@ -586,6 +586,10 @@ This method returns a list of initiated payments. This function uses the scope `
 const payments = await moneyhub.getPayments({
   limit: "limit", // optional
   offset: "offset", // optional
+  userId: "user-id", // optional
+  payeeId: "payee-id", // optional
+  startDate: "2020-01-01", // optional
+  endDate: "2020-12-31", // optional
 })
 ```
 
