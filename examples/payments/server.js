@@ -103,7 +103,7 @@ const start = async () => {
     res.send(`
   <ul>
   ${banks
-    // .filter(bank => bank.payments)
+    .filter(bank => bank.payments)
     .map(
       ({id, name}) =>
         `<li><a href="/pay/${req.params.payeeId}/${id}">Pay with ${name}</a></li>`
@@ -152,11 +152,19 @@ const start = async () => {
     if (queryParams.error) {
       return res.json(queryParams)
     }
-    const tokens = await moneyhub.exchangeCodeForTokens({
-      ...queryParams,
-      nonce: DEFAULT_NONCE,
-    })
-    return res.json({tokens, claims: tokens.claims})
+
+    try {
+      const tokens = await moneyhub.exchangeCodeForTokensLegacy({
+        ...queryParams,
+        nonce: DEFAULT_NONCE,
+      })
+
+      return res.json({tokens, claims: tokens.claims})
+    } catch (e) {
+      return res.json(e)
+    }
+
+
   })
 
   app.listen(3001, () => console.log("Test Server started on port 3001"))
