@@ -389,6 +389,15 @@ const queryParams = {limit: 10, offset: 5}
 const accounts = await moneyhub.getAccounts("userId", queryParams)
 ```
 
+#### `getAccountsWithDetails`
+
+Get all accounts for a user including extra details (sort code, account number, account holder name). This function uses the scopes `accounts:read accounts_details:read`.
+
+```javascript
+const queryParams = {limit: 10, offset: 5}
+const accounts = await moneyhub.getAccountsWithDetails("userId", queryParams)
+```
+
 #### `getAccountsWithToken`
 
 Get all accounts for a user. This call requires an access token with the `accounts:read` scope.
@@ -404,6 +413,15 @@ Get a single account for a user by the accountId. This function uses the scope `
 ```javascript
 const account = await moneyhub.getAccount("userId", "accountId")
 ```
+
+### `getAccountWithDetails`
+
+Get a single account for a user by the accountId including extra details (sort code, account number, account holder name). This function uses the scope `accounts:read accounts_details:read`.
+
+```javascript
+const account = await moneyhub.getAccountWithDetails("userId", "accountId")
+```
+
 
 #### `getAccountHoldingsWithToken`
 

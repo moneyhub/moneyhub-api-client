@@ -20,11 +20,7 @@ const {userId} = commandLineArgs(optionDefinitions)
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
-    const {access_token: token} = await moneyhub.getClientCredentialTokens({
-      scope: "accounts:read accounts_details:read",
-      sub: userId,
-    })
-    const result = await moneyhub.getAccountsWithToken(token)
+    const result = await moneyhub.getAccountsWithDetails(userId)
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {
     console.log(e)

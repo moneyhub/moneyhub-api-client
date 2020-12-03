@@ -459,6 +459,24 @@ This function now requires an object with the following properties:
       }).then(R.prop("body"))
     },
 
+    getAccountsWithDetails: async (userId, params = {}) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "accounts:read accounts_details:read",
+        sub: userId,
+      })
+
+      const url = `${resourceServerUrl}/accounts?${querystring.stringify(
+        params
+      )}`
+
+      return got(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+
     getAccountsWithToken: (token, params = {}) =>
       got(`${resourceServerUrl}/accounts?${querystring.stringify(params)}`, {
         headers: {
@@ -469,6 +487,19 @@ This function now requires an object with the following properties:
     getAccount: async (userId, accountId) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "accounts:read",
+        sub: userId,
+      })
+
+      return got(`${resourceServerUrl}/accounts/${accountId}`, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
+    getAccountWithDetails: async (userId, accountId) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "accounts:read accounts_details:read",
         sub: userId,
       })
 
