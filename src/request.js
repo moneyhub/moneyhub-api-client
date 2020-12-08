@@ -1,6 +1,6 @@
 const got = require("got")
 
-module.exports = async (url, opts = {}) => {
+module.exports = ({client}) => async (url, opts = {}) => {
   const gotOpts = {
     method: opts.method || "GET",
     headers: opts.headers || {},
@@ -13,9 +13,13 @@ module.exports = async (url, opts = {}) => {
       scope: opts.cc.scope,
       sub: opts.cc.sub,
     })
-    gotOpts.headers.Authorization =  `Bearer ${access_token}`
-
+    gotOpts.headers.Authorization = `Bearer ${access_token}`
   }
 
-  return got(url, gotOpts).json()
+  const req = got(url, gotOpts)
+  if (opts.returnStatus) {
+    return req.then((res) => res.statusCode)
+  }
+
+  return req.json()
 }
