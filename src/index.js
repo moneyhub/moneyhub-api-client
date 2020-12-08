@@ -1,11 +1,21 @@
 /* eslint-disable no-trailing-spaces */
 const {Issuer} = require("openid-client")
-const got = require("got")
 const R = require("ramda")
-const { JWKS } = require('jose')
-const querystring = require("querystring")
+const {JWKS} = require("jose")
 const exchangeCodeForTokensFactory = require("./exchange-code-for-token")
-const FormData = require("form-data")
+const getAuthUrlsFactory = require("./get-auth-urls")
+const requestFactories = [
+  require("./requests/accounts"),
+  require("./requests/payees"),
+  require("./requests/payments"),
+  require("./requests/projects"),
+  require("./requests/sync"),
+  require("./requests/tax"),
+  require("./requests/transactions"),
+  require("./requests/transaction-files"),
+  require("./requires/unauthenticated"),
+  require("./requires/users-and-connections"),
+]
 
 Issuer.defaultHttpOptions = {timeout: 60000}
 
@@ -13,7 +23,6 @@ const filterUndefined = R.reject(R.isNil)
 
 module.exports = async (config) => {
   const {
-    resourceServerUrl,
     identityServiceUrl,
     client: {
       client_id,
@@ -27,7 +36,6 @@ module.exports = async (config) => {
     },
   } = config
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
-
 
   const client = new moneyhubIssuer.Client(
     {
@@ -49,27 +57,13 @@ module.exports = async (config) => {
   })
 
   const request = require("./request")({client})
-  const unauthenticatedRequests = require("./requests/unauthenticated")({request, config})
 
   const moneyhub = {
-    ...unauthenticatedRequests,
-    keys: () => keys && keys.length ? (new JWKS.KeyStore({keys})).toJWKS() : null,
+    ...R.mergeAll(requestFactories.map((fn) => fn({request, config}))),
+    ...getAuthUrlsFactory({request, config}),
 
-    requestObject: ({scope, state, claims, nonce}) => {
-      const authParams = filterUndefined({
-        client_id,
-        scope,
-        state,
-        nonce,
-        claims,
-        exp: Math.round(Date.now() / 1000) + 300,
-        redirect_uri,
-        response_type,
-        prompt: "consent",
-      })
-
-      return client.requestObject(authParams)
-    },
+    keys: () =>
+      keys && keys.length ? new JWKS.KeyStore({keys}).toJWKS() : null,
 
     createJWKS: async ({
       keyAlg = "RSA",
@@ -295,6 +289,7 @@ module.exports = async (config) => {
       })
       return url
     },
+    
 
     exchangeCodeForTokensLegacy: ({state, code, nonce, id_token}) => {
       const verify = filterUndefined({state, nonce})
@@ -333,8 +328,7 @@ This function now requires an object with the following properties:
       "response_type" // recommended
       "code_verifier" // required for PKCE
   }
-}`
-        )
+}`)
         throw new Error("Missing parameters")
       }
       return exchangeCodeForTokens({paramsFromCallback, localParams})
@@ -348,7 +342,6 @@ This function now requires an object with the following properties:
         scope,
         sub,
       }),
-    registerUserWithToken: (id, token) =>
       got
         .post(identityServiceUrl.replace("oidc", "users"), {
           headers: {
@@ -756,13 +749,17 @@ This function now requires an object with the following properties:
       }).then(R.prop("body"))
     },
 
-    getPaymentFromIDToken: async idToken => {
-      try {
-        const payload = JSON.parse(Buffer.from(idToken.split(".")[1], "base64").toString())
+
+    getPaymentFromIDToken: async (idToken) => {
+        const payload = JSON.parse(
+          Buffer.from(idToken.split(".")[1], "base64").toString(),
+        )
         const paymentId = payload["mh:payment"]
         return moneyhub.getPayment(paymentId)
       } catch (e) {
-        throw new Error("Error retrieving payment from passed in ID Token: " + e.message)
+        throw new Error(
+          "Error retrieving payment from passed in ID Token: " + e.message,
+        )
       }
     },
 
@@ -770,7 +767,6 @@ This function now requires an object with the following properties:
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "projects:read",
         sub: userId,
-      })
       const url = `${resourceServerUrl}/projects?${querystring.stringify(params)}`
       return got(url, {
         headers: {
