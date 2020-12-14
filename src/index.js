@@ -441,12 +441,27 @@ This function now requires an object with the following properties:
         json: true,
       }).then(R.prop("body"))
     },
+    getSCIMUsers: async (params = {}) => {
+      const {access_token} = await moneyhub.getClientCredentialTokens({
+        scope: "scim_user:read",
+      })
+      const url = `${identityServiceUrl.replace(
+        "oidc",
+        "scim/users"
+      )}?${querystring.stringify(params)}`
+
+      return got(url, {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+        json: true,
+      }).then(R.prop("body"))
+    },
     getAccounts: async (userId, params = {}) => {
       const {access_token} = await moneyhub.getClientCredentialTokens({
         scope: "accounts:read",
         sub: userId,
       })
-
       const url = `${resourceServerUrl}/accounts?${querystring.stringify(
         params
       )}`
