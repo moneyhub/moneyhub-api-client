@@ -2,6 +2,9 @@ const Moneyhub = require("../")
 const config = require("../../examples/config")
 const {expect} = require("chai")
 
+/
+
+
 describe("API client", function() {
   describe("Client configuration", () => {
     it("should create client", async () => {
