@@ -1,0 +1,34 @@
+/* eslint-disable max-nested-callbacks */
+const Moneyhub = require("../")
+const config = require("../../examples/config.local")
+const {expect} = require("chai")
+
+describe("Users", () => {
+  let moneyhub
+  let userId
+  before(async () => {
+    moneyhub = await Moneyhub(config)
+  })
+
+  it("can create a user", async () => {
+    const user = await moneyhub.registerUser("some-random-id")
+    userId = user.userId
+    expect(user.userId).to.be.a("string")
+    expect(user.clientUserId).to.equal("some-random-id")
+  })
+
+  it("can get a created user", async () => {
+    const user = await moneyhub.getUser(userId)
+    expect(user.userId).to.equal(userId)
+  })
+
+  it("can get all users", async () => {
+    const users = await moneyhub.getUsers()
+    expect(users.data.length).to.be.greaterThan(0)
+  })
+
+  it("can delete a user", async () => {
+    const result = await moneyhub.deleteUser(userId)
+    expect(result).to.equal(204)
+  })
+})

@@ -16,9 +16,13 @@ module.exports = ({client}) => async (url, opts = {}) => {
     gotOpts.headers.Authorization = `Bearer ${access_token}`
   }
 
+  if (opts.body) {
+    gotOpts.json = opts.body
+  }
+
   const req = got(url, gotOpts)
   if (opts.returnStatus) {
-    return req.then((res) => res.statusCode)
+    return req.then(res => res.statusCode)
   }
 
   return req.json()

@@ -48,7 +48,7 @@ module.exports = ({config, request}) => {
         method: "DELETE",
         returnStatus: true,
         cc: {
-          scope: "user:read",
+          scope: "user:delete",
         },
       }),
   }
