@@ -69,6 +69,7 @@ module.exports = ({config, request}) => {
       request(
         `${resourceServerUrl}/accounts/${accountId}/recurring-transactions`,
         {
+          method: "POST",
           cc: {
             scope: "accounts:read transactions:read:all",
             sub: userId,

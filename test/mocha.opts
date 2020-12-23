@@ -1,8 +1,0 @@
---reporter spec
---colors
---ui bdd
---timeout 6000
---check-leaks
---recursive
---exit
-src/**/__tests__/*.js

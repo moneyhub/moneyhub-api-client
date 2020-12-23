@@ -1,3 +1,4 @@
 node_modules/
 local-configs/
 examples/config-local.js
+examples/config.local.js

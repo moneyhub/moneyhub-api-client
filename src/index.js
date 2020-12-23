@@ -56,7 +56,7 @@ module.exports = async (config) => {
     ...getTokensFactory({client, config}),
 
     keys: () =>
-      keys && keys.length ? new JWKS.KeyStore({keys}).toJWKS() : null,
+      keys && keys.length ? JWKS.asKeyStore({keys}).toJWKS() : null,
   }
   return moneyhub
 }
