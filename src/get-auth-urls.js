@@ -87,13 +87,11 @@ module.exports = ({client, config}) => {
     return body
   }
 
-
   return {
     getAuthorizeUrl,
     getAuthorizeUrlFromRequestUri,
     requestObject,
     getRequestUri,
-    
     getAuthorizeUrlForCreatedUser: async ({
       bankId,
       state,

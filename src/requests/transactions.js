@@ -1,4 +1,3 @@
-
 module.exports = ({config, request}) => {
   const {resourceServerUrl} = config
 
