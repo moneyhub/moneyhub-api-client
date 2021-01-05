@@ -32,7 +32,7 @@ module.exports = async (config) => {
       token_endpoint_auth_method,
     },
   } = config
-  const moneyhubIssuer = await Issuer.discover(identityServiceUrl)
+  const moneyhubIssuer = await Issuer.discover(identityServiceUrl + "/oidc")
 
   const client = new moneyhubIssuer.Client(
     {
