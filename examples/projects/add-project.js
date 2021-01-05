@@ -23,10 +23,11 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
-    const result = await moneyhub.addProject(options.userId, {
+    const result = await moneyhub.addProject({userId: options.userId, project: {
       name: options.name,
       accountIds: options.accountIds && options.accountIds.split(","),
       type: options.type,
+    },
     })
 
     console.log(result)

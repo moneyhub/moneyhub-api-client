@@ -60,7 +60,7 @@ module.exports = ({client, config}) => {
       return exchangeCodeForTokens({paramsFromCallback, localParams})
     },
 
-    refreshTokens: (refreshToken) => client.refresh(refreshToken),
+    refreshTokens: ({refreshToken}) => client.refresh(refreshToken),
 
     getClientCredentialTokens: ({scope, sub}) =>
       client.grant({

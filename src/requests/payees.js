@@ -2,18 +2,18 @@ module.exports = ({config, request}) => {
   const {identityServiceUrl} = config
 
   return {
-    addPayee: async ({accountNumber, sortCode, name}) =>
+    addPayee: async ({accountNumber, sortCode, name, externalId}) =>
       request(`${identityServiceUrl}/payees`, {
         method: "POST",
-        body: {accountNumber, sortCode, name},
+        body: {accountNumber, sortCode, name, externalId},
         cc: {
           scope: "payee:create",
         },
       }),
 
-    getPayees: (searchParams = {}) =>
+    getPayees: (params = {}) =>
       request(`${identityServiceUrl}/payees`, {
-        searchParams,
+        searchParams: params,
         cc: {
           scope: "payee:read",
         },

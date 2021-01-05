@@ -22,7 +22,10 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
-    const result = await moneyhub.deleteProject(options.userId, options.projectId)
+    const result = await moneyhub.deleteProject({
+      userId: options.userId,
+      projectId: options.projectId
+    })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {
     console.log(e)

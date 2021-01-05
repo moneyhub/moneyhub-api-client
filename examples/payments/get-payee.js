@@ -19,7 +19,7 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
-    const result = await moneyhub.getPayee(options.id)
+    const result = await moneyhub.getPayee({id: options.id})
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {
     console.log(e)

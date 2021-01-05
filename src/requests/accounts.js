@@ -11,6 +11,16 @@ module.exports = ({config, request}) => {
         },
       }),
 
+
+    getAccountsWithDetails: async ({userId, params = {}}) =>
+      request(`${resourceServerUrl}/accounts`, {
+        searchParams: params,
+        cc: {
+          scope: "accounts:read accounts_details:read",
+          sub: userId,
+        },
+      }),
+
     getAccount: async ({userId, accountId}) =>
       request(`${resourceServerUrl}/accounts/${accountId}`, {
         cc: {

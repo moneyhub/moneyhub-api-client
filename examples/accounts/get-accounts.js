@@ -15,13 +15,16 @@ const usage = commandLineUsage(
 )
 console.log(usage)
 
-const {userId} = commandLineArgs(optionDefinitions)
+const options = commandLineArgs(optionDefinitions)
+
 
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
-    const result = await moneyhub.getAccountsWithDetails(userId)
+
+    const result = await moneyhub.getAccounts({userId: options.userId})
     console.log(JSON.stringify(result, null, 2))
+
   } catch (e) {
     console.log(e)
   }
