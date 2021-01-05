@@ -1,8 +1,8 @@
 module.exports = ({config, request}) => {
-  const {identityUrl} = config
+  const {identityServiceUrl} = config
 
-  const getPayment = (id) =>
-    request(`${identityUrl}/payments/${id}`, {
+  const getPayment = ({id}) =>
+    request(`${identityServiceUrl}/payments/${id}`, {
       cc: {
         scope: "payment:read",
       },
@@ -11,20 +11,20 @@ module.exports = ({config, request}) => {
   return {
     getPayment,
     getPayments: (searchParams = {}) =>
-      request(`${identityUrl}/payments`, {
+      request(`${identityServiceUrl}/payments`, {
         searchParams,
         cc: {
           scope: "payment:read",
         },
       }),
 
-    getPaymentFromIDToken: async (idToken) => {
+    getPaymentFromIDToken: async ({idToken}) => {
       try {
         const payload = JSON.parse(
           Buffer.from(idToken.split(".")[1], "base64").toString(),
         )
         const paymentId = payload["mh:payment"]
-        return getPayment(paymentId)
+        return getPayment({id: paymentId})
       } catch (e) {
         throw new Error(
           "Error retrieving payment from passed in ID Token: " + e.message,

@@ -36,9 +36,15 @@ describe("Auth Urls", () => {
   })
 
   it("gets a payment auth url", async () => {
+    const payee = await moneyhub.addPayee({
+      accountNumber: "12345678",
+      sortCode: "123456",
+      name: "Test",
+    })
+
     const url = await moneyhub.getPaymentAuthorizeUrl({
       bankId,
-      payeeId: "some-payee-id",
+      payeeId: payee.data.id,
       amount: 1,
       payeeRef: "some-ref",
       payerRef: "another-ref",

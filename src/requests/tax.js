@@ -4,14 +4,9 @@ module.exports = ({config, request}) => {
   const {resourceServerUrl} = config
 
   return {
-    getTaxReturn: (userId, startDate, endDate, {accountId, projectId} = {}) =>
+    getTaxReturn: ({userId, params}) =>
       request(`${resourceServerUrl}/tax`, {
-        searchParams: R.reject(R.isNil)({
-          startDate,
-          endDate,
-          accountId,
-          projectId,
-        }),
+        searchParams: R.reject(R.isNil)(params),
         cc: {
           scope: "tax:read",
           sub: userId,
