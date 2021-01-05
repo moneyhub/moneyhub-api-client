@@ -28,7 +28,7 @@ Currently this library supports `client_secret_basic`, `client_secret_jwt` and `
 To use this API client you will need:
 
 - A `client_id`, `client_secret` and `redirect_uri` of a registered API client
-- The url of the Moneyhub identity service for the environment you are connecting to (https://identity.moneyhub.co.uk/oidc)
+- The url of the Moneyhub identity service for the environment you are connecting to (https://identity.moneyhub.co.uk)
 - The url for the API gateway for the environment that you are connecting to (https://api.moneyhub.co.uk/v2.0)
 
 ### To install
@@ -43,7 +43,7 @@ This module exposes a single factory function that accepts the following configu
 const Moneyhub = require("@mft/moneyhub-api-client")
 const moneyhub = Moneyhub({
   resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
-  identityServiceUrl: "https://identity.moneyhub.co.uk/oidc",
+  identityServiceUrl: "https://identity.moneyhub.co.uk",
   client: {
     client_id: "your client id",
     client_secret: "your client secret",
@@ -599,7 +599,7 @@ const accounts = await moneyhub.getGlobalCounterparties()
 This method returns a list of projects. This function uses the scope `projects:read`
 
 ```javascript
-const projects = await moneyhub.getProjects({
+const projects = await moneyhub.getProjects({x
   userId: "userId",
   params: {
     limit: "limit", // optional
