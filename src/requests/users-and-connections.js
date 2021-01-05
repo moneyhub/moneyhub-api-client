@@ -3,7 +3,7 @@ module.exports = ({config, request}) => {
   const usersEndpoint = identityServiceUrl + "/users"
 
   return {
-    registerUser: async (clientUserId) =>
+    registerUser: async ({clientUserId}) =>
       request(usersEndpoint, {
         method: "POST",
         cc: {
@@ -12,7 +12,7 @@ module.exports = ({config, request}) => {
         body: {clientUserId},
       }),
 
-    getUsers: async (params) =>
+    getUsers: async ({params} = {}) =>
       request(usersEndpoint, {
         searchParams: params,
         cc: {
@@ -20,21 +20,21 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getUser: async (id) =>
-      request(`${usersEndpoint}/${id}`, {
+    getUser: async ({userId}) =>
+      request(`${usersEndpoint}/${userId}`, {
         cc: {
           scope: "user:read",
         },
       }),
 
-    getUserConnections: async (userId) =>
+    getUserConnections: async ({userId}) =>
       request(`${usersEndpoint}/${userId}/connections`, {
         cc: {
           scope: "user:read",
         },
       }),
 
-    deleteUserConnection: async (userId, connectionId) =>
+    deleteUserConnection: async ({userId, connectionId}) =>
       request(`${usersEndpoint}/${userId}/connections/${connectionId}`, {
         method: "DELETE",
         returnStatus: true,
@@ -43,7 +43,7 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    deleteUser: async (userId) =>
+    deleteUser: async ({userId}) =>
       request(`${usersEndpoint}/${userId}`, {
         method: "DELETE",
         returnStatus: true,

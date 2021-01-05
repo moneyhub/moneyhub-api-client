@@ -2,7 +2,7 @@ module.exports = ({config, request}) => {
   const {resourceServerUrl} = config
 
   return {
-    getProjects: async (userId, params = {}) =>
+    getProjects: async ({userId, params = {}}) =>
       request(`${resourceServerUrl}/projects`, {
         searchParams: params,
         cc: {
@@ -10,7 +10,7 @@ module.exports = ({config, request}) => {
           sub: userId,
         },
       }),
-    getProject: async (userId, projectId) =>
+    getProject: async ({userId, projectId}) =>
       request(`${resourceServerUrl}/projects/${projectId}`, {
         cc: {
           scope: "projects:read",
@@ -18,31 +18,31 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    addProject: async (userId, projectBody) =>
+    addProject: async ({userId, project}) =>
       request(`${resourceServerUrl}/projects`, {
         method: "POST",
         cc: {
           scope: "projects:write",
           sub: userId,
         },
-        body: projectBody,
+        body: project,
       }),
 
-    updateProject: async (userId, projectId, projectBody) =>
+    updateProject: async ({userId, projectId, project}) =>
       request(`${resourceServerUrl}/projects/${projectId}`, {
         method: "PATCH",
         cc: {
           scope: "projects:write",
           sub: userId,
         },
-        body: projectBody,
+        body: project,
       }),
 
-    deleteProject: async (userId, projectId) =>
+    deleteProject: async ({userId, projectId}) =>
       request(`${resourceServerUrl}/projects/${projectId}`, {
         method: "DELETE",
         cc: {
-          scope: "projects:write",
+          scope: "projects:delete",
           sub: userId,
         },
         returnStatus: true,

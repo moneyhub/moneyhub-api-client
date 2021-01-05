@@ -20,6 +20,10 @@ module.exports = ({client}) => async (url, opts = {}) => {
     gotOpts.json = opts.body
   }
 
+  if (opts.form) {
+    gotOpts.body = opts.form
+  }
+
   const req = got(url, gotOpts)
   if (opts.returnStatus) {
     return req.then(res => res.statusCode)

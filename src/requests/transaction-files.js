@@ -4,14 +4,14 @@ module.exports = ({config, request}) => {
   const {resourceServerUrl} = config
 
   return {
-    addFileToTransaction: async (userId, transactionId, fileData) => {
+    addFileToTransaction: async ({userId, transactionId, fileData, fileName}) => {
       const form = new FormData()
-      form.append("file", fileData)
+      form.append("file", fileData, fileName)
       return request(
         `${resourceServerUrl}/transactions/${transactionId}/files`,
         {
           method: "POST",
-          body: form,
+          form,
           cc: {
             scope: "transactions:read:all transactions:write",
             sub: userId,
@@ -19,7 +19,7 @@ module.exports = ({config, request}) => {
         },
       )
     },
-    getTransactionFiles: async (userId, transactionId) =>
+    getTransactionFiles: async ({userId, transactionId}) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/files`, {
         cc: {
           scope: "transactions:read:all transactions:write",
@@ -27,7 +27,7 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getTransactionFile: async (userId, transactionId, fileId) =>
+    getTransactionFile: async ({userId, transactionId, fileId}) =>
       request(
         `${resourceServerUrl}/transactions/${transactionId}/files/${fileId}`,
         {
@@ -38,7 +38,7 @@ module.exports = ({config, request}) => {
         },
       ),
 
-    deleteTransactionFile: async (userId, transactionId, fileId) =>
+    deleteTransactionFile: async ({userId, transactionId, fileId}) =>
       request(
         `${resourceServerUrl}/transactions/${transactionId}/files/${fileId}`,
         {

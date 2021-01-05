@@ -2,7 +2,7 @@ module.exports = ({config, request}) => {
   const {resourceServerUrl} = config
 
   return {
-    getAccounts: async (userId, params = {}) =>
+    getAccounts: async ({userId, params = {}}) =>
       request(`${resourceServerUrl}/accounts`, {
         searchParams: params,
         cc: {
@@ -11,7 +11,7 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getAccount: async (userId, accountId) =>
+    getAccount: async ({userId, accountId}) =>
       request(`${resourceServerUrl}/accounts/${accountId}`, {
         cc: {
           scope: "accounts:read",
@@ -19,7 +19,7 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getAccountWithDetails: async (userId, accountId) =>
+    getAccountWithDetails: async ({userId, accountId}) =>
       request(`${resourceServerUrl}/accounts/${accountId}`, {
         cc: {
           scope: "accounts:read accounts_details:read",
@@ -27,7 +27,7 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getAccountHoldings: async (userId, accountId) =>
+    getAccountHoldings: async ({userId, accountId}) =>
       request(`${resourceServerUrl}/accounts/${accountId}/holdings`, {
         cc: {
           scope: "accounts:read",
@@ -35,7 +35,7 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getAccountHoldingsWithMatches: async (userId, accountId) =>
+    getAccountHoldingsWithMatches: async ({userId, accountId}) =>
       request(
         `${resourceServerUrl}/accounts/${accountId}/holdings-with-matches`,
         {
@@ -46,7 +46,7 @@ module.exports = ({config, request}) => {
         },
       ),
 
-    getAccountHolding: async (userId, accountId, holdingId) =>
+    getAccountHolding: async ({userId, accountId, holdingId}) =>
       request(
         `${resourceServerUrl}/accounts/${accountId}/holdings/${holdingId}`,
         {
@@ -57,7 +57,7 @@ module.exports = ({config, request}) => {
         },
       ),
 
-    getAccountCounterparties: async (userId, accountId) =>
+    getAccountCounterparties: async ({userId, accountId}) =>
       request(`${resourceServerUrl}/accounts/${accountId}/counterparties`, {
         cc: {
           scope: "accounts:read transactions:read:all",
@@ -65,7 +65,7 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getAccountRecurringTransactions: async (userId, accountId) =>
+    getAccountRecurringTransactions: async ({userId, accountId}) =>
       request(
         `${resourceServerUrl}/accounts/${accountId}/recurring-transactions`,
         {

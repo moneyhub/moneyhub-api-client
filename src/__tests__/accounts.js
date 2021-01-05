@@ -14,38 +14,38 @@ describe("Accounts", () => {
   })
 
   it("get accounts", async () => {
-    const accounts = await moneyhub.getAccounts(userId)
+    const accounts = await moneyhub.getAccounts({userId})
     expect(accounts.data.length).to.eql(11)
     accountId = accounts.data.find(a => a.type === "cash:current").id
     pensionId = accounts.data.find(a => a.type === "pension").id
   })
 
   it("get account", async () => {
-    const {data: account} = await moneyhub.getAccount(userId, accountId)
+    const {data: account} = await moneyhub.getAccount({userId, accountId})
     expect(account.id).to.eql(accountId)
   })
 
   it("get counterparties", async () => {
-    const {data: counterparties} = await moneyhub.getAccountCounterparties(
+    const {data: counterparties} = await moneyhub.getAccountCounterparties({
       userId,
       accountId
-    )
+    })
     expect(counterparties.length).to.be.greaterThan(10)
   })
 
   it("get holdings", async () => {
-    const {data: holdings} = await moneyhub.getAccountHoldings(
+    const {data: holdings} = await moneyhub.getAccountHoldings({
       userId,
-      pensionId
-    )
+      accountId: pensionId
+    })
     expect(holdings[0].items.length).to.be.greaterThan(5)
   })
 
   it("get recurring transactions", async () => {
-    const {data: recurring} = await moneyhub.getAccountRecurringTransactions(
+    const {data: recurring} = await moneyhub.getAccountRecurringTransactions({
       userId,
       accountId
-    )
+    })
     expect(recurring.length).to.be.greaterThan(10)
   })
 })
