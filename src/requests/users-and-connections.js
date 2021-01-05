@@ -1,6 +1,6 @@
 module.exports = ({config, request}) => {
   const {identityServiceUrl} = config
-  const usersEndpoint = identityServiceUrl.replace("oidc", "users")
+  const usersEndpoint = identityServiceUrl + "/users"
 
   return {
     registerUser: async (clientUserId) =>

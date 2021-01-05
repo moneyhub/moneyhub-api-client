@@ -76,7 +76,7 @@ module.exports = ({client, config}) => {
 
   const getRequestUri = async (requestObject) => {
     const {body} = await got.post(
-      identityServiceUrl.replace("oidc", "request"),
+      identityServiceUrl + "/request",
       {
         body: requestObject,
         headers: {

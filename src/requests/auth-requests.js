@@ -1,9 +1,6 @@
 module.exports = ({config, request}) => {
   const {identityServiceUrl} = config
-  const authRequestEndpoint = identityServiceUrl.replace(
-    "oidc",
-    "auth-requests",
-  )
+  const authRequestEndpoint = identityServiceUrl + "/auth-requests"
 
   return {
     createAuthRequest: async ({

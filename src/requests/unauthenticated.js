@@ -4,12 +4,12 @@ module.exports = ({config, request}) => {
     getGlobalCounterparties: () =>
       request(resourceServerUrl + "/global-counterparties"),
     listConnections: () =>
-      request(identityServiceUrl + "/.well-known/all-connections"),
+      request(identityServiceUrl + "/oidc/.well-known/all-connections"),
     listAPIConnections: () =>
-      request(identityServiceUrl + "/.well-known/api-connections"),
+      request(identityServiceUrl + "/oidc/.well-known/api-connections"),
     listTestConnections: () =>
-      request(identityServiceUrl + "/.well-known/test-connections"),
+      request(identityServiceUrl + "/oidc/.well-known/test-connections"),
     getOpenIdConfig: () =>
-      request(identityServiceUrl + "/.well-known/openid-configuration"),
+      request(identityServiceUrl + "/oidc/.well-known/openid-configuration"),
   }
 }
