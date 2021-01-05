@@ -67,11 +67,9 @@ Once the api client has been initialised it provides a simple promise based inte
 
 This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`.
 
-[Data access scopes](https://moneyhub.github.io/api-docs/#data-access)
+[Scopes](https://www.notion.so/moneyhub/Scopes-ca431010f9fa4398bb4b64c6a00beb98)
 
-[Financial institution scopes](https://moneyhub.github.io/api-docs/#financial-institutions)
-
-[Bank ids](https://moneyhub.github.io/api-docs/#bank-connections)
+[Financial institution](https://www.notion.so/moneyhub/Bank-Connections-a2a0177ea8d44131a00f8b8ed18de69d)
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrl({
@@ -98,7 +96,9 @@ const defaultClaims = {
 
 This is a helper function that returns an authorize url for a specific user to connect to a specific bank. This function uses the following scope with the value of the bankId provided `id:${bankId} openid`.
 
-[Bank ids](https://moneyhub.github.io/api-docs/#bank-connections)
+[Scopes](https://www.notion.so/moneyhub/Scopes-ca431010f9fa4398bb4b64c6a00beb98)
+
+[Financial institution](https://www.notion.so/moneyhub/Bank-Connections-a2a0177ea8d44131a00f8b8ed18de69d)gs
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrlForCreatedUser({
@@ -443,7 +443,7 @@ const accounts = await moneyhub.getAccountsWithDetails({
   })
 ```
 
-### `getAccount`
+#### `getAccount`
 
 Get a single account for a user by the accountId. This function uses the scope `accounts:read`.
 
@@ -454,7 +454,7 @@ const account = await moneyhub.getAccount({
   })
 ```
 
-### `getAccountWithDetails`
+#### `getAccountWithDetails`
 
 Get a single account for a user by the accountId including extra details (sort code, account number, account holder name). This function uses the scope `accounts:read accounts_details:read`.
 
@@ -466,7 +466,7 @@ const account = await moneyhub.getAccountWithDetails({
   ```
 
 
-### `getAccountHoldings`
+#### `getAccountHoldings`
 
 Get account holdings for a user. This function uses the scope `accounts:read`.
 
@@ -477,7 +477,7 @@ const account = await moneyhub.getAccountHoldings({
   })
 ```
 
-### `getAccountHoldingsWithMatches`
+#### `getAccountHoldingsWithMatches`
 
 Get account holdings with ISIN codes matchers for a user. This function uses the scope `accounts:read`.
 
@@ -488,7 +488,7 @@ const account = await moneyhub.getAccountHoldingsWithMatches({
   })
 ```
 
-### `getAccountHolding`
+#### `getAccountHolding`
 
 Get a single holding from a user's account. This function uses the scope `accounts:read`.
 
@@ -500,7 +500,7 @@ const account = await moneyhub.getAccountHolding({
   })
 ```
 
-### `getAccountCounterparties`
+#### `getAccountCounterparties`
 
 Get account counterparties for a user. This function uses the scope `accounts:read transactions:read`.
 
@@ -511,7 +511,7 @@ const account = await moneyhub.getAccountCounterparties({
   })
 ```
 
-### `getAccountRecurringTransactions`
+#### `getAccountRecurringTransactions`
 
 Get account recurring transactions for a user. This function uses the scope `accounts:read transactions:read`.
 
