@@ -5,10 +5,7 @@ const config = require("../config")
 
 const optionDefinitions = [
   {name: "userId", alias: "u", type: String, description: "required"},
-  {name: "startDate", alias: "s", type: String, description: "required"},
-  {name: "endDate", alias: "e", type: String, description: "required"},
-  {name: "accountId", alias: "a", type: String},
-  {name: "projectId", alias: "p", type: String},
+  {name: "accountId", alias: "a", type: String, description: "required"},
 ]
 
 const usage = commandLineUsage(
@@ -26,9 +23,9 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
-    const result = await moneyhub.getTaxReturn(options.userId, options.startDate, options.endDate, {
-      accountId: options.accountId,
-      projectId: options.projectId,
+    const result = await moneyhub.getAccountCounterparties({
+      userId: options.userId,
+      accountId: options.accountId
     })
     console.log(JSON.stringify(result, null, 2))
 

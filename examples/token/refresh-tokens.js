@@ -23,7 +23,7 @@ if (!options.refreshToken) throw new Error("refreshToken is required")
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
-    const data = await moneyhub.refreshTokens(options.refreshToken)
+    const data = await moneyhub.refreshTokens({refreshToken: options.refreshToken})
     console.log(data)
 
   } catch (e) {

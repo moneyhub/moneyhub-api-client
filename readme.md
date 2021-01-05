@@ -61,23 +61,6 @@ const moneyhub = Moneyhub({
 
 Once the api client has been initialised it provides a simple promise based interface with the following methods:
 
-### JWKS
-
-#### `createJWKS`
-
-This method creates a JWKS that can be used when configuring your Moneyhub API client. The public keys should be used in the configuration
-of the API client in the Moneyhub Admin portal. The private keys should
-be used in the config when creating an instance of this client.
-
-```javascript
-const url = await moneyhub.createJWKS({
-  keyAlg, // default 'RSA'
-  keySize, // default 2048
-  keyUse, // default 'sig'
-  alg, // default 'RS256'
-})
-```
-
 ### Auth API
 
 #### `getAuthorizeUrl`
@@ -242,20 +225,6 @@ const tokens = await moneyhub.exchangeCodeForTokens({
 })
 ```
 
-#### `exchangeCodeForTokensLegacy`
-
-This is a legacy method to get tokens for a user.
-After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
-
-```javascript
-const tokens = await moneyhub.exchangeCodeForTokens({
-  code: "the authorization code",
-  nonce: "your nonce value", // optional
-  state: "your state value", // optional
-  id_token: "your id token", // optional
-})
-```
-
 #### `getClientCredentialTokens`
 
 Use this to get a client credentials access token.
@@ -267,6 +236,106 @@ const tokens = await moneyhub.getClientCredentialTokens({
 })
 ```
 
+#### `refreshTokens`
+
+Use this to get a new access token using a refresh token
+
+```javascript
+const tokens = await moneyhub.refreshTokens({
+  refreshToken: "refresh-token",
+})
+```
+
+### Auth Request URI
+
+#### `requestObject`
+
+Creates a request object
+
+```javascript
+const tokens = await moneyhub.requestObject({
+  scope: "the-required-scope",
+  state: "state",
+  nonce: "nonce,
+  claims: claimsObject,
+})
+```
+
+#### `getRequestUri`
+
+Use this to create a request uri from a request object
+
+```javascript
+const tokens = await moneyhub.getRequestUri(
+  requestObject
+)
+```
+
+#### `getAuthorizeUrlFromRequestUri`
+
+Use this to retrieve an authorization url from a request uri
+
+```javascript
+const tokens = await moneyhub.getAuthorizeUrlFromRequestUri({
+  requestUri: "request-uri"
+})
+```
+
+### Auth Requests
+
+#### `createAuthRequest`
+
+Creates an auth request
+
+```javascript
+const tokens = await moneyhub.createAuthRequest({
+  redirectUri: "redirect-uri,
+  userId: "user-id",
+  connectionId: "connection-id",
+  categorisationType: "personal",
+  scope:"openid payment",
+  payment: paymentObject, //optional
+})
+```
+
+#### `completeAuthRequest`
+
+Completes an auth request
+
+```javascript
+const tokens = await moneyhub.completeAuthRequest({
+  id: "auth-request-id",
+  authParams: {
+    code: "code"
+    state: "state",
+    "id_token": "idToken",
+    error: "error-code",
+    "error_description": "error description"
+  }
+})
+```
+
+#### `getAllAuthRequests`
+
+Retrieves auth requests
+
+```javascript
+const tokens = await moneyhub.getAllAuthRequests({
+  limit: 10, // optional
+  offset: 0 // optional
+})
+```
+
+#### `getAuthRequest`
+
+Retrieve a single auth request
+
+```javascript
+const tokens = await moneyhub.getAuthRequest({
+  id: "auth-request-id"
+})
+```
+
 ### User Management
 
 #### `registerUser`
@@ -274,7 +343,9 @@ const tokens = await moneyhub.getClientCredentialTokens({
 Helper method that gets the correct client credentials access token and then registers a user.
 
 ```javascript
-const user = await moneyhub.registerUser("your user id" /* optional */)
+const user = await moneyhub.registerUser({
+  clientUserId: "your user id" /* optional */
+})
 ```
 
 #### `getUsers`
@@ -282,7 +353,11 @@ const user = await moneyhub.registerUser("your user id" /* optional */)
 Returns all the users registered for your api-client
 
 ```javascript
-const users = await moneyhub.getUsers({limit, offset, isDemo})
+const users = await moneyhub.getUsers({
+  limit,
+  offset,
+  isDemo
+  })
 ```
 
 #### `getUser`
@@ -290,7 +365,9 @@ const users = await moneyhub.getUsers({limit, offset, isDemo})
 Get a single user by their id
 
 ```javascript
-const user = await moneyhub.getUser("user-id")
+const user = await moneyhub.getUser({
+  userId: "user-id"
+  })
 ```
 
 #### `deleteUser`
@@ -298,27 +375,11 @@ const user = await moneyhub.getUser("user-id")
 Helper method that gets the correct client credentials access token and then deletes a user.
 
 ```javascript
-const user = await moneyhub.deleteUser("user-id")
+const user = await moneyhub.deleteUser({
+  userId: "user-id"}
+  )
 ```
 
-#### `registerUserWithToken`
-
-Use this to register a new user
-
-```javascript
-const user = await moneyhub.registerUserWithToken(
-  "your user id", //optional ,
-  "an access token with the user:create scope"
-)
-```
-
-#### `deleteUserWithToken`
-
-Deletes a user. This calls requires an access token with the `user:delete` scope.
-
-```javascript
-const user = await moneyhub.deleteUserWithToken("user-id", "access.token")
-```
 
 ### User Connections
 
@@ -327,9 +388,10 @@ const user = await moneyhub.deleteUserWithToken("user-id", "access.token")
 Helper method that gets the correct client credentials access token and then gets all user connections.
 
 ```javascript
-const user = await moneyhub.getUserConnections("user-id")
+const user = await moneyhub.getUserConnections({
+  userId: "user-id"
+  })
 ```
-
 
 #### `syncUserConnection`
 
@@ -344,38 +406,15 @@ const tokens = await moneyhub.syncUserConnection({
 })
 ```
 
-#### `syncUserConnectionWithToken`
-
-Sync an existing user connection. This process will fetch the latest balances and transactions of the accounts attached to the connection. This method only returns the status of the syncing.
-This calls requires an access token with the `accounts:read` and one of `accounts:write` or `accounts:write:all` scopes.
-
-```javascript
-const tokens = await moneyhub.syncUserConnectionWithToken({
-  accessToken,
-  connectionId,
-  customerIpAddress, // optional
-  customerLastLoggedTime, // optional
-})
-```
-
 #### `deleteUserConnection`
 
 Helper method that gets the correct client credentials access token and then deletes a user connection.
 
 ```javascript
-const user = await moneyhub.deleteUserConnection("user-id", "connection-id")
-```
-
-#### `deleteUserConnectionWithToken`
-
-Deletes a user connection. This calls requires an access token with the `user:delete` scope
-
-```javascript
-const user = await moneyhub.deleteUserConnectionWithToken(
-  "user-id",
-  "connection-id",
-  "access.token"
-)
+const user = await moneyhub.deleteUserConnection({
+  userId: "user-id",
+  connectionId: "connection-id"
+  })
 ```
 
 ### Data API
@@ -386,7 +425,10 @@ Get all accounts for a user. This function uses the scope `accounts:read`.
 
 ```javascript
 const queryParams = {limit: 10, offset: 5}
-const accounts = await moneyhub.getAccounts("userId", queryParams)
+const accounts = await moneyhub.getAccounts({
+  userId: "userId",
+  params: queryParams,
+  })
 ```
 
 #### `getAccountsWithDetails`
@@ -395,15 +437,10 @@ Get all accounts for a user including extra details (sort code, account number, 
 
 ```javascript
 const queryParams = {limit: 10, offset: 5}
-const accounts = await moneyhub.getAccountsWithDetails("userId", queryParams)
-```
-
-#### `getAccountsWithToken`
-
-Get all accounts for a user. This call requires an access token with the `accounts:read` scope.
-
-```javascript
-const accounts = await moneyhub.getAccountsWithToken("access.token")
+const accounts = await moneyhub.getAccountsWithDetails({
+  userId: "userId",
+  params: queryParams
+  })
 ```
 
 ### `getAccount`
@@ -411,7 +448,10 @@ const accounts = await moneyhub.getAccountsWithToken("access.token")
 Get a single account for a user by the accountId. This function uses the scope `accounts:read`.
 
 ```javascript
-const account = await moneyhub.getAccount("userId", "accountId")
+const account = await moneyhub.getAccount({
+  userId: "userId",
+  accountId: "accountId"
+  })
 ```
 
 ### `getAccountWithDetails`
@@ -419,24 +459,22 @@ const account = await moneyhub.getAccount("userId", "accountId")
 Get a single account for a user by the accountId including extra details (sort code, account number, account holder name). This function uses the scope `accounts:read accounts_details:read`.
 
 ```javascript
-const account = await moneyhub.getAccountWithDetails("userId", "accountId")
-```
+const account = await moneyhub.getAccountWithDetails({
+  userId: "userId",
+  accountId: "accountId"
+  })
+  ```
 
-
-#### `getAccountHoldingsWithToken`
-
-Get account holdings for a user. This call requires an access token with the `accounts:read` scope.
-
-```javascript
-const accounts = await moneyhub.getAccountHoldingsWithToken("access.token", "accountId)
-```
 
 ### `getAccountHoldings`
 
 Get account holdings for a user. This function uses the scope `accounts:read`.
 
 ```javascript
-const account = await moneyhub.getAccountHoldings("userId", "accountId")
+const account = await moneyhub.getAccountHoldings({
+  userId: "userId",
+  accountId: "accountId"
+  })
 ```
 
 ### `getAccountHoldingsWithMatches`
@@ -444,7 +482,22 @@ const account = await moneyhub.getAccountHoldings("userId", "accountId")
 Get account holdings with ISIN codes matchers for a user. This function uses the scope `accounts:read`.
 
 ```javascript
-const account = await moneyhub.getAccountHoldingsWithMatches("userId", "accountId")
+const account = await moneyhub.getAccountHoldingsWithMatches({
+  userId: "userId",
+  accountId: "accountId"
+  })
+```
+
+### `getAccountHolding`
+
+Get a single holding from a user's account. This function uses the scope `accounts:read`.
+
+```javascript
+const account = await moneyhub.getAccountHolding({
+  userId: "userId",
+  accountId: "accountId",
+  holdingId: "holdingId"
+  })
 ```
 
 ### `getAccountCounterparties`
@@ -452,7 +505,10 @@ const account = await moneyhub.getAccountHoldingsWithMatches("userId", "accountI
 Get account counterparties for a user. This function uses the scope `accounts:read transactions:read`.
 
 ```javascript
-const account = await moneyhub.getAccountCounterparties("userId", "accountId")
+const account = await moneyhub.getAccountCounterparties({
+  userId: "userId",
+  accountId: "accountId"
+  })
 ```
 
 ### `getAccountRecurringTransactions`
@@ -460,7 +516,10 @@ const account = await moneyhub.getAccountCounterparties("userId", "accountId")
 Get account recurring transactions for a user. This function uses the scope `accounts:read transactions:read`.
 
 ```javascript
-const account = await moneyhub.getAccountRecurringTransactions("userId", "accountId")
+const account = await moneyhub.getAccountRecurringTransactions({
+  userId: "userId",
+  accountId: "accountId"
+  })
 ```
 
 #### `getTransactions`
@@ -469,15 +528,10 @@ Get all transactions for a user. This function uses the scope `transactions:read
 
 ```javascript
 const queryParams = {limit: 10, offset: 5}
-const accounts = await moneyhub.getTransactions("userId", queryParams)
-```
-
-#### `getTransactionsWithToken`
-
-Get all transactions for a user. This call requires an access token with a scope that allows it to read transactions.
-
-```javascript
-const accounts = await moneyhub.getTransactionsWithToken("access.token")
+const transactions = await moneyhub.getTransactions({
+  userId: "userId",
+  params: queryParams
+  })
 ```
 
 #### `addFileToTransaction`
@@ -485,7 +539,12 @@ const accounts = await moneyhub.getTransactionsWithToken("access.token")
 Add an attachment to a transaction. This call requires an access token with a scope that allows it to read and write transactions. The third parameter must be a stream, and the size of the file being uploaded can be of max size 10MB.
 
 ```javascript
-const file = await money.addFileToTransaction("userId", "transactionId", fs.createReadStream("path/to/file.png"))
+const file = await money.addFileToTransaction({
+  userId: "userId" ,
+  transactionId: "transactionId",
+  fileName: "file-name",
+  fileData: fs.createReadStream("path/to/file.png"),
+  })
 ```
 
 #### `getTransactionFiles`
@@ -493,7 +552,10 @@ const file = await money.addFileToTransaction("userId", "transactionId", fs.crea
 Get all attachments associated with a transaction. This call requires an access token with a scope that allows it to read transactions.
 
 ```javascript
-const files = await money.getTransactionFiles("userId", "transactionId")
+const files = await money.getTransactionFiles({
+  userId: "userId" ,
+  transactionId: "transactionId",
+  })
 ```
 
 #### `getTransactionFile`
@@ -501,7 +563,11 @@ const files = await money.getTransactionFiles("userId", "transactionId")
 Get an attachment associated with a transaction. This call requires an access token with a scope that allows it to read transactions.
 
 ```javascript
-const files = await money.getTransactionFile("userId", "transactionId", "attachmentId")
+const files = await money.getTransactionFile({
+  userId: "userId" ,
+  transactionId: "transactionId",
+  fileId: "fileId",
+  })
 ```
 
 #### `deleteTransactionFile`
@@ -509,7 +575,11 @@ const files = await money.getTransactionFile("userId", "transactionId", "attachm
 Delete an attachment associated with a transaction. This call requires an access token with a scope that allows it to read and write transactions.
 
 ```javascript
-await money.deleteTransactionFile("userId", "transactionId", "attachmentId")
+await money.deleteTransactionFile({
+  userId: "userId" ,
+  transactionId: "transactionId",
+  fileId: "fileId",
+  })
 ```
 
 #### `getGlobalCounterparties`
@@ -520,6 +590,94 @@ Get global counterparties.
 
 const accounts = await moneyhub.getGlobalCounterparties()
 ```
+
+
+### Projects
+
+#### `getProjects`
+
+This method returns a list of projects. This function uses the scope `projects:read`
+
+```javascript
+const projects = await moneyhub.getProjects({
+  userId: "userId",
+  params: {
+    limit: "limit", // optional
+    offset: "offset", // optional
+  } // optional
+})
+```
+
+#### `getProject`
+
+Get a single project for a user by the projectId. This function uses the scope `projects:read`.
+
+```javascript
+const project = await moneyhub.getProject({
+  userId: "userId",
+  projectId: "projectId"
+  })
+```
+
+#### `addProject`
+
+Create a new project for a user. This function uses the scope `projects.write`. This will return the new project.
+
+```javascript
+const project = await moneyhub.addProject({
+  userId: "userId",
+  project: {
+    name: "Project Name",
+    accountIds: "id1,id2", // comma-separated list of account IDs
+    type: "PropertyProject",
+  }
+})
+```
+
+#### `updateProject`
+
+Update a project for a user. This function uses the scope `projects.write`. This will return the newly updated project.
+
+```javascript
+const project = await moneyhub.updateProject({
+  userId: "userId",
+  projectId: "projectId",
+  project: {
+    name: "Updated Project Name",
+    accountIds: "id1,id2", // comma-separated list of account IDs
+    type: "PropertyProject",
+    archived: false,
+  }
+})
+```
+
+#### `deleteProject`
+Delete a project for a user given a project ID. This function uses the scope `projects.delete`.
+
+```javascript
+const result = await moneyhub.deleteProject({
+  userId: "userId",
+  projectId: "projectId"
+  })
+```
+
+### Tax Return
+
+#### `getTaxReturn`
+Get a tax return object for a subset of transactions. This makes use of the `enhancedCategories` on transactions. This functions uses the scope `tax:read`
+
+```javascript
+const result = await moneyhub.getTaxReturn({
+  userId: "userId",
+  params: {
+    startDate: "2020-01-01",
+    endDate: "2020-02-01",
+    accountId: "accountId",
+    projectId: "projectId",
+  }
+})
+```
+
 
 ### Payments
 
@@ -616,7 +774,9 @@ const payments = await moneyhub.getPayments({
 Get a single payment by its id . This function uses the scope `payment:read`
 
 ```javascript
-const paymentData = await moneyhub.getPayment("payment-id")
+const paymentData = await moneyhub.getPayment({
+  id: "payment-id",
+})
 ```
 
 #### `getPaymentFromIDToken`
@@ -625,10 +785,10 @@ When a payment flow is completed and you call `exchangeCodeForTokens`
 you will receive back an ID Token that contains the payment id. This is a utility function to get the payment data using the id in the ID Token.
 
 ```javascript
-const paymentData = await moneyhub.getPaymentFromIDToken("eyJhbGciOiJSUz...")
+const paymentData = await moneyhub.getPaymentFromIDToken({
+  idToken: "eyJhbGciOiJSUz..."
+  })
 ```
-
-
 
 ### Financial Connections
 
@@ -666,70 +826,6 @@ This method will resolve with our open id configuration.
 const availableConnections = await moneyhub.getOpenIdConfig()
 ```
 
-### Projects
-
-#### `getProjects`
-
-This method returns a list of projects. This function uses the scope `projects:read`
-
-```javascript
-const projects = await moneyhub.getProjects("userId", {
-  limit: "limit", // optional
-  offset: "offset", // optional
-})
-```
-
-#### `getProject`
-
-Get a single project for a user by the projectId. This function uses the scope `projects:read`.
-
-```javascript
-const project = await moneyhub.getProject("userId", "projectId")
-```
-
-#### `addProject`
-
-Create a new project for a user. This function uses the scope `projects.write`. This will return the new project.
-
-```javascript
-const project = await moneyhub.addProject("userId", {
-  name: "Project Name",
-  accountIds: "id1,id2", // comma-separated list of account IDs
-  type: "PropertyProject",
-})
-```
-
-#### `updateProject`
-
-Update a project for a user. This function uses the scope `projects.write`. This will return the newly updated project.
-
-```javascript
-const project = await moneyhub.updateProject("userId", "projectId", {
-  name: "Updated Project Name",
-  accountIds: "id1,id2", // comma-separated list of account IDs
-  type: "PropertyProject",
-  archived: false,
-})
-```
-
-#### `deleteProject`
-Delete a project for a user given a project ID. This function uses the scope `projects.delete`.
-
-```javascript
-const result = await moneyhub.deleteProject("userId", "projectId")
-```
-
-### Tax Return
-
-#### `getTaxReturn`
-Get a tax return object for a subset of transactions. This makes use of the `enhancedCategories` on transactions. This functions uses the scope `tax:read`
-
-```javascript
-const result = await moneyhub.getTaxReturn("userId", "2020-01-01", "2020-02-01", {
-  accountId: "accountId",
-  projectId: "projectId"
-})
-```
 
 ### Examples
 

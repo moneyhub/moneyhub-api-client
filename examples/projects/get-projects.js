@@ -23,9 +23,11 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
-    const result = await moneyhub.getProjects(options.userId, {
-      limit: options.limit,
-      offset: options.offset,
+    const result = await moneyhub.getProjects({
+      userId: options.userId, params: {
+        limit: options.limit,
+        offset: options.offset,
+      }
     })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {

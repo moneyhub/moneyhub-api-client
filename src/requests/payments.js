@@ -10,9 +10,9 @@ module.exports = ({config, request}) => {
 
   return {
     getPayment,
-    getPayments: (searchParams = {}) =>
+    getPayments: (params = {}) =>
       request(`${identityServiceUrl}/payments`, {
-        searchParams,
+        searchParams: params,
         cc: {
           scope: "payment:read",
         },

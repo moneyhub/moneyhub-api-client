@@ -20,6 +20,7 @@ describe("API client", () => {
     it("should export the required functions", () => {
       expect(Object.keys(moneyhub)).to.deep.equal([
         "getAccounts",
+        "getAccountsWithDetails",
         "getAccount",
         "getAccountWithDetails",
         "getAccountHoldings",

@@ -24,11 +24,15 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
-    const result = await moneyhub.updateProject(options.userId, options.projectId, {
-      name: options.name,
-      accountIds: options.accountIds.split(","),
-      type: options.type,
-      archived: false,
+    const result = await moneyhub.updateProject({
+      userId: options.userId,
+      projectId: options.projectId,
+      project: {
+        name: options.name,
+        accountIds: options.accountIds.split(","),
+        type: options.type,
+        archived: false,
+      }
     })
 
     console.log(result)

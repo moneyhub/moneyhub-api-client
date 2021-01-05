@@ -45,7 +45,7 @@ module.exports = ({client, config}) => {
         },
         {
           sign: request_object_signing_alg,
-        },
+        }
       )
       .then((request) => ({
         ...authParams,
@@ -54,8 +54,8 @@ module.exports = ({client, config}) => {
       .then(client.authorizationUrl.bind(client))
   }
 
-  const getAuthorizeUrlFromRequestUri = ({request_uri}) => {
-    return `${client.issuer.authorization_endpoint}?request_uri=${request_uri}`
+  const getAuthorizeUrlFromRequestUri = ({requestUri}) => {
+    return `${client.issuer.authorization_endpoint}?request_uri=${requestUri}`
   }
 
   const requestObject = ({scope, state, claims, nonce}) => {
@@ -75,15 +75,12 @@ module.exports = ({client, config}) => {
   }
 
   const getRequestUri = async (requestObject) => {
-    const {body} = await got.post(
-      identityServiceUrl + "/request",
-      {
-        body: requestObject,
-        headers: {
-          "Content-Type": "application/jws",
-        },
+    const {body} = await got.post(identityServiceUrl + "/request", {
+      body: requestObject,
+      headers: {
+        "Content-Type": "application/jws",
       },
-    )
+    })
     return body
   }
 
@@ -238,7 +235,7 @@ module.exports = ({client, config}) => {
 
       const requestUri = await getRequestUri(request)
       const url = getAuthorizeUrlFromRequestUri({
-        request_uri: requestUri,
+        requestUri,
       })
       return url
     },

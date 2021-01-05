@@ -25,7 +25,7 @@ const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
 
-    const response = await moneyhub.deleteUserConnection(userId, connectionId)
+    const response = await moneyhub.deleteUserConnection({userId, connectionId})
     console.log(JSON.stringify({statusCode: response.statusCode}, null, 2))
 
   } catch (e) {
