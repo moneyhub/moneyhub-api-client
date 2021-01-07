@@ -12,7 +12,7 @@ module.exports = ({config, request}) => {
         body: {clientUserId},
       }),
 
-    getUsers: async ({params} = {}) =>
+    getUsers: async (params = {}) =>
       request(usersEndpoint, {
         searchParams: params,
         cc: {

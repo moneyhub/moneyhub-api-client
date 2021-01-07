@@ -28,7 +28,7 @@ describe("Users", () => {
   })
 
   it("can get all users with limit", async () => {
-    const users = await moneyhub.getUsers({params: {limit: 1}})
+    const users = await moneyhub.getUsers({limit: 1})
     expect(users.data.length).to.equal(1)
   })
 
