@@ -16,8 +16,7 @@ const requestFactories = [
   require("./requests/unauthenticated"),
   require("./requests/users-and-connections"),
 ]
-
-Issuer.defaultHttpOptions = {timeout: 60000}
+const DEAFULT_TIMEOUT = 60000
 
 module.exports = async (apiClientConfig) => {
   const config = R.evolve({
@@ -26,6 +25,7 @@ module.exports = async (apiClientConfig) => {
 
   const {
     identityServiceUrl,
+    options = {},
     client: {
       client_id,
       client_secret,
@@ -36,6 +36,10 @@ module.exports = async (apiClientConfig) => {
       token_endpoint_auth_method,
     },
   } = config
+  const {timeout = DEAFULT_TIMEOUT} = options
+
+  Issuer.defaultHttpOptions = {timeout}
+
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl + "/oidc")
 
   const client = new moneyhubIssuer.Client(
@@ -52,7 +56,7 @@ module.exports = async (apiClientConfig) => {
 
   client.CLOCK_TOLERANCE = 10
 
-  const request = require("./request")({client})
+  const request = require("./request")({client, options: {timeout}})
 
   const moneyhub = {
     ...R.mergeAll(requestFactories.map((fn) => fn({request, config}))),

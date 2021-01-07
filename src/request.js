@@ -1,10 +1,11 @@
 const got = require("got")
 
-module.exports = ({client}) => async (url, opts = {}) => {
+module.exports = ({client, options: {timeout}}) => async (url, opts = {}) => {
   const gotOpts = {
     method: opts.method || "GET",
     headers: opts.headers || {},
     searchParams: opts.searchParams,
+    timeout,
   }
 
   if (opts.cc) {
