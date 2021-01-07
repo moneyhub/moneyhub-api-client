@@ -1,6 +1,7 @@
 module.exports = ({config, request}) => {
   const {identityServiceUrl} = config
   const usersEndpoint = identityServiceUrl + "/users"
+  const scimUsersEndpoint = identityServiceUrl + "/scim/users"
 
   return {
     registerUser: async ({clientUserId}) =>
@@ -17,6 +18,14 @@ module.exports = ({config, request}) => {
         searchParams: params,
         cc: {
           scope: "user:read",
+        },
+      }),
+
+    getSCIMUsers: async (params = {}) =>
+      request(scimUsersEndpoint, {
+        searchParams: params,
+        cc: {
+          scope: "scim_user:read",
         },
       }),
 
