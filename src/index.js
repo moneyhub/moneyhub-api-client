@@ -19,7 +19,11 @@ const requestFactories = [
 
 Issuer.defaultHttpOptions = {timeout: 60000}
 
-module.exports = async (config) => {
+module.exports = async (apiClientConfig) => {
+  const config = R.evolve({
+    identityServiceUrl: (value) => value.replace("/oidc", "")
+  }, apiClientConfig)
+
   const {
     identityServiceUrl,
     client: {
