@@ -19,9 +19,12 @@ const requestFactories = [
 const DEAFULT_TIMEOUT = 60000
 
 module.exports = async (apiClientConfig) => {
-  const config = R.evolve({
-    identityServiceUrl: (value) => value.replace("/oidc", "")
-  }, apiClientConfig)
+  const config = R.evolve(
+    {
+      identityServiceUrl: (value) => value.replace("/oidc", ""),
+    },
+    apiClientConfig
+  )
 
   const {
     identityServiceUrl,
@@ -51,7 +54,7 @@ module.exports = async (apiClientConfig) => {
       token_endpoint_auth_method,
       request_object_signing_alg,
     },
-    {keys},
+    {keys}
   )
 
   client.CLOCK_TOLERANCE = 10
@@ -63,8 +66,7 @@ module.exports = async (apiClientConfig) => {
     ...getAuthUrlsFactory({client, config}),
     ...getTokensFactory({client, config}),
 
-    keys: () =>
-      keys && keys.length ? JWKS.asKeyStore({keys}).toJWKS() : null,
+    keys: () => (keys && keys.length ? JWKS.asKeyStore({keys}).toJWKS() : null),
   }
   return moneyhub
 }

@@ -1,4 +1,21 @@
 
+4.0.0 / 2021-01-11
+==================
+
+**Features**
+
+* Allow passing requests timeout
+* Allow passing Identity service url without `/oidc` suffix
+
+**Bug Fixes**
+
+* Update `openid-client` and `got` to fix security vulnerabilities
+
+**Breaking Changes**
+
+* Normalisation of all methods to use object destructuring to pass parameters.
+  Please refer to the docs of each method when migrating to this version
+
 3.7.0 / 2020-07-27
 ==================
 

@@ -23,6 +23,10 @@ This is an Node.JS client for the [Moneyhub API](https://www.notion.so/Moneyhub-
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
 
+### Changelog
+
+[Learn about the latest improvements and breaking changes](changelog).
+
 ### Prerequisites
 
 To use this API client you will need:
@@ -44,6 +48,9 @@ const Moneyhub = require("@mft/moneyhub-api-client")
 const moneyhub = Moneyhub({
   resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
   identityServiceUrl: "https://identity.moneyhub.co.uk",
+  options: { // optional
+    timeout: 60000
+  }
   client: {
     client_id: "your client id",
     client_secret: "your client secret",
