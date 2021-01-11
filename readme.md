@@ -837,3 +837,7 @@ const availableConnections = await moneyhub.getOpenIdConfig()
 ### Examples
 
 We have a couple of examples under the `/examples` folder that can be helpful to start using our client.
+
+### Running Tests
+
+Instructions on how to run the integration tests for the API client can be found [here](https://www.notion.so/moneyhub/Moneyhub-API-Client-Tests-Config-0bef6e3cb922425b88f0268c1a999917)
