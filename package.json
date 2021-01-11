@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "lint": "eslint src/ examples/",
-    "test": "mocha src/**/__tests__/*.js",
+    "test": "mocha src/**/__tests__/*.js --timeout 5000",
     "prepush": "npm run lint && npm run test"
   },
   "keywords": [

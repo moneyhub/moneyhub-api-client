@@ -57,6 +57,7 @@ describe("API client", () => {
         "getOpenIdConfig",
         "registerUser",
         "getUsers",
+        "getSCIMUsers",
         "getUser",
         "getUserConnections",
         "deleteUserConnection",
