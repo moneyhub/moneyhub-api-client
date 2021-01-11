@@ -25,7 +25,7 @@ Currently this library supports `client_secret_basic`, `client_secret_jwt` and `
 
 ### Changelog
 
-[Learn about the latest improvements and breaking changes](changelog).
+[Learn about the latest improvements and breaking changes](CHANGELOG.md).
 
 ### Prerequisites
 
