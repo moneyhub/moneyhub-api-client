@@ -44,7 +44,7 @@ module.exports = ({config, request}) => {
       }),
 
     deleteUserConnection: async ({userId, connectionId}) =>
-      request(`${usersEndpoint}/${userId}/connections/${connectionId}`, {
+      request(`${usersEndpoint}/${userId}/connection/${connectionId}`, {
         method: "DELETE",
         returnStatus: true,
         cc: {
