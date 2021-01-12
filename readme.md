@@ -589,6 +589,57 @@ await money.deleteTransactionFile({
   })
 ```
 
+#### `splitTransaction`
+Split up a transaction into different categories and/or projects.
+```javascript
+const splits = await moneyhub.splitTransaction({
+    userId: "userId",
+    transactionId: "transactionId",
+    splits: [
+      {
+        "categoryId": "std:5a7ff1f3-cd2c-4676-a368-caf09f2ca35a",
+        "description": "Split 1",
+        "amount": -6000
+      },
+      {
+        "categoryId": "std:eac238ec-3899-49ff-8cce-e3b9f4b1aede",
+        "description": "Split 2",
+        "amount": -4000
+      }
+    ]
+})
+```
+
+#### `getTransactionSplits`
+Get a transactions splits.
+```javascript
+const splits = await moneyhub.getTransactionSplits({
+    userId: "userId",
+    transactionId: "transactionId"
+})
+```
+
+#### `patchTransactionSplit`
+Update a transaction's split's description, categoryId or projectId.
+```javascript
+const splits = await moneyhub.patchTransactionSplit({
+    userId: "userId",
+    transactionId: "transactionId",
+    split: {
+      description: "New description"
+    }
+})
+```
+
+#### `deleteTransactionSplits`
+Delete a transaction's splits and merge them back together.
+```javascript
+const splits = await moneyhub.deleteTransactionSplits({
+    userId: "userId",
+    transactionId: "transactionId"
+})
+```
+
 #### `getGlobalCounterparties`
 
 Get global counterparties.

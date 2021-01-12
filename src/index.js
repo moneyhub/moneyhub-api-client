@@ -13,6 +13,7 @@ const requestFactories = [
   require("./requests/tax"),
   require("./requests/transactions"),
   require("./requests/transaction-files"),
+  require("./requests//transaction-splits"),
   require("./requests/unauthenticated"),
   require("./requests/users-and-connections"),
 ]
