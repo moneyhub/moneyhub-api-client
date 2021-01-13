@@ -19,9 +19,24 @@ This is an Node.JS client for the [Moneyhub API](https://www.notion.so/Moneyhub-
 - Get Payees and payments
 - CRUD actions on projects
 - CRUD actions on transaction attachments
+- CRUD actions on transaction splits
 - Get a tax return for a subset of transactions
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
+
+### Upgrading from 3.x
+
+The breaking changes when upgrading are outlined below:
+
+* Normalisation of all methods to use object destructuring to pass parameters. Please refer to the docs of each method when migrating to this version
+
+* Delete methods only return the status code when succesful
+
+* All methods to retrieve data return the body response as json, on previous versions some methods were returning the full response from the got library.
+
+* When our API response code is not 2xx an HTTP error is thrown. Includes a response property with more information.
+
+For the full list of changes please refer to the [changelog](CHANGELOG.md)
 
 ### Changelog
 

@@ -13,8 +13,10 @@
 
 **Breaking Changes**
 
-* Normalisation of all methods to use object destructuring to pass parameters.
-  Please refer to the docs of each method when migrating to this version
+* Normalisation of all methods to use object destructuring to pass parameters. Please refer to the docs of each method when migrating to this version
+* Delete methods only return the status code when succesful
+* All methods to retrieve data return the body response as json, on previous versions some methods were returning the full response from the got library.
+* When our API response code is not 2xx an HTTP error is thrown. Includes a response property with more information.
 
 3.7.0 / 2020-07-27
 ==================
