@@ -22,6 +22,7 @@ describe("API client", () => {
         "getAccounts",
         "getAccountsWithDetails",
         "getAccount",
+        "getAccountBalances",
         "getAccountWithDetails",
         "getAccountHoldings",
         "getAccountHoldingsWithMatches",

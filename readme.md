@@ -487,6 +487,16 @@ const account = await moneyhub.getAccountWithDetails({
   })
   ```
 
+#### `getAccountBalances`
+
+Get account balances for a user. This function uses the scope `accounts:read`.
+
+```javascript
+const account = await moneyhub.getAccountBalances({
+  userId: "userId",
+  accountId: "accountId"
+  })
+```
 
 #### `getAccountHoldings`
 

@@ -29,6 +29,14 @@ module.exports = ({config, request}) => {
         },
       }),
 
+    getAccountBalances: async ({userId, accountId}) =>
+      request(`${resourceServerUrl}/accounts/${accountId}/balances`, {
+        cc: {
+          scope: "accounts:read",
+          sub: userId,
+        },
+      }),
+
     getAccountWithDetails: async ({userId, accountId}) =>
       request(`${resourceServerUrl}/accounts/${accountId}`, {
         cc: {
