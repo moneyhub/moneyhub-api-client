@@ -2,7 +2,7 @@
 
 ### Introduction
 
-This is an Node.JS client for the [Moneyhub API](https://www.notion.so/Moneyhub-API-Docs-26fa35dba2a64cf08116cbd6fe844488). It currently supports the following features:
+This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise.com/docs). It currently supports the following features:
 
 - Getting the list of supported banks
 - Registering users
@@ -89,9 +89,9 @@ Once the api client has been initialised it provides a simple promise based inte
 
 This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`.
 
-[Scopes](https://www.notion.so/moneyhub/Scopes-ca431010f9fa4398bb4b64c6a00beb98)
+[Scopes](https://docs.moneyhubenterprise.com/docs/scopes)
 
-[Financial institution](https://www.notion.so/moneyhub/Bank-Connections-a2a0177ea8d44131a00f8b8ed18de69d)
+[Financial institution](https://docs.moneyhubenterprise.com/docs/bank-connections)
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrl({
@@ -118,9 +118,9 @@ const defaultClaims = {
 
 This is a helper function that returns an authorize url for a specific user to connect to a specific bank. This function uses the following scope with the value of the bankId provided `id:${bankId} openid`.
 
-[Scopes](https://www.notion.so/moneyhub/Scopes-ca431010f9fa4398bb4b64c6a00beb98)
+[Scopes](https://docs.moneyhubenterprise.com/docs/scopes)
 
-[Financial institution](https://www.notion.so/moneyhub/Bank-Connections-a2a0177ea8d44131a00f8b8ed18de69d)gs
+[Financial institution](https://docs.moneyhubenterprise.com/docs/bank-connections)
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrlForCreatedUser({
