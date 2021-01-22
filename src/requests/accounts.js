@@ -94,5 +94,27 @@ module.exports = ({config, request}) => {
           },
         },
       ),
+
+    getAccountStandingOrders: async ({userId, accountId}) =>
+      request(
+        `${resourceServerUrl}/accounts/${accountId}/standing-orders`,
+        {
+          cc: {
+            scope: "accounts:read standing_orders:read",
+            sub: userId,
+          },
+        },
+      ),
+
+    getAccountStandingOrdersWithDetail: async ({userId, accountId}) =>
+      request(
+        `${resourceServerUrl}/accounts/${accountId}/standing-orders`,
+        {
+          cc: {
+            scope: "accounts:read standing_orders_detail:read",
+            sub: userId,
+          },
+        },
+      ),
   }
 }
