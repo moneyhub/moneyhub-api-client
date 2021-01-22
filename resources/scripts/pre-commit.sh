@@ -20,7 +20,7 @@ function hasOnlys {
 }
 
 function hasLogs {
-  addedLogs=$(git diff --cached -G "(console.log|debugger)" | grep "^+[^+]" | grep -E "(console.log|debugger)")
+  addedLogs=$(git diff -- src --cached -G "(console.log|debugger)" | grep "^+[^+]" | grep -E "(console.log|debugger)")
   if [ $(echo $addedLogs | wc -c) -gt 1 ]
   then
     echo ""
