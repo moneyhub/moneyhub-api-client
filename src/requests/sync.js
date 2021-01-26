@@ -12,6 +12,7 @@ module.exports = ({config, request}) => {
       customerLastLoggedTime,
     }) =>
       request(`${resourceServerUrl}/sync/${connectionId}`, {
+        method: "POST",
         body: filterUndefined({customerIpAddress, customerLastLoggedTime}),
         cc: {
           scope: "accounts:read accounts:write:all",
