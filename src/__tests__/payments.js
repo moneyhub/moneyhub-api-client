@@ -12,19 +12,19 @@ describe("Payments", () => {
   })
 
   it("gets payment from token", async () => {
-    const payment = await moneyhub.getPaymentFromIDToken({
+    const {data: payment} = await moneyhub.getPaymentFromIDToken({
       idToken: config.testPaymentIdToken,
     })
-    paymentId = payment.data.id
-    expect(payment.data.status).to.eql("completed")
+    paymentId = payment.id
+    expect(paymentId).to.eql("2f1b0cec-d231-4c3b-8f6c-0f9ad330e939")
   })
 
   it("gets payment by id", async () => {
-    const payment = await moneyhub.getPayment({
+    const {data: payment} = await moneyhub.getPayment({
       id: paymentId
     })
-    expect(payment.data.id).to.eql(paymentId)
-    expect(payment.data.status).to.eql("completed")
+    expect(payment.id).to.eql(paymentId)
+    expect(payment.status).to.eql("completed")
   })
 
   it("gets payments", async () => {
