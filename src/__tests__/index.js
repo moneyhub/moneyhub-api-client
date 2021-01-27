@@ -29,6 +29,8 @@ describe("API client", () => {
         "getAccountHolding",
         "getAccountCounterparties",
         "getAccountRecurringTransactions",
+        "getAccountStandingOrders",
+        "getAccountStandingOrdersWithDetail",
         "createAuthRequest",
         "completeAuthRequest",
         "getAllAuthRequests",
