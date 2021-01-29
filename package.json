@@ -1,6 +1,6 @@
 {
   "name": "@mft/moneyhub-api-client",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "Node.JS client for the Moneyhub API",
   "main": "src/index.js",
   "scripts": {
