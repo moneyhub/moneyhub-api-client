@@ -1,4 +1,4 @@
-const {Issuer} = require("openid-client")
+const {Issuer, custom} = require("openid-client")
 const R = require("ramda")
 const {JWKS} = require("jose")
 const getAuthUrlsFactory = require("./get-auth-urls")
@@ -17,7 +17,7 @@ const requestFactories = [
   require("./requests/unauthenticated"),
   require("./requests/users-and-connections"),
 ]
-const DEAFULT_TIMEOUT = 60000
+const DEFAULT_TIMEOUT = 60000
 
 module.exports = async (apiClientConfig) => {
   const config = R.evolve(
@@ -40,7 +40,12 @@ module.exports = async (apiClientConfig) => {
       token_endpoint_auth_method,
     },
   } = config
-  const {timeout = DEAFULT_TIMEOUT} = options
+
+  const {timeout = DEFAULT_TIMEOUT} = options
+
+  custom.setHttpOptionsDefaults({
+    timeout,
+  })
 
   Issuer.defaultHttpOptions = {timeout}
 
@@ -58,7 +63,7 @@ module.exports = async (apiClientConfig) => {
     {keys}
   )
 
-  client.CLOCK_TOLERANCE = 10
+  client[custom.clock_tolerance] = 10
 
   const request = require("./request")({client, options: {timeout}})
 
