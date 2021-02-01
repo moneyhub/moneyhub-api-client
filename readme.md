@@ -782,6 +782,7 @@ const url = await moneyhub.getPaymentAuthorizeUrl({
   payerEmail: "Payer Email", // optional
   state: "your state value",
   nonce: "your nonce value", // optional
+  context: "Payment context [Other,BillPayment,PartyToParty]", // optional - defaults to PartyToParty
   claims: claimsObject, // optional
 })
 
