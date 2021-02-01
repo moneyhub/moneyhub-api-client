@@ -191,6 +191,7 @@ module.exports = ({client, config}) => {
       payerType,
       state,
       nonce,
+      context,
       claims = {},
     }) => {
       if (!state) {
@@ -219,6 +220,7 @@ module.exports = ({client, config}) => {
               payeeType,
               payerId,
               payerType,
+              context,
             },
           },
         },

@@ -18,6 +18,7 @@ const optionDefinitions = [
   {name: "payer-type", type: String},
   {name: "payer-name", type: String},
   {name: "payer-email", type: String},
+  {name: "context", alias: "c", type: String},
   {name: "amount", alias: "a", defaultValue: 100, description: "required"},
   {
     name: "payee-ref",
@@ -69,6 +70,7 @@ const start = async () => {
       payerId: options["payer-id"],
       payerName: options["payer-name"],
       payerEmail: options["payer-email"],
+      context: options.context
     })
 
     console.log(url)

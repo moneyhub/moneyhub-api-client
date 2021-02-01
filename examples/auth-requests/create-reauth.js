@@ -34,6 +34,7 @@ const start = async () => {
     console.log(data)
   } catch (e) {
     console.log(e)
+    console.log(e.response.body)
   }
 }
 

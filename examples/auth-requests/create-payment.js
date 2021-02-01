@@ -17,6 +17,7 @@ const optionDefinitions = [
   {name: "payee-type", type: String},
   {name: "payer-id", type: String},
   {name: "payer-type", type: String},
+  {name: "context", alias: "c", type: String},
   {name: "amount", alias: "a", defaultValue: 100, description: "required"},
   {
     name: "payee-ref",
@@ -53,12 +54,14 @@ const start = async () => {
         amount: options.amount,
         payeeRef: options["payee-ref"],
         payerRef: options["payer-ref"],
+        context: options.context
       },
       redirectUri: config.client.redirect_uri,
     })
     console.log(data)
   } catch (e) {
     console.log(e)
+    console.log(e.response.body)
   }
 }
 
