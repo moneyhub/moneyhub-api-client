@@ -13,20 +13,19 @@ const optionDefinitions = [
   {name: "userId", alias: "u", type: String},
 ]
 
-const usage = commandLineUsage(
-  {
-    header: "Options",
-    optionList: optionDefinitions,
-  }
-)
+const usage = commandLineUsage({
+  header: "Options",
+  optionList: optionDefinitions,
+})
 console.log(usage)
 
 const options = commandLineArgs(optionDefinitions)
-const {
-  code, state, userId, nonce, idtoken, localstate,
-} = options
+const {code, state, userId, nonce, idtoken, localstate} = options
 
 if (!code) throw new Error("code needs to be provided")
+
+const decodeJWT = (jwtToken) =>
+  JSON.parse(Buffer.from(jwtToken.split(".")[1], "base64").toString())
 
 const start = async () => {
   try {
@@ -41,8 +40,16 @@ const start = async () => {
       nonce,
       state: localstate,
     }
-    const result = await moneyhub.exchangeCodeForTokens({paramsFromCallback, localParams})
-    console.log(JSON.stringify(result, null, 2))
+    const result = await moneyhub.exchangeCodeForTokens({
+      paramsFromCallback,
+      localParams,
+    })
+    console.log(result)
+    const {access_token, id_token} = result
+
+    access_token && console.dir(decodeJWT(access_token), {depth: null})
+    id_token && console.log(decodeJWT(id_token))
+
   } catch (e) {
     console.log(e)
   }
