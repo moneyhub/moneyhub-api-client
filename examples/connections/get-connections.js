@@ -25,7 +25,7 @@ const start = async () => {
     const moneyhub = await Moneyhub(config)
 
     const result = await moneyhub.getUserConnections({userId})
-    console.log(JSON.stringify(result.body, null, 2))
+    console.log(JSON.stringify(result, null, 2))
 
   } catch (e) {
     console.log(e)
