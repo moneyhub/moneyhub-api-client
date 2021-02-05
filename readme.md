@@ -60,7 +60,7 @@ This module exposes a single factory function that accepts the following configu
 
 ```javascript
 const Moneyhub = require("@mft/moneyhub-api-client")
-const moneyhub = Moneyhub({
+const moneyhub = await Moneyhub({
   resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
   identityServiceUrl: "https://identity.moneyhub.co.uk",
   options: { // optional
