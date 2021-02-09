@@ -313,7 +313,6 @@ Creates a connection auth request
 const tokens = await moneyhub.createAuthRequest({
   redirectUri: "redirect-uri,
   userId: "user-id",
-  connectionId: "connection-id", // optional - nedeed only on reauth
   scope:"openid 1ffe704d39629a929c8e293880fb449a", // replace bank id with the bank you want to connect to
   categorisationType: "personal", // optional - defaults to personal
 })
