@@ -360,7 +360,7 @@ const tokens = await moneyhub.createAuthRequest({
 
 #### `completeAuthRequest`
 
-Completes an auth request
+Completes an auth request succesfully
 
 ```javascript
 const tokens = await moneyhub.completeAuthRequest({
@@ -369,12 +369,21 @@ const tokens = await moneyhub.completeAuthRequest({
     code: "code"
     state: "state",
     "id_token": "idToken",
+  }
+})
+```
+
+Completes an auth request with an error
+
+```javascript
+const tokens = await moneyhub.completeAuthRequest({
+  id: "auth-request-id",
+  authParams: {
     error: "error-code",
     "error_description": "error description"
   }
 })
 ```
-
 #### `getAllAuthRequests`
 
 Retrieves auth requests
