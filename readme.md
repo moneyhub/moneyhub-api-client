@@ -307,16 +307,54 @@ const tokens = await moneyhub.getAuthorizeUrlFromRequestUri({
 
 #### `createAuthRequest`
 
-Creates an auth request
+Creates a connection auth request
+
+```javascript
+const tokens = await moneyhub.createAuthRequest({
+  redirectUri: "redirect-uri,
+  userId: "user-id",
+  connectionId: "connection-id", // optional - nedeed only on reauth
+  scope:"openid 1ffe704d39629a929c8e293880fb449a", // replace bank id with the bank you want to connect to
+  categorisationType: "personal", // optional - defaults to personal
+})
+```
+
+Creates a reauth auth request
 
 ```javascript
 const tokens = await moneyhub.createAuthRequest({
   redirectUri: "redirect-uri,
   userId: "user-id",
   connectionId: "connection-id",
-  categorisationType: "personal",
+  scope:"openid reauth",
+})
+```
+
+Creates a refresh auth request
+
+```javascript
+const tokens = await moneyhub.createAuthRequest({
+  redirectUri: "redirect-uri,
+  userId: "user-id",
+  connectionId: "connection-id",
+  scope:"openid refresh",
+})
+```
+
+Creates a payment auth request
+
+```javascript
+const tokens = await moneyhub.createAuthRequest({
+  redirectUri: "redirect-uri,
+  userId: "user-id",
+  connectionId: "connection-id",
   scope:"openid payment",
-  payment: paymentObject, //optional
+  payment: {
+    payeeId: "payee-id",
+    amount: 200,
+    payeeRef: "Payee ref,
+    payerRef: "Payer ref"
+  },
 })
 ```
 
