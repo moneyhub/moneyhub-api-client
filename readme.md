@@ -89,9 +89,11 @@ Once the api client has been initialised it provides a simple promise based inte
 
 This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`.
 
+[Financial institutions](https://docs.moneyhubenterprise.com/docs/bank-connections)
+
 [Scopes](https://docs.moneyhubenterprise.com/docs/scopes)
 
-[Financial institution](https://docs.moneyhubenterprise.com/docs/bank-connections)
+[Claims](https://docs.moneyhubenterprise.com/docs/claims)
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrl({
@@ -118,9 +120,11 @@ const defaultClaims = {
 
 This is a helper function that returns an authorize url for a specific user to connect to a specific bank. This function uses the following scope with the value of the bankId provided `id:${bankId} openid`.
 
+[Financial institutions](https://docs.moneyhubenterprise.com/docs/bank-connections)
+
 [Scopes](https://docs.moneyhubenterprise.com/docs/scopes)
 
-[Financial institution](https://docs.moneyhubenterprise.com/docs/bank-connections)
+[Claims](https://docs.moneyhubenterprise.com/docs/claims)
 
 ```javascript
 const url = await moneyhub.getAuthorizeUrlForCreatedUser({
@@ -595,6 +599,28 @@ Get account recurring transactions for a user. This function uses the scope `acc
 
 ```javascript
 const account = await moneyhub.getAccountRecurringTransactions({
+  userId: "userId",
+  accountId: "accountId"
+  })
+```
+
+#### `getAccountStandingOrders`
+
+Get the standing orders for an account. This function uses the scope `standing_orders:read` and a connection with `ReadStandingOrdersBasic` permission.
+
+```javascript
+const standingOrders = await moneyhub.getAccountStandingOrders({
+  userId: "userId",
+  accountId: "accountId"
+  })
+```
+
+#### `getAccountStandingOrdersWithDetail`
+
+Get the standing orders with detail (payee information) for an account. This function uses the scope `standing_orders_detail:read` and a connection with `ReadStandingOrdersDetail` permission.
+
+```javascript
+const standingOrders = await moneyhub.getAccountStandingOrdersWithDetail({
   userId: "userId",
   accountId: "accountId"
   })
