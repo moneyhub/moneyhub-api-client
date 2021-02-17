@@ -14,7 +14,6 @@ describe("Sync", () => {
 
   it("sync user connection", async () => {
     const user = await moneyhub.getUser({userId})
-    console.log(user)
     connectionId = user.connectionIds[0]
     try {
       const result = await moneyhub.syncUserConnection({userId, connectionId})

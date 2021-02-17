@@ -17,6 +17,7 @@ This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise
 - Generate authorisation url for payments
 - Add Payees
 - Get Payees and payments
+- Get categories
 - CRUD actions on projects
 - CRUD actions on transaction attachments
 - CRUD actions on transaction splits

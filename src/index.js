@@ -16,6 +16,7 @@ const requestFactories = [
   require("./requests//transaction-splits"),
   require("./requests/unauthenticated"),
   require("./requests/users-and-connections"),
+  require("./requests/categories")
 ]
 const DEFAULT_TIMEOUT = 60000
 
