@@ -748,6 +748,59 @@ const accounts = await moneyhub.getGlobalCounterparties()
 ```
 
 
+#### `getCategories`
+
+Get all categories for a user. This function uses the scope `categories:read`.
+
+```javascript
+
+const categories = await moneyhub.getCategories({
+  userId: "userId",
+  params: {
+    type: "personal" // optional personal|business
+    },
+  })
+```
+
+#### `getCategory`
+
+Get a single category for a user. This function uses the scope `categories:read`.
+
+```javascript
+const category = await moneyhub.getCategory({
+  userId: "userId",
+  categoryId: "categoryId"
+  })
+```
+
+#### `getCategoryGroups`
+
+Get all category groups for a user. This function uses the scope `categories:read`.
+
+```javascript
+
+const categoryGroups = await moneyhub.getCategoryGroups({
+  userId: "userId",
+  params: {
+    type: "personal" // optional personal|business
+    },
+  })
+```
+#### `createCustomCategory`
+
+Create a custom category. This function uses the scopes `categories:read categories:write`.
+
+```javascript
+
+const category = await moneyhub.createCustomCategory({
+  userId: "userId",
+  category: {
+    group: "group:1"
+    name: "custom-category",
+    },
+  })
+```
+
 ### Projects
 
 #### `getProjects`
