@@ -1000,6 +1000,93 @@ const paymentData = await moneyhub.getPaymentFromIDToken({
   })
 ```
 
+### Standing Orders
+
+#### `getStandingOrderAuthorizeUrl`
+
+This is a helper function that returns an authorize url to authorize a standng order to the payee with the bank selected. This function uses the following scope with the value of the bankId provided `standing_orders:create openid id:${bankId}`. It also requires the authentication to be `client_secret_jwt` or `private_key_jwt`.
+
+```javascript
+const url = await moneyhub.getStandingOrderAuthorizeUrl({
+  bankId: "Bank id to authorise payment from",
+  payeeId: "Id of payee",
+  payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
+  payerId: "Id of payer", // requird only if payerType is defined
+  payerType: "Payer type [mh-user-account]", // required only if payerId is used
+  reference: "The reference for standing order",
+  frequency: "The frequency to repeat the standing order [Daily,Weekly,Monthly,Yearly]",
+  numberOfPayments: "The number of payments to complete the standing order", // required if finalPaymentDate is not specified
+  firstPaymentAmount: "Amount in pence to authorize payment",
+  recurringPaymentAmount: "Amount in pence to authorize payment", // optional when it is the same as the first amount
+  finalPaymentAmount: "Amount in pence to authorize payment", // optional when it is the same as the first amount
+  currency: "The currency code for the standing order amount [GBP]",
+  firstPaymentDate: "The date to make the first payment",
+  recurringPaymentDate: "The date to make the first repeating payment",
+  finalPaymentDate: "The date to make the final payment", // required if numberOfPayments is not specified
+  state: "your state value",
+  nonce: "your nonce value", // optional
+  context: "Payment context [Other,BillPayment,PartyToParty]", // optional - defaults to PartyToParty
+  claims: claimsObject, // optional
+})
+
+// Scope used with the bankId provided
+const scope = `standing_orders:create openid id:${bankId}`
+
+// Default claims if none are provided
+const defaultClaims = {
+  id_token: {
+    "mh:con_id": {
+      essential: true,
+    },
+    "mh:payment": {
+      essential: true,
+      value: {
+        payeeId,
+        payeeType,
+        payerId,
+        payerType,
+        reference,
+        frequency,
+        numberOfPayments,
+        firstPaymentAmount,
+        recurringPaymentAmount,
+        finalPaymentAmount,
+        currency,
+        firstPaymentDate,
+        recurringPaymentDate,
+        finalPaymentDate,
+        context,
+      },
+    },
+  },
+}
+```
+
+#### `getStandingOrders`
+
+This method returns a list of initiated standing orders. This function uses the scope `payment:read`
+
+```javascript
+const standingOrders = await moneyhub.getStandingOrders({
+  limit: "limit", // optional
+  offset: "offset", // optional
+  userId: "user-id", // optional
+  payeeId: "payee-id", // optional
+  startDate: "2020-01-01", // optional
+  endDate: "2020-12-31", // optional
+})
+```
+
+#### `getStandingOrder`
+
+Get a single standing order request by its id . This function uses the scope `payment:read`
+
+```javascript
+const standingOrder = await moneyhub.getStandingOrder({
+  id: "standing-order-id",
+})
+```
+
 ### Financial Connections
 
 #### `listConnections`

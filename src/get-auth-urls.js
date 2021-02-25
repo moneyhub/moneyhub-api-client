@@ -241,5 +241,82 @@ module.exports = ({client, config}) => {
       })
       return url
     },
+
+    getStandingOrderAuthorizeUrl: async ({
+      bankId,
+      payeeId,
+      payeeType,
+      payerId,
+      payerType,
+      reference,
+      frequency,
+      numberOfPayments,
+      firstPaymentAmount,
+      recurringPaymentAmount,
+      finalPaymentAmount,
+      currency,
+      firstPaymentDate,
+      recurringPaymentDate,
+      finalPaymentDate,
+      state,
+      nonce,
+      context,
+      claims = {},
+    }) => {
+      if (!state) {
+        console.error("State is required")
+        throw new Error("Missing parameters")
+      }
+
+      if (!payeeId) {
+        console.error("PayeeId is required")
+        throw new Error("Missing parameters")
+      }
+
+      const scope = `standing_orders:create openid id:${bankId}`
+      const defaultClaims = {
+        id_token: {
+          "mh:con_id": {
+            essential: true,
+          },
+          "mh:payment": {
+            essential: true,
+            value: {
+              payeeId,
+              payeeType,
+              payerId,
+              payerType,
+              reference,
+              frequency,
+              numberOfPayments,
+              firstPaymentAmount,
+              recurringPaymentAmount,
+              finalPaymentAmount,
+              currency,
+              firstPaymentDate,
+              recurringPaymentDate,
+              finalPaymentDate,
+              context,
+            },
+          },
+        },
+      }
+
+      const _claims = R.mergeDeepRight(defaultClaims, claims)
+
+      const request = await requestObject({
+        scope,
+        state,
+        claims: _claims,
+        nonce,
+      })
+
+      const requestUri = await getRequestUri(request)
+      const url = getAuthorizeUrlFromRequestUri({
+        requestUri,
+      })
+      return url
+    },
+
   }
 }
