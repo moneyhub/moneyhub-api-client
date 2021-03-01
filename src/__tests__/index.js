@@ -81,6 +81,7 @@ describe("API client", () => {
         "getReauthAuthorizeUrlForCreatedUser",
         "getRefreshAuthorizeUrlForCreatedUser",
         "getPaymentAuthorizeUrl",
+        "getStandingOrderAuthorizeUrl",
         "exchangeCodeForTokensLegacy",
         "exchangeCodeForTokens",
         "refreshTokens",

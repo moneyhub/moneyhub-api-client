@@ -1038,7 +1038,7 @@ const defaultClaims = {
     "mh:con_id": {
       essential: true,
     },
-    "mh:payment": {
+    "mh:standing_order": {
       essential: true,
       value: {
         payeeId,
