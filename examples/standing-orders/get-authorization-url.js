@@ -30,6 +30,8 @@ const optionDefinitions = [
     type: String,
     description: "required",
   },
+  {name: "frequency-day", type: Number},
+  {name: "frequency-week", type: Number},
   {name: "number-of-payments", alias: "o", type: Number},
   {name: "first-amount", alias: "a", defaultValue: 100, type: Number, description: "required"},
   {name: "recurring-amount", type: Number},
@@ -70,7 +72,9 @@ const start = async () => {
       payerType: options["payer-type"],
       reference: options.reference,
       frequency: {
-        repeat: options.frequency
+        repeat: options.frequency,
+        day: options["frequency-day"],
+        week: options["frequency-week"],
       },
       numberOfPayments: options["number-of-payments"],
       firstPaymentAmount: options["first-amount"],
