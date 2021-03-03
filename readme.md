@@ -1014,13 +1014,18 @@ const url = await moneyhub.getStandingOrderAuthorizeUrl({
   payerId: "Id of payer", // requird only if payerType is defined
   payerType: "Payer type [mh-user-account]", // required only if payerId is used
   reference: "The reference for standing order",
-  frequency: "The frequency to repeat the standing order [Daily,Weekly,Monthly,Yearly]",
+  frequency: {
+    repeat: "The frequency to repeat the standing order [Daily,Weekly,Monthly]",
+    day: "The number of the day on which to repeat the payment", // required if repeat is Weekly or Monthly
+    week: "The number of the week on which to repeat the payment",
+    onlyWorkDays: "Specifies whether the payment should only be made on working days",
+  }
   numberOfPayments: "The number of payments to complete the standing order", // required if finalPaymentDate is not specified
-  firstPaymentAmount: "Amount in pence to authorize payment",
-  recurringPaymentAmount: "Amount in pence to authorize payment", // optional when it is the same as the first amount
-  finalPaymentAmount: "Amount in pence to authorize payment", // optional when it is the same as the first amount
+  firstPaymentAmount: "Amount in pence for the first payment",
+  recurringPaymentAmount: "Amount in pence for all repeating payments", // optional when it is the same as the first amount
+  finalPaymentAmount: "Amount in pence for the final payment", // optional when it is the same as the first amount
   currency: "The currency code for the standing order amount [GBP]",
-  firstPaymentDate: "The date to make the first payment",
+  firstPaymentDate: "The date to make the first payment", // should be in an international format, e.g. 15-MAR-2021 or ISO date
   recurringPaymentDate: "The date to make the first repeating payment",
   finalPaymentDate: "The date to make the final payment", // required if numberOfPayments is not specified
   state: "your state value",
