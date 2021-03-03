@@ -24,7 +24,7 @@ const optionDefinitions = [
     description: "required",
   },
   {
-    name: "frequency",
+    name: "frequency-repeat",
     alias: "f",
     defaultValue: "Daily",
     type: String,
