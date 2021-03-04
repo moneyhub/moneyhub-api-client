@@ -14,13 +14,9 @@ const run = async () => {
   console.log(`Encrypting ${file}`)
 
   console.log("Retreiving Moneyhub encryption key")
-  const openidConfig = await got(
-    `${config.identityServiceUrl}/.well-known/openid-configuration`,
-    {json: true},
-  )
-  const jwksUri = openidConfig.body.jwks_uri
-  const certs = await got(jwksUri, {json: true})
-  const keyStore = JWKS.asKeyStore(certs.body)
+  const openidConfig = await got(`${config.identityServiceUrl}/.well-known/openid-configuration`).json()
+  const certs = await got(openidConfig.jwks_uri).json()
+  const keyStore = JWKS.asKeyStore(certs)
   const key = keyStore.get({use: "enc"})
 
   if (!key) {

@@ -72,7 +72,7 @@ const start = async () => {
       payerType: options["payer-type"],
       reference: options.reference,
       frequency: {
-        repeat: options.frequency,
+        repeat: options["frequency-repeat"],
         day: options["frequency-day"],
         week: options["frequency-week"],
       },
