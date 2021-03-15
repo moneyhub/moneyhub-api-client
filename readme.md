@@ -23,6 +23,7 @@ This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise
 - CRUD actions on transaction splits
 - Get a tax return for a subset of transactions
 - Get the regular transactions on an account
+- Get beneficiaries
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
 
@@ -638,6 +639,52 @@ const transactions = await moneyhub.getTransactions({
   userId: "userId",
   params: queryParams
   })
+```
+
+#### `getBeneficiaries`
+
+Get all beneficiaries for a user. This function uses the scope `beneficiaries:read`
+
+```javascript
+const queryParams = {limit: 10, offset: 5}
+const beneficiaries = await moneyhub.getBeneficiaries({
+  userId: "userId",
+  params: queryParams
+})
+```
+
+#### `getBeneficiariesWithDetail`
+
+Get all beneficiaries for a user, including beneficiary detail. This function uses the scope `beneficiaries_detail:read`
+
+```javascript
+const queryParams = {limit: 10, offset: 5}
+const beneficiaries = await moneyhub.getBeneficiariesWithDetail({
+  userId: "userId",
+  params: queryParams
+})
+```
+
+#### `getBeneficiary`
+
+Get a beneficiary for a user. This function uses the scope `beneficiaries:read`
+
+```javascript
+const beneficiary = await moneyhub.getBeneficiary({
+  userId: "userId",
+  id: "beneficiaryId"
+})
+```
+
+#### `getBeneficiaryWithDetail`
+
+Get a beneficiary for a user, including beneficiary detail. This function uses the scope `beneficiaries_detail:read`
+
+```javascript
+const beneficiary = await moneyhub.getBeneficiaryWithDetail({
+  userId: "userId",
+  id: "beneficiaryId"
+})
 ```
 
 #### `addFileToTransaction`
