@@ -6,6 +6,7 @@ const getTokensFactory = require("./tokens")
 const requestFactories = [
   require("./requests/accounts"),
   require("./requests/auth-requests"),
+  require("./requests/beneficiaries"),
   require("./requests/payees"),
   require("./requests/payments"),
   require("./requests/projects"),
