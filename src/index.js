@@ -18,6 +18,7 @@ const requestFactories = [
   require("./requests/users-and-connections"),
   require("./requests/categories"),
   require("./requests/standing-orders"),
+  require("./requests/regular-transactions"),
 ]
 const DEFAULT_TIMEOUT = 60000
 
