@@ -4,8 +4,8 @@ const Moneyhub = require("../../src/index")
 const config = require("../config")
 
 const optionDefinitions = [
-  {name: "accountId", alias: "a", type: String, description: "required"},
   {name: "userId", alias: "u", type: String, description: "required"},
+  {name: "accountId", alias: "a", type: String},
 ]
 
 const usage = commandLineUsage(

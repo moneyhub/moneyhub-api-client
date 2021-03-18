@@ -4,7 +4,7 @@ module.exports = ({config, request}) => {
   return {
     getRegularTransactions: async ({userId}) =>
       request(
-        `${resourceServerUrl}/transactions/regular-transactions`,
+        `${resourceServerUrl}/regular-transactions`,
         {
           cc: {
             scope: "accounts:read regular_transactions:read transactions:read:all",
