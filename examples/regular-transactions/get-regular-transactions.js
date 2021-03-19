@@ -24,7 +24,7 @@ const start = async () => {
 
     const result = await moneyhub.getRegularTransactions({
       userId: options.userId,
-      accountId: options.accountId
+      params: {accountId: options.accountId}
     })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {
