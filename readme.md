@@ -22,6 +22,7 @@ This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise
 - CRUD actions on transaction attachments
 - CRUD actions on transaction splits
 - Get a tax return for a subset of transactions
+- Get the regular transactions on an account
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
 
@@ -1084,11 +1085,23 @@ const standingOrders = await moneyhub.getStandingOrders({
 
 #### `getStandingOrder`
 
-Get a single standing order request by its id . This function uses the scope `payment:read`
+Get a single standing order request by its id. This function uses the scope `payment:read`
 
 ```javascript
 const standingOrder = await moneyhub.getStandingOrder({
   id: "standing-order-id",
+})
+```
+
+#### `getRegularTransactions`
+
+Get all the regular transactions for a user, there is an option to pass an account ID as a parameter as a filter. This function uses the scope `accounts:read`, `transactions:read:all` and `regular_transactions:read` 
+
+```javascript
+const queryParams = {accountID}
+const regulartransactions = await moneyhub.getRegularTransactions({
+  userId: "userId",
+  params: queryParams,
 })
 ```
 
