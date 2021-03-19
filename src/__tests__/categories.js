@@ -14,18 +14,14 @@ describe("Categories", () => {
   })
 
   it("get personal categories", async () => {
-    const categories = await moneyhub.getCategories({userId})
+    const categories = await moneyhub.getCategories({userId, params: {limit: 100}})
     expect(categories.data.length).to.be.at.least(50)
-    categoryId = categories.data.find((a) => a.key === "utilities").categoryId
+    categoryId = categories.data.find((a) => a.categoryId.startsWith("std:")).categoryId
   })
 
   it("get personal category", async () => {
     const category = await moneyhub.getCategory({userId, categoryId})
-    expect(category.data).to.eql({
-      categoryId: "std:0265af3e-189e-4407-a5fa-b1e6bf4328c2",
-      group: "group:1",
-      key: "utilities",
-    })
+    expect(category.data.categoryId).to.eql(categoryId)
   })
 
   it("get personal category groups", async () => {
