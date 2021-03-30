@@ -17,6 +17,19 @@
 * Delete methods only return the status code when succesful
 * All methods to retrieve data return the body response as json, on previous versions some methods were returning the full response from the got library.
 * When our API response code is not 2xx an HTTP error is thrown. Includes a response property with more information.
+* Removal of all the methods with the suffix `WithToken`. To migrate to this version you can use the method with the same name but without the suffix. e.g `getUserConnectionsWithToken()` => `getUserConnections()`
+
+  - registerUserWithToken
+  - getUserConnectionsWithToken
+  - deleteUserConnectionWithToken
+  - deleteUserWithToken
+  - getAccountsWithToken
+  - getAccountWithToken
+  - getAccountHoldingsWithToken
+  - getTransactionsWithToken
+  - syncUserConnectionWithToken
+
+
 
 3.7.0 / 2020-07-27
 ==================

@@ -39,6 +39,8 @@ The breaking changes when upgrading are outlined below:
 
 * When our API response code is not 2xx an HTTP error is thrown. Includes a response property with more information.
 
+* Removal of all the methods with the suffix `WithToken`. To migrate to this version you can use the method with the same name but without the suffix. e.g `getUserConnectionsWithToken()` => `getUserConnections()`
+
 For the full list of changes please refer to the [changelog](CHANGELOG.md)
 
 ### Changelog
