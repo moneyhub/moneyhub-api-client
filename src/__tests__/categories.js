@@ -60,12 +60,12 @@ describe("Categories", () => {
     expect(groups.data.length).to.equal(8)
   })
 
-  it.skip("get all categories", async () => {
+  it("get all categories", async () => {
     const categories = await moneyhub.getCategories({
       userId,
-      params: {type: "all"},
+      params: {type: "all", limit: 200},
     })
-    expect(categories.data.length).to.equal(72)
+    expect(categories.data.length).to.be.above(100)
   })
 
   it("creates custom category", async () => {
