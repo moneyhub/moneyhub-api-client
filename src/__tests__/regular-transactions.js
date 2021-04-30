@@ -3,7 +3,7 @@ const Moneyhub = require("..")
 const config = require("../../test/config")
 const {expect} = require("chai")
 
-describe("Regular transactions", () => {
+describe.skip("Regular transactions", () => {
   let moneyhub
   const userId = config.testUserId
 

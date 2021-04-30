@@ -16,7 +16,7 @@ describe("Payments", () => {
       idToken: config.testPaymentIdToken,
     })
     paymentId = payment.id
-    expect(paymentId).to.eql("2f1b0cec-d231-4c3b-8f6c-0f9ad330e939")
+    expect(paymentId).to.be.a("string")
   })
 
   it("gets payment by id", async () => {

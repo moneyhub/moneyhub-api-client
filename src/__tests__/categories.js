@@ -65,7 +65,7 @@ describe("Categories", () => {
       userId,
       params: {type: "all", limit: 200},
     })
-    expect(categories.data.length).to.be.above(100)
+    expect(categories.data.length).to.be.above(80)
   })
 
   it("creates custom category", async () => {
