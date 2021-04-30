@@ -1,6 +1,6 @@
 /* eslint-disable max-nested-callbacks */
 const Moneyhub = require("../")
-const config = require("../../test/config")
+const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
 describe("API client", () => {

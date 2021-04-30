@@ -1,0 +1,11 @@
+{
+    "reporter": "mocha-junit-reporter",
+    "reporter-options": "mochaFile=test-reports/report.xml",
+    "ui": "bdd",
+    "timeout": "5s",
+    "check-leaks": false,
+    "recursive": true,
+    "colors": true,
+    "exit": true,
+    "spec": ["src/**/__tests__/*.js"]
+  }
