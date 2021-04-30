@@ -1,4 +1,5 @@
 node_modules/
-local-configs/
 examples/config-local.js
 examples/config.local.js
+config/local.json
+config/default.json

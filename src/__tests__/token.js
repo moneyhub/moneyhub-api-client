@@ -1,6 +1,6 @@
 /* eslint-disable max-nested-callbacks */
 const Moneyhub = require("..")
-const config = require("../../examples/config.local")
+const config = require("../../test/config")
 const {expect} = require("chai")
 
 const state = "sample-state"

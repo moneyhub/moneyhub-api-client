@@ -1,6 +1,6 @@
 /* eslint-disable max-nested-callbacks */
 const Moneyhub = require("..")
-const config = require("../../examples/config.local")
+const config = require("../../test/config")
 const {expect} = require("chai")
 
 const bankId = "1ffe704d39629a929c8e293880fb449a"
