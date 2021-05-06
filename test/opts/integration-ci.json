@@ -6,5 +6,6 @@
     "check-leaks": false,
     "recursive": true,
     "colors": true,
+    "exit": true,
     "spec": ["src/**/__tests__/*.js"]
   }
