@@ -12,8 +12,8 @@ This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise
 - Refreshing access tokens
 - Deleting user connections
 - Getting access tokens with client credentials
-- Getting accounts for a user
-- Getting transactions for a user
+- CRUD actions for accounts
+- CRUD actions for transactions
 - Generate authorisation url for payments
 - Add Payees
 - Get Payees and payments
@@ -631,6 +631,39 @@ const standingOrders = await moneyhub.getAccountStandingOrdersWithDetail({
   })
 ```
 
+#### `createAccount`
+
+Create a manual account for a user. This function uses the scopes `accounts:read accounts:write:all`
+
+```javascript
+const account = await moneyhub.createAccount({
+  userId: "userId",
+  account: {
+    accountName: "Account name",
+    providerName: "Provider name",
+    type: "cash:current",
+    accountType: "personal",
+    balance: {
+      date: "2018-08-12",
+      amount: {
+        value: 300023
+      }
+    }
+  }
+})
+```
+
+#### `deleteAccount`
+
+Delete a manual account for a user. This function uses the scope `accounts:write:all`
+
+```javascript
+const result = await moneyhub.deleteAccount({
+  userId: "userId",
+  accountId: "accountId"
+})
+```
+
 #### `getTransactions`
 
 Get all transactions for a user. This function uses the scope `transactions:read:all`..
@@ -641,6 +674,59 @@ const transactions = await moneyhub.getTransactions({
   userId: "userId",
   params: queryParams
   })
+```
+
+#### `getTransaction`
+
+Get a transaction by ID for a user. This function uses the scope `transactions:read:all`..
+
+```javascript
+const transactions = await moneyhub.getTransaction({
+  userId: "userId",
+  transactionId: "transactionId"
+})
+```
+
+#### `updateTransaction`
+
+Update a transaction by ID for a user. This function uses the scopes `transactions:read:all transactions:write:all`..
+
+```javascript
+const transactions = await moneyhub.updateTransaction({
+  userId: "userId",
+  transactionId: "transactionId",
+  transaction: {
+    amount: {
+      value: 10
+    }
+  }
+})
+```
+
+#### `addTransaction`
+
+Add a transaction for a user. Please note, transaction must belong to an account that is transaction-able. This function uses the scopes `transactions:read:all transactions:write:all`..
+
+```javascript
+const transactions = await moneyhub.addTransaction({
+  userId: "userId",
+  transaction: {
+    amount: {
+      value: 10
+    }
+  }
+})
+```
+
+#### `deleteTransaction`
+
+Delete a transaction for a user. This function uses the scopes `transactions:write:all`..
+
+```javascript
+const result = await moneyhub.deleteTransaction({
+  userId: "userId",
+  id: "transactionId"
+})
 ```
 
 #### `getBeneficiaries`
