@@ -41,11 +41,35 @@ describe("Accounts", () => {
     expect(holdings[0].items.length).to.be.greaterThan(5)
   })
 
-  it("get recurring transactions", async () => {
+  xit("get recurring transactions", async () => {
     const {data: recurring} = await moneyhub.getAccountRecurringTransactions({
       userId,
       accountId
     })
     expect(recurring.length).to.be.greaterThan(10)
+  })
+
+  it("creates a manual account", async () => {
+    const account = {
+      "accountName": "Account name",
+      "providerName": "Provider name",
+      "type": "cash:current",
+      "accountType": "personal",
+      "balance": {
+        "date": "2018-08-12",
+        "amount": {
+          "value": 300023
+        }
+      }
+    }
+
+    const {data: {id}} = await moneyhub.createAccount({userId, account})
+    accountId = id
+    expect(id).to.not.be.undefined
+  })
+
+  it("deletes manual account", async () => {
+    const status = await moneyhub.deleteAccount({userId, accountId})
+    expect(status).to.eql(204)
   })
 })

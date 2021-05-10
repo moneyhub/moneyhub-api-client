@@ -116,5 +116,31 @@ module.exports = ({config, request}) => {
           },
         },
       ),
+
+    createAccount: async ({userId, account}) =>
+      request(
+        `${resourceServerUrl}/accounts`,
+        {
+          method: "POST",
+          cc: {
+            scope: "accounts:read accounts:write:all",
+            sub: userId,
+          },
+          body: account
+        },
+      ),
+
+    deleteAccount: async ({userId, accountId}) =>
+      request(
+        `${resourceServerUrl}/accounts/${accountId}`,
+        {
+          method: "DELETE",
+          cc: {
+            scope: "accounts:write:all",
+            sub: userId,
+          },
+          returnStatus: true,
+        },
+      ),
   }
 }
