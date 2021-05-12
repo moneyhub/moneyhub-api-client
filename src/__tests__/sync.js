@@ -19,11 +19,9 @@ describe("Sync", () => {
       const result = await moneyhub.syncUserConnection({userId, connectionId})
       expect(result.data.status).to.equal("ok")
     } catch (error) {
-      // Even if a 500 is returned we are testing that the method calls the api
-      const {statusCode, body} = error.response
-      const responseBody = JSON.parse(body)
-      expect(statusCode).to.eql(500)
-      expect(responseBody).has.property("correlationId")
+      // Even if a 500 or 429 is returned we are testing that the method calls the api
+      const {statusCode} = error.response
+      expect(statusCode).to.be.oneOf.of([500, 429])
     }
 
   })
