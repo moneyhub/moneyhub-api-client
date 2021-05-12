@@ -3,7 +3,7 @@ const Moneyhub = require("..")
 const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
-describe(getSelection"Sync", () => {
+describe("Sync", () => {
   let moneyhub
   let connectionId
   const userId = config.testUserIdWithconnection
