@@ -3,7 +3,7 @@ const Moneyhub = require("..")
 const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
-describe("Sync", () => {
+describe(getSelection"Sync", () => {
   let moneyhub
   let connectionId
   const userId = config.testUserIdWithconnection
@@ -21,7 +21,7 @@ describe("Sync", () => {
     } catch (error) {
       // Even if a 500 or 429 is returned we are testing that the method calls the api
       const {statusCode} = error.response
-      expect(statusCode).to.be.oneOf.of([500, 429])
+      expect(statusCode).to.be.oneOf([500, 429])
     }
 
   })
