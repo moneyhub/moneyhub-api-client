@@ -16,10 +16,14 @@ describe("Categories", () => {
   it("get personal categories", async () => {
     const categories = await moneyhub.getCategories({userId, params: {limit: 100}})
     expect(categories.data.length).to.be.at.least(50)
-    categoryId = categories.data.find((a) => a.categoryId.startsWith("std:")).categoryId
   })
 
   it("get personal category", async () => {
+    const {data: categories} = await moneyhub.getCategories({
+      userId,
+      params: {type: "personal"},
+    })
+    const categoryId = categories[0].categoryId
     const category = await moneyhub.getCategory({userId, categoryId})
     expect(category.data.categoryId).to.eql(categoryId)
   })
