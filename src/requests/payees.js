@@ -2,10 +2,10 @@ module.exports = ({config, request}) => {
   const {identityServiceUrl} = config
 
   return {
-    addPayee: async ({accountNumber, sortCode, name, externalId}) =>
+    addPayee: async ({accountNumber, sortCode, name, externalId, userId}) =>
       request(`${identityServiceUrl}/payees`, {
         method: "POST",
-        body: {accountNumber, sortCode, name, externalId},
+        body: {accountNumber, sortCode, name, externalId, userId},
         cc: {
           scope: "payee:create",
         },
