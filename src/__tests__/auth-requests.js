@@ -13,7 +13,7 @@ describe("Auth requests", () => {
   it("creates payment auth request", async () => {
     const {testPayeeId} = config
     const {data} = await moneyhub.createAuthRequest({
-      scope: "openid payment id:14e0a20df1bfac5d1454d48997876089",
+      scope: "openid payment id:b74f1a79f0be8bdb857d82d0f041d7d2",
       payment: {
         payeeId: testPayeeId,
         amount: 15,
