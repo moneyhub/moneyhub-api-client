@@ -8,6 +8,7 @@ const optionDefinitions = [
   {name: "sort-code", alias: "s", type: String, description: "required"},
   {name: "name", alias: "n", type: String, description: "required"},
   {name: "external-id", alias: "i", type: String},
+  {name: "user-id", alias: "u", type: String},
 ]
 
 const usage = commandLineUsage(
@@ -29,6 +30,7 @@ const start = async () => {
       sortCode: options["sort-code"],
       name: options.name,
       externalId: options["external-id"],
+      userId: options["user-id"],
     })
 
     console.log(result)

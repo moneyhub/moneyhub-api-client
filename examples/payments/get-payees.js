@@ -6,6 +6,7 @@ const config = require("../config")
 const optionDefinitions = [
   {name: "limit", alias: "l", type: Number, defaultValue: 10},
   {name: "offset", alias: "o", type: Number, defaultValue: 0},
+  {name: "user-id", alias: "u", type: String},
 ]
 
 const usage = commandLineUsage(
@@ -25,6 +26,7 @@ const start = async () => {
     const result = await moneyhub.getPayees({
       limit: options.limit,
       offset: options.offset,
+      userId: options["user-id"],
     })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {
