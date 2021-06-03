@@ -147,14 +147,26 @@ const start = async () => {
 
   app.get("/auth/callback", async (req, res) => {
     const queryParams = req.query
+    const {error, code, state, id_token, idToken} = queryParams
 
     console.log("Query params", JSON.stringify(queryParams, null, 2))
-    if (queryParams.error) {
+    if (error) {
       return res.json(queryParams)
     }
-    const tokens = await moneyhub.exchangeCodeForTokens({
-      ...queryParams,
+
+    const paramsFromCallback = {
+      code,
+      state,
+      id_token: idToken || id_token,
+    }
+    const localParams = {
       nonce: DEFAULT_NONCE,
+      state,
+    }
+
+    const tokens = await moneyhub.exchangeCodeForTokens({
+      paramsFromCallback,
+      localParams,
     })
     return res.json({tokens, claims: tokens.claims})
   })
