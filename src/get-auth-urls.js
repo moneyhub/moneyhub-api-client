@@ -218,6 +218,7 @@ module.exports = ({client, config}) => {
       state,
       nonce,
       context,
+      readRefundAccount,
       claims = {},
     }) => {
       if (!state) {
@@ -247,7 +248,59 @@ module.exports = ({client, config}) => {
               payerId,
               payerType,
               context,
+              readRefundAccount,
             },
+          },
+        },
+      }
+
+      const _claims = R.mergeDeepRight(defaultClaims, claims)
+
+      const request = await requestObject({
+        scope,
+        state,
+        claims: _claims,
+        nonce,
+      })
+
+      const requestUri = await getRequestUri(request)
+      const url = getAuthorizeUrlFromRequestUri({
+        requestUri,
+      })
+      return url
+    },
+
+    getReversePaymentAuthorizeUrl: async ({
+      bankId,
+      paymentId,
+      state,
+      nonce,
+      claims = {},
+    }) => {
+      if (!state) {
+        console.error("State is required")
+        throw new Error("Missing parameters")
+      }
+
+      if (!paymentId) {
+        console.error("PayeeId is required")
+        throw new Error("Missing parameters")
+      }
+
+      const scope = `reverse_payment openid id:${bankId}`
+      const defaultClaims = {
+        id_token: {
+          "mh:con_id": {
+            essential: true,
+          },
+          "mh:reverse_payment": {
+            essential: true,
+            value: {
+              paymentId,
+            },
+          },
+          "mh:payment": {
+            essential: true,
           },
         },
       }
