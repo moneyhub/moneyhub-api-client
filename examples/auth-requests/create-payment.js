@@ -33,6 +33,10 @@ const optionDefinitions = [
     type: String,
     description: "required",
   },
+  {
+    name: "read-refund-account",
+    type: Boolean,
+  },
 ]
 
 const usage = commandLineUsage({
@@ -54,7 +58,8 @@ const start = async () => {
         amount: options.amount,
         payeeRef: options["payee-ref"],
         payerRef: options["payer-ref"],
-        context: options.context
+        context: options.context,
+        readRefundAccount: options["read-refund-account"],
       },
       redirectUri: config.client.redirect_uri,
     })

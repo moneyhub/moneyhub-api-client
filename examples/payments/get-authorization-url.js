@@ -42,6 +42,10 @@ const optionDefinitions = [
     description: "required",
   },
   {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
+  {
+    name: "read-refund-account",
+    type: Boolean,
+  },
 ]
 
 const usage = commandLineUsage({
@@ -70,7 +74,8 @@ const start = async () => {
       payerId: options["payer-id"],
       payerName: options["payer-name"],
       payerEmail: options["payer-email"],
-      context: options.context
+      context: options.context,
+      readRefundAccount: options["read-refund-account"],
     })
 
     console.log(url)

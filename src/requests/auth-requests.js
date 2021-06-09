@@ -6,6 +6,7 @@ module.exports = ({config, request}) => {
     createAuthRequest: async ({
       redirectUri,
       payment,
+      reversePayment,
       userId,
       connectionId,
       categorisationType,
@@ -19,6 +20,7 @@ module.exports = ({config, request}) => {
         body: {
           redirectUri,
           payment,
+          reversePayment,
           userId,
           connectionId,
           scope,
