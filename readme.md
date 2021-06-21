@@ -366,6 +366,20 @@ const tokens = await moneyhub.createAuthRequest({
 })
 ```
 
+Creates a reverse payment auth request
+
+```javascript
+const tokens = await moneyhub.createAuthRequest({
+  redirectUri: "redirect-uri,
+  userId: "user-id",
+  connectionId: "connection-id",
+  scope:"openid reverse_payment",
+  reversePayment: {
+    paymentId: "payment-id"
+  },
+})
+```
+
 #### `completeAuthRequest`
 
 Completes an auth request succesfully
@@ -1069,6 +1083,41 @@ const defaultClaims = {
         payerType,
         payerName,
         payerEmail,
+      },
+    },
+  },
+}
+```
+
+#### `getPaymentAuthorizeUrl`
+
+This is a helper function that returns an authorize url to authorize a reverse payment for a payment that is reversible. This function uses the following scope with the value of the bankId provided `reverse_payment openid id:${bankId}`. It also requires the authentication to be `client_secret_jwt` or `private_key_jwt`.
+
+```javascript
+const url = await moneyhub.getReversePaymentAuthorizeUrl({
+  bankId: "Bank id to authorise payment from",
+  paymentId: "Id of payment to reverse",
+  state: "your state value",
+  nonce: "your nonce value", // optional
+  claims: claimsObject, // optional
+})
+
+// Scope used with the bankId provided
+const scope = `reverse_payment openid id:${bankId}`
+
+// Default claims if none are provided
+const defaultClaims = {
+  id_token: {
+    "mh:con_id": {
+      essential: true,
+    },
+    "mh:payment": {
+      essential: true,
+    },
+    "mh:reversePayment": {
+      essential: true,
+      value: {
+        paymentId
       },
     },
   },
