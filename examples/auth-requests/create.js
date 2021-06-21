@@ -8,6 +8,7 @@ const commandLineUsage = require("command-line-usage")
 const optionDefinitions = [
   {name: "userId", alias: "u", type: String, description: "required"},
   {name: "bankId", alias: "b", defaultValue: DEFAULT_BANK_ID, type: String},
+  {name: "permissions", alias: "p", description: "comma separated extra permissions", type: String},
 ]
 
 const usage = commandLineUsage({
@@ -18,7 +19,7 @@ console.log(usage)
 
 const options = commandLineArgs(optionDefinitions)
 
-const {userId, bankId} = options
+const {userId, bankId, permissions} = options
 
 if (!userId) throw new Error("userId is required")
 
@@ -29,6 +30,7 @@ const start = async () => {
       scope: `openid id:${bankId}`,
       redirectUri: config.client.redirect_uri,
       userId,
+      permissions: permissions && permissions.split(",")
     })
     console.log(data)
   } catch (e) {

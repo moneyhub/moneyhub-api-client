@@ -10,6 +10,7 @@ module.exports = ({config, request}) => {
       connectionId,
       categorisationType,
       scope,
+      permissions,
     }) =>
       request(authRequestEndpoint, {
         method: "POST",
@@ -23,6 +24,7 @@ module.exports = ({config, request}) => {
           connectionId,
           scope,
           categorisationType,
+          permissions,
         },
       }),
 
