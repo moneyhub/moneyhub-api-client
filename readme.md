@@ -324,6 +324,7 @@ const tokens = await moneyhub.createAuthRequest({
   userId: "user-id",
   scope:"openid 1ffe704d39629a929c8e293880fb449a", // replace bank id with the bank you want to connect to
   categorisationType: "personal", // optional - defaults to personal
+  permissions: ["ReadBeneficiariesDetail"] // optional - set of extra permissions to set for auth request
 })
 ```
 
