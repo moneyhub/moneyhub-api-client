@@ -1,6 +1,5 @@
 const Moneyhub = require("../../src/index")
 const config = require("../config")
-const R = require("ramda")
 const {DEFAULT_BANK_ID, DEFAULT_STATE, DEFAULT_NONCE} = require("../constants")
 
 const commandLineArgs = require("command-line-args")
@@ -26,16 +25,6 @@ const options = commandLineArgs(optionDefinitions)
 const {userId, state, bankId, nonce} = options
 
 if (!userId) throw new Error("userId is required")
-const beneficiaryClaim = {
-  "id_token": {
-    "mh:consent": {
-      "essential": true,
-      "value": {
-        "permissions": ["ReadBeneficiariesDetail"]
-      }
-    }
-  }
-}
 const claims = (options.claims && JSON.parse(options.claims)) || {}
 
 const start = async () => {
@@ -48,7 +37,8 @@ const start = async () => {
       state,
       bankId,
       nonce,
-      claims: R.mergeDeepRight(beneficiaryClaim, claims),
+      claims,
+      permissions: ["ReadBeneficiariesDetail"]
     })
     console.log(data)
 

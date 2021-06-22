@@ -106,6 +106,7 @@ const url = await moneyhub.getAuthorizeUrl({
   state: " your state value", // optional
   nonce: "your nonce value", //optional
   claims: claimsObject, // optional
+  permissions: ["ReadBeneficiariesDetail"] // optional - set of extra permissions to set for auth URL
 })
 
 // Default claims if none are provided
@@ -138,6 +139,7 @@ const url = await moneyhub.getAuthorizeUrlForCreatedUser({
   state: "your state value", // optional
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
+  permissions: ["ReadBeneficiariesDetail"] // optional - set of extra permissions to set for auth URL
 })
 
 // Scope used with the bankId provided
