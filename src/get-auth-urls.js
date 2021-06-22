@@ -13,7 +13,24 @@ module.exports = ({client, config}) => {
     },
   } = config
 
-  const getAuthorizeUrl = ({state, scope, nonce, claims = {}}) => {
+  const setPermissionsToClaims = permissions => claims => {
+    if (permissions && R.is(Array, permissions)) {
+      return R.mergeDeepRight(claims, {
+        id_token: {
+          "mh:consent": {
+            essential: true,
+            value: {
+              permissions
+            }
+          }
+        }
+      })
+    }
+
+    return claims
+  }
+
+  const getAuthorizeUrl = ({state, scope, nonce, claims = {}, permissions}) => {
     const defaultClaims = {
       id_token: {
         sub: {
@@ -24,7 +41,11 @@ module.exports = ({client, config}) => {
         },
       },
     }
-    const _claims = R.mergeDeepRight(defaultClaims, claims)
+
+    const _claims = R.compose(
+      setPermissionsToClaims(permissions),
+      R.mergeDeepRight(defaultClaims)
+    )(claims)
 
     const authParams = filterUndefined({
       client_id,
@@ -95,6 +116,7 @@ module.exports = ({client, config}) => {
       nonce,
       userId,
       claims = {},
+      permissions
     }) => {
       const scope = `id:${bankId} openid`
       const defaultClaims = {
@@ -108,7 +130,11 @@ module.exports = ({client, config}) => {
           },
         },
       }
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = R.compose(
+        setPermissionsToClaims(permissions),
+        R.mergeDeepRight(defaultClaims)
+      )(claims)
+
       const url = await getAuthorizeUrl({
         state,
         nonce,
