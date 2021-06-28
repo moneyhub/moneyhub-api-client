@@ -1092,7 +1092,7 @@ const defaultClaims = {
 }
 ```
 
-#### `getPaymentAuthorizeUrl`
+#### `getReversePaymentAuthorizeUrl`
 
 This is a helper function that returns an authorize url to authorize a reverse payment for a payment that is reversible. This function uses the following scope with the value of the bankId provided `reverse_payment openid id:${bankId}`. It also requires the authentication to be `client_secret_jwt` or `private_key_jwt`.
 
@@ -1282,7 +1282,7 @@ const standingOrder = await moneyhub.getStandingOrder({
 
 #### `getRegularTransactions`
 
-Get all the regular transactions for a user, there is an option to pass an account ID as a parameter as a filter. This function uses the scope `accounts:read`, `transactions:read:all` and `regular_transactions:read` 
+Get all the regular transactions for a user, there is an option to pass an account ID as a parameter as a filter. This function uses the scope `accounts:read`, `transactions:read:all` and `regular_transactions:read`
 
 ```javascript
 const queryParams = {accountID}
