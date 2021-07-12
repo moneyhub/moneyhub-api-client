@@ -26,6 +26,16 @@ module.exports = ({config, request}) => {
         },
         body: transaction
       }),
+    addTransactions: ({userId, transactions, params = {}}) =>
+      request(`${resourceServerUrl}/transactions-collection`, {
+        method: "POST",
+        searchParams: params,
+        cc: {
+          scope: "transactions:read:all transactions:write:all",
+          sub: userId,
+        },
+        body: transactions
+      }),
     updateTransaction: ({userId, transactionId, transaction}) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
         method: "PATCH",

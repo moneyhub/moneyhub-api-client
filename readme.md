@@ -735,6 +735,31 @@ const transactions = await moneyhub.addTransaction({
 })
 ```
 
+#### `addTransactions`
+
+Add up to 50 transactions for a user. Please note, transaction must belong to an account that is transaction-able. This function uses the scopes `transactions:read:all transactions:write:all`.
+
+```javascript
+const transactions = await moneyhub.addTransactions({
+  userId: "userId",
+  transactions: [
+    {
+      amount: {
+        value: 10
+      }
+    },
+    {
+      amount: {
+        value: 25
+      }
+    }
+  ],
+  params: {
+    categorise: true // optional - enable categorisatio for transactions
+  }
+})
+```
+
 #### `deleteTransaction`
 
 Delete a transaction for a user. This function uses the scopes `transactions:write:all`..
