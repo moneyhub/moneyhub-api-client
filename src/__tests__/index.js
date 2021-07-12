@@ -57,6 +57,7 @@ describe("API client", () => {
         "getTransactions",
         "getTransaction",
         "addTransaction",
+        "addTransactions",
         "updateTransaction",
         "deleteTransaction",
         "addFileToTransaction",
