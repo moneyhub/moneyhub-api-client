@@ -13,6 +13,16 @@ describe("Categories", () => {
     moneyhub = await Moneyhub(config)
   })
 
+  it("get standard categories", async () => {
+    const categories = await moneyhub.getStandardCategories({params: {type: "personal"}})
+    expect(categories.data.length).to.be.at.least(50)
+  })
+
+  it("get standard category groups", async () => {
+    const categories = await moneyhub.getStandardCategoryGroups({params: {type: "all"}})
+    expect(categories.data.length).to.be.at.least(24)
+  })
+
   it("get personal categories", async () => {
     const categories = await moneyhub.getCategories({userId, params: {limit: 100}})
     expect(categories.data.length).to.be.at.least(50)

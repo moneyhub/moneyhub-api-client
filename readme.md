@@ -964,6 +964,32 @@ const categoryGroups = await moneyhub.getCategoryGroups({
     },
   })
 ```
+
+#### `getStandardCategories`
+
+Get standard categories.
+
+```javascript
+
+const categories = await moneyhub.getStandardCategories({
+  params: {
+    type: "personal" // optional personal|business|all
+    },
+  })
+```
+
+#### `getStandardCategoryGroups`
+
+Get standard categories.
+
+```javascript
+
+const categoryGroups = await moneyhub.getStandardCategoryGroups({
+  params: {
+    type: "personal" // optional personal|business|all
+    },
+  })
+```
 #### `createCustomCategory`
 
 Create a custom category. This function uses the scopes `categories:read categories:write`.

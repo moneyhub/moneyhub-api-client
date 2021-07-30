@@ -11,6 +11,11 @@ module.exports = ({config, request}) => {
         },
       }),
 
+    getStandardCategories: async ({params = {}}) =>
+      request(`${resourceServerUrl}/standard-categories`, {
+        searchParams: params,
+      }),
+
     getCategory: async ({userId, categoryId, params = {}}) =>
       request(`${resourceServerUrl}/categories/${categoryId}`, {
         searchParams: params,
@@ -27,6 +32,11 @@ module.exports = ({config, request}) => {
           scope: "categories:read",
           sub: userId,
         },
+      }),
+
+    getStandardCategoryGroups: async ({params = {}}) =>
+      request(`${resourceServerUrl}/standard-category-groups`, {
+        searchParams: params,
       }),
 
     createCustomCategory: async ({userId, category: {group, name}}) =>
