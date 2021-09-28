@@ -4,10 +4,8 @@ const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
 describe("Accounts", () => {
-  let moneyhub
-  let accountId
-  let pensionId
-  const userId = config.testUserId
+  let manualAccountId, moneyhub
+  const {testUserId: userId, testAccountId: accountId, testPensionId: pensionId} = config
 
   before(async () => {
     moneyhub = await Moneyhub(config)
@@ -15,9 +13,7 @@ describe("Accounts", () => {
 
   it("get accounts", async () => {
     const accounts = await moneyhub.getAccounts({userId})
-    expect(accounts.data.length).to.eql(11)
-    accountId = accounts.data.find(a => a.type === "cash:current").id
-    pensionId = accounts.data.find(a => a.type === "pension").id
+    expect(accounts.data.length).to.be.at.least(11)
   })
 
   it("get account", async () => {
@@ -64,12 +60,12 @@ describe("Accounts", () => {
     }
 
     const {data: {id}} = await moneyhub.createAccount({userId, account})
-    accountId = id
+    manualAccountId = id
     expect(id).to.not.be.undefined
   })
 
   it("deletes manual account", async () => {
-    const status = await moneyhub.deleteAccount({userId, accountId})
+    const status = await moneyhub.deleteAccount({userId, accountId: manualAccountId})
     expect(status).to.eql(204)
   })
 })
