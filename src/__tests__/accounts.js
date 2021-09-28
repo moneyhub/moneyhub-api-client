@@ -14,6 +14,11 @@ describe("Accounts", () => {
   it("get accounts", async () => {
     const accounts = await moneyhub.getAccounts({userId})
     expect(accounts.data.length).to.be.at.least(11)
+    const cashAccount = accounts.data.find(a => a.type === "cash:current")
+    const pension = accounts.data.find(a => a.type === "pension")
+
+    expect(cashAccount).to.not.be.undefined
+    expect(pension).to.not.be.undefined
   })
 
   it("get account", async () => {
