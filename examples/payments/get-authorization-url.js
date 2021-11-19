@@ -46,6 +46,11 @@ const optionDefinitions = [
     name: "read-refund-account",
     type: Boolean,
   },
+  {
+    name: "user-id",
+    alias: "u",
+    type: String
+  }
 ]
 
 const usage = commandLineUsage({
@@ -76,6 +81,7 @@ const start = async () => {
       payerEmail: options["payer-email"],
       context: options.context,
       readRefundAccount: options["read-refund-account"],
+      userId: options["user-id"]
     })
 
     console.log(url)
