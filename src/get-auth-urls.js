@@ -219,6 +219,7 @@ module.exports = ({client, config}) => {
       nonce,
       context,
       readRefundAccount,
+      userId,
       claims = {},
     }) => {
       if (!state) {
@@ -251,6 +252,11 @@ module.exports = ({client, config}) => {
               readRefundAccount,
             },
           },
+          ...userId && {
+            sub: {
+              value: userId
+            }
+          }
         },
       }
 
