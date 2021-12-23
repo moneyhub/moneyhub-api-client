@@ -1,3 +1,11 @@
+4.13.0 / 2022-01-05
+==================
+
+**Features**
+
+* Add getRentalRecords
+* Add createRentalRecord
+* Add deleteRentalRecord
 
 4.0.0 / 2021-01-11
 ==================

@@ -1,0 +1,18 @@
+{
+  "title": "Title",
+  "firstName": "firstName",
+  "lastName": "lastName",
+  "birthdate": "2000-11-19",
+  "addressLine1": "First address line",
+  "addressLine2": "Second address line",
+  "addressLine3": "Third address line",
+  "addressLine4": "Fourth address line",
+  "postalCode": "CA12345",
+  "tenancyStartDate": "2020-11-19",
+  "tenancyEndDate": "2021-05-19",
+  "rentalAmount": {
+    "value": 2000
+  },
+  "rentalFrequency": "monthly",
+  "seriesId": ""
+}
