@@ -1248,10 +1248,10 @@ This is a helper function that returns an authorize url to authorize a standng o
 
 ```javascript
 const url = await moneyhub.getStandingOrderAuthorizeUrl({
-  bankId: "Bank id to authorise payment from",
-  payeeId: "Id of payee",
+  bankId: "Bank id to authorise payment from", // required
+  payeeId: "Id of payee", // required
   payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
-  payerId: "Id of payer", // requird only if payerType is defined
+  payerId: "Id of payer", // required only if payerType is defined
   payerType: "Payer type [mh-user-account]", // required only if payerId is used
   reference: "The reference for standing order",
   frequency: {
