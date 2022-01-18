@@ -28,8 +28,13 @@ describe("Rental records", () => {
 
   before(async () => {
     moneyhub = await Moneyhub(config)
-    const {data} = await moneyhub.getRegularTransactions({userId})
-    seriesId = data[0].seriesId
+    const {data: regularTransactions} = await moneyhub.getRegularTransactions({userId})
+    seriesId = regularTransactions[0].seriesId
+    const {data: rentals} = await moneyhub.getRentalRecords({userId})
+    if (rentals.length) {
+      const existingRentalId = rentals[0].id
+      await moneyhub.deleteRentalRecord({userId, rentalId: existingRentalId})
+    }
   })
 
   beforeEach(async () => {
