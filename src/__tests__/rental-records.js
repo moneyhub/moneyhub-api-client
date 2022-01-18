@@ -14,7 +14,6 @@ const testRentalData = {
   addressLine4: "Fourth address line",
   postalCode: "CA12345",
   tenancyStartDate: "2020-11-19",
-  tenancyEndDate: "2021-05-19",
   rentalAmount: {
     value: 10000
   },
@@ -69,7 +68,6 @@ describe("Rental records", () => {
       addressLine4: "Fourth address line",
       postalCode: "CA12345",
       tenancyStartDate: "2020-11-19",
-      tenancyEndDate: "2021-05-19",
       rentalAmount: {
         value: 10000,
         currency: "GBP"

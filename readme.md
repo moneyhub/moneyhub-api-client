@@ -1376,7 +1376,6 @@ const createRentalRecordResponse = await moneyhub.createRentalRecord({
     addressLine4: "Fourth address line", // optional
     postalCode: "CA12345",
     tenancyStartDate: "2020-11-19",
-    tenancyEndDate: "2021-05-19", // optional
     rentalAmount: {
       value: 10000
     },
