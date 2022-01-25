@@ -29,6 +29,9 @@
   },
   "devDependencies": {
     "@mft/eslint-config-momentumft": "^4.0.0",
+    "@types/got": "^9.6.12",
+    "@types/openid-client": "^3.7.0",
+    "@types/ramda": "^0.27.64",
     "body-parser": "^1.19.0",
     "chai": "^4.2.0",
     "command-line-args": "^5.1.1",
