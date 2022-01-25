@@ -51,8 +51,6 @@ module.exports = async (apiClientConfig) => {
     timeout,
   })
 
-  Issuer.defaultHttpOptions = {timeout}
-
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl + "/oidc")
 
   const client = new moneyhubIssuer.Client(
