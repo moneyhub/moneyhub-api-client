@@ -3,6 +3,7 @@
   "version": "4.12.1",
   "description": "Node.JS client for the Moneyhub API",
   "main": "src/index.js",
+  "type": "module",
   "scripts": {
     "lint": "eslint src/ examples/",
     "test": "mocha --config test/opts/integration.json",
