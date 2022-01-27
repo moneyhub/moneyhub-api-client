@@ -19,6 +19,7 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': OFF,
     '@typescript-eslint/no-object-literal-type-assertion': OFF,
     'no-console': [ERROR],
+    '@typescript-eslint/no-unused-vars': [ERROR, { argsIgnorePattern: '^_' }],
   },
   overrides: [
     {
