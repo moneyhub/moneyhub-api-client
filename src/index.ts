@@ -1,18 +1,17 @@
 import { Issuer, custom } from "openid-client";
 import R from "ramda";
-const { JWKS } = require("jose");
-const getAuthUrlsFactory = require("./get-auth-urls");
-const getTokensFactory = require("./tokens");
+import { JWKS } from "jose";
+import getAuthUrlsFactory from "./get-auth-urls";
+import getTokensFactory from "./tokens";
 import requestFactories from "./requests";
 import req from "./request";
-import type { APIClientConfig } from "./index.types";
+import type { APIClientConfig, MoneyHub } from "./types";
 const DEFAULT_TIMEOUT = 60000;
 
-export default async (apiClientConfig: APIClientConfig) => {
+export default async (apiClientConfig: APIClientConfig): Promise<MoneyHub> => {
   const config = R.evolve(
     {
-      identityServiceUrl: (val: APIClientConfig["identityServiceUrl"]) =>
-        val.replace("/oidc", ""),
+      identityServiceUrl: (val: APIClientConfig["identityServiceUrl"]) => val.replace("/oidc", ""),
     },
     apiClientConfig
   );
@@ -63,8 +62,7 @@ export default async (apiClientConfig: APIClientConfig) => {
     ...getAuthUrlsFactory({ client, config }),
     ...getTokensFactory({ client, config }),
 
-    keys: () =>
-      keys && keys.length ? JWKS.asKeyStore({ keys }).toJWKS() : null,
+    keys: () => (keys && keys.length ? JWKS.asKeyStore({ keys }).toJWKS() : null),
   };
 
   return moneyhub;
