@@ -1,6 +1,8 @@
-module.exports = ({config, request}) => {
-  const {identityServiceUrl} = config
-  const authRequestEndpoint = identityServiceUrl + "/auth-requests"
+import { AuthRequests, AuthRequestsParams } from "../types/requests/auth-requests";
+
+export default ({ config, request }: AuthRequestsParams): AuthRequests => {
+  const { identityServiceUrl } = config;
+  const authRequestEndpoint = identityServiceUrl + "/auth-requests";
 
   return {
     createAuthRequest: async ({
@@ -32,7 +34,7 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    completeAuthRequest: async ({id, authParams}) =>
+    completeAuthRequest: async ({ id, authParams }) =>
       request(`${authRequestEndpoint}/${id}`, {
         method: "PATCH",
         cc: {
@@ -51,11 +53,11 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getAuthRequest: async ({id}) =>
+    getAuthRequest: async ({ id }) =>
       request(`${authRequestEndpoint}/${id}`, {
         cc: {
           scope: "auth_requests:read",
         },
       }),
-  }
-}
+  };
+};

@@ -1,8 +1,10 @@
-module.exports = ({config, request}) => {
-  const {resourceServerUrl} = config
+import { CategoriesRequests, CategoriesRequestsParams } from "../types/requests/categories";
+
+export default ({ config, request }: CategoriesRequestsParams): CategoriesRequests => {
+  const { resourceServerUrl } = config;
 
   return {
-    getCategories: async ({userId, params = {}}) =>
+    getCategories: async ({ userId, params = {} }) =>
       request(`${resourceServerUrl}/categories`, {
         searchParams: params,
         cc: {
@@ -11,12 +13,12 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getStandardCategories: async ({params = {}}) =>
+    getStandardCategories: async ({ params = {} }) =>
       request(`${resourceServerUrl}/standard-categories`, {
         searchParams: params,
       }),
 
-    getCategory: async ({userId, categoryId, params = {}}) =>
+    getCategory: async ({ userId, categoryId, params = {} }) =>
       request(`${resourceServerUrl}/categories/${categoryId}`, {
         searchParams: params,
         cc: {
@@ -25,7 +27,7 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getCategoryGroups: async ({userId, params = {}}) =>
+    getCategoryGroups: async ({ userId, params = {} }) =>
       request(`${resourceServerUrl}/category-groups`, {
         searchParams: params,
         cc: {
@@ -34,12 +36,12 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getStandardCategoryGroups: async ({params = {}}) =>
+    getStandardCategoryGroups: async ({ params = {} }) =>
       request(`${resourceServerUrl}/standard-category-groups`, {
         searchParams: params,
       }),
 
-    createCustomCategory: async ({userId, category: {group, name}}) =>
+    createCustomCategory: async ({ userId, category: { group, name } }) =>
       request(`${resourceServerUrl}/categories`, {
         method: "POST",
         cc: {
@@ -48,8 +50,8 @@ module.exports = ({config, request}) => {
         },
         body: {
           group,
-          name
-        }
+          name,
+        },
       }),
-  }
-}
+  };
+};

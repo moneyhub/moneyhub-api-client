@@ -1,8 +1,10 @@
-module.exports = ({config, request}) => {
-  const {resourceServerUrl} = config
+import { TransactionsRequests, TransactionsRequestsParams } from "../types/requests/transactions";
+
+export default ({ config, request }: TransactionsRequestsParams): TransactionsRequests => {
+  const { resourceServerUrl } = config;
 
   return {
-    getTransactions: ({userId, params}) =>
+    getTransactions: ({ userId, params }) =>
       request(`${resourceServerUrl}/transactions`, {
         searchParams: params,
         cc: {
@@ -10,23 +12,26 @@ module.exports = ({config, request}) => {
           sub: userId,
         },
       }),
-    getTransaction: ({userId, transactionId}) =>
+      
+    getTransaction: ({ userId, transactionId }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
         cc: {
           scope: "transactions:read:all",
           sub: userId,
         },
       }),
-    addTransaction: ({userId, transaction}) =>
+
+    addTransaction: ({ userId, transaction }) =>
       request(`${resourceServerUrl}/transactions`, {
         method: "POST",
         cc: {
           scope: "transactions:read:all transactions:write:all",
           sub: userId,
         },
-        body: transaction
+        body: transaction,
       }),
-    addTransactions: ({userId, transactions, params = {}}) =>
+
+    addTransactions: ({ userId, transactions, params = {} }) =>
       request(`${resourceServerUrl}/transactions-collection`, {
         method: "POST",
         searchParams: params,
@@ -34,25 +39,27 @@ module.exports = ({config, request}) => {
           scope: "transactions:read:all transactions:write:all",
           sub: userId,
         },
-        body: transactions
+        body: transactions,
       }),
-    updateTransaction: ({userId, transactionId, transaction}) =>
+
+    updateTransaction: ({ userId, transactionId, transaction }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
         method: "PATCH",
         cc: {
           scope: "transactions:read:all transactions:write:all",
           sub: userId,
         },
-        body: transaction
+        body: transaction,
       }),
-    deleteTransaction: ({userId, transactionId}) =>
+
+    deleteTransaction: ({ userId, transactionId }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
         method: "DELETE",
         cc: {
           scope: "transactions:write:all",
           sub: userId,
         },
-        returnStatus: true
+        returnStatus: true,
       }),
-  }
-}
+  };
+};

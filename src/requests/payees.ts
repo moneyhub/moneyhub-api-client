@@ -1,11 +1,13 @@
-module.exports = ({config, request}) => {
-  const {identityServiceUrl} = config
+import { PayeesRequests, PayeesRequestsParams } from "../types/requests/payees";
+
+export default ({ config, request }: PayeesRequestsParams): PayeesRequests => {
+  const { identityServiceUrl } = config;
 
   return {
-    addPayee: async ({accountNumber, sortCode, name, externalId, userId}) =>
+    addPayee: async ({ accountNumber, sortCode, name, externalId, userId }) =>
       request(`${identityServiceUrl}/payees`, {
         method: "POST",
-        body: {accountNumber, sortCode, name, externalId, userId},
+        body: { accountNumber, sortCode, name, externalId, userId },
         cc: {
           scope: "payee:create",
         },
@@ -19,11 +21,11 @@ module.exports = ({config, request}) => {
         },
       }),
 
-    getPayee: async ({id}) =>
+    getPayee: async ({ id }) =>
       request(`${identityServiceUrl}/payees/${id}`, {
         cc: {
           scope: "payee:read",
         },
       }),
-  }
-}
+  };
+};

@@ -1,12 +1,14 @@
-module.exports = ({config, request}) => {
-  const {identityServiceUrl} = config
+import { StandingOrdersRequests, StandingOrdersRequestsParams } from "../types/requests/standing-orders";
 
-  const getStandingOrder = ({id}) =>
+export default ({ config, request }: StandingOrdersRequestsParams): StandingOrdersRequests => {
+  const { identityServiceUrl } = config;
+
+  const getStandingOrder = ({ id }: { id: string }) =>
     request(`${identityServiceUrl}/standing-orders/${id}`, {
       cc: {
         scope: "payment:read",
       },
-    })
+    });
 
   return {
     getStandingOrder,
@@ -17,5 +19,5 @@ module.exports = ({config, request}) => {
           scope: "payment:read",
         },
       }),
-  }
-}
+  };
+};
