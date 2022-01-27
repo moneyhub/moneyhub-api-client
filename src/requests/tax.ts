@@ -1,4 +1,4 @@
-import { TaxRequests, TaxRequestsParams } from "../types/requests/tax";
+import { TaxRequests, TaxRequestsParams } from '../types/requests/tax';
 
 export default ({ config, request }: TaxRequestsParams): TaxRequests => {
   const { resourceServerUrl } = config;
@@ -7,9 +7,9 @@ export default ({ config, request }: TaxRequestsParams): TaxRequests => {
   return {
     getTaxReturn: ({ userId, params }) =>
       request(`${resourceServerUrl}/tax`, {
-        searchParams: typeof params === "object" ? filterNullOrUndefined(params) : params,
+        searchParams: typeof params === 'object' ? filterNullOrUndefined(params) : params,
         cc: {
-          scope: "tax:read",
+          scope: 'tax:read',
           sub: userId,
         },
       }),

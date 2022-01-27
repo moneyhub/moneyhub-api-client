@@ -1,4 +1,4 @@
-import { TransactionsRequests, TransactionsRequestsParams } from "../types/requests/transactions";
+import { TransactionsRequests, TransactionsRequestsParams } from '../types/requests/transactions';
 
 export default ({ config, request }: TransactionsRequestsParams): TransactionsRequests => {
   const { resourceServerUrl } = config;
@@ -8,24 +8,24 @@ export default ({ config, request }: TransactionsRequestsParams): TransactionsRe
       request(`${resourceServerUrl}/transactions`, {
         searchParams: params,
         cc: {
-          scope: "transactions:read:all",
+          scope: 'transactions:read:all',
           sub: userId,
         },
       }),
-      
+
     getTransaction: ({ userId, transactionId }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
         cc: {
-          scope: "transactions:read:all",
+          scope: 'transactions:read:all',
           sub: userId,
         },
       }),
 
     addTransaction: ({ userId, transaction }) =>
       request(`${resourceServerUrl}/transactions`, {
-        method: "POST",
+        method: 'POST',
         cc: {
-          scope: "transactions:read:all transactions:write:all",
+          scope: 'transactions:read:all transactions:write:all',
           sub: userId,
         },
         body: transaction,
@@ -33,10 +33,10 @@ export default ({ config, request }: TransactionsRequestsParams): TransactionsRe
 
     addTransactions: ({ userId, transactions, params = {} }) =>
       request(`${resourceServerUrl}/transactions-collection`, {
-        method: "POST",
+        method: 'POST',
         searchParams: params,
         cc: {
-          scope: "transactions:read:all transactions:write:all",
+          scope: 'transactions:read:all transactions:write:all',
           sub: userId,
         },
         body: transactions,
@@ -44,9 +44,9 @@ export default ({ config, request }: TransactionsRequestsParams): TransactionsRe
 
     updateTransaction: ({ userId, transactionId, transaction }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
-        method: "PATCH",
+        method: 'PATCH',
         cc: {
-          scope: "transactions:read:all transactions:write:all",
+          scope: 'transactions:read:all transactions:write:all',
           sub: userId,
         },
         body: transaction,
@@ -54,9 +54,9 @@ export default ({ config, request }: TransactionsRequestsParams): TransactionsRe
 
     deleteTransaction: ({ userId, transactionId }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         cc: {
-          scope: "transactions:write:all",
+          scope: 'transactions:write:all',
           sub: userId,
         },
         returnStatus: true,

@@ -1,4 +1,4 @@
-import type { AccountRequestsParams, AccountsRequests } from "../types/requests/accounts";
+import type { AccountRequestsParams, AccountsRequests } from '../types/requests/accounts';
 
 export default ({ config, request }: AccountRequestsParams): AccountsRequests => {
   const { resourceServerUrl } = config;
@@ -8,7 +8,7 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
       request(`${resourceServerUrl}/accounts`, {
         searchParams: params,
         cc: {
-          scope: "accounts:read",
+          scope: 'accounts:read',
           sub: userId,
         },
       }),
@@ -17,7 +17,7 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
       request(`${resourceServerUrl}/accounts`, {
         searchParams: params,
         cc: {
-          scope: "accounts:read accounts_details:read",
+          scope: 'accounts:read accounts_details:read',
           sub: userId,
         },
       }),
@@ -25,7 +25,7 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
     getAccount: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}`, {
         cc: {
-          scope: "accounts:read",
+          scope: 'accounts:read',
           sub: userId,
         },
       }),
@@ -33,7 +33,7 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
     getAccountBalances: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}/balances`, {
         cc: {
-          scope: "accounts:read",
+          scope: 'accounts:read',
           sub: userId,
         },
       }),
@@ -41,7 +41,7 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
     getAccountWithDetails: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}`, {
         cc: {
-          scope: "accounts:read accounts_details:read",
+          scope: 'accounts:read accounts_details:read',
           sub: userId,
         },
       }),
@@ -49,7 +49,7 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
     getAccountHoldings: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}/holdings`, {
         cc: {
-          scope: "accounts:read",
+          scope: 'accounts:read',
           sub: userId,
         },
       }),
@@ -57,7 +57,7 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
     getAccountHoldingsWithMatches: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}/holdings-with-matches`, {
         cc: {
-          scope: "accounts:read",
+          scope: 'accounts:read',
           sub: userId,
         },
       }),
@@ -65,7 +65,7 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
     getAccountHolding: async ({ userId, accountId, holdingId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}/holdings/${holdingId}`, {
         cc: {
-          scope: "accounts:read",
+          scope: 'accounts:read',
           sub: userId,
         },
       }),
@@ -73,16 +73,16 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
     getAccountCounterparties: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}/counterparties`, {
         cc: {
-          scope: "accounts:read transactions:read:all",
+          scope: 'accounts:read transactions:read:all',
           sub: userId,
         },
       }),
 
     getAccountRecurringTransactions: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}/recurring-transactions`, {
-        method: "POST",
+        method: 'POST',
         cc: {
-          scope: "accounts:read transactions:read:all",
+          scope: 'accounts:read transactions:read:all',
           sub: userId,
         },
       }),
@@ -90,7 +90,7 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
     getAccountStandingOrders: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}/standing-orders`, {
         cc: {
-          scope: "accounts:read standing_orders:read",
+          scope: 'accounts:read standing_orders:read',
           sub: userId,
         },
       }),
@@ -98,16 +98,16 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
     getAccountStandingOrdersWithDetail: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}/standing-orders`, {
         cc: {
-          scope: "accounts:read standing_orders_detail:read",
+          scope: 'accounts:read standing_orders_detail:read',
           sub: userId,
         },
       }),
 
     createAccount: async ({ userId, account }) =>
       request(`${resourceServerUrl}/accounts`, {
-        method: "POST",
+        method: 'POST',
         cc: {
-          scope: "accounts:read accounts:write:all",
+          scope: 'accounts:read accounts:write:all',
           sub: userId,
         },
         body: account,
@@ -115,9 +115,9 @@ export default ({ config, request }: AccountRequestsParams): AccountsRequests =>
 
     deleteAccount: async ({ userId, accountId }) =>
       request(`${resourceServerUrl}/accounts/${accountId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         cc: {
-          scope: "accounts:write:all",
+          scope: 'accounts:write:all',
           sub: userId,
         },
         returnStatus: true,

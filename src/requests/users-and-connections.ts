@@ -1,19 +1,22 @@
 import {
   UsersAndConnectionsRequests,
   UsersAndConnectionsRequestsParams,
-} from "../types/requests/users-and-connections";
+} from '../types/requests/users-and-connections';
 
-export default ({ config, request }: UsersAndConnectionsRequestsParams): UsersAndConnectionsRequests => {
+export default ({
+  config,
+  request,
+}: UsersAndConnectionsRequestsParams): UsersAndConnectionsRequests => {
   const { identityServiceUrl } = config;
-  const usersEndpoint = identityServiceUrl + "/users";
-  const scimUsersEndpoint = identityServiceUrl + "/scim/users";
+  const usersEndpoint = identityServiceUrl + '/users';
+  const scimUsersEndpoint = identityServiceUrl + '/scim/users';
 
   return {
     registerUser: async ({ clientUserId }) =>
       request(usersEndpoint, {
-        method: "POST",
+        method: 'POST',
         cc: {
-          scope: "user:create",
+          scope: 'user:create',
         },
         body: { clientUserId },
       }),
@@ -22,7 +25,7 @@ export default ({ config, request }: UsersAndConnectionsRequestsParams): UsersAn
       request(usersEndpoint, {
         searchParams: params,
         cc: {
-          scope: "user:read",
+          scope: 'user:read',
         },
       }),
 
@@ -30,39 +33,39 @@ export default ({ config, request }: UsersAndConnectionsRequestsParams): UsersAn
       request(scimUsersEndpoint, {
         searchParams: params,
         cc: {
-          scope: "scim_user:read",
+          scope: 'scim_user:read',
         },
       }),
 
     getUser: async ({ userId }) =>
       request(`${usersEndpoint}/${userId}`, {
         cc: {
-          scope: "user:read",
+          scope: 'user:read',
         },
       }),
 
     getUserConnections: async ({ userId }) =>
       request(`${usersEndpoint}/${userId}/connections`, {
         cc: {
-          scope: "user:read",
+          scope: 'user:read',
         },
       }),
 
     deleteUserConnection: async ({ userId, connectionId }) =>
       request(`${usersEndpoint}/${userId}/connection/${connectionId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         returnStatus: true,
         cc: {
-          scope: "user:delete",
+          scope: 'user:delete',
         },
       }),
 
     deleteUser: async ({ userId }) =>
       request(`${usersEndpoint}/${userId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         returnStatus: true,
         cc: {
-          scope: "user:delete",
+          scope: 'user:delete',
         },
       }),
   };

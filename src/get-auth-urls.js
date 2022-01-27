@@ -1,51 +1,46 @@
-const got = require("got")
-const R = require("ramda")
-const filterUndefined = R.reject(R.isNil)
+const got = require('got');
+const R = require('ramda');
+const filterUndefined = R.reject(R.isNil);
 
-module.exports = ({client, config}) => {
+module.exports = ({ client, config }) => {
   const {
     identityServiceUrl,
-    client: {
-      client_id,
-      request_object_signing_alg,
-      redirect_uri,
-      response_type,
-    },
-  } = config
+    client: { client_id, request_object_signing_alg, redirect_uri, response_type },
+  } = config;
 
-  const setPermissionsToClaims = permissions => claims => {
+  const setPermissionsToClaims = (permissions) => (claims) => {
     if (permissions && R.is(Array, permissions)) {
       return R.mergeDeepRight(claims, {
         id_token: {
-          "mh:consent": {
+          'mh:consent': {
             essential: true,
             value: {
-              permissions
-            }
-          }
-        }
-      })
+              permissions,
+            },
+          },
+        },
+      });
     }
 
-    return claims
-  }
+    return claims;
+  };
 
-  const getAuthorizeUrl = ({state, scope, nonce, claims = {}, permissions}) => {
+  const getAuthorizeUrl = ({ state, scope, nonce, claims = {}, permissions }) => {
     const defaultClaims = {
       id_token: {
         sub: {
           essential: true,
         },
-        "mh:con_id": {
+        'mh:con_id': {
           essential: true,
         },
       },
-    }
+    };
 
     const _claims = R.compose(
       setPermissionsToClaims(permissions),
-      R.mergeDeepRight(defaultClaims)
-    )(claims)
+      R.mergeDeepRight(defaultClaims),
+    )(claims);
 
     const authParams = filterUndefined({
       client_id,
@@ -54,8 +49,8 @@ module.exports = ({client, config}) => {
       nonce,
       redirect_uri,
       response_type,
-      prompt: "consent",
-    })
+      prompt: 'consent',
+    });
 
     return client
       .requestObject(
@@ -66,20 +61,20 @@ module.exports = ({client, config}) => {
         },
         {
           sign: request_object_signing_alg,
-        }
+        },
       )
       .then((request) => ({
         ...authParams,
         request,
       }))
-      .then(client.authorizationUrl.bind(client))
-  }
+      .then(client.authorizationUrl.bind(client));
+  };
 
-  const getAuthorizeUrlFromRequestUri = ({requestUri}) => {
-    return `${client.issuer.authorization_endpoint}?request_uri=${requestUri}`
-  }
+  const getAuthorizeUrlFromRequestUri = ({ requestUri }) => {
+    return `${client.issuer.authorization_endpoint}?request_uri=${requestUri}`;
+  };
 
-  const requestObject = ({scope, state, claims, nonce}) => {
+  const requestObject = ({ scope, state, claims, nonce }) => {
     const authParams = filterUndefined({
       client_id,
       scope,
@@ -89,21 +84,21 @@ module.exports = ({client, config}) => {
       exp: Math.round(Date.now() / 1000) + 300,
       redirect_uri,
       response_type,
-      prompt: "consent",
-    })
+      prompt: 'consent',
+    });
 
-    return client.requestObject(authParams)
-  }
+    return client.requestObject(authParams);
+  };
 
   const getRequestUri = async (requestObject) => {
-    const {body} = await got.post(identityServiceUrl + "/request", {
+    const { body } = await got.post(identityServiceUrl + '/request', {
       body: requestObject,
       headers: {
-        "Content-Type": "application/jws",
+        'Content-Type': 'application/jws',
       },
-    })
-    return body
-  }
+    });
+    return body;
+  };
 
   return {
     getAuthorizeUrl,
@@ -116,32 +111,32 @@ module.exports = ({client, config}) => {
       nonce,
       userId,
       claims = {},
-      permissions
+      permissions,
     }) => {
-      const scope = `id:${bankId} openid`
+      const scope = `id:${bankId} openid`;
       const defaultClaims = {
         id_token: {
           sub: {
             essential: true,
             value: userId,
           },
-          "mh:con_id": {
+          'mh:con_id': {
             essential: true,
           },
         },
-      }
+      };
       const _claims = R.compose(
         setPermissionsToClaims(permissions),
-        R.mergeDeepRight(defaultClaims)
-      )(claims)
+        R.mergeDeepRight(defaultClaims),
+      )(claims);
 
       const url = await getAuthorizeUrl({
         state,
         nonce,
         scope,
         claims: _claims,
-      })
-      return url
+      });
+      return url;
     },
 
     getReauthAuthorizeUrlForCreatedUser: async ({
@@ -151,28 +146,28 @@ module.exports = ({client, config}) => {
       nonce,
       claims = {},
     }) => {
-      const scope = "openid reauth"
+      const scope = 'openid reauth';
       const defaultClaims = {
         id_token: {
           sub: {
             essential: true,
             value: userId,
           },
-          "mh:con_id": {
+          'mh:con_id': {
             essential: true,
             value: connectionId,
           },
         },
-      }
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      };
+      const _claims = R.mergeDeepRight(defaultClaims, claims);
 
       const url = await getAuthorizeUrl({
         state,
         nonce,
         scope,
         claims: _claims,
-      })
-      return url
+      });
+      return url;
     },
 
     getRefreshAuthorizeUrlForCreatedUser: async ({
@@ -182,28 +177,28 @@ module.exports = ({client, config}) => {
       nonce,
       claims = {},
     }) => {
-      const scope = "openid refresh"
+      const scope = 'openid refresh';
       const defaultClaims = {
         id_token: {
           sub: {
             essential: true,
             value: userId,
           },
-          "mh:con_id": {
+          'mh:con_id': {
             essential: true,
             value: connectionId,
           },
         },
-      }
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      };
+      const _claims = R.mergeDeepRight(defaultClaims, claims);
 
       const url = await getAuthorizeUrl({
         state,
         scope,
         nonce,
         claims: _claims,
-      })
-      return url
+      });
+      return url;
     },
 
     getPaymentAuthorizeUrl: async ({
@@ -223,22 +218,22 @@ module.exports = ({client, config}) => {
       claims = {},
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        console.error('State is required');
+        throw new Error('Missing parameters');
       }
 
       if (!payeeId) {
-        console.error("PayeeId is required")
-        throw new Error("Missing parameters")
+        console.error('PayeeId is required');
+        throw new Error('Missing parameters');
       }
 
-      const scope = `payment openid id:${bankId}`
+      const scope = `payment openid id:${bankId}`;
       const defaultClaims = {
         id_token: {
-          "mh:con_id": {
+          'mh:con_id': {
             essential: true,
           },
-          "mh:payment": {
+          'mh:payment': {
             essential: true,
             value: {
               amount,
@@ -252,79 +247,73 @@ module.exports = ({client, config}) => {
               readRefundAccount,
             },
           },
-          ...userId && {
+          ...(userId && {
             sub: {
-              value: userId
-            }
-          }
+              value: userId,
+            },
+          }),
         },
-      }
+      };
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = R.mergeDeepRight(defaultClaims, claims);
 
       const request = await requestObject({
         scope,
         state,
         claims: _claims,
         nonce,
-      })
+      });
 
-      const requestUri = await getRequestUri(request)
+      const requestUri = await getRequestUri(request);
       const url = getAuthorizeUrlFromRequestUri({
         requestUri,
-      })
-      return url
+      });
+      return url;
     },
 
-    getReversePaymentAuthorizeUrl: async ({
-      bankId,
-      paymentId,
-      state,
-      nonce,
-      claims = {},
-    }) => {
+    getReversePaymentAuthorizeUrl: async ({ bankId, paymentId, state, nonce, claims = {} }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        console.error('State is required');
+        throw new Error('Missing parameters');
       }
 
       if (!paymentId) {
-        console.error("PayeeId is required")
-        throw new Error("Missing parameters")
+        console.error('PayeeId is required');
+        throw new Error('Missing parameters');
       }
 
-      const scope = `reverse_payment openid id:${bankId}`
+      const scope = `reverse_payment openid id:${bankId}`;
       const defaultClaims = {
         id_token: {
-          "mh:con_id": {
+          'mh:con_id': {
             essential: true,
           },
-          "mh:reverse_payment": {
+          'mh:reverse_payment': {
             essential: true,
             value: {
               paymentId,
             },
           },
-          "mh:payment": {
+          'mh:payment': {
             essential: true,
           },
         },
-      }
+      };
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = R.mergeDeepRight(defaultClaims, claims);
 
       const request = await requestObject({
         scope,
         state,
         claims: _claims,
         nonce,
-      })
+      });
 
-      const requestUri = await getRequestUri(request)
+      const requestUri = await getRequestUri(request);
       const url = getAuthorizeUrlFromRequestUri({
         requestUri,
-      })
-      return url
+      });
+      return url;
     },
 
     getStandingOrderAuthorizeUrl: async ({
@@ -349,22 +338,22 @@ module.exports = ({client, config}) => {
       claims = {},
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        console.error('State is required');
+        throw new Error('Missing parameters');
       }
 
       if (!payeeId) {
-        console.error("PayeeId is required")
-        throw new Error("Missing parameters")
+        console.error('PayeeId is required');
+        throw new Error('Missing parameters');
       }
 
-      const scope = `standing_orders:create openid id:${bankId}`
+      const scope = `standing_orders:create openid id:${bankId}`;
       const defaultClaims = {
         id_token: {
-          "mh:con_id": {
+          'mh:con_id': {
             essential: true,
           },
-          "mh:standing_order": {
+          'mh:standing_order': {
             essential: true,
             value: {
               payeeId,
@@ -385,23 +374,22 @@ module.exports = ({client, config}) => {
             },
           },
         },
-      }
+      };
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = R.mergeDeepRight(defaultClaims, claims);
 
       const request = await requestObject({
         scope,
         state,
         claims: _claims,
         nonce,
-      })
+      });
 
-      const requestUri = await getRequestUri(request)
+      const requestUri = await getRequestUri(request);
       const url = getAuthorizeUrlFromRequestUri({
         requestUri,
-      })
-      return url
+      });
+      return url;
     },
-
-  }
-}
+  };
+};

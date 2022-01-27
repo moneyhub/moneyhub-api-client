@@ -1,32 +1,32 @@
-import type { AccountsMethods } from "./requests/accounts";
-import type { AuthRequestsMethods } from "./requests/auth-requests";
-import type { RequestOptions } from "./request";
-import type { Options } from "got";
+import type { AccountsMethods } from './requests/accounts';
+import type { AuthRequestsMethods } from './requests/auth-requests';
+import type { RequestOptions } from './request';
+import type { Options } from 'got';
 
-declare module "@mft/moneyhub-api-client" {
+declare module '@mft/moneyhub-api-client' {
   async function Factory(apiClientConfig: APIClientConfig): Promise<MoneyHub>;
   export default Factory;
 }
 
 interface MoneyHub {
-  getAccounts: AccountsMethods["getAccounts"];
-  getAccountsWithDetails: AccountsMethods["getAccountsWithDetails"];
-  getAccount: AccountsMethods["getAccount"];
-  getAccountBalances: AccountsMethods["getAccountBalances"];
-  getAccountWithDetails: AccountsMethods["getAccountWithDetails"];
-  getAccountHoldings: AccountsMethods["getAccountHoldings"];
-  getAccountHoldingsWithMatches: AccountsMethods["getAccountHoldingsWithMatches"];
-  getAccountHolding: AccountsMethods["getAccountHolding"];
-  getAccountCounterparties: AccountsMethods["getAccountCounterparties"];
-  getAccountRecurringTransactions: AccountsMethods["getAccountRecurringTransactions"];
-  getAccountStandingOrders: AccountsMethods["getAccountStandingOrders"];
-  getAccountStandingOrdersWithDetail: AccountsMethods["getAccountStandingOrdersWithDetail"];
-  createAccount: AccountsMethods["createAccount"];
-  deleteAccount: AccountsMethods["deleteAccount"];
-  createAuthRequest: AuthRequestsMethods["createAuthRequest"];
-  completeAuthRequest: AuthRequestsMethods["completeAuthRequest"];
-  getAllAuthRequests: AuthRequestsMethods["getAllAuthRequests"];
-  getAuthRequest: AuthRequestsMethods["getAuthRequest"];
+  getAccounts: AccountsMethods['getAccounts'];
+  getAccountsWithDetails: AccountsMethods['getAccountsWithDetails'];
+  getAccount: AccountsMethods['getAccount'];
+  getAccountBalances: AccountsMethods['getAccountBalances'];
+  getAccountWithDetails: AccountsMethods['getAccountWithDetails'];
+  getAccountHoldings: AccountsMethods['getAccountHoldings'];
+  getAccountHoldingsWithMatches: AccountsMethods['getAccountHoldingsWithMatches'];
+  getAccountHolding: AccountsMethods['getAccountHolding'];
+  getAccountCounterparties: AccountsMethods['getAccountCounterparties'];
+  getAccountRecurringTransactions: AccountsMethods['getAccountRecurringTransactions'];
+  getAccountStandingOrders: AccountsMethods['getAccountStandingOrders'];
+  getAccountStandingOrdersWithDetail: AccountsMethods['getAccountStandingOrdersWithDetail'];
+  createAccount: AccountsMethods['createAccount'];
+  deleteAccount: AccountsMethods['deleteAccount'];
+  createAuthRequest: AuthRequestsMethods['createAuthRequest'];
+  completeAuthRequest: AuthRequestsMethods['completeAuthRequest'];
+  getAllAuthRequests: AuthRequestsMethods['getAllAuthRequests'];
+  getAuthRequest: AuthRequestsMethods['getAuthRequest'];
 
   keys: () => JSONWebKeySet | null;
 }
@@ -54,4 +54,4 @@ export interface RequestsParams {
   request: (url: string, opts?: RequestOptions) => Promise<unknown>;
 }
 
-export type SearchParams = Options["searchParams"];
+export type SearchParams = Options['searchParams'];

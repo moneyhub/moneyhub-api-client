@@ -1,4 +1,4 @@
-import { PayeesRequests, PayeesRequestsParams } from "../types/requests/payees";
+import { PayeesRequests, PayeesRequestsParams } from '../types/requests/payees';
 
 export default ({ config, request }: PayeesRequestsParams): PayeesRequests => {
   const { identityServiceUrl } = config;
@@ -6,10 +6,10 @@ export default ({ config, request }: PayeesRequestsParams): PayeesRequests => {
   return {
     addPayee: async ({ accountNumber, sortCode, name, externalId, userId }) =>
       request(`${identityServiceUrl}/payees`, {
-        method: "POST",
+        method: 'POST',
         body: { accountNumber, sortCode, name, externalId, userId },
         cc: {
-          scope: "payee:create",
+          scope: 'payee:create',
         },
       }),
 
@@ -17,14 +17,14 @@ export default ({ config, request }: PayeesRequestsParams): PayeesRequests => {
       request(`${identityServiceUrl}/payees`, {
         searchParams: params,
         cc: {
-          scope: "payee:read",
+          scope: 'payee:read',
         },
       }),
 
     getPayee: async ({ id }) =>
       request(`${identityServiceUrl}/payees/${id}`, {
         cc: {
-          scope: "payee:read",
+          scope: 'payee:read',
         },
       }),
   };

@@ -1,5 +1,4 @@
-import type { RequestsParams } from "..";
-import type { RequestOptions } from "../request";
+import type { RequestsParams } from '..';
 
 export type UnauthenticatedRequestsParams = RequestsParams;
 

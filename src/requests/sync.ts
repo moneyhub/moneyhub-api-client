@@ -1,5 +1,5 @@
-import R from "ramda";
-import { SyncRequests, SyncRequestsParams } from "../types/requests/sync";
+import R from 'ramda';
+import { SyncRequests, SyncRequestsParams } from '../types/requests/sync';
 const filterUndefined = R.reject(R.isNil);
 
 export default ({ config, request }: SyncRequestsParams): SyncRequests => {
@@ -8,10 +8,10 @@ export default ({ config, request }: SyncRequestsParams): SyncRequests => {
   return {
     syncUserConnection: ({ userId, connectionId, customerIpAddress, customerLastLoggedTime }) =>
       request(`${resourceServerUrl}/sync/${connectionId}`, {
-        method: "POST",
+        method: 'POST',
         body: filterUndefined({ customerIpAddress, customerLastLoggedTime }),
         cc: {
-          scope: "accounts:read accounts:write:all",
+          scope: 'accounts:read accounts:write:all',
           sub: userId,
         },
       }),

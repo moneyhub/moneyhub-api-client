@@ -1,19 +1,19 @@
-import { Issuer, custom } from "openid-client";
-import R from "ramda";
-import { JWKS } from "jose";
-import getAuthUrlsFactory from "./get-auth-urls";
-import getTokensFactory from "./tokens";
-import requestFactories from "./requests";
-import req from "./request";
-import type { APIClientConfig, MoneyHub } from "./types";
+import { Issuer, custom } from 'openid-client';
+import R from 'ramda';
+import { JWKS } from 'jose';
+import getAuthUrlsFactory from './get-auth-urls';
+import getTokensFactory from './tokens';
+import requestFactories from './requests';
+import req from './request';
+import type { APIClientConfig, MoneyHub } from './types';
 const DEFAULT_TIMEOUT = 60000;
 
 export default async (apiClientConfig: APIClientConfig): Promise<MoneyHub> => {
   const config = R.evolve(
     {
-      identityServiceUrl: (val: APIClientConfig["identityServiceUrl"]) => val.replace("/oidc", ""),
+      identityServiceUrl: (val: APIClientConfig['identityServiceUrl']) => val.replace('/oidc', ''),
     },
-    apiClientConfig
+    apiClientConfig,
   );
 
   const {
@@ -36,7 +36,7 @@ export default async (apiClientConfig: APIClientConfig): Promise<MoneyHub> => {
     timeout,
   });
 
-  const moneyhubIssuer = await Issuer.discover(identityServiceUrl + "/oidc");
+  const moneyhubIssuer = await Issuer.discover(identityServiceUrl + '/oidc');
 
   const client = new moneyhubIssuer.Client(
     {
@@ -47,7 +47,7 @@ export default async (apiClientConfig: APIClientConfig): Promise<MoneyHub> => {
       token_endpoint_auth_method,
       request_object_signing_alg,
     },
-    { keys }
+    { keys },
   );
 
   client[custom.clock_tolerance] = 10;

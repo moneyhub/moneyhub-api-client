@@ -1,13 +1,19 @@
-import { TransactionSplitsRequests, TransactionSplitsRequestsParams } from "../types/requests/transaction-splits";
+import {
+  TransactionSplitsRequests,
+  TransactionSplitsRequestsParams,
+} from '../types/requests/transaction-splits';
 
-export default ({ config, request }: TransactionSplitsRequestsParams): TransactionSplitsRequests => {
+export default ({
+  config,
+  request,
+}: TransactionSplitsRequestsParams): TransactionSplitsRequests => {
   const { resourceServerUrl } = config;
   return {
     splitTransaction: async ({ userId, transactionId, splits }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/splits`, {
-        method: "POST",
+        method: 'POST',
         cc: {
-          scope: "transactions:write:all",
+          scope: 'transactions:write:all',
           sub: userId,
         },
         body: splits,
@@ -16,16 +22,16 @@ export default ({ config, request }: TransactionSplitsRequestsParams): Transacti
     getTransactionSplits: async ({ userId, transactionId }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/splits`, {
         cc: {
-          scope: "transactions:read:all",
+          scope: 'transactions:read:all',
           sub: userId,
         },
       }),
 
     patchTransactionSplit: async ({ userId, transactionId, splitId, split }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/splits/${splitId}`, {
-        method: "PATCH",
+        method: 'PATCH',
         cc: {
-          scope: "transactions:write:all",
+          scope: 'transactions:write:all',
           sub: userId,
         },
         body: split,
@@ -33,9 +39,9 @@ export default ({ config, request }: TransactionSplitsRequestsParams): Transacti
 
     deleteTransactionSplits: async ({ userId, transactionId }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/splits`, {
-        method: "DELETE",
+        method: 'DELETE',
         cc: {
-          scope: "transactions:write:all",
+          scope: 'transactions:write:all',
           sub: userId,
         },
         returnStatus: true,

@@ -1,5 +1,4 @@
-import type { RequestsParams } from "..";
-import type { RequestOptions } from "../request";
+import type { RequestsParams } from '..';
 
 export type TransactionSplitsRequestsParams = RequestsParams;
 
@@ -19,7 +18,13 @@ interface TransactionSplitsRequests {
     splits: Record<string, any>;
   }) => Promise<unknown>;
 
-  getTransactionSplits: ({ userId, transactionId }: { userId: string; transactionId: string }) => Promise<unknown>;
+  getTransactionSplits: ({
+    userId,
+    transactionId,
+  }: {
+    userId: string;
+    transactionId: string;
+  }) => Promise<unknown>;
 
   patchTransactionSplit: ({
     userId,
@@ -33,5 +38,11 @@ interface TransactionSplitsRequests {
     split: Record<string, any>;
   }) => Promise<unknown>;
 
-  deleteTransactionSplits: ({ userId, transactionId }: { userId: string; transactionId: string }) => Promise<unknown>;
+  deleteTransactionSplits: ({
+    userId,
+    transactionId,
+  }: {
+    userId: string;
+    transactionId: string;
+  }) => Promise<unknown>;
 }

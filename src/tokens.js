@@ -1,6 +1,6 @@
-const R = require("ramda")
-const exchangeCodeForTokensFactory = require("./exchange-code-for-token")
-const filterUndefined = R.reject(R.isNil)
+const R = require('ramda');
+const exchangeCodeForTokensFactory = require('./exchange-code-for-token');
+const filterUndefined = R.reject(R.isNil);
 
 const exchangeCodeForTokensErrorMessage = `
 Missing Parameters in exchangeCodeForTokens method.
@@ -33,40 +33,40 @@ This function now requires an object with the following properties:
       "code_verifier" // required for PKCE
   }
 }
-`
+`;
 
-module.exports = ({client, config}) => {
+module.exports = ({ client, config }) => {
   const {
-    client: {redirect_uri},
-  } = config
+    client: { redirect_uri },
+  } = config;
 
   const exchangeCodeForTokens = exchangeCodeForTokensFactory({
     client,
     redirectUri: redirect_uri,
-  })
+  });
 
   return {
-    exchangeCodeForTokensLegacy: ({state, code, nonce, id_token}) => {
-      const verify = filterUndefined({state, nonce})
-      const requestObj = filterUndefined({state, code, id_token, nonce})
-      return client.authorizationCallback(redirect_uri, requestObj, verify)
+    exchangeCodeForTokensLegacy: ({ state, code, nonce, id_token }) => {
+      const verify = filterUndefined({ state, nonce });
+      const requestObj = filterUndefined({ state, code, id_token, nonce });
+      return client.authorizationCallback(redirect_uri, requestObj, verify);
     },
 
-    exchangeCodeForTokens: ({paramsFromCallback, localParams}) => {
+    exchangeCodeForTokens: ({ paramsFromCallback, localParams }) => {
       if (!paramsFromCallback || !localParams) {
-        console.error(exchangeCodeForTokensErrorMessage)
-        throw new Error("Missing parameters")
+        console.error(exchangeCodeForTokensErrorMessage);
+        throw new Error('Missing parameters');
       }
-      return exchangeCodeForTokens({paramsFromCallback, localParams})
+      return exchangeCodeForTokens({ paramsFromCallback, localParams });
     },
 
-    refreshTokens: ({refreshToken}) => client.refresh(refreshToken),
+    refreshTokens: ({ refreshToken }) => client.refresh(refreshToken),
 
-    getClientCredentialTokens: ({scope, sub}) =>
+    getClientCredentialTokens: ({ scope, sub }) =>
       client.grant({
-        grant_type: "client_credentials",
+        grant_type: 'client_credentials',
         scope,
         sub,
       }),
-  }
-}
+  };
+};

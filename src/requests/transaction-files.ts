@@ -1,6 +1,9 @@
-import { TransactionFilesRequests, TransactionFilesRequestsParams } from "../types/requests/transaction-files";
+import {
+  TransactionFilesRequests,
+  TransactionFilesRequestsParams,
+} from '../types/requests/transaction-files';
 
-import FormData from "form-data";
+import FormData from 'form-data';
 
 export default ({ config, request }: TransactionFilesRequestsParams): TransactionFilesRequests => {
   const { resourceServerUrl } = config;
@@ -8,12 +11,12 @@ export default ({ config, request }: TransactionFilesRequestsParams): Transactio
   return {
     addFileToTransaction: async ({ userId, transactionId, fileData, fileName }) => {
       const form = new FormData();
-      form.append("file", fileData, fileName);
+      form.append('file', fileData, fileName);
       return request(`${resourceServerUrl}/transactions/${transactionId}/files`, {
-        method: "POST",
+        method: 'POST',
         form,
         cc: {
-          scope: "transactions:read:all transactions:write",
+          scope: 'transactions:read:all transactions:write',
           sub: userId,
         },
       });
@@ -22,7 +25,7 @@ export default ({ config, request }: TransactionFilesRequestsParams): Transactio
     getTransactionFiles: async ({ userId, transactionId }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/files`, {
         cc: {
-          scope: "transactions:read:all transactions:write",
+          scope: 'transactions:read:all transactions:write',
           sub: userId,
         },
       }),
@@ -30,16 +33,16 @@ export default ({ config, request }: TransactionFilesRequestsParams): Transactio
     getTransactionFile: async ({ userId, transactionId, fileId }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/files/${fileId}`, {
         cc: {
-          scope: "transactions:read:all transactions:write",
+          scope: 'transactions:read:all transactions:write',
           sub: userId,
         },
       }),
 
     deleteTransactionFile: async ({ userId, transactionId, fileId }) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/files/${fileId}`, {
-        method: "DELETE",
+        method: 'DELETE',
         cc: {
-          scope: "transactions:read:all transactions:write",
+          scope: 'transactions:read:all transactions:write',
           sub: userId,
         },
         returnStatus: true,

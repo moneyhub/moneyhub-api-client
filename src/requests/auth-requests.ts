@@ -1,8 +1,8 @@
-import { AuthRequests, AuthRequestsParams } from "../types/requests/auth-requests";
+import { AuthRequests, AuthRequestsParams } from '../types/requests/auth-requests';
 
 export default ({ config, request }: AuthRequestsParams): AuthRequests => {
   const { identityServiceUrl } = config;
-  const authRequestEndpoint = identityServiceUrl + "/auth-requests";
+  const authRequestEndpoint = identityServiceUrl + '/auth-requests';
 
   return {
     createAuthRequest: async ({
@@ -17,9 +17,9 @@ export default ({ config, request }: AuthRequestsParams): AuthRequests => {
       permissions,
     }) =>
       request(authRequestEndpoint, {
-        method: "POST",
+        method: 'POST',
         cc: {
-          scope: "auth_requests:write",
+          scope: 'auth_requests:write',
         },
         body: {
           redirectUri,
@@ -36,9 +36,9 @@ export default ({ config, request }: AuthRequestsParams): AuthRequests => {
 
     completeAuthRequest: async ({ id, authParams }) =>
       request(`${authRequestEndpoint}/${id}`, {
-        method: "PATCH",
+        method: 'PATCH',
         cc: {
-          scope: "auth_requests:write",
+          scope: 'auth_requests:write',
         },
         body: {
           authParams,
@@ -49,14 +49,14 @@ export default ({ config, request }: AuthRequestsParams): AuthRequests => {
       request(authRequestEndpoint, {
         searchParams: params,
         cc: {
-          scope: "auth_requests:read",
+          scope: 'auth_requests:read',
         },
       }),
 
     getAuthRequest: async ({ id }) =>
       request(`${authRequestEndpoint}/${id}`, {
         cc: {
-          scope: "auth_requests:read",
+          scope: 'auth_requests:read',
         },
       }),
   };

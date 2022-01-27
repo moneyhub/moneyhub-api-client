@@ -1,10 +1,10 @@
-import got from "got";
-import type { RequestOptions, GotRequestParams } from "./types/request";
+import got from 'got';
+import type { RequestOptions, GotRequestParams } from './types/request';
 
 export default ({ client, options: { timeout } }: GotRequestParams) =>
   async (url: string, opts?: RequestOptions) => {
-    let gotOpts = {
-      method: opts?.method || "GET",
+    const gotOpts = {
+      method: opts?.method || 'GET',
       headers: opts?.headers || {},
       searchParams: opts?.searchParams || {},
       timeout,
@@ -14,7 +14,7 @@ export default ({ client, options: { timeout } }: GotRequestParams) =>
 
     if (opts?.cc) {
       const { access_token } = await client.grant({
-        grant_type: "client_credentials",
+        grant_type: 'client_credentials',
         scope: opts?.cc.scope,
         sub: opts?.cc.sub,
       });

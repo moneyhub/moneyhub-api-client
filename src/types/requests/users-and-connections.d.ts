@@ -1,5 +1,4 @@
-import type { RequestsParams, SearchParams } from "..";
-import type { RequestOptions } from "../request";
+import type { RequestsParams, SearchParams } from '..';
 
 export type UsersAndConnectionsRequestsParams = RequestsParams;
 
@@ -14,6 +13,12 @@ interface UsersAndConnectionsRequests {
   getSCIMUsers: (params: SearchParams) => Promise<unknown>;
   getUser: ({ userId }: { userId: string }) => Promise<unknown>;
   getUserConnections: ({ userId }: { userId: string }) => Promise<unknown>;
-  deleteUserConnection: ({ userId, connectionId }: { userId: string; connectionId: string }) => Promise<unknown>;
+  deleteUserConnection: ({
+    userId,
+    connectionId,
+  }: {
+    userId: string;
+    connectionId: string;
+  }) => Promise<unknown>;
   deleteUser: ({ userId }: { userId: string }) => Promise<unknown>;
 }

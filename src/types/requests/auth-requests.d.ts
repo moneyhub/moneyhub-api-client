@@ -1,4 +1,4 @@
-import { RequestsParams } from "..";
+import { RequestsParams } from '..';
 
 export type AuthRequestsParams = RequestsParams;
 export default function AuthRequests({ config, request }: AuthRequestsParams): AuthRequests;

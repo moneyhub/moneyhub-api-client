@@ -1,4 +1,4 @@
-import { CategoriesRequests, CategoriesRequestsParams } from "../types/requests/categories";
+import { CategoriesRequests, CategoriesRequestsParams } from '../types/requests/categories';
 
 export default ({ config, request }: CategoriesRequestsParams): CategoriesRequests => {
   const { resourceServerUrl } = config;
@@ -8,7 +8,7 @@ export default ({ config, request }: CategoriesRequestsParams): CategoriesReques
       request(`${resourceServerUrl}/categories`, {
         searchParams: params,
         cc: {
-          scope: "categories:read",
+          scope: 'categories:read',
           sub: userId,
         },
       }),
@@ -22,7 +22,7 @@ export default ({ config, request }: CategoriesRequestsParams): CategoriesReques
       request(`${resourceServerUrl}/categories/${categoryId}`, {
         searchParams: params,
         cc: {
-          scope: "categories:read",
+          scope: 'categories:read',
           sub: userId,
         },
       }),
@@ -31,7 +31,7 @@ export default ({ config, request }: CategoriesRequestsParams): CategoriesReques
       request(`${resourceServerUrl}/category-groups`, {
         searchParams: params,
         cc: {
-          scope: "categories:read",
+          scope: 'categories:read',
           sub: userId,
         },
       }),
@@ -43,9 +43,9 @@ export default ({ config, request }: CategoriesRequestsParams): CategoriesReques
 
     createCustomCategory: async ({ userId, category: { group, name } }) =>
       request(`${resourceServerUrl}/categories`, {
-        method: "POST",
+        method: 'POST',
         cc: {
-          scope: "categories:read categories:write",
+          scope: 'categories:read categories:write',
           sub: userId,
         },
         body: {

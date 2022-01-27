@@ -1,4 +1,7 @@
-import { StandingOrdersRequests, StandingOrdersRequestsParams } from "../types/requests/standing-orders";
+import {
+  StandingOrdersRequests,
+  StandingOrdersRequestsParams,
+} from '../types/requests/standing-orders';
 
 export default ({ config, request }: StandingOrdersRequestsParams): StandingOrdersRequests => {
   const { identityServiceUrl } = config;
@@ -6,7 +9,7 @@ export default ({ config, request }: StandingOrdersRequestsParams): StandingOrde
   const getStandingOrder = ({ id }: { id: string }) =>
     request(`${identityServiceUrl}/standing-orders/${id}`, {
       cc: {
-        scope: "payment:read",
+        scope: 'payment:read',
       },
     });
 
@@ -16,7 +19,7 @@ export default ({ config, request }: StandingOrdersRequestsParams): StandingOrde
       request(`${identityServiceUrl}/standing-orders`, {
         searchParams: params,
         cc: {
-          scope: "payment:read",
+          scope: 'payment:read',
         },
       }),
   };
