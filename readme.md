@@ -1153,6 +1153,7 @@ const url = await moneyhub.getReversePaymentAuthorizeUrl({
   bankId: "Bank id to authorise payment from",
   paymentId: "Id of payment to reverse",
   state: "your state value",
+  amount: "reverse payment amount" // optional
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
 })

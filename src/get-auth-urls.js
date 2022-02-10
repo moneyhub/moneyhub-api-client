@@ -281,6 +281,7 @@ module.exports = ({client, config}) => {
       paymentId,
       state,
       nonce,
+      amount,
       claims = {},
     }) => {
       if (!state) {
@@ -303,6 +304,7 @@ module.exports = ({client, config}) => {
             essential: true,
             value: {
               paymentId,
+              amount,
             },
           },
           "mh:payment": {
