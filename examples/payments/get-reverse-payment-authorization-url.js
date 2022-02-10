@@ -21,6 +21,7 @@ const optionDefinitions = [
     description: "required",
   },
   {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
+  {name: "amount", alias: "a", type: Number},
 ]
 
 const usage = commandLineUsage({
@@ -41,6 +42,7 @@ const start = async () => {
       paymentId: options["payment-id"],
       state: options.state,
       nonce: options.nonce,
+      amount: options.amount,
     })
 
     console.log(url)
