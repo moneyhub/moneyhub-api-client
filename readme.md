@@ -1345,6 +1345,57 @@ const regulartransactions = await moneyhub.getRegularTransactions({
 })
 ```
 
+### Rental records
+
+#### `getRentalRecords`
+
+This method will return the rental record for the user. Requires the scope `rental_records:read`.
+
+```javascript
+const getRentalRecordResponse = await moneyhub.getRentalRecords({
+  userId: "user-id"
+})
+const rentalRecord = getRentalRecordResponse.data[0]
+```
+
+#### `createRentalRecord`
+
+This method will create a rental record for the user. Requires the scope `rental_records:write`. Please note only one rental record can exist for a user.
+
+```javascript
+const createRentalRecordResponse = await moneyhub.createRentalRecord({
+  userId: "user-id",
+  rentalData: {
+    title: "Title",
+    firstName: "firstName",
+    lastName: "lastName",
+    birthdate: "2000-11-19",
+    addressLine1: "First address line",
+    addressLine2: "Second address line", // optional
+    addressLine3: "Third address line", // optional
+    addressLine4: "Fourth address line", // optional
+    postalCode: "CA12345",
+    tenancyStartDate: "2020-11-19",
+    rentalAmount: {
+      value: 10000
+    },
+    rentalFrequency: "monthly",
+  }
+})
+const createdRentalRecord = createRentalRecordResponse.data
+```
+
+#### `deleteRentalRecord`
+
+This method deletes the rental record for a user.
+
+```javascript
+await moneyhub.deleteRentalRecord({
+  userId: "user-id",
+  rentalId: "rental-id"
+})
+```
+
 ### Financial Connections
 
 #### `listConnections`
