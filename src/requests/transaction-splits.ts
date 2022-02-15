@@ -1,7 +1,7 @@
 import {
   TransactionSplitsRequests,
   TransactionSplitsRequestsParams,
-} from '../types/requests/transaction-splits';
+} from '../../types/requests/transaction-splits';
 
 export default ({
   config,

@@ -1,4 +1,4 @@
-import { PayeesRequests, PayeesRequestsParams } from '../types/requests/payees';
+import { PayeesRequests, PayeesRequestsParams } from '../../types/requests/payees';
 
 export default ({ config, request }: PayeesRequestsParams): PayeesRequests => {
   const { identityServiceUrl } = config;

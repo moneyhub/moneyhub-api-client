@@ -1,5 +1,5 @@
 import got from 'got';
-import type { RequestOptions, GotRequestParams } from './types/request';
+import type { RequestOptions, GotRequestParams } from '../types/request';
 
 export default ({ client, options: { timeout } }: GotRequestParams) =>
   async (url: string, opts?: RequestOptions) => {

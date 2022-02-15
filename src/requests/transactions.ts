@@ -1,4 +1,7 @@
-import { TransactionsRequests, TransactionsRequestsParams } from '../types/requests/transactions';
+import {
+  TransactionsRequests,
+  TransactionsRequestsParams,
+} from '../../types/requests/transactions';
 
 export default ({ config, request }: TransactionsRequestsParams): TransactionsRequests => {
   const { resourceServerUrl } = config;

@@ -1,4 +1,4 @@
-import type { AccountRequestsParams, AccountsRequests } from '../types/requests/accounts';
+import type { AccountRequestsParams, AccountsRequests } from '../../types/requests/accounts';
 
 export default ({ config, request }: AccountRequestsParams): AccountsRequests => {
   const { resourceServerUrl } = config;

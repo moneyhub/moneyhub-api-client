@@ -1,7 +1,7 @@
 import {
   StandingOrdersRequests,
   StandingOrdersRequestsParams,
-} from '../types/requests/standing-orders';
+} from '../../types/requests/standing-orders';
 
 export default ({ config, request }: StandingOrdersRequestsParams): StandingOrdersRequests => {
   const { identityServiceUrl } = config;

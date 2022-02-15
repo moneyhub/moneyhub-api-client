@@ -1,5 +1,5 @@
 import R from 'ramda';
-import { SyncRequests, SyncRequestsParams } from '../types/requests/sync';
+import { SyncRequests, SyncRequestsParams } from '../../types/requests/sync';
 const filterUndefined = R.reject(R.isNil);
 
 export default ({ config, request }: SyncRequestsParams): SyncRequests => {

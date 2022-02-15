@@ -1,8 +1,8 @@
-import { RequestOptions } from '../types/request';
+import { RequestOptions } from '../../types/request';
 import {
   BeneficiariesRequests,
   BeneficiariesRequestsParams,
-} from '../types/requests/beneficiaries';
+} from '../../types/requests/beneficiaries';
 
 export default ({ config, request }: BeneficiariesRequestsParams): BeneficiariesRequests => {
   const { resourceServerUrl } = config;

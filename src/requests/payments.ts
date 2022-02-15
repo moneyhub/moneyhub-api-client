@@ -1,4 +1,4 @@
-import { PaymentsRequests, PaymentsRequestsParams } from '../types/requests/payments';
+import { PaymentsRequests, PaymentsRequestsParams } from '../../types/requests/payments';
 
 export default ({ config, request }: PaymentsRequestsParams): PaymentsRequests => {
   const { identityServiceUrl } = config;

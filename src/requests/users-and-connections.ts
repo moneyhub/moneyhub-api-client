@@ -1,7 +1,7 @@
 import {
   UsersAndConnectionsRequests,
   UsersAndConnectionsRequestsParams,
-} from '../types/requests/users-and-connections';
+} from '../../types/requests/users-and-connections';
 
 export default ({
   config,

@@ -5,7 +5,7 @@ import getAuthUrlsFactory from './get-auth-urls';
 import getTokensFactory from './tokens';
 import requestFactories from './requests';
 import req from './request';
-import type { APIClientConfig, MoneyHub } from './types';
+import type { APIClientConfig, MoneyHub } from '../types';
 const DEFAULT_TIMEOUT = 60000;
 
 export default async (apiClientConfig: APIClientConfig): Promise<MoneyHub> => {

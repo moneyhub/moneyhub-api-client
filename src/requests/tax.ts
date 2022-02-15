@@ -1,4 +1,4 @@
-import { TaxRequests, TaxRequestsParams } from '../types/requests/tax';
+import { TaxRequests, TaxRequestsParams } from '../../types/requests/tax';
 
 export default ({ config, request }: TaxRequestsParams): TaxRequests => {
   const { resourceServerUrl } = config;

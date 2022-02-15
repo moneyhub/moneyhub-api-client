@@ -1,7 +1,7 @@
 import {
   TransactionFilesRequests,
   TransactionFilesRequestsParams,
-} from '../types/requests/transaction-files';
+} from '../../types/requests/transaction-files';
 
 import FormData from 'form-data';
 

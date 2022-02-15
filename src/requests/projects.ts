@@ -1,4 +1,4 @@
-import { ProjectsRequests, ProjectsRequestsParams } from '../types/requests/projects';
+import { ProjectsRequests, ProjectsRequestsParams } from '../../types/requests/projects';
 
 export default ({ config, request }: ProjectsRequestsParams): ProjectsRequests => {
   const { resourceServerUrl } = config;

@@ -1,7 +1,7 @@
 import {
   RegularTransactionsRequests,
   RegularTransactionsRequestsParams,
-} from '../types/requests/regular-transactions';
+} from '../../types/requests/regular-transactions';
 
 export default ({
   config,

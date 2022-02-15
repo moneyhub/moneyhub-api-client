@@ -1,4 +1,4 @@
-import { AuthRequests, AuthRequestsParams } from '../types/requests/auth-requests';
+import { AuthRequests, AuthRequestsParams } from '../../types/requests/auth-requests';
 
 export default ({ config, request }: AuthRequestsParams): AuthRequests => {
   const { identityServiceUrl } = config;

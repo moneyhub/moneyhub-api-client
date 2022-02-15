@@ -1,4 +1,4 @@
-import { CategoriesRequests, CategoriesRequestsParams } from '../types/requests/categories';
+import { CategoriesRequests, CategoriesRequestsParams } from '../../types/requests/categories';
 
 export default ({ config, request }: CategoriesRequestsParams): CategoriesRequests => {
   const { resourceServerUrl } = config;
