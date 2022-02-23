@@ -1333,6 +1333,86 @@ const standingOrder = await moneyhub.getStandingOrder({
 })
 ```
 
+### Recurring Payments (VRP)
+
+#### `getRecurringPaymentAuthorizeUrl`
+
+This is a helper function that returns an authorize url to authorize a recurring payment with the selected bank. This function uses the following scope with the value of the bankId provided `recurring_payment:create openid id:${bankId}`. It also requires the authentication to be `client_secret_jwt` or `private_key_jwt`.
+
+```javascript
+const url = await moneyhub.getRecurringPaymentAuthorizeUrl({
+  bankId: "Bank id to authorise payment from",
+  payeeId: "Id of payee",
+  payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
+  payerId: "Id of payer", // requird only if payerType is defined
+  payerType: "Payer type [mh-user-account]", // required only if payerId is used
+  reference: "The reference for recurring payment",
+  validFromDate: "The date from which the authorisation is effective" , // should be in an international format, e.g. 15-MAR-2021 or ISO date
+  validToDate: "The date to which the authorisation is effective", // should be in an international format, e.g. 15-MAR-2021 or ISO date
+  maximumIndividualAmount: "The maimum single amount that will be allowed", // the valid in whole minor units (i.e. pence)
+  currency: "The currency code for the maxiumum recurring payment amount [GBP]",
+  periodicLimits: [
+    {
+      amount: "The maximum amount for this recurring payment limit", // the valid in whole minor units (i.e. pence)
+      currency: "The currency code for this recurring payment limit [GBP]",
+      periodType: "The period over which the limit is effective [Day, Week, Fortnight, Month, Half-year, Year]",
+      periodAlignment: "Specifies whether the period starts on the date of consent creation or lines up with a calendar [Consent, Calendar]",   
+    }
+  ],
+  type: [ 
+    "Sweeping", // Specifies that the recurring payment is for the purpose of sweeping payments
+    "Other" // Specifies that the recurring payment is for other payments of another purpose
+  ],
+  context: "Payment context [Other,BillPayment,PartyToParty]", // optional - defaults to PartyToParty
+  state: "your state value",
+  nonce: "your nonce value", // optional
+  claims: claimsObject, // optional
+})
+
+// Scope used with the bankId provided
+const scope = `recurring_payment:create openid id:${bankId}`
+
+// Default claims if none are provided
+const defaultClaims = {
+  id_token: {
+    "mh:con_id": {
+      essential: true,
+    },
+    "mh:recurring_payment": {
+      essential: true,
+      value: {
+        payeeId,
+        payeeType,
+        payerId,
+        payerType,
+        reference,
+        validFromDate,
+        validToDate,
+        maximumIndividualAmount,
+        currency,
+        periodicLimits,
+        context,
+      },
+    },
+  },
+}
+```
+
+#### `getRecurringPayments`
+
+This method returns a list of initiated recurring payments. This function uses the scope `recurring_payment:read`
+
+```javascript
+const recurringPayments = await moneyhub.getRecurringPayments({
+  limit: "limit", // optional
+  offset: "offset", // optional
+  userId: "user-id", // optional
+  payeeId: "payee-id", // optional
+  startDate: "2020-01-01", // optional
+  endDate: "2020-12-31", // optional
+})
+```
+
 #### `getRegularTransactions`
 
 Get all the regular transactions for a user, there is an option to pass an account ID as a parameter as a filter. This function uses the scope `accounts:read`, `transactions:read:all` and `regular_transactions:read`
