@@ -20,7 +20,8 @@ const requestFactories = [
   require("./requests/categories"),
   require("./requests/standing-orders"),
   require("./requests/regular-transactions"),
-  require("./requests/rental-records")
+  require("./requests/rental-records"),
+  require("./requests/recurring-payments"),
 ]
 const DEFAULT_TIMEOUT = 60000
 
