@@ -19,7 +19,7 @@ const optionDefinitions = [
   {
     name: "reference",
     alias: "r",
-    defaultValue: "Standing Order",
+    defaultValue: "Recurring payment",
     type: String,
     description: "required",
   },
@@ -60,6 +60,7 @@ const start = async () => {
         amount: options["maximum-daily-amount"],
         currency: options.currency,
         periodType: "Day",
+        periodAlignment: "Consent",
       })
     }
 
@@ -68,6 +69,7 @@ const start = async () => {
         amount: options["maximum-monthly-amount"],
         currency: options.currency,
         periodType: "Month",
+        periodAlignment: "Consent",
       })
     }
 
@@ -89,9 +91,11 @@ const start = async () => {
     })
 
     console.log(url)
-
   } catch (e) {
-    console.log(e)
+    if (e.response && e.response.body)
+      console.error(`${e.response.body.code}: ${e.response.body.message}`)
+    else
+      console.error(e)
   }
 }
 
