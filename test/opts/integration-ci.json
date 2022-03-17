@@ -2,7 +2,7 @@
     "reporter": "mocha-junit-reporter",
     "reporter-options": "mochaFile=test-reports/report.xml",
     "ui": "bdd",
-    "timeout": "5s",
+    "timeout": "10s",
     "check-leaks": false,
     "recursive": true,
     "colors": true,
