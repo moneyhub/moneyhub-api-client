@@ -25,5 +25,13 @@ module.exports = ({config, request}) => {
           scope: "recurring_payment:create",
         },
       }),
+
+    revokeRecurringPayment: async ({recurringPaymentId}) =>
+      request(`${identityServiceUrl}/recurring-payments/${recurringPaymentId}`, {
+        method: "DELETE",
+        cc: {
+          scope: "recurring_payment:create",
+        },
+      }),
   }
 }
