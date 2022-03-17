@@ -289,7 +289,7 @@ Creates a request object
 const tokens = await moneyhub.requestObject({
   scope: "the-required-scope",
   state: "state",
-  nonce: "nonce,
+  nonce: "nonce",
   claims: claimsObject,
 })
 ```
@@ -322,7 +322,7 @@ Creates a connection auth request
 
 ```javascript
 const tokens = await moneyhub.createAuthRequest({
-  redirectUri: "redirect-uri,
+  redirectUri: "redirect-uri",
   userId: "user-id",
   scope:"openid 1ffe704d39629a929c8e293880fb449a", // replace bank id with the bank you want to connect to
   categorisationType: "personal", // optional - defaults to personal
@@ -334,7 +334,7 @@ Creates a reauth auth request
 
 ```javascript
 const tokens = await moneyhub.createAuthRequest({
-  redirectUri: "redirect-uri,
+  redirectUri: "redirect-uri",
   userId: "user-id",
   connectionId: "connection-id",
   scope:"openid reauth",
@@ -345,7 +345,7 @@ Creates a refresh auth request
 
 ```javascript
 const tokens = await moneyhub.createAuthRequest({
-  redirectUri: "redirect-uri,
+  redirectUri: "redirect-uri",
   userId: "user-id",
   connectionId: "connection-id",
   scope:"openid refresh",
@@ -356,14 +356,14 @@ Creates a payment auth request
 
 ```javascript
 const tokens = await moneyhub.createAuthRequest({
-  redirectUri: "redirect-uri,
+  redirectUri: "redirect-uri",
   userId: "user-id",
   connectionId: "connection-id",
   scope:"openid payment",
   payment: {
     payeeId: "payee-id",
     amount: 200,
-    payeeRef: "Payee ref,
+    payeeRef: "Payee ref",
     payerRef: "Payer ref"
   },
 })
@@ -373,7 +373,7 @@ Creates a reverse payment auth request
 
 ```javascript
 const tokens = await moneyhub.createAuthRequest({
-  redirectUri: "redirect-uri,
+  redirectUri: "redirect-uri",
   userId: "user-id",
   connectionId: "connection-id",
   scope:"openid reverse_payment",
@@ -438,7 +438,7 @@ Helper method that gets the correct client credentials access token and then reg
 
 ```javascript
 const user = await moneyhub.registerUser({
-  clientUserId: "your user id" /* optional */
+  clientUserId: "your user id" // optional
 })
 ```
 
@@ -1113,7 +1113,7 @@ const url = await moneyhub.getPaymentAuthorizeUrl({
   state: "your state value",
   nonce: "your nonce value", // optional
   context: "Payment context [Other,BillPayment,PartyToParty]", // optional - defaults to PartyToParty
-  userId: "Moneyhub API User ID you wish to attach to the payment" // optional
+  userId: "Moneyhub API User ID you wish to attach to the payment", // optional
   claims: claimsObject, // optional
 })
 
@@ -1400,7 +1400,7 @@ const defaultClaims = {
 
 #### `getRecurringPayments`
 
-This method returns a list of initiated recurring payments. This function uses the scope `recurring_payment:read`
+This method returns a list of initiated recurring payment consents. This function uses the scope `recurring_payment:read`
 
 ```javascript
 const recurringPayments = await moneyhub.getRecurringPayments({
@@ -1410,6 +1410,42 @@ const recurringPayments = await moneyhub.getRecurringPayments({
   payeeId: "payee-id", // optional
   startDate: "2020-01-01", // optional
   endDate: "2020-12-31", // optional
+})
+```
+
+#### `getRecurringPayment`
+
+This method gets a recurring payment consent. This function uses the scope `recurring_payment:create`
+
+```javascript
+const recurringPayment = await moneyhub.getRecurringPayment({
+  recurringPaymentId: "Id of the recurring payment consent"
+})
+```
+
+#### `makeRecurringPayment`
+
+This method creates a payment using the recurring payment consent. This function uses the scope `recurring_payment:create`
+
+```javascript
+const recurringPayments = await moneyhub.getRecurringPayments({
+  recurringPaymentId: "Id of the recurring payment consent",
+  payment: {
+    payeeId: "payee-id", // optional
+    amount: 200,
+    payeeRef: "Payee ref",
+    payerRef: "Payer ref"
+  }
+})
+```
+
+#### `revokeRecurringPayment`
+
+This method revokes a recurring payment consent. This function uses the scope `recurring_payment:create`
+
+```javascript
+const revokedRecurringPayment = await moneyhub.revokeRecurringPayment({
+  recurringPaymentId: "Id of the recurring payment consent"
 })
 ```
 
