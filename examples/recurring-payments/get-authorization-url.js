@@ -92,10 +92,7 @@ const start = async () => {
 
     console.log(url)
   } catch (e) {
-    if (e.response && e.response.body)
-      console.error(`${e.response.body.code}: ${e.response.body.message}`)
-    else
-      console.error(e)
+    console.error(e)
   }
 }
 
