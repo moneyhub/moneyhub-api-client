@@ -553,6 +553,18 @@ const syncs = await moneyhub.getSync({
 });
 ```
 
+#### `updateUserConnection`
+
+Helper method that updates a connection. Requires scope `user:update`. Currently only the consent can be updated by updating the `expiresAt` field. This field should be a valid date-time ISO string and not be more than 90 days away. This method can only be used by those clients that have bypassed consent (the `Enforce user consent` option in the Admin Portal). If successful returns a 204.
+
+```javascript
+const user = await moneyhub.updateUserConnection({
+  userId: "user-id",
+  connectionId: "connection-id",
+  expiresAt: "2022-06-26T09:43:16.318+00:00"
+  })
+```
+
 ### Data API
 
 #### `getAccounts`
