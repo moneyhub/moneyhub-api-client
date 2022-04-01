@@ -82,6 +82,7 @@ describe("API client", () => {
         "deleteUser",
         "getConnectionSyncs",
         "getSync",
+        "updateUserConnection",
         "getCategories",
         "getStandardCategories",
         "getCategory",

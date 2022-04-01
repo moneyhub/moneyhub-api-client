@@ -65,15 +65,25 @@ module.exports = ({config, request}) => {
       request(`${usersEndpoint}/${userId}/connections/${connectionId}/syncs`, {
         searchParams: params,
         cc: {
-          scope: "user:read"
-        }
+          scope: "user:read",
+        },
       }),
 
     getSync: async ({userId, syncId}) =>
       request(`${usersEndpoint}/${userId}/syncs/${syncId}`, {
         cc: {
-          scope: "user:read"
-        }
-      })
+          scope: "user:read",
+        },
+      }),
+
+    updateUserConnection: async ({userId, connectionId, expiresAt}) =>
+      request(`${usersEndpoint}/${userId}/connections/${connectionId}`, {
+        method: "PATCH",
+        returnStatus: true,
+        cc: {
+          scope: "user:update",
+        },
+        body: {expiresAt},
+      }),
   }
 }
