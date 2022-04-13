@@ -101,4 +101,26 @@ describe("Auth Urls", () => {
 
     expect(url).to.be.a("string")
   })
+
+  it("gets a reconsent url for a user", async () => {
+    const userId = config.testUserIdWithconnection
+    const connections = await moneyhub.getUserConnections({
+      userId
+    })
+    const connectionId = connections.data.length ? connections.data[0].id : undefined
+    const url = await moneyhub.getReconsentAuthorizeUrlForCreatedUser({
+      state,
+      nonce,
+      bankId,
+      userId: "some-user-id",
+      connectionId
+    })
+
+    const {request} = querystring.parse(url)
+    const payload = parseJwt(request)
+
+    expect(url).to.be.a("string")
+    expect(payload).to.have.nested.property("claims.id_token.mh:consent")
+    expect(payload).to.have.nested.property("claims.id_token.mh:con_id")
+  })
 })
