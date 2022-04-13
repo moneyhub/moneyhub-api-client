@@ -211,6 +211,43 @@ module.exports = ({client, config}) => {
       return url
     },
 
+    getReconsentAuthorizeUrlForCreatedUser: async ({
+      userId,
+      connectionId,
+      expiresAt,
+      state,
+      nonce,
+      claims = {},
+    }) => {
+      const scope = "openid reconsent"
+      const defaultClaims = {
+        id_token: {
+          sub: {
+            essential: true,
+            value: userId,
+          },
+          "mh:con_id": {
+            essential: true,
+            value: connectionId,
+          },
+          "mh:consent": {
+            value: {
+              expirationDateTime: expiresAt
+            }
+          }
+        },
+      }
+      const _claims = R.mergeDeepRight(defaultClaims, claims)
+
+      const url = await getAuthorizeUrl({
+        state,
+        nonce,
+        scope,
+        claims: _claims,
+      })
+      return url
+    },
+
     getRefreshAuthorizeUrlForCreatedUser: async ({
       userId,
       connectionId,
