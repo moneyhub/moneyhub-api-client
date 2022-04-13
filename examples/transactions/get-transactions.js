@@ -13,6 +13,7 @@ const optionDefinitions = [
   {name: "endDate", alias: "e", type: String},
   {name: "limit", alias: "l", type: Number},
   {name: "offset", alias: "o", type: Number},
+  {name: "counterpartiesVersion", alias: "v", type: String, description: "required"},
 ]
 
 const usage = commandLineUsage(
@@ -37,6 +38,7 @@ const start = async () => {
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {
     console.log(e)
+    console.log(e.response.body)
   }
 }
 

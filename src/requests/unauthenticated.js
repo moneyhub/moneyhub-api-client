@@ -1,8 +1,10 @@
 module.exports = ({config, request}) => {
   const {resourceServerUrl, identityServiceUrl} = config
   return {
-    getGlobalCounterparties: () =>
-      request(resourceServerUrl + "/global-counterparties"),
+    getGlobalCounterparties: (params = {}) =>
+      request(resourceServerUrl + "/global-counterparties", {
+        searchParams: params,
+      }),
     listConnections: () =>
       request(identityServiceUrl + "/oidc/.well-known/all-connections"),
     listAPIConnections: () =>
