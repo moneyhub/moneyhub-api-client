@@ -12,6 +12,7 @@ const optionDefinitions = [
   {name: "bankId", alias: "b", defaultValue: DEFAULT_BANK_ID, type: String},
   {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
   {name: "claims", alias: "c", type: String},
+  {name: "enable-async", alias: "e", type: Boolean},
 ]
 
 const usage = commandLineUsage(
@@ -23,7 +24,7 @@ const usage = commandLineUsage(
 console.log(usage)
 
 const options = commandLineArgs(optionDefinitions)
-const {userId, state, bankId, nonce} = options
+const {userId, state, bankId, nonce, "enable-async": enableAsync} = options
 
 if (!userId) throw new Error("userId is required")
 const claims = options.claims && JSON.parse(options.claims)
@@ -39,6 +40,7 @@ const start = async () => {
       bankId,
       nonce,
       claims,
+      enableAsync,
     })
     console.log(data)
 

@@ -36,6 +36,7 @@ module.exports = ({client, config}) => {
     nonce,
     claims = {},
     permissions,
+    enableAsync,
     expirationDateTime,
     transactionFromDateTime,
   }) => {
@@ -54,6 +55,12 @@ module.exports = ({client, config}) => {
               ...expirationDateTime && {expirationDateTime},
               ...transactionFromDateTime && {transactionFromDateTime},
             }
+          }
+        },
+        ...enableAsync && {
+          "mh:sync": {
+            "essential": true,
+            "value": {"enableAsync": true}
           }
         }
       },
@@ -136,6 +143,7 @@ module.exports = ({client, config}) => {
       permissions,
       expirationDateTime,
       transactionFromDateTime,
+      enableAsync,
     }) => {
       const scope = `id:${bankId} openid`
       const defaultClaims = {
@@ -161,6 +169,7 @@ module.exports = ({client, config}) => {
         claims: _claims,
         expirationDateTime,
         transactionFromDateTime,
+        enableAsync,
       })
       return url
     },
@@ -173,6 +182,7 @@ module.exports = ({client, config}) => {
       claims = {},
       expirationDateTime,
       transactionFromDateTime,
+      enableAsync,
     }) => {
       const scope = "openid reauth"
       const defaultClaims = {
@@ -196,6 +206,7 @@ module.exports = ({client, config}) => {
         claims: _claims,
         expirationDateTime,
         transactionFromDateTime,
+        enableAsync,
       })
       return url
     },
@@ -208,6 +219,7 @@ module.exports = ({client, config}) => {
       claims = {},
       expirationDateTime,
       transactionFromDateTime,
+      enableAsync
     }) => {
       const scope = "openid refresh"
       const defaultClaims = {
@@ -231,6 +243,7 @@ module.exports = ({client, config}) => {
         claims: _claims,
         expirationDateTime,
         transactionFromDateTime,
+        enableAsync
       })
       return url
     },

@@ -60,5 +60,20 @@ module.exports = ({config, request}) => {
           scope: "user:delete",
         },
       }),
+
+    getConnectionSyncs: async ({userId, connectionId, params = {}}) =>
+      request(`${usersEndpoint}/${userId}/connections/${connectionId}/syncs`, {
+        searchParams: params,
+        cc: {
+          scope: "user:read"
+        }
+      }),
+
+    getSync: async ({userId, syncId}) =>
+      request(`${usersEndpoint}/${userId}/syncs/${syncId}`, {
+        cc: {
+          scope: "user:read"
+        }
+      })
   }
 }
