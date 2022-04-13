@@ -17,8 +17,8 @@
     "openid"
   ],
   "author": "Moneyub Financial Technology",
-  "homepage": "https://www.npmjs.com/package/@mft/moneyhub-client",
-  "repository": "https://bitbucket.org/yourwealth/moneyhub-client",
+  "homepage": "https://github.com/moneyhub/moneyhub-api-client",
+  "repository": "moneyhub/moneyhub-api-client",
   "license": "ISC",
   "dependencies": {
     "form-data": "^3.0.1",
