@@ -1,4 +1,26 @@
 const got = require("got")
+const R = require("ramda")
+
+const getResponseBody = err => {
+  let body = {}
+  try {
+    const {code, message, details} = JSON.parse(R.pathOr("{}", ["response", "body"], err))
+    body = {code, message, details: typeof details === "object" ? JSON.stringify(details) : details}
+  // eslint-disable-next-line no-empty
+  } catch (e) {
+    body = {}
+  }
+
+  return body
+}
+
+const attachErrorDetails = err => {
+  const {code, message, details} = getResponseBody(err)
+  err.error = code
+  err.error_description = message
+  err.error_details = details
+  throw err
+}
 
 module.exports = ({client, options: {timeout}}) => async (url, opts = {}) => {
   const gotOpts = {
@@ -28,7 +50,9 @@ module.exports = ({client, options: {timeout}}) => async (url, opts = {}) => {
   const req = got(url, gotOpts)
   if (opts.returnStatus) {
     return req.then(res => res.statusCode)
+      .catch(attachErrorDetails)
   }
 
   return req.json()
+    .catch(attachErrorDetails)
 }
