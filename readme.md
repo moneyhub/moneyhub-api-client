@@ -96,6 +96,8 @@ The options below can be set on the following URL generating methods:
 - `getRefreshAuthorizeUrlForCreatedUser`
 
 The `expirationDateTime` and `transactionFromDateTime` options can be set according to the [AIS Consents documentation](https://docs.moneyhubenterprise.com/docs/ais-consents)
+
+Set `enableAsync` to true if you wish to make an AIS connection that won't wait for accounts and transactions to be fetched.
 #### `getAuthorizeUrl`
 
 This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`. 
@@ -116,6 +118,7 @@ const url = await moneyhub.getAuthorizeUrl({
   permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth URL
   expirationDateTime: "2022-09-01T00:00:00.000Z", // optional
   transactionFromDateTime: "2020-09-01T00:00:00.000Z", // optional,
+  enableAsync: false // optional
 })
 
 // Default claims if none are provided
@@ -148,7 +151,8 @@ const url = await moneyhub.getAuthorizeUrlForCreatedUser({
   state: "your state value", // optional
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
-  permissions: ["ReadBeneficiariesDetail"] // optional - set of extra permissions to set for auth URL
+  permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth URL
+  enableAsync: false // optional
 })
 
 // Scope used with the bankId provided
@@ -179,6 +183,7 @@ const url = await moneyhub.getReauthAuthorizeUrlForCreatedUser({
   state: "your state value", // optional
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
+  enableAsync: false // optional
 })
 
 // Default claims if none are provided
@@ -207,6 +212,7 @@ const url = await moneyhub.getRefreshAuthorizeUrlForCreatedUser({
   state: "your state value", // optional
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
+  enableAsync: false // optional
 })
 
 // Default claims if none are provided
@@ -518,6 +524,30 @@ const user = await moneyhub.deleteUserConnection({
   userId: "user-id",
   connectionId: "connection-id"
   })
+```
+
+#### `getConnectionSyncs`
+
+Retrieve the syncs for a given connection ID.
+```javascript
+const syncs = await moneyhub.getConnectionSyncs({
+  userId: "user-id",
+  connectionId: "connection-id",
+  params: {
+    limit: 10,
+    offset: 0
+  }
+})
+```
+
+#### `getSync`
+
+Retrieve the syncs for the given sync ID.
+```javascript
+const syncs = await moneyhub.getSync({
+  userId: "user-id",
+  syncId: "sync-id"
+})
 ```
 
 ### Data API

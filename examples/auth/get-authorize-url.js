@@ -12,6 +12,7 @@ const optionDefinitions = [
   {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
   {name: "data-scopes", alias: "d", defaultValue: DEFAULT_DATA_SCOPES_USE_CASE_1, type: String},
   {name: "claims", alias: "c", type: String},
+  {name: "enable-async", alias: "e", type: Boolean},
 ]
 
 const usage = commandLineUsage(
@@ -25,7 +26,7 @@ console.log(usage)
 const options = commandLineArgs(optionDefinitions)
 
 const claims = options.claims && JSON.parse(options.claims)
-const {state, bankId, nonce, "data-scopes": dataScopes} = options
+const {state, bankId, nonce, "data-scopes": dataScopes, "enable-async": enableAsync} = options
 
 const start = async () => {
   try {
@@ -35,6 +36,7 @@ const start = async () => {
       nonce,
       scope: `openid offline_access id:${bankId} ${dataScopes}`,
       claims,
+      enableAsync,
     })
     console.log(data)
   } catch (e) {
