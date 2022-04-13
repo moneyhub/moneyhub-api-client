@@ -3,3 +3,5 @@ examples/config-local.js
 examples/config.local.js
 config/local.json
 config/default.json
+config/prod.json
+config/dev.json
