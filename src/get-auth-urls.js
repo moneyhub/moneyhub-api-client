@@ -30,7 +30,15 @@ module.exports = ({client, config}) => {
     return claims
   }
 
-  const getAuthorizeUrl = ({state, scope, nonce, claims = {}, permissions}) => {
+  const getAuthorizeUrl = ({
+    state,
+    scope,
+    nonce,
+    claims = {},
+    permissions,
+    expirationDateTime,
+    transactionFromDateTime,
+  }) => {
     const defaultClaims = {
       id_token: {
         sub: {
@@ -39,6 +47,15 @@ module.exports = ({client, config}) => {
         "mh:con_id": {
           essential: true,
         },
+        ...(expirationDateTime || transactionFromDateTime) && {
+          "mh:consent": {
+            "essential": true,
+            "value": {
+              ...expirationDateTime && {expirationDateTime},
+              ...transactionFromDateTime && {transactionFromDateTime},
+            }
+          }
+        }
       },
     }
 
@@ -116,7 +133,9 @@ module.exports = ({client, config}) => {
       nonce,
       userId,
       claims = {},
-      permissions
+      permissions,
+      expirationDateTime,
+      transactionFromDateTime,
     }) => {
       const scope = `id:${bankId} openid`
       const defaultClaims = {
@@ -140,6 +159,8 @@ module.exports = ({client, config}) => {
         nonce,
         scope,
         claims: _claims,
+        expirationDateTime,
+        transactionFromDateTime,
       })
       return url
     },
@@ -150,6 +171,8 @@ module.exports = ({client, config}) => {
       state,
       nonce,
       claims = {},
+      expirationDateTime,
+      transactionFromDateTime,
     }) => {
       const scope = "openid reauth"
       const defaultClaims = {
@@ -171,6 +194,8 @@ module.exports = ({client, config}) => {
         nonce,
         scope,
         claims: _claims,
+        expirationDateTime,
+        transactionFromDateTime,
       })
       return url
     },
@@ -181,6 +206,8 @@ module.exports = ({client, config}) => {
       state,
       nonce,
       claims = {},
+      expirationDateTime,
+      transactionFromDateTime,
     }) => {
       const scope = "openid refresh"
       const defaultClaims = {
@@ -202,6 +229,8 @@ module.exports = ({client, config}) => {
         scope,
         nonce,
         claims: _claims,
+        expirationDateTime,
+        transactionFromDateTime,
       })
       return url
     },

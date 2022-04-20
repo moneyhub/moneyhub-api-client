@@ -89,10 +89,16 @@ const moneyhub = await Moneyhub({
 Once the api client has been initialised it provides a simple promise based interface with the following methods:
 
 ### Auth API
+The options below can be set on the following URL generating methods:
+- `getAuthorizeUrl`
+- `getAuthorizeUrlForCreatedUser`
+- `getReauthAuthorizeUrlForCreatedUser`
+- `getRefreshAuthorizeUrlForCreatedUser`
 
+The `expirationDateTime` and `transactionFromDateTime` options can be set according to the [AIS Consents documentation](https://docs.moneyhubenterprise.com/docs/ais-consents)
 #### `getAuthorizeUrl`
 
-This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`.
+This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`. 
 
 [Financial institutions](https://docs.moneyhubenterprise.com/docs/bank-connections)
 
@@ -100,13 +106,16 @@ This method returns an authorize url for your API client. You can redirect a use
 
 [Claims](https://docs.moneyhubenterprise.com/docs/claims)
 
+
 ```javascript
 const url = await moneyhub.getAuthorizeUrl({
   scope: "openid bank-id-scope other-data-scopes",
   state: " your state value", // optional
   nonce: "your nonce value", //optional
   claims: claimsObject, // optional
-  permissions: ["ReadBeneficiariesDetail"] // optional - set of extra permissions to set for auth URL
+  permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth URL
+  expirationDateTime: "2022-09-01T00:00:00.000Z", // optional
+  transactionFromDateTime: "2020-09-01T00:00:00.000Z", // optional,
 })
 
 // Default claims if none are provided
