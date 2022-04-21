@@ -67,7 +67,7 @@ describe("Transaction Splits", () => {
       transactionId,
     })
     expect(splits).to.have.length(2)
-    expect(R.path([0, "amount"], splits)).to.be.oneOf([-1500, -800])
+    expect(R.path([0, "amount", "value"], splits)).to.be.oneOf([-1500, -800])
     expect(R.path([0, "description"], splits)).to.be.oneOf(["Split 1", "Split 2"])
   })
 
