@@ -23,6 +23,7 @@ const requestFactories = [
   require("./requests/rental-records"),
   require("./requests/recurring-payments"),
   require("./requests/spending-analysis"),
+  require("./requests/spending-goals")
 ]
 const DEFAULT_TIMEOUT = 60000
 

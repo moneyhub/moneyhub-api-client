@@ -3,40 +3,45 @@ module.exports = ({config, request}) => {
   const spendingGoalsEndpoint = resourceServerUrl + "/spending-goals"
 
   return {
-    getSpendingGoals: async (params = {}) =>
+    getSpendingGoals: async (params = {}, userId) =>
       request(spendingGoalsEndpoint, {
         searchParams: params,
         cc: {
           scope: "spending_goals:read",
+          sub: userId,
         },
       }),
-    getSpendingGoal: async ({goalId}) =>
+    getSpendingGoal: async ({goalId, userId}) =>
       request(`${spendingGoalsEndpoint}/${goalId}`, {
         cc: {
           scope: "spending_goals:read",
+          sub: userId,
         },
       }),
-    createSpendingGoal: async ({categoryId, periodType, periodStart, amount}) =>
+    createSpendingGoal: async ({categoryId, periodType, periodStart, amount, userId}) =>
       request(spendingGoalsEndpoint, {
         method: "POST",
         cc: {
           scope: "spending_goals:read spending_goals:write:all",
+          sub: userId,
         },
         body: {categoryId, periodType, periodStart, amount},
       }),
-    updateSpendingGoal: async ({goalId, categoryId, amount}) =>
+    updateSpendingGoal: async ({goalId, categoryId, amount, userId}) =>
       request(`${spendingGoalsEndpoint}/${goalId}`, {
         method: "PATCH",
         cc: {
           scope: "spending_goals:read spending_goals:write",
+          sub: userId,
         },
         body: {categoryId, amount},
       }),
-    deleteSpendingGoal: async ({goalId}) =>
+    deleteSpendingGoal: async ({goalId, userId}) =>
       request(`${spendingGoalsEndpoint}/${goalId}`, {
         method: "DELETE",
         cc: {
           scope: "spending_goals:write:all",
+          sub: userId,
         },
       }),
   }
