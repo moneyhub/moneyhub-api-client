@@ -98,6 +98,7 @@ describe("API client", () => {
         "getRecurringPayment",
         "makeRecurringPayment",
         "revokeRecurringPayment",
+        "getSpendingAnalysis",
         "getAuthorizeUrl",
         "getAuthorizeUrlFromRequestUri",
         "requestObject",
