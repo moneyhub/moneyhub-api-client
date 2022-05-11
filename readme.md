@@ -100,7 +100,7 @@ The `expirationDateTime` and `transactionFromDateTime` options can be set accord
 Set `enableAsync` to true if you wish to make an AIS connection that won't wait for accounts and transactions to be fetched.
 #### `getAuthorizeUrl`
 
-This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`. 
+This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`.
 
 [Financial institutions](https://docs.moneyhubenterprise.com/docs/bank-connections)
 
@@ -1044,6 +1044,36 @@ const category = await moneyhub.createCustomCategory({
   })
 ```
 
+### Spending analysis
+
+#### `getSpendingAnalysis`
+
+This method returns the spending analysis for the given dates. This function uses the scope `spending_analysis:read`
+
+```javascript
+const projects = await moneyhub.getSpendingAnalysis({
+  userId: "userId",
+  dates: [
+    {
+      "name": "currentMonth",
+      "from": "2018-10-01",
+      "to": "2018-10-31"
+    },
+    {
+      "name": "previousMonth",
+      "from": "2018-09-01",
+      "to": "2018-09-30"
+    }
+  ],
+  accountIds: [
+    "ac9bd177-d01e-449c-9f29-d3656d2edc2e"
+  ], // optional
+  categoryIds: [
+    "std:338d2636-7f88-491d-8129-255c98da1eb8"
+  ] // optional
+})
+```
+
 ### Projects
 
 #### `getProjects`
@@ -1051,7 +1081,7 @@ const category = await moneyhub.createCustomCategory({
 This method returns a list of projects. This function uses the scope `projects:read`
 
 ```javascript
-const projects = await moneyhub.getProjects({x
+const projects = await moneyhub.getProjects({
   userId: "userId",
   params: {
     limit: "limit", // optional
@@ -1395,10 +1425,10 @@ const url = await moneyhub.getRecurringPaymentAuthorizeUrl({
       amount: "The maximum amount for this recurring payment limit", // the valid in whole minor units (i.e. pence)
       currency: "The currency code for this recurring payment limit [GBP]",
       periodType: "The period over which the limit is effective [Day, Week, Fortnight, Month, Half-year, Year]",
-      periodAlignment: "Specifies whether the period starts on the date of consent creation or lines up with a calendar [Consent, Calendar]",   
+      periodAlignment: "Specifies whether the period starts on the date of consent creation or lines up with a calendar [Consent, Calendar]",
     }
   ],
-  type: [ 
+  type: [
     "Sweeping", // Specifies that the recurring payment is for the purpose of sweeping payments
     "Other" // Specifies that the recurring payment is for other payments of another purpose
   ],
