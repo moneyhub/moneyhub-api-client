@@ -43,6 +43,7 @@ module.exports = ({config, request}) => {
           scope: "spending_goals:write:all",
           sub: userId,
         },
+        returnStatus: true
       }),
   }
 }
