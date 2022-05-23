@@ -1650,6 +1650,72 @@ const spendingGoals = await moneyhub.deleteSpendingGoal({
 });
 ```
 
+### Savings Goals
+
+#### `createSavingsGoal`
+
+This method will create a single savings goal for the user. Requires the scopes`savings_goals:read` and `savings_goals:write:all`.
+
+```javascript
+const savingsGoal = await moneyhub.createSavingsGoal({
+  name: "savings",
+  amount: { value: 200 },
+  imageUrl: "https://myimage.com",
+  notes: "lots'o'money",
+  userId: "user-id",
+  accounts: [{ id: "1234" }],
+});
+```
+
+#### `getSavingsGoals`
+
+This method will return the savings goals for the user. Requires the scope `savings_goals:read`.
+
+```javascript
+const savingsGoals = await moneyhub.getSavingsGoals({
+  userId: "user-id",
+  limit: 1,
+  offset: 0,
+});
+const savingsGoal = savingsGoals.data[0];
+```
+
+#### `getSavingsGoal`
+
+This method will return the specified savings goal for the user. Requires the scope `savings_goals:read`.
+
+```javascript
+const savingsGoals = await moneyhub.getSavingsGoal({
+  userId: "user-id",
+  goalId: "goal-id",
+});
+```
+
+#### `updateSavingsGoal`
+
+This method will update the specified savings goal for the user. Requires the scopes `savings_goals:read` and `savings_goals:write`.
+
+```javascript
+const savingsGoals = await moneyhub.updateSavingsGoal({
+  userId: "user-id",
+  goalId: "goal-id",
+  name: "new-name",
+  amount: { value: 302 },
+  accounts: [{ id: "1234" }],
+});
+```
+
+#### `deleteSavingsGoal`
+
+This method will delete the specified savings goal for the user. Requires the scope `savings_goals:write:all`.
+
+```javascript
+const savingsGoals = await moneyhub.deleteSavingsGoal({
+  userId: "user-id",
+  goalId: "goal-id",
+});
+```
+
 ### Financial Connections
 
 #### `listConnections`

@@ -24,6 +24,7 @@ const requestFactories = [
   require("./requests/recurring-payments"),
   require("./requests/spending-analysis"),
   require("./requests/spending-goals")
+  require("./requests/savings-goals.js"),
 ]
 const DEFAULT_TIMEOUT = 60000
 
