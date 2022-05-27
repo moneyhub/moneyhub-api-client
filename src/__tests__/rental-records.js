@@ -1,5 +1,5 @@
 /* eslint-disable max-nested-callbacks */
-const Moneyhub = require("..")
+const {Moneyhub} = require("..")
 const config = require("../../test/test-client-config")
 const {expect, assert} = require("chai")
 

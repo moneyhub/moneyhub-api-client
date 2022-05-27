@@ -2,12 +2,17 @@
   "name": "@mft/moneyhub-api-client",
   "version": "4.20.0",
   "description": "Node.JS client for the Moneyhub API",
-  "main": "src/index.js",
+  "main": "dist/src/index.js",
+  "types": "dist/src/index.d.ts",
+  "files": ["dist/*"],
   "scripts": {
     "lint": "eslint src/ examples/",
-    "test": "mocha --config test/opts/integration.json",
-    "test-ci": "mocha --config test/opts/integration-ci.json || true",
-    "prepush": "npm run lint && npm run test"
+    "test": "mocha --require ts-node/register --config test/opts/integration.json",
+    "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json || true",
+    "prepush": "npm run lint && npm run test",
+    "prepare": "npm run build",
+    "build": "tsc",
+    "ts-node": "ts-node"
   },
   "keywords": [
     "moneyhub",
@@ -29,6 +34,11 @@
   },
   "devDependencies": {
     "@mft/eslint-config-momentumft": "^4.0.0",
+    "@types/got": "^9.6.12",
+    "@types/openid-client": "^3.7.0",
+    "@types/ramda": "^0.28.13",
+    "@typescript-eslint/eslint-plugin": "^5.26.0",
+    "@typescript-eslint/parser": "^5.26.0",
     "body-parser": "^1.19.2",
     "chai": "^4.3.6",
     "command-line-args": "^5.2.1",
@@ -38,7 +48,9 @@
     "express": "^4.17.3",
     "husky": "^7.0.4",
     "mocha": "^9.2.2",
-    "mocha-junit-reporter": "^2.0.2"
+    "mocha-junit-reporter": "^2.0.2",
+    "ts-node": "^10.8.0",
+    "typescript": "^4.7.2"
   },
   "husky": {
     "hooks": {

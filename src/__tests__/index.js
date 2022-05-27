@@ -1,5 +1,5 @@
 /* eslint-disable max-nested-callbacks */
-const Moneyhub = require("../")
+const {Moneyhub} = require("../")
 const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
@@ -18,7 +18,7 @@ describe("API client", () => {
     })
 
     it("should export the required functions", () => {
-      expect(Object.keys(moneyhub)).to.deep.equal([
+      expect(Object.keys(moneyhub).sort()).to.deep.equal([
         "getAccounts",
         "getAccountsWithDetails",
         "getAccount",
@@ -128,7 +128,7 @@ describe("API client", () => {
         "refreshTokens",
         "getClientCredentialTokens",
         "keys",
-      ])
+      ].sort())
     })
 
     describe("utility methods", () => {

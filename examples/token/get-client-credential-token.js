@@ -1,4 +1,4 @@
-const Moneyhub = require("../../src/index")
+const {Moneyhub} = require("../../src/index")
 const config = require("../config")
 const {DEFAULT_DATA_SCOPES_USE_CASE_2} = require("../constants")
 const commandLineArgs = require("command-line-args")

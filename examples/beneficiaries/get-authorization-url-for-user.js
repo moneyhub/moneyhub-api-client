@@ -1,4 +1,4 @@
-const Moneyhub = require("../../src/index")
+const {Moneyhub} = require("../../src/index")
 const config = require("../config")
 const {DEFAULT_BANK_ID, DEFAULT_STATE, DEFAULT_NONCE} = require("../constants")
 

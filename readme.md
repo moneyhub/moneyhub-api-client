@@ -43,6 +43,18 @@ The breaking changes when upgrading are outlined below:
 
 For the full list of changes please refer to the [changelog](CHANGELOG.md)
 
+### Upgrading from 4.x
+
+The major upgrade from version 4.x is that the library now caters for TypeScript. To allow for this, the factory method that creates the client instance is now a named export rather than a default export.
+
+```js
+// v4.x
+const Moneyhub = require("@mft/moneyhub-api-client")
+
+// v5.x
+const {Moneyhub} = require("@mft/moneyhub-api-client")
+```
+
 ### Changelog
 
 [Learn about the latest improvements and breaking changes](CHANGELOG.md).
@@ -64,7 +76,7 @@ To use this API client you will need:
 This module exposes a single factory function that accepts the following configuration:
 
 ```javascript
-const Moneyhub = require("@mft/moneyhub-api-client")
+const {Moneyhub} = require("@mft/moneyhub-api-client")
 const moneyhub = await Moneyhub({
   resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
   identityServiceUrl: "https://identity.moneyhub.co.uk",
@@ -317,7 +329,7 @@ const tokens = await moneyhub.requestObject({
 Use this to create a request uri from a request object
 
 ```javascript
-const tokens = await moneyhub.getRequestUri(requestObject);
+const requestUri = await moneyhub.getRequestUri(requestObject);
 ```
 
 #### `getAuthorizeUrlFromRequestUri`
@@ -325,7 +337,7 @@ const tokens = await moneyhub.getRequestUri(requestObject);
 Use this to retrieve an authorization url from a request uri
 
 ```javascript
-const tokens = await moneyhub.getAuthorizeUrlFromRequestUri({
+const url = await moneyhub.getAuthorizeUrlFromRequestUri({
   requestUri: "request-uri",
 });
 ```
@@ -1754,6 +1766,14 @@ This method will resolve with a list of all the Test connections that a user can
 const availableConnections = await moneyhub.listTestConnections();
 ```
 
+#### `listBetaConnections`
+
+This method will resolve with a list of all the Beta connections that a user can connect to.
+
+```javascript
+const availableConnections = await moneyhub.listBetaConnections();
+```
+
 ### OpenID Config
 
 #### `getOpenIdConfig`
@@ -1766,8 +1786,23 @@ const availableConnections = await moneyhub.getOpenIdConfig();
 
 ### Examples
 
-We have a couple of examples under the `/examples` folder that can be helpful to start using our client.
+We have a couple of examples under the `/examples` folder that can be helpful to start using our client. To run them, you'll need to use `ts-node`. If you haven't got it globally installed, you can run examples by executing within the library `npm run ts-node -- <script path here> <options>`
 
 ### Running Tests
 
 Instructions on how to run the integration tests for the API client can be found [here](https://www.notion.so/moneyhub/Moneyhub-API-Client-Tests-Config-0bef6e3cb922425b88f0268c1a999917)
+
+## TypeScript
+If you wish to use the client library with TypeScript, we allow you to make use of the types that are returned from our methods. Below is an example usage to get started:
+
+```ts
+import {Moneyhub, ApiClientConfig} from "@mft/moneyhub-api-client"
+const config: ApiClientConfig = {} // your config goes here and is strongly typed
+
+const getAccounts = ({userId}) => {
+  const moneyhub = await Moneyhub(config)
+  const accounts = await moneyhub.getAccounts({userId})
+}
+```
+
+The default export is of the Moneyhub constructor that takes in an argument of the config. You can use `ApiClientConfig` to type that config. The client object that is returned from the constructor can then be used to make API calls. The methods are available with arguments and returns typed.

@@ -1,4 +1,4 @@
-const Moneyhub = require("../../src/index")
+const {Moneyhub} = require("../../src/index")
 const config = require("../config")
 
 const start = async () => {

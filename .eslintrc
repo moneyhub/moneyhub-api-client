@@ -1,9 +1,0 @@
----
-{
-  extends: "./node_modules/@mft/eslint-config-momentumft/index.js",
-  rules: {
-    "camelcase": "off",
-    "comma-dangle": "off",
-  }
-
-}
