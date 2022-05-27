@@ -2,7 +2,7 @@ const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
 const fs = require("fs")
 const path = require("path")
-const Moneyhub = require("../../src/index")
+const {Moneyhub} = require("../../src/index")
 const config = require("../config")
 
 const optionDefinitions = [

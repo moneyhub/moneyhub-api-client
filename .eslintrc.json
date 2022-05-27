@@ -1,0 +1,68 @@
+{
+  "parserOptions": {
+    "sourceType": "module",
+    "ecmaVersion": 2018,
+    "project": "./tsconfig.json"
+  },
+  "extends": [
+    "@mft/eslint-config-momentumft"
+  ],
+  "root": true,
+  "rules": {
+    "comma-dangle": [
+      "off",
+      {
+        "functions": "never",
+        "objects": "always-multiline",
+        "arrays": "always-multiline",
+        "imports": "always-multiline",
+        "exports": "always-multiline"
+      }
+    ],
+    "camelcase": "off",
+    "no-use-before-define": [
+      "error",
+      {
+        "functions": false
+      }
+    ],
+    "no-shadow": "warn"
+  },
+  "overrides": [
+    {
+      "files": ["./**/*.ts"],
+      "plugins": ["@typescript-eslint"],
+      "parser": "@typescript-eslint/parser",
+      "extends": [
+        "@mft/eslint-config-momentumft",
+        "plugin:@typescript-eslint/recommended"
+      ],
+      "rules": {
+        "@typescript-eslint/explicit-function-return-type": "off",
+        "@typescript-eslint/no-use-before-define": [
+          "error",
+          {
+            "functions": false,
+            "typedefs": false
+          }
+        ],
+        "no-use-before-define": "off",
+        "@typescript-eslint/member-delimiter-style": [
+          "warn",
+          {
+            "multiline": {"delimiter": "none"},
+            "singleline": {"delimiter": "comma"}
+          }
+        ],
+        "@typescript-eslint/camelcase": "off",
+        "camelcase": "off",
+        "@typescript-eslint/no-base-to-string": "error",
+        "@typescript-eslint/no-empty-function": "off",
+        "@typescript-eslint/no-explicit-any": "off",
+        "@typescript-eslint/no-unused-vars": "error",
+        "@typescript-eslint/ban-types": "warn",
+        "no-shadow": "warn"
+      }
+    }
+  ]
+}
