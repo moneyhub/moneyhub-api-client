@@ -11,6 +11,8 @@ module.exports = ({config, request}) => {
       request(identityServiceUrl + "/oidc/.well-known/api-connections"),
     listTestConnections: () =>
       request(identityServiceUrl + "/oidc/.well-known/test-connections"),
+    listBetaConnections: () =>
+      request(identityServiceUrl + "/oidc/.well-known/beta-connections"),
     getOpenIdConfig: () =>
       request(identityServiceUrl + "/oidc/.well-known/openid-configuration"),
   }

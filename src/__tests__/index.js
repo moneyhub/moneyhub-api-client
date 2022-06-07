@@ -72,6 +72,7 @@ describe("API client", () => {
         "listConnections",
         "listAPIConnections",
         "listTestConnections",
+        "listBetaConnections",
         "getOpenIdConfig",
         "registerUser",
         "getUsers",
