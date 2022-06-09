@@ -1,10 +1,12 @@
 {
   "name": "@mft/moneyhub-api-client",
-  "version": "4.20.0",
+  "version": "5.0.0-0",
   "description": "Node.JS client for the Moneyhub API",
   "main": "dist/src/index.js",
   "types": "dist/src/index.d.ts",
-  "files": ["dist/*"],
+  "files": [
+    "dist/*"
+  ],
   "scripts": {
     "lint": "eslint src/ examples/",
     "test": "mocha --require ts-node/register --config test/opts/integration.json",
