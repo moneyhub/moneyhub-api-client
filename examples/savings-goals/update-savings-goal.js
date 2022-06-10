@@ -9,7 +9,7 @@ const optionDefinitions = [
   {name: "value", alias: "v", type: Number},
   {name: "imageUrl", alias: "s", type: String},
   {name: "notes", alias: "t", type: String},
-  {name: "accounts", alias: "a", type: Array},
+  {name: "accounts", alias: "a", type: Array, description: "required"},
   {name: "goalId", alias: "g", type: String, description: "required"}
 ]
 
@@ -25,6 +25,7 @@ const {name, value, imageUrl, notes, userId, accounts, goalId} = commandLineArgs
 
 if (!userId) throw new Error("userId is required")
 if (!goalId) throw new Error("goalId is required")
+if (!accounts) throw new Error("accounts are required")
 
 
 const start = async () => {
