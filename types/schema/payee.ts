@@ -1,3 +1,5 @@
+import {SearchParams} from "../request"
+
 export interface Payee {
   id: string
   clientId: string
@@ -9,4 +11,9 @@ export interface Payee {
   name: string
   externalId?: string
   userId?: string
+}
+
+export interface PayeesSearchParams extends SearchParams {
+  userId?: string
+  hasUserId?: boolean
 }

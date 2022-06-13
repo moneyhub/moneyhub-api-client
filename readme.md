@@ -1298,6 +1298,8 @@ This method returns a list of registered payees. This function uses the scope `p
 const payees = await moneyhub.getPayees({
   limit: "limit", // optional
   offset: "offset", // optional
+  userId: "user-id", // optional
+  hasUserId: true, // optional
 });
 ```
 
