@@ -1,22 +1,28 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("..")
-const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
+const OB_MOCK_ID = "1ffe704d39629a929c8e293880fb449a"
+
 describe("Sync", () => {
+  let config
   let moneyhub
   let connectionId
-  const userId = config.testUserIdWithconnection
+  let readOnlyUserId
 
-  before(async () => {
+  before(async function() {
+    config = this.config
+    readOnlyUserId = config.testReadOnlyUserId
     moneyhub = await Moneyhub(config)
   })
 
   it("sync user connection", async () => {
-    const user = await moneyhub.getUser({userId})
-    connectionId = user.connectionIds[0]
+    const user = await moneyhub.getUser({userId: readOnlyUserId})
+    connectionId = user.connectionIds.find(
+      (connectionId) => connectionId.split(":")[0] === OB_MOCK_ID
+    )
     try {
-      const result = await moneyhub.syncUserConnection({userId, connectionId})
+      const result = await moneyhub.syncUserConnection({userId: readOnlyUserId, connectionId})
       expect(result.data.status).to.equal("ok")
     } catch (error) {
       // Even if a 500 or 429 is returned we are testing that the method calls the api

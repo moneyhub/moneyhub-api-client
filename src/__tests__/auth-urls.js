@@ -1,6 +1,5 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("..")
-const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 const querystring = require("querystring")
 
@@ -16,9 +15,10 @@ const parseJwt = (token) => {
 }
 
 describe("Auth Urls", () => {
-  let moneyhub
+  let config, moneyhub
 
-  before(async () => {
+  before(async function() {
+    config = this.config
     moneyhub = await Moneyhub(config)
   })
 
@@ -103,7 +103,7 @@ describe("Auth Urls", () => {
   })
 
   it("gets a reconsent url for a user", async () => {
-    const userId = config.testUserIdWithconnection
+    const userId = config.testReadOnlyUserId
     const connections = await moneyhub.getUserConnections({
       userId
     })

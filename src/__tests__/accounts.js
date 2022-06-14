@@ -1,19 +1,35 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("..")
-const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
 describe("Accounts", () => {
-  let manualAccountId, moneyhub
-  const {testUserId: userId, testAccountId: accountId, testPensionId: pensionId} = config
+  let accountId,
+    accountIdWithCounterparties,
+    manualAccountId,
+    moneyhub,
+    pensionId,
+    readOnlyUserId,
+    userId
 
-  before(async () => {
-    moneyhub = await Moneyhub(config)
+  before(async function() {
+    const {
+      testUserId,
+      testAccountId,
+      readOnlyPensionId,
+      readOnlyAccountIdWithCounterparties,
+      testReadOnlyUserId,
+    } = this.config
+    accountId = testAccountId
+    userId = testUserId
+    readOnlyUserId = testReadOnlyUserId
+    accountIdWithCounterparties = readOnlyAccountIdWithCounterparties
+    pensionId = readOnlyPensionId
+    moneyhub = await Moneyhub(this.config)
   })
 
   it("get accounts", async () => {
     const accounts = await moneyhub.getAccounts({userId})
-    expect(accounts.data.length).to.be.at.least(11)
+    expect(accounts.data.length).to.be.at.least(2)
     const cashAccount = accounts.data.find(a => a.type === "cash:current")
     const pension = accounts.data.find(a => a.type === "pension")
 
@@ -28,18 +44,18 @@ describe("Accounts", () => {
 
   it("get counterparties", async () => {
     const {data: counterparties} = await moneyhub.getAccountCounterparties({
-      userId,
-      accountId
+      userId: readOnlyUserId,
+      accountId: accountIdWithCounterparties
     })
-    expect(counterparties.length).to.be.greaterThan(10)
+    expect(counterparties.length).to.be.greaterThan(6)
   })
 
   it("get holdings", async () => {
     const {data: holdings} = await moneyhub.getAccountHoldings({
-      userId,
+      userId: readOnlyUserId,
       accountId: pensionId
     })
-    expect(holdings[0].items.length).to.be.greaterThan(5)
+    expect(holdings[0].items.length).to.be.greaterThan(1)
   })
 
   xit("get recurring transactions", async () => {

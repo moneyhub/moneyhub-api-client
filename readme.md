@@ -1794,6 +1794,21 @@ We have a couple of examples under the `/examples` folder that can be helpful to
 
 Instructions on how to run the integration tests for the API client can be found [here](https://www.notion.so/moneyhub/Moneyhub-API-Client-Tests-Config-0bef6e3cb922425b88f0268c1a999917)
 
+### Adding Tests
+
+The tests use root level Mocha hooks to set up and teardown test data. When adding tests please consider the following:
+- The test data IDs is passed via Mocha context to the individual tests. The test data can be found in the `this.config` object
+- To access the context in tests before or after hook ensure you are declaring as regular function instead of arrow function
+- The context cannot be accessed in the `describe` functions, only in the hooks or tests themselves
+- Any new tests added should either try to use the test data setup at beginning of the run
+- If the read only test user has to be used to create data, the test itself should clear up anything created in the after hook
+- Currently the read only test user is used for getting counterparties, holdings, rental records and regular transactions
+
+### Troubleshooting tests
+
+- If any errors occurr during test setup or teardown, this should appear as happening in the "before all" or "after all" hook in `"{root}"` with the error.
+- Errors in the `before all` hook can cause errors in the `after all` hook as it won't be able to find data to clear up.
+
 ## TypeScript
 If you wish to use the client library with TypeScript, we allow you to make use of the types that are returned from our methods. Below is an example usage to get started:
 
@@ -1808,3 +1823,4 @@ const getAccounts = ({userId}) => {
 ```
 
 The default export is of the Moneyhub constructor that takes in an argument of the config. You can use `ApiClientConfig` to type that config. The client object that is returned from the constructor can then be used to make API calls. The methods are available with arguments and returns typed.
+
