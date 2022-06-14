@@ -11,6 +11,7 @@ const optionDefinitions = [
   {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
   {name: "idtoken", alias: "i", type: String},
   {name: "userId", alias: "u", type: String},
+  {name: "codeVerifier", alias: "v", type: String},
 ]
 
 const usage = commandLineUsage({
@@ -20,7 +21,7 @@ const usage = commandLineUsage({
 console.log(usage)
 
 const options = commandLineArgs(optionDefinitions)
-const {code, state, userId, nonce, idtoken, localstate} = options
+const {code, state, userId, nonce, idtoken, localstate, codeVerifier} = options
 
 if (!code) throw new Error("code needs to be provided")
 
@@ -39,6 +40,7 @@ const start = async () => {
       sub: userId,
       nonce,
       state: localstate,
+      code_verifier: codeVerifier,
     }
     const result = await moneyhub.exchangeCodeForTokens({
       paramsFromCallback,

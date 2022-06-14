@@ -1,4 +1,4 @@
-import {Issuer, custom} from "openid-client"
+import {Issuer, custom, generators} from "openid-client"
 import {JWKS} from "jose"
 import getAuthUrlsFactory from "./get-auth-urls"
 import getTokensFactory from "./tokens"
@@ -63,6 +63,7 @@ const Moneyhub = async (apiClientConfig: ApiClientConfig): Promise<MoneyHubInsta
     ...getTokensFactory({client, config}),
     ...requestsFactory({config, request}),
     keys: () => (keys && keys.length ? JWKS.asKeyStore({keys}).toJWKS() : null),
+    generators,
   }
 
   return moneyhub

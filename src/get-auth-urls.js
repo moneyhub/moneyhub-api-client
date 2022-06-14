@@ -555,5 +555,70 @@ module.exports = ({client, config}) => {
       return url
     },
 
+    getPushedAuthorisationRequestUrl: async ({
+      bankId,
+      state,
+      nonce,
+      userId,
+      claims = {},
+      permissions,
+      expirationDateTime,
+      transactionFromDateTime,
+      enableAsync,
+      codeChallenge,
+    }) => {
+      const scope = `id:${bankId} openid`
+      const defaultClaims = {
+        id_token: {
+          sub: {
+            essential: true,
+            value: userId,
+          },
+          "mh:con_id": {
+            essential: true,
+          },
+        },
+      }
+
+      const _claims = R.compose(
+        setPermissionsToClaims(permissions),
+        R.mergeDeepRight(defaultClaims)
+      )(claims)
+
+      const authParams = filterUndefined({
+        client_id,
+        scope,
+        state,
+        nonce,
+        redirect_uri,
+        response_type,
+        prompt: "consent",
+      })
+
+      const pkceParams = codeChallenge && {
+        code_challenge: codeChallenge,
+        code_challenge_method: "S256",
+      }
+
+      const request = await client.requestObject(
+        {
+          ...authParams,
+          ...pkceParams,
+          claims: _claims,
+          expirationDateTime,
+          transactionFromDateTime,
+          enableAsync,
+        },
+        {
+          sign: request_object_signing_alg,
+        })
+
+      const pushedRequest = await client.pushedAuthorizationRequest({request})
+
+      const url = client.authorizationUrl(pushedRequest)
+
+      return url
+    },
+
   }
 }
