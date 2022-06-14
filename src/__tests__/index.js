@@ -116,6 +116,7 @@ describe("API client", () => {
         "requestObject",
         "getRequestUri",
         "getAuthorizeUrlForCreatedUser",
+        "getPushedAuthorisationRequestUrl",
         "getReauthAuthorizeUrlForCreatedUser",
         "getReconsentAuthorizeUrlForCreatedUser",
         "getRefreshAuthorizeUrlForCreatedUser",
@@ -128,6 +129,7 @@ describe("API client", () => {
         "refreshTokens",
         "getClientCredentialTokens",
         "keys",
+        "generators",
       ].sort())
     })
 
