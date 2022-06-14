@@ -1,17 +1,17 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("../")
-const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
 describe("Spending Goals", () => {
+  let config
   let moneyhub
   let userId
   let goalId
 
-  before(async () => {
+  before(async function() {
+    config = this.config
     moneyhub = await Moneyhub(config)
-    const user = await moneyhub.registerUser({clientUserId: "some-random-id"})
-    userId = user.userId
+    userId = config.testUserId
   })
 
   it("can create a spending goal", async () => {

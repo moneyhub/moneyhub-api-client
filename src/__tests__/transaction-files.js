@@ -1,17 +1,18 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("..")
-const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 const fs = require("fs")
 const path = require("path")
 
-const userId = config.testUserId
-
 describe("Transaction Files", () => {
+  let config
   let moneyhub
   let transactionId
   let fileId
-  before(async () => {
+  let userId
+  before(async function() {
+    config = this.config
+    userId = config.testUserId
     moneyhub = await Moneyhub(config)
     const {data: transactions} = await moneyhub.getTransactions({
       userId,

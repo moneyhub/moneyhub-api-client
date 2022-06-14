@@ -1,6 +1,5 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("..")
-const config = require("../../test/test-client-config")
 const {expect, assert} = require("chai")
 
 const testRentalData = {
@@ -21,12 +20,15 @@ const testRentalData = {
 }
 
 describe("Rental records", () => {
+  let config
   let moneyhub
   let seriesId
   let rentalId
-  const userId = config.testUserIdWithconnection
+  let userId
 
-  before(async () => {
+  before(async function() {
+    config = this.config
+    userId = config.testReadOnlyUserId
     moneyhub = await Moneyhub(config)
     const {data: regularTransactions} = await moneyhub.getRegularTransactions({userId})
     seriesId = regularTransactions[0].seriesId

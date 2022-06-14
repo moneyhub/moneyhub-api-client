@@ -1,14 +1,15 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("..")
-const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
-const userId = config.testUserId
-
 describe("Projects", () => {
+  let config
   let moneyhub
   let projectId
-  before(async () => {
+  let userId
+  before(async function() {
+    config = this.config
+    userId = config.testUserId
     moneyhub = await Moneyhub(config)
   })
 

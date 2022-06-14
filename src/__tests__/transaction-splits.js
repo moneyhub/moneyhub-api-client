@@ -1,33 +1,38 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("..")
-const config = require("../../test/test-client-config")
 const {expect} = require("chai")
-const {testUserId: userId, testAccountId: accountId} = config
 const R = require("ramda")
 
 describe("Transaction Splits", () => {
+  let config
   let moneyhub
   let transactionId
   let splitId
+  let accountId
+  let userId
+  let splitTestBaseInput
 
-  const splitTestBaseInput = {
-    userId,
-    splits: [
-      {
-        categoryId: "std:39577c49-350f-45a4-8ec3-48ce205585fb",
-        amount: -1500,
-        description: "Split 1"
-      },
-      {
-        categoryId: "std:7daf3d79-98dd-4c85-b3cc-6d7ffd83fce9",
-        amount: -800,
-        description: "Split 2"
-      }
-    ]
-  }
-
-  before(async () => {
+  before(async function() {
+    config = this.config
+    accountId = config.testAccountId
+    userId = config.testUserId
     moneyhub = await Moneyhub(config)
+    splitTestBaseInput = {
+      userId,
+      splits: [
+        {
+          categoryId: "std:39577c49-350f-45a4-8ec3-48ce205585fb",
+          amount: -1500,
+          description: "Split 1"
+        },
+        {
+          categoryId: "std:7daf3d79-98dd-4c85-b3cc-6d7ffd83fce9",
+          amount: -800,
+          description: "Split 2"
+        }
+      ]
+    }
+
     const transaction = {
       accountId,
       "amount": {

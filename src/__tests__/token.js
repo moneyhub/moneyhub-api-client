@@ -1,6 +1,5 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("..")
-const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
 const state = "sample-state"
@@ -8,9 +7,11 @@ const nonce = "sample-nonce"
 const code = "X3MNigTlftG~AKzSQfmVmfvVWrq"
 
 describe.skip("Exchange Code For Token", () => {
+  let config
   let moneyhub
 
   before(async () => {
+    config = this.config
     moneyhub = await Moneyhub(config)
   })
 

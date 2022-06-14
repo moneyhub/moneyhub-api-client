@@ -1,13 +1,17 @@
 /* eslint-disable max-nested-callbacks */
 const {Moneyhub} = require("..")
-const config = require("../../test/test-client-config")
 const {expect} = require("chai")
 
 describe("Auth requests", () => {
-  let moneyhub
+  let config, moneyhub, userId
 
-  before(async () => {
+  before(async function() {
+    config = this.config
     moneyhub = await Moneyhub(config)
+  })
+
+  after(async () => {
+    await moneyhub.deleteUser({userId})
   })
 
   it("creates payment auth request", async () => {
@@ -22,6 +26,7 @@ describe("Auth requests", () => {
       },
       redirectUri: config.client.redirect_uri,
     })
+    userId = data.userId
     expect(data).to.have.property("id")
     expect(data).to.have.property("status", "pending")
     expect(data).to.have.property("redirectParams")

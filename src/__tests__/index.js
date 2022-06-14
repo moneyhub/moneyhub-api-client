@@ -1,12 +1,12 @@
 /* eslint-disable max-nested-callbacks */
-const {Moneyhub} = require("../")
-const config = require("../../test/test-client-config")
+const {Moneyhub} = require("..")
 const {expect} = require("chai")
 
 describe("API client", () => {
   describe("Client configuration", () => {
-    let moneyhub
-    before(async () => {
+    let config, moneyhub
+    before(async function() {
+      config = this.config
       if (config.mode !== "TEST") {
         throw new Error("These tests require example config to be set to test mode")
       }
