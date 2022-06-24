@@ -1,7 +1,7 @@
 import {RequestsParams} from "../../types/request"
-import {MoneyhubRequests} from "../../types"
 
 import accounts from "./accounts"
+import affordability from "./affordability"
 import authRequests from "./auth-requests"
 import beneficiaries from "./beneficiaries"
 import categories from "./categories"
@@ -23,9 +23,10 @@ import transactions from "./transactions"
 import unauthenticated from "./unauthenticated"
 import usersAndConnections from "./users-and-connections"
 
-export default ({config, request}: RequestsParams): MoneyhubRequests => {
+export default ({config, request}: RequestsParams) => {
   return {
     ...accounts({config, request}),
+    ...affordability({config, request}),
     ...authRequests({config, request}),
     ...beneficiaries({config, request}),
     ...categories({config, request}),

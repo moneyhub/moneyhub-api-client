@@ -5,11 +5,10 @@ import getTokensFactory from "./tokens"
 import requestsFactory from "./requests"
 import * as R from "ramda"
 import req from "./request"
-import type {MoneyHubInstance} from "../types"
 import type {ApiClientConfig} from "../types/config"
 const DEFAULT_TIMEOUT = 60000
 
-const Moneyhub = async (apiClientConfig: ApiClientConfig): Promise<MoneyHubInstance> => {
+const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
   const config = R.evolve(
     {
       identityServiceUrl: (val: ApiClientConfig["identityServiceUrl"]) => val.replace("/oidc", ""),
@@ -69,7 +68,11 @@ const Moneyhub = async (apiClientConfig: ApiClientConfig): Promise<MoneyHubInsta
   return moneyhub
 }
 
+type MoneyhubInstance = Awaited<ReturnType<typeof _Moneyhub>>
+const Moneyhub: (apiClientConfig: ApiClientConfig) => Promise<MoneyhubInstance> = _Moneyhub
+
 import type * as Accounts from "../types/schema/account"
+import type * as Affordability from "../types/schema/affordability"
 import type * as AuthRequests from "../types/schema/auth-request"
 import type * as Balances from "../types/schema/balance"
 import type * as Beneficiaries from "../types/schema/beneficiary"
@@ -92,6 +95,7 @@ import type * as Users from "../types/schema/user"
 
 export {
   Accounts,
+  Affordability,
   AuthRequests,
   Balances,
   Beneficiaries,

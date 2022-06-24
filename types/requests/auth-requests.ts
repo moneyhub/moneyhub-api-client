@@ -4,13 +4,13 @@ import type {AuthRequestStandingOrderPost} from "../schema/standing-order"
 import type {AuthParams, AuthRequest} from "../schema/auth-request"
 import type {ApiResponse, SearchParams} from "../request"
 
-enum Permissions {
+export enum AuthRequestPermissions {
   READ_STANDING_ORDERS_BASIC = "ReadStandingOrdersBasic",
   READ_STANDING_ORDERS_DETAIL = "ReadStandingOrdersDetail",
   READ_BENEFICIARIES_DETAIL = "ReadBeneficiariesDetail"
 }
 
-interface CreateAuthRequestParams {
+type CreateAuthRequestParams = {
   redirectUri?: string
   userId?: string
   scope: string
@@ -22,7 +22,7 @@ interface CreateAuthRequestParams {
   categorisationType?: AccountType
   benefitsCheck?: boolean
   counterpartiesCheck?: string[]
-  permissions?: Permissions
+  permissions?: AuthRequestPermissions
   expirationDateTime?: string
   transactionsFromDateTime?: string
   sync?: {

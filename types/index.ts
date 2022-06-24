@@ -51,4 +51,3 @@ export interface MoneyHubInstance extends
   MoneyhubRequests, TokensRequests, GetAuthUrlsMethods {
   keys: () => JSONWebKeySet | null
 }
-
