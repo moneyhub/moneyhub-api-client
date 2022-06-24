@@ -1,12 +1,12 @@
 import {ApiResponse} from "../request"
 
-enum Status {
+export enum SyncStatus {
   OK = "ok",
   ERROR = "error"
 }
 
-interface SyncResponse {
-  status: Status
+type SyncResponse = {
+  status: SyncStatus
 }
 
 export interface SyncRequests {

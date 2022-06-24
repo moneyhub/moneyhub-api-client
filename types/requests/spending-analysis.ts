@@ -1,7 +1,7 @@
 import {ApiResponse} from "../request"
 import {SpendingAnalysis} from "../schema/spending-analysis"
 
-interface Date {
+type Date = {
   name: string
   from: string
   to: string

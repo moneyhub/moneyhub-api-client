@@ -1,12 +1,12 @@
 import {ApiResponse, SearchParams} from "../request"
 import {SpendingGoal} from "../schema/spending-goal"
 
-enum PeriodType {
+export enum SpendingGoalsPeriodType {
   MONTHLY = "monthly",
   ANNUAL = "annual"
 }
 
-interface Amount {
+type Amount = {
   value: number
 }
 
@@ -32,7 +32,7 @@ export interface SpendingGoalsRequests {
     userId,
   }: {
     categoryId: string
-    periodType?: PeriodType
+    periodType?: SpendingGoalsPeriodType
     periodStart?: string
     amount: Amount
     userId: string
