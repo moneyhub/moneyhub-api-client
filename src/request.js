@@ -1,5 +1,6 @@
 const got = require("got")
 const R = require("ramda")
+const qs = require("query-string")
 
 const getResponseBody = err => {
   let body = {}
@@ -26,7 +27,7 @@ module.exports = ({client, options: {timeout}}) => async (url, opts = {}) => {
   const gotOpts = {
     method: opts.method || "GET",
     headers: opts.headers || {},
-    searchParams: opts.searchParams,
+    searchParams: qs.stringify(opts.searchParams),
     timeout,
   }
 
