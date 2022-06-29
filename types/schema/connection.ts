@@ -38,6 +38,7 @@ export interface UserConnection {
   expiresAt: string
   accountIds: string[]
   status: "ok" | "error"
+  error?: "resync" | "sync_error" | "sync_partial" | "mfa_required" | "credentials_error"
   userConsentedAt?: string
   tppConsent?:boolean
 }
