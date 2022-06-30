@@ -1,3 +1,5 @@
+import {SearchParams} from "../request"
+
 export interface Category {
   categoryId: string
   name?: string
@@ -13,4 +15,8 @@ export interface CategoryGroup {
 export interface CategoryPost {
   name: string
   group: string
+}
+
+export interface CategorySearchParams extends SearchParams {
+  type?: "personal" | "business" | "all"
 }

@@ -1,5 +1,5 @@
-import {ApiResponse, SearchParams} from "../request"
-import {Category, CategoryGroup, CategoryPost} from "../schema/category"
+import {ApiResponse} from "../request"
+import {Category, CategoryGroup, CategoryPost, CategorySearchParams} from "../schema/category"
 
 export interface CategoriesRequests {
   getCategories: ({
@@ -7,13 +7,13 @@ export interface CategoriesRequests {
     params,
   }: {
     userId: string
-    params?: SearchParams
+    params?: CategorySearchParams
   }) => Promise<ApiResponse<Category[]>>
 
   getStandardCategories: ({
     params,
   }: {
-    params?: SearchParams
+    params?: CategorySearchParams
   }) => Promise<ApiResponse<Category[]>>
 
   getCategory: ({
@@ -23,7 +23,7 @@ export interface CategoriesRequests {
   }: {
     userId: string
     categoryId: string
-    params?: SearchParams
+    params?: Pick<CategorySearchParams, "type">
   }) => Promise<ApiResponse<Category>>
 
   getCategoryGroups: ({
@@ -31,13 +31,13 @@ export interface CategoriesRequests {
     params,
   }: {
     userId: string
-    params?: SearchParams
+    params?: Pick<CategorySearchParams, "type">
   }) => Promise<ApiResponse<CategoryGroup[]>>
 
   getStandardCategoryGroups: ({
     params,
   }: {
-    params?: SearchParams
+    params?: Pick<CategorySearchParams, "type">
   }) => Promise<ApiResponse<CategoryGroup[]>>
 
   createCustomCategory: ({
