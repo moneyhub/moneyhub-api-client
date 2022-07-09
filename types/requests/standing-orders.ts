@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 import {StandingOrderRequest, StandingOrderSearchParams} from "../schema/standing-order"
 
 export interface StandingOrdersRequests {

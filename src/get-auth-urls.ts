@@ -1,16 +1,18 @@
 import got from "got"
+import type {Client} from "openid-client"
 import * as R from "ramda"
-import {ApiClientConfig} from "../types/config"
-import {GetAuthUrlsMethods} from "../types/get-auth-urls"
+
+import type {ApiClientConfig} from "../types/config"
+
 const filterUndefined = R.reject(R.isNil)
 
 export default ({
   client,
   config,
 }: {
-  client: any
+  client: Client
   config: ApiClientConfig
-}): GetAuthUrlsMethods => {
+}) => {
   const {
     identityServiceUrl,
     client: {
@@ -21,7 +23,7 @@ export default ({
     },
   } = config
 
-  const setPermissionsToClaims = (permissions?: string[]) => (claims: object) => {
+  const setPermissionsToClaims = (permissions: any) => (claims: any) => {
     if (permissions && R.is(Array, permissions)) {
       return R.mergeDeepRight(claims, {
         id_token: {
@@ -38,7 +40,7 @@ export default ({
     return claims
   }
 
-  const getAuthorizeUrl: GetAuthUrlsMethods["getAuthorizeUrl"] = ({
+  const getAuthorizeUrl = ({
     state,
     scope,
     nonce,
@@ -47,7 +49,16 @@ export default ({
     enableAsync,
     expirationDateTime,
     transactionFromDateTime,
-  }) => {
+  }: {
+    state: string
+    scope: string
+    nonce: string
+    claims?: any
+    permissions?: string[]
+    enableAsync?: boolean
+    expirationDateTime?: string
+    transactionFromDateTime?: string
+  }): Promise<string> => {
     const defaultClaims = {
       id_token: {
         sub: {
@@ -89,7 +100,7 @@ export default ({
       prompt: "consent",
     })
 
-    return client
+    return (client as any)
       .requestObject(
         {
           ...authParams,
@@ -100,18 +111,28 @@ export default ({
           sign: request_object_signing_alg,
         },
       )
-      .then((request: any) => ({
+      .then((request: Awaited<ReturnType<Client["requestObject"]>>) => ({
         ...authParams,
         request,
       }))
       .then(client.authorizationUrl.bind(client))
   }
 
-  const getAuthorizeUrlFromRequestUri: GetAuthUrlsMethods["getAuthorizeUrlFromRequestUri"] = ({requestUri}) => {
+  const getAuthorizeUrlFromRequestUri = ({requestUri}: {requestUri: string}) => {
     return `${client.issuer.authorization_endpoint}?request_uri=${requestUri}`
   }
 
-  const requestObject: GetAuthUrlsMethods["requestObject"] = ({scope, state, claims, nonce}) => {
+  const requestObject = ({
+    scope,
+    state,
+    claims,
+    nonce,
+  }: {
+    scope: string
+    state: string
+    claims: object
+    nonce: string
+    }) => {
     const authParams = filterUndefined({
       client_id,
       scope,
@@ -127,7 +148,7 @@ export default ({
     return client.requestObject(authParams)
   }
 
-  const getRequestUri: GetAuthUrlsMethods["getRequestUri"] = async (requestObject) => {
+  const getRequestUri = async (requestObject: any) => {
     const {body} = await got.post(identityServiceUrl + "/request", {
       body: requestObject,
       headers: {
@@ -152,6 +173,17 @@ export default ({
       expirationDateTime,
       transactionFromDateTime,
       enableAsync,
+    }:
+    {
+      bankId: string
+      state: string
+      nonce: string
+      userId: string
+      claims?: any
+      permissions?: string[]
+      expirationDateTime?: string
+      transactionFromDateTime?: string
+      enableAsync?: boolean
     }) => {
       const scope = `id:${bankId} openid`
       const defaultClaims = {
@@ -177,6 +209,7 @@ export default ({
         claims: _claims,
         expirationDateTime,
         transactionFromDateTime,
+        permissions,
         enableAsync,
       })
       return url
@@ -191,6 +224,15 @@ export default ({
       expirationDateTime,
       transactionFromDateTime,
       enableAsync,
+    }: {
+      userId: string
+      connectionId: string
+      state: string
+      nonce: string
+      claims?: any
+      expirationDateTime?: string
+      transactionFromDateTime?: string
+      enableAsync?: boolean
     }) => {
       const scope = "openid reauth"
       const defaultClaims = {
@@ -226,6 +268,13 @@ export default ({
       state,
       nonce,
       claims = {},
+    }: {
+      userId: string
+      connectionId: string
+      state: string
+      nonce: string
+      claims?: any
+      expiresAt?: string
     }) => {
       const scope = "openid reconsent"
       const defaultClaims = {
@@ -265,6 +314,15 @@ export default ({
       expirationDateTime,
       transactionFromDateTime,
       enableAsync,
+    }: {
+      userId: string
+      connectionId: string
+      state: string
+      nonce: string
+      claims?: any
+      expirationDateTime?: string
+      transactionFromDateTime?: string
+      enableAsync?: boolean
     }) => {
       const scope = "openid refresh"
       const defaultClaims = {
@@ -308,6 +366,21 @@ export default ({
       readRefundAccount,
       userId,
       claims = {},
+    }: {
+      bankId: string
+      payeeId: string
+      payeeType: string
+      amount: number
+      payeeRef: string
+      payerRef: string
+      payerId: string
+      payerType: string
+      state: string
+      nonce: string
+      context: string
+      readRefundAccount: boolean
+      userId: string
+      claims?: any
     }) => {
       if (!state) {
         console.error("State is required")
@@ -372,6 +445,15 @@ export default ({
       claims = {},
       payerId,
       payerType,
+    }: {
+      bankId: string
+      paymentId: string
+      state: string
+      nonce: string
+      amount: number
+      claims?: any
+      payerId?: string
+      payerType?: "api-payee" | "mh-user-account"
     }) => {
       if (!state) {
         console.error("State is required")
@@ -438,6 +520,24 @@ export default ({
       nonce,
       userId,
       claims = {},
+    }: {
+      bankId: string
+      payeeId: string
+      payeeType: string
+      payerId: string
+      payerType: string
+      reference: string
+      validFromDate: string
+      validToDate: string
+      maximumIndividualAmount: number
+      currency: string
+      periodicLimits: any
+      type: string
+      context: string
+      state: string
+      nonce: string
+      userId: string
+      claims?: any
     }) => {
       if (!state) {
         console.error("State is required")
@@ -511,6 +611,26 @@ export default ({
       nonce,
       context,
       claims = {},
+    }: {
+      bankId: string
+      payeeId: string
+      payeeType: string
+      payerId: string
+      payerType: string
+      reference: string
+      frequency: string
+      numberOfPayments: number
+      firstPaymentAmount: number
+      recurringPaymentAmount: number
+      finalPaymentAmount: number
+      currency: string
+      firstPaymentDate: string
+      recurringPaymentDate: string
+      finalPaymentDate: string
+      state: string
+      nonce: string
+      context: string
+      claims?: any
     }) => {
       if (!state) {
         console.error("State is required")
@@ -578,6 +698,18 @@ export default ({
       transactionFromDateTime,
       enableAsync,
       codeChallenge,
+    }: {
+      bankId: string
+      state: string
+      nonce: string
+      userId: string
+      context: string
+      claims?: any
+      permissions?: string[]
+      expirationDateTime?: string
+      transactionFromDateTime?: string
+      enableAsync?: boolean
+      codeChallenge?: string
     }) => {
       const scope = `id:${bankId} openid`
       const defaultClaims = {
@@ -612,7 +744,7 @@ export default ({
         code_challenge_method: "S256",
       }
 
-      const request = await client.requestObject(
+      const request = await (client as any).requestObject(
         {
           ...authParams,
           ...pkceParams,

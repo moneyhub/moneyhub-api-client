@@ -1,4 +1,4 @@
-import {RequestsParams} from "../../types/request"
+import {RequestsParams} from "src/request"
 import {TransactionFilesRequests} from "../../types/requests/transaction-files"
 
 import FormData from "form-data"

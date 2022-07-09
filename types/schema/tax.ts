@@ -1,5 +1,5 @@
-import {SearchParams} from "../request"
-import {Amount} from "./balance"
+import type {SearchParams} from "src/request"
+import type {Amount} from "./balance"
 
 export interface TaxSearchParams extends SearchParams {
   startDate: string

@@ -1,5 +1,9 @@
-const R = require("ramda")
-const exchangeCodeForTokensFactory = require("./exchange-code-for-token")
+import type {Client, TokenSet} from "openid-client"
+import * as R from "ramda"
+
+import type {ApiClientConfig} from "../types/config"
+import exchangeCodeForTokensFactory from "./exchange-code-for-token"
+
 const filterUndefined = R.reject(R.isNil)
 
 const exchangeCodeForTokensErrorMessage = `
@@ -35,7 +39,13 @@ This function now requires an object with the following properties:
 }
 `
 
-module.exports = ({client, config}) => {
+export default ({
+  client,
+  config,
+}: {
+  client: Client
+  config: ApiClientConfig
+}) => {
   const {
     client: {redirect_uri},
   } = config
@@ -46,13 +56,23 @@ module.exports = ({client, config}) => {
   })
 
   return {
-    exchangeCodeForTokensLegacy: ({state, code, nonce, id_token}) => {
+    exchangeCodeForTokensLegacy: ({
+      state,
+      code,
+      nonce,
+      id_token,
+    }: {
+      state: string
+      code: string
+      nonce: string
+      id_token?: string
+    }): Promise<TokenSet> => {
       const verify = filterUndefined({state, nonce})
       const requestObj = filterUndefined({state, code, id_token, nonce})
-      return client.authorizationCallback(redirect_uri, requestObj, verify)
+      return (client as any).authorizationCallback(redirect_uri, requestObj, verify)
     },
 
-    exchangeCodeForTokens: ({paramsFromCallback, localParams}) => {
+    exchangeCodeForTokens: ({paramsFromCallback, localParams}: Parameters<typeof exchangeCodeForTokens>[0]) => {
       if (!paramsFromCallback || !localParams) {
         console.error(exchangeCodeForTokensErrorMessage)
         throw new Error("Missing parameters")
@@ -60,9 +80,9 @@ module.exports = ({client, config}) => {
       return exchangeCodeForTokens({paramsFromCallback, localParams})
     },
 
-    refreshTokens: ({refreshToken}) => client.refresh(refreshToken),
+    refreshTokens: ({refreshToken}: {refreshToken: string | TokenSet}) => client.refresh(refreshToken),
 
-    getClientCredentialTokens: ({scope, sub}) =>
+    getClientCredentialTokens: ({scope, sub}: {scope: string, sub: string}) =>
       client.grant({
         grant_type: "client_credentials",
         scope,

@@ -2,13 +2,12 @@ import type {AccountType} from "../schema/account"
 import type {AuthRequestPostPayment, AuthRequestPostRecurringPayment, AuthRequestPostReversePayment} from "../schema/payment"
 import type {AuthRequestStandingOrderPost} from "../schema/standing-order"
 import type {AuthParams, AuthRequest} from "../schema/auth-request"
-import type {ApiResponse, SearchParams} from "../request"
+import type {ApiResponse, SearchParams} from "src/request"
 
-export enum AuthRequestPermissions {
-  READ_STANDING_ORDERS_BASIC = "ReadStandingOrdersBasic",
-  READ_STANDING_ORDERS_DETAIL = "ReadStandingOrdersDetail",
-  READ_BENEFICIARIES_DETAIL = "ReadBeneficiariesDetail"
-}
+type AuthRequestPermissions =
+  | "ReadStandingOrdersBasic"
+  | "ReadStandingOrdersDetail"
+  | "ReadBeneficiariesDetail"
 
 type CreateAuthRequestParams = {
   redirectUri?: string

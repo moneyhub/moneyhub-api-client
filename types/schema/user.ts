@@ -1,6 +1,6 @@
 export interface User {
   userId: string
-  clientUserId: string
+  clientUserId?: string
   clientId: string
   createdAt: string
   updatedAt: string

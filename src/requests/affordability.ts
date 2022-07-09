@@ -1,4 +1,4 @@
-import type {ApiResponse, RequestsParams, SearchParams} from "../../types/request"
+import type {ApiResponse, RequestsParams, SearchParams} from "src/request"
 import type {Affordability, AffordabilityMetadata} from "../../types/schema/affordability"
 
 export default ({config, request}: RequestsParams) => {

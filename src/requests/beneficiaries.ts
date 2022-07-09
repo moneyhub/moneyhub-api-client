@@ -1,4 +1,4 @@
-import {RequestsParams, SearchParams} from "../../types/request"
+import {RequestsParams, SearchParams} from "src/request"
 import {BeneficiariesRequests} from "../../types/requests/beneficiaries"
 export default ({config, request}: RequestsParams): BeneficiariesRequests => {
   const {resourceServerUrl} = config

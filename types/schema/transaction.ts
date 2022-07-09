@@ -1,4 +1,5 @@
-import type {Balance} from "./balance"
+import type {SearchParams} from "src/request"
+import type {Amount, Balance} from "./balance"
 
 export interface RecurringTransactionEstimate {
   counterpartyId?: string
@@ -9,9 +10,6 @@ export interface RecurringTransactionEstimate {
   monthlyAverageOnly?: boolean
   dates?: string[]
 }
-
-import {SearchParams} from "../request"
-import {Amount} from "./balance"
 
 export interface TransactionFile {
   id: string

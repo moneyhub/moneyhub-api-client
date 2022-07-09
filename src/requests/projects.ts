@@ -1,4 +1,4 @@
-import {RequestsParams} from "../../types/request"
+import {RequestsParams} from "src/request"
 import {ProjectsRequests} from "../../types/requests/projects"
 
 export default ({config, request}: RequestsParams): ProjectsRequests => {

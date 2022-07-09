@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 import {RentalRecord, RentalRecordPost} from "../schema/rental-record"
 
 export interface RentalRecordsRequests {

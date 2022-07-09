@@ -1,10 +1,9 @@
-import {ApiResponse, SearchParams} from "../request"
+import {ApiResponse, SearchParams} from "src/request"
 import {SpendingGoal} from "../schema/spending-goal"
 
-export enum SpendingGoalsPeriodType {
-  MONTHLY = "monthly",
-  ANNUAL = "annual"
-}
+type SpendingGoalsPeriodType =
+  | "monthly"
+  | "annual"
 
 type Amount = {
   value: number

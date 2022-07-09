@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 import {Tax, TaxSearchParams} from "../schema/tax"
 
 export interface TaxRequests {

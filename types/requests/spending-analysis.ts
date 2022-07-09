@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 import {SpendingAnalysis} from "../schema/spending-analysis"
 
 type Date = {
