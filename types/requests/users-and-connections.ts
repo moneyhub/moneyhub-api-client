@@ -1,7 +1,7 @@
-import {ApiResponse, SearchParams} from "../request"
-import {UserConnection} from "../schema/connection"
-import {ConnectionSync} from "../schema/sync"
-import {User} from "../schema/user"
+import type {ApiResponse, SearchParams} from "src/request"
+import type {UserConnection} from "../schema/connection"
+import type {ConnectionSync} from "../schema/sync"
+import type {User} from "../schema/user"
 
 export interface UsersAndConnectionsRequests {
   registerUser: ({

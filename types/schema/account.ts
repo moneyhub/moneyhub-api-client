@@ -1,21 +1,18 @@
 import type {Balance} from "./balance"
 
-enum InterestType {
-  FIXED = "fixed",
-  VARIABLE = "variable"
-}
+type InterestType =
+  | "fixed"
+  | "variable"
 
-enum RunningCostPeriod {
-  MONTH = "month",
-  YEAR = "year"
-}
+type RunningCostPeriod =
+  | "month"
+  | "year"
 
-export enum AccountType {
-  PERSONAL = "personal",
-  BUSINESS = "business"
-}
+export type AccountType =
+  | "personal"
+  | "business"
 
-enum Type {
+export enum Type {
   CASH_CURRENT = "cash:current",
   SAVINGS = "savings",
   CARD = "card",

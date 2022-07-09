@@ -1,4 +1,4 @@
-import {Amount} from "./balance"
+import type {Amount} from "./balance"
 
 enum Frequency {
   WEEKLY = "weekly",

@@ -1,4 +1,4 @@
-import type {RequestsParams} from "../../types/request"
+import type {RequestsParams} from "src/request"
 import type {AccountsRequests} from "../../types/requests/accounts"
 
 export default ({

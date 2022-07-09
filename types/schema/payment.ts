@@ -1,4 +1,4 @@
-import {SearchParams} from "../request"
+import type {SearchParams} from "src/request"
 
 export enum PaymentActorType {
   API_PAYEE = "api-payee",

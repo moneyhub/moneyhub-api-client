@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 import {TransactionFile} from "../schema/transaction"
 
 export interface TransactionFilesRequests {

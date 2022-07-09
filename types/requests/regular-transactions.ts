@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 import {RegularTransaction, RegularTransactionSearchParams} from "../schema/regular-transaction"
 
 export interface RegularTransactionsRequests {

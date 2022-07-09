@@ -1,4 +1,4 @@
-import {RequestsParams} from "../../types/request"
+import {RequestsParams} from "src/request"
 import {UnauthenticatedRequests} from "../../types/requests/unauthenticated"
 
 export default ({config, request}: RequestsParams): UnauthenticatedRequests => {

@@ -1,7 +1,31 @@
-const DEFAULT_DATA_SCOPES_USE_CASE_1 =
-  "accounts:read transactions:read:all categories:read categories:write spending_goals:read savings_goals:read"
-const DEFAULT_DATA_SCOPES_USE_CASE_2 =
-  "accounts:read accounts:write:all transactions:read:all transactions:write:all categories:read categories:write spending_goals:read spending_goals:write:all savings_goals:read savings_goals:write:all spending_analysis:read projects:read projects:write projects:delete tax:read"
+const DEFAULT_DATA_SCOPES_USE_CASE_1 = [
+  "accounts:read",
+  "transactions:read:all",
+  "categories:read",
+  "categories:write",
+  "spending_goals:read",
+  "savings_goals:read"
+].join(" ")
+
+const DEFAULT_DATA_SCOPES_USE_CASE_2 = [
+  "accounts:read",
+  "accounts:write:all",
+  "affordability:read",
+  "affordability:write",
+  "transactions:read:all",
+  "transactions:write:all",
+  "categories:read",
+  "categories:write",
+  "spending_goals:read",
+  "spending_goals:write:all",
+  "savings_goals:read",
+  "savings_goals:write:all",
+  "spending_analysis:read",
+  "projects:read",
+  "projects:write",
+  "projects:delete",
+  "tax:read"
+].join(" ")
 
 const BANK_IDS = {
   ALL: "all",

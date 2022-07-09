@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "../../src/request"
 import {Category, CategoryGroup, CategoryPost, CategorySearchParams} from "../schema/category"
 
 export interface CategoriesRequests {

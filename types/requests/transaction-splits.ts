@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 import {TransactionSplit, TransactionSplitPatch, TransactionSplitPost} from "../schema/transaction"
 
 export interface TransactionSplitsRequests {

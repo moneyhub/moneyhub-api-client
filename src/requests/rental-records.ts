@@ -1,4 +1,4 @@
-import {RequestsParams} from "../../types/request"
+import {RequestsParams} from "src/request"
 import {RentalRecordsRequests} from "../../types/requests/rental-records"
 
 export default ({config, request}: RequestsParams): RentalRecordsRequests=> {

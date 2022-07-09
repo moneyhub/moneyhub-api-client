@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 import {WellKnownConnection} from "../schema/connection"
 import {GlobalCounterpartiesSearchParams, GlobalCounterparty} from "../schema/counterparty"
 

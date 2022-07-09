@@ -6,6 +6,11 @@
     "target": "es2019",
     "moduleResolution": "node",
     "outDir": "./dist",
+    "baseUrl": "./",
+    "paths": {
+      "src": ["./src"],
+      "types": ["./types"]
+    },
     "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,
@@ -17,5 +22,5 @@
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts", "types/**/*.ts"],
+  "include": ["src/**/*.ts", "types/**/*.ts", "src/exchange-code-for-token.js"],
 }

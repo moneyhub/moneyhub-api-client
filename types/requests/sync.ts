@@ -1,9 +1,8 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 
-export enum SyncStatus {
-  OK = "ok",
-  ERROR = "error"
-}
+type SyncStatus =
+  | "ok"
+  | "error"
 
 type SyncResponse = {
   status: SyncStatus

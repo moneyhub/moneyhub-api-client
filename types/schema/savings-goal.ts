@@ -1,4 +1,4 @@
-import {Amount} from "./balance"
+import type {Amount} from "./balance"
 export interface SavingsGoal {
   id: string
   name: string

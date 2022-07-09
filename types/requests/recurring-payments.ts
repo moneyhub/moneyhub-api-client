@@ -1,4 +1,4 @@
-import {ApiResponse} from "../request"
+import {ApiResponse} from "src/request"
 import {PaymentsClaims, RecurringPaymentRequest, RecurringPaymentSearchParams} from "../schema/payment"
 
 export interface RecurringPaymentsRequests {
