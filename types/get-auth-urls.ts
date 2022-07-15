@@ -8,7 +8,7 @@ export interface GetAuthUrlsMethods {
     enableAsync,
     expirationDateTime,
     transactionFromDateTime,
-  }: {
+  }: Partial<{
     state: string
     scope: string
     nonce: string
@@ -17,7 +17,7 @@ export interface GetAuthUrlsMethods {
     enableAsync: boolean
     expirationDateTime: string
     transactionFromDateTime: string
-  }) => Promise<string>
+  }>) => Promise<string>
   getAuthorizeUrlFromRequestUri: ({
     requestUri,
   }: {
@@ -28,12 +28,12 @@ export interface GetAuthUrlsMethods {
     state,
     claims,
     nonce,
-  }: {
+  }: Partial<{
     scope: string
     state: string
     claims: object
     nonce: string
-    }) => Promise<string>
+    }>) => Promise<string>
   getRequestUri: (requestObject: any) => Promise<string>
   getAuthorizeUrlForCreatedUser: ({
     bankId,
@@ -45,8 +45,7 @@ export interface GetAuthUrlsMethods {
     expirationDateTime,
     transactionFromDateTime,
     enableAsync,
-  }:
-    {
+  }: Partial<{
       bankId: string
       state: string
       nonce: string
@@ -56,7 +55,7 @@ export interface GetAuthUrlsMethods {
       expirationDateTime: string
       transactionFromDateTime: string
       enableAsync: boolean
-    }) => Promise<string>
+    }>) => Promise<string>
   getReauthAuthorizeUrlForCreatedUser: ({
     userId,
     connectionId,
@@ -66,7 +65,7 @@ export interface GetAuthUrlsMethods {
     expirationDateTime,
     transactionFromDateTime,
     enableAsync,
-  }: {
+  }: Partial<{
     userId: string
     connectionId: string
     state: string
@@ -75,7 +74,7 @@ export interface GetAuthUrlsMethods {
     expirationDateTime: string
     transactionFromDateTime: string
     enableAsync: boolean
-  }) => Promise<string>
+  }>) => Promise<string>
   getRefreshAuthorizeUrlForCreatedUser: ({
     userId,
     connectionId,
@@ -85,7 +84,7 @@ export interface GetAuthUrlsMethods {
     expirationDateTime,
     transactionFromDateTime,
     enableAsync,
-  }: {
+  }: Partial<{
     userId: string
     connectionId: string
     state: string
@@ -94,7 +93,7 @@ export interface GetAuthUrlsMethods {
     expirationDateTime: string
     transactionFromDateTime: string
     enableAsync: boolean
-  }) => Promise<string>
+  }>) => Promise<string>
   getPaymentAuthorizeUrl: ({
     bankId,
     payeeId,
@@ -110,7 +109,7 @@ export interface GetAuthUrlsMethods {
     readRefundAccount,
     userId,
     claims,
-  }: {
+  }: Partial<{
     bankId: string
     payeeId: string
     payeeType: string
@@ -124,8 +123,8 @@ export interface GetAuthUrlsMethods {
     context: string
     readRefundAccount: boolean
     userId: string
-    claims: boolean
-  }) => Promise<string>
+    claims: object
+  }>) => Promise<string>
   getReversePaymentAuthorizeUrl: ({
     bankId,
     paymentId,
@@ -133,14 +132,18 @@ export interface GetAuthUrlsMethods {
     nonce,
     amount,
     claims,
-  }: {
+    payerId,
+    payerType,
+  }: Partial<{
     bankId: string
     paymentId: string
     state: string
     nonce: string
     amount: number
     claims: object
-  }) => Promise<string>
+    payerId: string | undefined
+    payerType: "api-payee" | "mh-user-account" | undefined
+  }>) => Promise<string>
   getRecurringPaymentAuthorizeUrl: ({
     bankId,
     payeeId,
@@ -159,7 +162,7 @@ export interface GetAuthUrlsMethods {
     nonce,
     userId,
     claims,
-  }: {
+  }: Partial<{
     bankId: string
     payeeId: string
     payeeType: string
@@ -177,7 +180,7 @@ export interface GetAuthUrlsMethods {
     nonce: string
     userId: string
     claims: object
-  }) => Promise<string>
+  }>) => Promise<string>
   getStandingOrderAuthorizeUrl: ({
     bankId,
     payeeId,
@@ -198,7 +201,7 @@ export interface GetAuthUrlsMethods {
     nonce,
     context,
     claims,
-  }: {
+  }: Partial<{
     bankId: string
     payeeId: string
     payeeType: string
@@ -218,5 +221,43 @@ export interface GetAuthUrlsMethods {
     nonce: string
     context: string
     claims: object
-  }) => Promise<string>
+  }>) => Promise<string>
+  getReconsentAuthorizeUrlForCreatedUser: ({
+    userId,
+    connectionId,
+    expiresAt,
+    state,
+    nonce,
+    claims,
+  }: Partial<{
+    userId: string
+    connectionId: string
+    expiresAt: string
+    state: string
+    nonce: string
+    claims: object
+  }>) => Promise<string>
+  getPushedAuthorisationRequestUrl: ({
+    bankId,
+    state,
+    nonce,
+    userId,
+    claims,
+    permissions,
+    expirationDateTime,
+    transactionFromDateTime,
+    enableAsync,
+    codeChallenge,
+  }: Partial<{
+    bankId: string
+    state: string
+    nonce: string
+    userId: string
+    claims: object
+    permissions: string[]
+    expirationDateTime: string
+    transactionFromDateTime: string
+    enableAsync: boolean
+    codeChallenge: string
+  }>) => Promise<string>
 }

@@ -1,8 +1,16 @@
-const got = require("got")
-const R = require("ramda")
+import got from "got"
+import * as R from "ramda"
+import {ApiClientConfig} from "../types/config"
+import {GetAuthUrlsMethods} from "../types/get-auth-urls"
 const filterUndefined = R.reject(R.isNil)
 
-module.exports = ({client, config}) => {
+export default ({
+  client,
+  config,
+}: {
+  client: any
+  config: ApiClientConfig
+}): GetAuthUrlsMethods => {
   const {
     identityServiceUrl,
     client: {
@@ -13,24 +21,24 @@ module.exports = ({client, config}) => {
     },
   } = config
 
-  const setPermissionsToClaims = permissions => claims => {
+  const setPermissionsToClaims = (permissions?: string[]) => (claims: object) => {
     if (permissions && R.is(Array, permissions)) {
       return R.mergeDeepRight(claims, {
         id_token: {
           "mh:consent": {
             essential: true,
             value: {
-              permissions
-            }
-          }
-        }
+              permissions,
+            },
+          },
+        },
       })
     }
 
     return claims
   }
 
-  const getAuthorizeUrl = ({
+  const getAuthorizeUrl: GetAuthUrlsMethods["getAuthorizeUrl"] = ({
     state,
     scope,
     nonce,
@@ -54,21 +62,21 @@ module.exports = ({client, config}) => {
             "value": {
               ...expirationDateTime && {expirationDateTime},
               ...transactionFromDateTime && {transactionFromDateTime},
-            }
-          }
+            },
+          },
         },
         ...enableAsync && {
           "mh:sync": {
             "essential": true,
-            "value": {"enableAsync": true}
-          }
-        }
+            "value": {"enableAsync": true},
+          },
+        },
       },
     }
 
     const _claims = R.compose(
       setPermissionsToClaims(permissions),
-      R.mergeDeepRight(defaultClaims)
+      R.mergeDeepRight(defaultClaims),
     )(claims)
 
     const authParams = filterUndefined({
@@ -90,20 +98,20 @@ module.exports = ({client, config}) => {
         },
         {
           sign: request_object_signing_alg,
-        }
+        },
       )
-      .then((request) => ({
+      .then((request: any) => ({
         ...authParams,
         request,
       }))
       .then(client.authorizationUrl.bind(client))
   }
 
-  const getAuthorizeUrlFromRequestUri = ({requestUri}) => {
+  const getAuthorizeUrlFromRequestUri: GetAuthUrlsMethods["getAuthorizeUrlFromRequestUri"] = ({requestUri}) => {
     return `${client.issuer.authorization_endpoint}?request_uri=${requestUri}`
   }
 
-  const requestObject = ({scope, state, claims, nonce}) => {
+  const requestObject: GetAuthUrlsMethods["requestObject"] = ({scope, state, claims, nonce}) => {
     const authParams = filterUndefined({
       client_id,
       scope,
@@ -119,7 +127,7 @@ module.exports = ({client, config}) => {
     return client.requestObject(authParams)
   }
 
-  const getRequestUri = async (requestObject) => {
+  const getRequestUri: GetAuthUrlsMethods["getRequestUri"] = async (requestObject) => {
     const {body} = await got.post(identityServiceUrl + "/request", {
       body: requestObject,
       headers: {
@@ -159,7 +167,7 @@ module.exports = ({client, config}) => {
       }
       const _claims = R.compose(
         setPermissionsToClaims(permissions),
-        R.mergeDeepRight(defaultClaims)
+        R.mergeDeepRight(defaultClaims),
       )(claims)
 
       const url = await getAuthorizeUrl({
@@ -232,9 +240,9 @@ module.exports = ({client, config}) => {
           },
           "mh:consent": {
             value: {
-              expirationDateTime: expiresAt
-            }
-          }
+              expirationDateTime: expiresAt,
+            },
+          },
         },
       }
       const _claims = R.mergeDeepRight(defaultClaims, claims)
@@ -256,7 +264,7 @@ module.exports = ({client, config}) => {
       claims = {},
       expirationDateTime,
       transactionFromDateTime,
-      enableAsync
+      enableAsync,
     }) => {
       const scope = "openid refresh"
       const defaultClaims = {
@@ -280,7 +288,7 @@ module.exports = ({client, config}) => {
         claims: _claims,
         expirationDateTime,
         transactionFromDateTime,
-        enableAsync
+        enableAsync,
       })
       return url
     },
@@ -333,9 +341,9 @@ module.exports = ({client, config}) => {
           },
           ...userId && {
             sub: {
-              value: userId
-            }
-          }
+              value: userId,
+            },
+          },
         },
       }
 
@@ -362,6 +370,8 @@ module.exports = ({client, config}) => {
       nonce,
       amount,
       claims = {},
+      payerId,
+      payerType,
     }) => {
       if (!state) {
         console.error("State is required")
@@ -382,6 +392,8 @@ module.exports = ({client, config}) => {
           "mh:reverse_payment": {
             essential: true,
             value: {
+              payerId,
+              payerType,
               paymentId,
               amount,
             },
@@ -457,9 +469,9 @@ module.exports = ({client, config}) => {
           },
           ...userId && {
             sub: {
-              value: userId
-            }
-          }
+              value: userId,
+            },
+          },
         },
       }
 
@@ -582,7 +594,7 @@ module.exports = ({client, config}) => {
 
       const _claims = R.compose(
         setPermissionsToClaims(permissions),
-        R.mergeDeepRight(defaultClaims)
+        R.mergeDeepRight(defaultClaims),
       )(claims)
 
       const authParams = filterUndefined({

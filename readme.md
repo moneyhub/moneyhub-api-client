@@ -1252,6 +1252,8 @@ const url = await moneyhub.getReversePaymentAuthorizeUrl({
   amount: "reverse payment amount" // optional
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
+  payerId: "payer id that will make the payment", // optional
+  payerType: "api-payee|mh-user-account" // optional
 })
 
 // Scope used with the bankId provided
