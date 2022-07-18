@@ -2,7 +2,7 @@ type ConnectionType = "api" | "legacy" | "test" | "zoopla" | "mouseprice"
 
 interface AccountType {
   beta: boolean
-  name: "cash:current" | "savings" | "card" | "investment" | "loan" | "mortgage:repayment" | "mortgage:interestOnly" | "pension" | "pension:definedBenefit" | "pension:definedContribution" | "asset" | "properties:residential" | "properties:buyToLet"
+  name: "cash:current" | "savings" | "card" | "investment" | "loan" | "mortgage:repayment" | "mortgage:interestOnly" | "pension" | "pension:definedBenefit" | "pension:definedContribution" | "asset" | "properties:residential" | "properties:buyToLet" | "crypto"
 }
 
 type UserType = "personal" | "business"
