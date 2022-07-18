@@ -29,6 +29,7 @@ enum Type {
   ASSET = "asset",
   PROPERTIES_RESIDENTIAL = "properties:residential",
   PROPERTIES_BUT_TO_LET = "properties:buyToLet",
+  CRYPTO = "crypto"
 }
 
 interface TransactionData {
