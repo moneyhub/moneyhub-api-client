@@ -30,7 +30,7 @@
   },
   "overrides": [
     {
-      "files": ["./**/*.ts"],
+      "files": ["./src/**/*.ts"],
       "plugins": ["@typescript-eslint"],
       "parser": "@typescript-eslint/parser",
       "extends": [

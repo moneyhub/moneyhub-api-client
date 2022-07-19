@@ -5,6 +5,6 @@
     "recursive": true,
     "colors": true,
     "exit": true,
-    "spec": ["src/**/__tests__/*.js"],
+    "spec": ["src/**/__tests__/*.ts"],
     "require": ["test/hooks.js"]
   }

@@ -5,7 +5,7 @@ import getTokensFactory from "./tokens"
 import requestsFactory from "./requests"
 import * as R from "ramda"
 import req from "./request"
-import type {ApiClientConfig} from "../types/config"
+import type {ApiClientConfig} from "./schema/config"
 const DEFAULT_TIMEOUT = 60000
 
 const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
@@ -68,30 +68,30 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
   return moneyhub
 }
 
-type MoneyhubInstance = Awaited<ReturnType<typeof _Moneyhub>>
+export type MoneyhubInstance = Awaited<ReturnType<typeof _Moneyhub>>
 const Moneyhub: (apiClientConfig: ApiClientConfig) => Promise<MoneyhubInstance> = _Moneyhub
 
-import type * as Accounts from "../types/schema/account"
-import type * as Affordability from "../types/schema/affordability"
-import type * as AuthRequests from "../types/schema/auth-request"
-import type * as Balances from "../types/schema/balance"
-import type * as Beneficiaries from "../types/schema/beneficiary"
-import type * as Categories from "../types/schema/category"
-import type * as Counterparties from "../types/schema/counterparty"
-import type * as Holdings from "../types/schema/holding"
-import type * as Payees from "../types/schema/payee"
-import type * as Payments from "../types/schema/payment"
-import type * as Projects from "../types/schema/project"
-import type * as RegularTransactions from "../types/schema/regular-transaction"
-import type * as RentalRecords from "../types/schema/rental-record"
-import type * as SavingsGoals from "../types/schema/savings-goal"
-import type * as SpendingAnalysis from "../types/schema/spending-analysis"
-import type * as SpendingGoals from "../types/schema/spending-goal"
-import type * as StandingOrders from "../types/schema/standing-order"
-import type * as Syncs from "../types/schema/sync"
-import type * as Taxes from "../types/schema/tax"
-import type * as Transactions from "../types/schema/transaction"
-import type * as Users from "../types/schema/user"
+import type * as Accounts from "./schema/account"
+import type * as Affordability from "./schema/affordability"
+import type * as AuthRequests from "./schema/auth-request"
+import type * as Balances from "./schema/balance"
+import type * as Beneficiaries from "./schema/beneficiary"
+import type * as Categories from "./schema/category"
+import type * as Counterparties from "./schema/counterparty"
+import type * as Holdings from "./schema/holding"
+import type * as Payees from "./schema/payee"
+import type * as Payments from "./schema/payment"
+import type * as Projects from "./schema/project"
+import type * as RegularTransactions from "./schema/regular-transaction"
+import type * as RentalRecords from "./schema/rental-record"
+import type * as SavingsGoals from "./schema/savings-goal"
+import type * as SpendingAnalysis from "./schema/spending-analysis"
+import type * as SpendingGoals from "./schema/spending-goal"
+import type * as StandingOrders from "./schema/standing-order"
+import type * as Syncs from "./schema/sync"
+import type * as Taxes from "./schema/tax"
+import type * as Transactions from "./schema/transaction"
+import type * as Users from "./schema/user"
 
 export {
   Accounts,

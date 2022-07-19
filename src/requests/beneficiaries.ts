@@ -1,5 +1,5 @@
 import {RequestsParams, SearchParams} from "src/request"
-import {BeneficiariesRequests} from "../../types/requests/beneficiaries"
+import {BeneficiariesRequests} from "./types/beneficiaries"
 export default ({config, request}: RequestsParams): BeneficiariesRequests => {
   const {resourceServerUrl} = config
   const BENEFICIARIES_READ_SCOPE = "beneficiaries:read"

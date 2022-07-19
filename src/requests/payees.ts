@@ -1,5 +1,5 @@
 import {RequestsParams} from "src/request"
-import {PayeesRequests} from "../../types/requests/payees"
+import {PayeesRequests} from "./types/payees"
 
 export default ({config, request}: RequestsParams): PayeesRequests => {
   const {identityServiceUrl} = config

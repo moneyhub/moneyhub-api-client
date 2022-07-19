@@ -1,5 +1,5 @@
 import {RequestsParams} from "src/request"
-import {RegularTransactionsRequests} from "../../types/requests/regular-transactions"
+import {RegularTransactionsRequests} from "./types/regular-transactions"
 
 export default ({config, request}: RequestsParams): RegularTransactionsRequests => {
   const {resourceServerUrl} = config

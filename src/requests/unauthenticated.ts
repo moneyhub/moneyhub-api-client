@@ -1,5 +1,5 @@
 import {RequestsParams} from "src/request"
-import {UnauthenticatedRequests} from "../../types/requests/unauthenticated"
+import {UnauthenticatedRequests} from "./types/unauthenticated"
 
 export default ({config, request}: RequestsParams): UnauthenticatedRequests => {
   const {resourceServerUrl, identityServiceUrl} = config

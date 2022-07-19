@@ -1,5 +1,5 @@
 import {RequestsParams} from "src/request"
-import {SpendingAnalysisRequests} from "../../types/requests/spending-analysis"
+import {SpendingAnalysisRequests} from "./types/spending-analysis"
 
 export default ({config, request}: RequestsParams): SpendingAnalysisRequests => {
   const {resourceServerUrl} = config

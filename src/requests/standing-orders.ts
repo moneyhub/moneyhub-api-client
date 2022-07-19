@@ -1,6 +1,6 @@
 import {ApiResponse, RequestsParams} from "src/request"
-import {StandingOrdersRequests} from "../../types/requests/standing-orders"
-import {StandingOrderRequest} from "../../types/schema/standing-order"
+import {StandingOrdersRequests} from "./types/standing-orders"
+import {StandingOrderRequest} from "../schema/standing-order"
 
 export default ({config, request}: RequestsParams): StandingOrdersRequests => {
   const {identityServiceUrl} = config

@@ -2,7 +2,9 @@ import got from "got"
 import type {Client} from "openid-client"
 import * as R from "ramda"
 
-import type {ApiClientConfig} from "../types/config"
+import type {ApiClientConfig} from "./schema/config"
+import {PaymentActorType} from "./schema/payment"
+import {StandingOrderFrequency} from "./schema/standing-order"
 
 const filterUndefined = R.reject(R.isNil)
 
@@ -50,9 +52,9 @@ export default ({
     expirationDateTime,
     transactionFromDateTime,
   }: {
-    state: string
+    state?: string
     scope: string
-    nonce: string
+    nonce?: string
     claims?: any
     permissions?: string[]
     enableAsync?: boolean
@@ -122,16 +124,16 @@ export default ({
     return `${client.issuer.authorization_endpoint}?request_uri=${requestUri}`
   }
 
-  const requestObject = ({
+  const getRequestObject = ({
     scope,
     state,
     claims,
     nonce,
   }: {
     scope: string
-    state: string
+    state?: string
     claims: object
-    nonce: string
+    nonce?: string
     }) => {
     const authParams = filterUndefined({
       client_id,
@@ -161,7 +163,7 @@ export default ({
   return {
     getAuthorizeUrl,
     getAuthorizeUrlFromRequestUri,
-    requestObject,
+    requestObject: getRequestObject,
     getRequestUri,
     getAuthorizeUrlForCreatedUser: async ({
       bankId,
@@ -176,8 +178,8 @@ export default ({
     }:
     {
       bankId: string
-      state: string
-      nonce: string
+      state?: string
+      nonce?: string
       userId: string
       claims?: any
       permissions?: string[]
@@ -227,8 +229,8 @@ export default ({
     }: {
       userId: string
       connectionId: string
-      state: string
-      nonce: string
+      state?: string
+      nonce?: string
       claims?: any
       expirationDateTime?: string
       transactionFromDateTime?: string
@@ -271,8 +273,8 @@ export default ({
     }: {
       userId: string
       connectionId: string
-      state: string
-      nonce: string
+      state?: string
+      nonce?: string
       claims?: any
       expiresAt?: string
     }) => {
@@ -315,10 +317,10 @@ export default ({
       transactionFromDateTime,
       enableAsync,
     }: {
-      userId: string
+      userId?: string
       connectionId: string
-      state: string
-      nonce: string
+      state?: string
+      nonce?: string
       claims?: any
       expirationDateTime?: string
       transactionFromDateTime?: string
@@ -353,10 +355,10 @@ export default ({
 
     getPaymentAuthorizeUrl: async ({
       bankId,
+      payeeRef,
       payeeId,
       payeeType,
       amount,
-      payeeRef,
       payerRef,
       payerId,
       payerType,
@@ -368,18 +370,18 @@ export default ({
       claims = {},
     }: {
       bankId: string
-      payeeId: string
-      payeeType: string
-      amount: number
       payeeRef: string
+      payeeId: string
+      payeeType?: string
+      amount: number
       payerRef: string
-      payerId: string
-      payerType: string
-      state: string
-      nonce: string
-      context: string
-      readRefundAccount: boolean
-      userId: string
+      payerId?: string
+      payerType?: string
+      state?: string
+      nonce?: string
+      context?: string
+      readRefundAccount?: boolean
+      userId?: string
       claims?: any
     }) => {
       if (!state) {
@@ -422,7 +424,7 @@ export default ({
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const request = await requestObject({
+      const request = await getRequestObject({
         scope,
         state,
         claims: _claims,
@@ -448,12 +450,12 @@ export default ({
     }: {
       bankId: string
       paymentId: string
-      state: string
-      nonce: string
+      state?: string
+      nonce?: string
       amount: number
       claims?: any
       payerId?: string
-      payerType?: "api-payee" | "mh-user-account"
+      payerType?: PaymentActorType
     }) => {
       if (!state) {
         console.error("State is required")
@@ -488,7 +490,7 @@ export default ({
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const request = await requestObject({
+      const request = await getRequestObject({
         scope,
         state,
         claims: _claims,
@@ -522,20 +524,20 @@ export default ({
       claims = {},
     }: {
       bankId: string
-      payeeId: string
-      payeeType: string
-      payerId: string
-      payerType: string
-      reference: string
-      validFromDate: string
-      validToDate: string
-      maximumIndividualAmount: number
-      currency: string
-      periodicLimits: any
-      type: string
-      context: string
-      state: string
-      nonce: string
+      payeeId?: string
+      payeeType?: string
+      payerId?: string
+      payerType?: string
+      reference?: string
+      validFromDate?: string
+      validToDate?: string
+      maximumIndividualAmount?: number
+      currency?: string
+      periodicLimits?: any
+      type?: string
+      context?: string
+      state?: string
+      nonce?: string
       userId: string
       claims?: any
     }) => {
@@ -577,7 +579,7 @@ export default ({
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const request = await requestObject({
+      const request = await getRequestObject({
         scope,
         state,
         claims: _claims,
@@ -614,21 +616,21 @@ export default ({
     }: {
       bankId: string
       payeeId: string
-      payeeType: string
-      payerId: string
-      payerType: string
+      payeeType?: string
+      payerId?: string
+      payerType?: string
       reference: string
-      frequency: string
-      numberOfPayments: number
+      frequency: StandingOrderFrequency
+      numberOfPayments?: number
       firstPaymentAmount: number
       recurringPaymentAmount: number
       finalPaymentAmount: number
-      currency: string
+      currency?: string
       firstPaymentDate: string
       recurringPaymentDate: string
       finalPaymentDate: string
-      state: string
-      nonce: string
+      state?: string
+      nonce?: string
       context: string
       claims?: any
     }) => {
@@ -673,7 +675,7 @@ export default ({
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const request = await requestObject({
+      const request = await getRequestObject({
         scope,
         state,
         claims: _claims,
@@ -700,10 +702,10 @@ export default ({
       codeChallenge,
     }: {
       bankId: string
-      state: string
-      nonce: string
-      userId: string
-      context: string
+      state?: string
+      nonce?: string
+      userId?: string
+      context?: string
       claims?: any
       permissions?: string[]
       expirationDateTime?: string

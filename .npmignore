@@ -1,5 +1,9 @@
-/examples
-/config
-/test
-/resources
-/src
+.husky
+examples
+config
+test
+resources
+src
+__tests__
+.eslintrc.json
+tsconfig.json
