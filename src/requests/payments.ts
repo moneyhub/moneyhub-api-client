@@ -1,6 +1,6 @@
 import {ApiResponse, RequestsParams} from "src/request"
-import {PaymentsRequests} from "../../types/requests/payments"
-import {Payment} from "../../types/schema/payment"
+import {PaymentsRequests} from "./types/payments"
+import {Payment} from "../schema/payment"
 
 export default ({config, request}: RequestsParams): PaymentsRequests => {
   const {identityServiceUrl} = config

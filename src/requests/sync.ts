@@ -1,6 +1,6 @@
 import * as R from "ramda"
 import {RequestsParams} from "src/request"
-import {SyncRequests} from "../../types/requests/sync"
+import {SyncRequests} from "./types/sync"
 const filterUndefined = R.reject(R.isNil)
 
 export default ({config, request}: RequestsParams): SyncRequests => {

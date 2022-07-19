@@ -1,5 +1,5 @@
 import {RequestsParams} from "src/request"
-import {AuthRequestsRequests} from "../../types/requests/auth-requests"
+import {AuthRequestsRequests} from "./types/auth-requests"
 
 export default ({
   config,

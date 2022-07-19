@@ -22,12 +22,12 @@ export type ParamsFromCallback = {
 }
 
 export interface LocalParams {
-  max_age: any
+  max_age?: any
   state: any
-  response_type: any
+  response_type?: any
   nonce: any
-  code_verifier: any
-  sub: any
+  code_verifier?: any
+  sub?: any
 }
 
 type ResponseType = "none" | "code" | "id_token" | "token"

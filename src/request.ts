@@ -3,7 +3,7 @@ import {Client} from "openid-client"
 import qs from "query-string"
 import * as R from "ramda"
 
-import type {ApiClientConfig} from "types/config"
+import type {ApiClientConfig} from "./schema/config"
 
 interface RequestOptions extends Pick<Options, "method" | "headers" | "searchParams" | "json" | "form"> {
   searchParams?: any // needed?

@@ -1,5 +1,5 @@
 import type {ApiResponse, RequestsParams, SearchParams} from "src/request"
-import type {Affordability, AffordabilityMetadata} from "../../types/schema/affordability"
+import type {Affordability, AffordabilityMetadata} from "../schema/affordability"
 
 export default ({config, request}: RequestsParams) => {
   const {resourceServerUrl} = config
@@ -10,7 +10,7 @@ export default ({config, request}: RequestsParams) => {
         `${resourceServerUrl}/affordability`,
         {
           cc: {
-            scope: "affordability:read affordability:create",
+            scope: "affordability:read affordability:write",
             sub: userId,
           },
           method: "POST",

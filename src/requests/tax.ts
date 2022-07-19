@@ -1,5 +1,5 @@
 import {RequestsParams} from "src/request"
-import {TaxRequests} from "../../types/requests/tax"
+import {TaxRequests} from "./types/tax"
 import * as R from "ramda"
 
 export default ({config, request}: RequestsParams): TaxRequests => {

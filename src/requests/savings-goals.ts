@@ -1,5 +1,5 @@
 import {RequestsParams} from "src/request"
-import {SavingsGoalsRequests} from "../../types/requests/savings-goals"
+import {SavingsGoalsRequests} from "./types/savings-goals"
 
 export default ({config, request}: RequestsParams): SavingsGoalsRequests => {
   const {resourceServerUrl} = config

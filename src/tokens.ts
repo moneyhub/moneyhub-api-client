@@ -1,7 +1,7 @@
 import type {Client, TokenSet} from "openid-client"
 import * as R from "ramda"
 
-import type {ApiClientConfig} from "../types/config"
+import type {ApiClientConfig} from "./schema/config"
 import exchangeCodeForTokensFactory from "./exchange-code-for-token"
 
 const filterUndefined = R.reject(R.isNil)

@@ -1,5 +1,5 @@
 import {RequestsParams} from "src/request"
-import {CategoriesRequests} from "../../types/requests/categories"
+import {CategoriesRequests} from "./types/categories"
 
 export default ({config, request}: RequestsParams): CategoriesRequests => {
   const {resourceServerUrl} = config

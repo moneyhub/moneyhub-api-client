@@ -1,5 +1,5 @@
 import {RequestsParams} from "src/request"
-import {RecurringPaymentsRequests} from "../../types/requests/recurring-payments"
+import {RecurringPaymentsRequests} from "./types/recurring-payments"
 
 export default ({config, request}: RequestsParams): RecurringPaymentsRequests => {
   const {identityServiceUrl} = config

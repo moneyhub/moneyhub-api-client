@@ -1,5 +1,5 @@
 import type {RequestsParams} from "src/request"
-import type {AccountsRequests} from "../../types/requests/accounts"
+import type {AccountsRequests} from "./types/accounts"
 
 export default ({
   config,
