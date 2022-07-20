@@ -1,9 +1,10 @@
+.github
 .husky
-examples
 config
-test
+examples
 resources
 src
+test
 __tests__
 .eslintrc.json
 tsconfig.json
