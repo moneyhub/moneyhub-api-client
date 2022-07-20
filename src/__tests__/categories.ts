@@ -39,7 +39,7 @@ describe("Categories", () => {
     })
     const id = categories[0].categoryId
     const category = await moneyhub.getCategory({userId, categoryId: id})
-    expect(category.data.categoryId).to.eql(categoryId)
+    expect(category.data.categoryId).to.eql(id)
     expectTypeOf<Categories.Category[]>(categories)
   })
 
