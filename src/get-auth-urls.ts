@@ -766,5 +766,91 @@ export default ({
       return url
     },
 
+    getPARPaymentAuthorizeUrl: async ({
+      bankId,
+      payeeId,
+      payeeType,
+      amount,
+      payeeRef,
+      payerRef,
+      payerId,
+      payerType,
+      state,
+      nonce,
+      context,
+      readRefundAccount,
+      userId,
+      claims = {},
+      codeChallenge
+    }) => {
+      if (!state) {
+        console.error("State is required")
+        throw new Error("Missing parameters")
+      }
+
+      if (!payeeId) {
+        console.error("PayeeId is required")
+        throw new Error("Missing parameters")
+      }
+
+      const scope = `payment openid id:${bankId}`
+      const defaultClaims = {
+        id_token: {
+          "mh:con_id": {
+            essential: true,
+          },
+          "mh:payment": {
+            essential: true,
+            value: {
+              amount,
+              payeeRef,
+              payerRef,
+              payeeId,
+              payeeType,
+              payerId,
+              payerType,
+              context,
+              readRefundAccount,
+            },
+          },
+          ...userId && {
+            sub: {
+              value: userId
+            }
+          }
+        },
+      }
+
+      const _claims = R.mergeDeepRight(defaultClaims, claims)
+
+      const authParams = filterUndefined({
+        client_id,
+        scope,
+        state,
+        nonce,
+        redirect_uri,
+        response_type,
+        prompt: "consent",
+      })
+
+      const pkceParams = codeChallenge && {
+        code_challenge: codeChallenge,
+        code_challenge_method: "S256",
+      }
+
+      const request = await client.requestObject(
+        {
+          ...authParams,
+          ...pkceParams,
+          claims: _claims,
+        })
+
+      const pushedRequest = await client.pushedAuthorizationRequest({request})
+
+      const url = client.authorizationUrl(pushedRequest)
+
+      return url
+    },
+
   }
 }

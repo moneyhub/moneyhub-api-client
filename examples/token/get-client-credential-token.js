@@ -20,7 +20,7 @@ console.log(usage)
 
 const options = commandLineArgs(optionDefinitions)
 
-if (!options.userId) throw new Error("userId needs to be provided")
+// if (!options.userId) throw new Error("userId needs to be provided")
 
 const start = async () => {
   try {

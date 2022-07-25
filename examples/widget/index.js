@@ -1,6 +1,6 @@
 const express = require("express")
 const bodyParser = require("body-parser")
-const Moneyhub = require("../../src")
+const {Moneyhub} = require("../../src")
 
 const config = require("../config")
 const LOCAL_IDENTITY_URL = "http://identity.dev.127.0.0.1.nip.io/oidc"
