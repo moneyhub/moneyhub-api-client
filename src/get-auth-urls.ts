@@ -114,7 +114,6 @@ export default ({
         },
       )
       .then((request: Awaited<ReturnType<Client["requestObject"]>>) => ({
-        ...authParams,
         request,
       }))
       .then(client.authorizationUrl.bind(client))
