@@ -1,8 +1,41 @@
 import type {Client, TokenSet} from "openid-client"
 import * as R from "ramda"
-
+import * as jose from "jose"
 import type {ApiClientConfig} from "./schema/config"
+import type {JWK, KeyLike} from "jose"
+import * as crypto from "crypto"
 import exchangeCodeForTokensFactory from "./exchange-code-for-token"
+
+const random = (length = 32) =>
+  jose.base64url.encode(crypto.randomBytes(length))
+
+const createSignedJWT = async ({
+  alg,
+  kid,
+  audience,
+  issuer,
+  sub,
+  privateKey,
+  expirationTime = "10m",
+}: {
+    alg: string
+    kid: string | undefined
+    audience: string
+    issuer: string
+    sub: string
+    privateKey: KeyLike | Uint8Array
+    expirationTime: string | undefined
+  }) =>
+  new jose.SignJWT({})
+    .setProtectedHeader({alg, kid})
+    .setSubject(sub)
+    .setAudience(audience)
+    .setIssuer(issuer)
+    .setJti(random())
+    .setIssuedAt()
+    .setExpirationTime(expirationTime)
+    .sign(privateKey)
+
 
 const filterUndefined = R.reject(R.isNil)
 
@@ -47,13 +80,33 @@ export default ({
   config: ApiClientConfig
 }) => {
   const {
-    client: {redirect_uri},
+    identityServiceUrl,
+    client: {redirect_uri, request_object_signing_alg, keys, client_id},
   } = config
 
   const exchangeCodeForTokens = exchangeCodeForTokensFactory({
     client,
     redirectUri: redirect_uri,
   })
+
+  const createJWTBearerGrantToken = async (sub: string) => {
+    if (request_object_signing_alg === "none") throw new Error("request_object_signing_alg can't be 'none'")
+
+    const privateJWK =  keys.find(({alg}) => alg === request_object_signing_alg) as JWK
+    if (!privateJWK) throw new Error(`Private key with alg ${request_object_signing_alg} missing`)
+
+    const privateKey = await jose.importJWK(privateJWK)
+
+    return await createSignedJWT({
+      alg: request_object_signing_alg,
+      kid: privateJWK.kid,
+      sub,
+      audience: `${identityServiceUrl}/oidc`,
+      issuer: client_id,
+      privateKey,
+      expirationTime: "10m",
+    })
+  }
 
   return {
     exchangeCodeForTokensLegacy: ({
@@ -88,5 +141,16 @@ export default ({
         scope,
         sub,
       }),
+
+    getJWTBearerToken: async ({scope, sub}: {scope: string, sub: string}) => {
+
+      return client.grant({
+        grant_type: "urn:ietf:params:oauth:grant-type:jwt-bearer",
+        scope,
+        assertion: await createJWTBearerGrantToken(sub),
+      })
+    },
+
+    createJWTBearerGrantToken,
   }
 }
