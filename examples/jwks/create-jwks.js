@@ -1,6 +1,6 @@
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
-const {JWKS} = require("jose")
+const jose = require("jose")
 
 const optionDefinitions = [
   {name: "key-alg", type: String},
@@ -17,28 +17,44 @@ const options = commandLineArgs(optionDefinitions)
 
 console.log(usage)
 
+// eslint-disable-next-line max-statements
 const start = async () => {
   try {
-    const keyAlg = options["key-alg"] || "RSA"
     const keySize = options["key-size"] || 2048
-    const keyUse = options["key-use"] || "sig"
+    const keyUse = options["key-use"] || "sign"
     const alg = options.alg || "RS256"
-    const keystore = new JWKS.KeyStore()
-    await keystore.generate(keyAlg, keySize, {
-      alg,
-      use: keyUse,
+
+    const {publicKey, privateKey} = await jose.generateKeyPair(alg, {
+      extractable: true,
+      modulusLength: keySize,
     })
+
+    const exportedPrivateJWT = await jose.exportJWK(privateKey)
+    const exportedPublicJWT = await jose.exportJWK(publicKey)
+
+    const kid = await jose.calculateJwkThumbprint(exportedPublicJWT)
+
+    const privateJWT = {...exportedPrivateJWT, kid, use: keyUse, alg}
+    const publicJWT = {...exportedPublicJWT, kid, use: keyUse, alg}
+
+    const publicJWKS = {
+      keys: [publicJWT]
+    }
+
+    const privateJWKS = {
+      keys: [privateJWT]
+    }
 
     console.log("Public keys")
     console.log(
-      "This can be used as the jwks in your API client configuration in the Moneyhub Admin portal",
+      "This can be used as the JWKS in your API client configuration in the Moneyhub Admin portal"
     )
-    console.log(JSON.stringify(keystore.toJWKS(), null, 4))
-    console.log("Private keys")
+    console.log(JSON.stringify(publicJWKS, null, 4))
+    console.log("\n\nPrivate keys")
     console.log(
-      "This can be used as the keys value when configuring the moneyhub api client",
+      "This can be used as the keys value when configuring the moneyhub api client"
     )
-    console.log(JSON.stringify(keystore.toJWKS(true), null, 4))
+    console.log(JSON.stringify(privateJWKS, null, 4))
   } catch (e) {
     console.log(e)
   }

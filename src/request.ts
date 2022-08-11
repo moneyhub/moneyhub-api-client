@@ -21,9 +21,11 @@ interface Links {
   self: string
 }
 
+export type Request = <T>(url: string, opts?: RequestOptions) => Promise<T>
+
 export interface RequestsParams {
   config: ApiClientConfig
-  request: <T>(url: string, opts?: RequestOptions) => Promise<T>
+  request: Request
 }
 
 export interface SearchParams {
@@ -94,7 +96,7 @@ export default ({
   }
 
   if (opts.form) {
-    (gotOpts as any).body = opts.form
+    (gotOpts as any).form = opts.form
   }
 
   const req = got<T>(url, gotOpts)

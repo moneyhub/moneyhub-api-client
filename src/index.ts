@@ -1,5 +1,4 @@
 import {Issuer, custom, generators} from "openid-client"
-import {JWKS} from "jose"
 import getAuthUrlsFactory from "./get-auth-urls"
 import getTokensFactory from "./tokens"
 import requestsFactory from "./requests"
@@ -61,7 +60,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
     ...getAuthUrlsFactory({client, config}),
     ...getTokensFactory({client, config}),
     ...requestsFactory({config, request}),
-    keys: () => (keys && keys.length ? JWKS.asKeyStore({keys}).toJWKS() : null),
+    keys: () => (keys && keys.length ? {keys} : null),
     generators,
   }
 
