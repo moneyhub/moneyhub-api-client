@@ -8,6 +8,7 @@ import type {ApiClientConfig} from "./schema/config"
 interface RequestOptions extends Pick<Options, "method" | "headers" | "searchParams" | "json" | "form"> {
   searchParams?: any // needed?
   body?: Record<string, any>
+  formData?: any
   returnStatus?: boolean
   cc?: {
     scope: string
@@ -97,6 +98,10 @@ export default ({
 
   if (opts.form) {
     (gotOpts as any).form = opts.form
+  }
+
+  if (opts.formData) {
+    (gotOpts as any).body = opts.formData
   }
 
   const req = got<T>(url, gotOpts)

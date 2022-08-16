@@ -8,13 +8,13 @@ export default ({config, request}: RequestsParams): TransactionFilesRequests => 
 
   return {
     addFileToTransaction: async ({userId, transactionId, fileData, fileName}) => {
-      const form = new FormData()
-      form.append("file", fileData, fileName)
+      const formData = new FormData()
+      formData.append("file", fileData, fileName)
       return request(
         `${resourceServerUrl}/transactions/${transactionId}/files`,
         {
           method: "POST",
-          form,
+          formData,
           cc: {
             scope: "transactions:read:all transactions:write",
             sub: userId,
