@@ -98,6 +98,7 @@ describe("API client", () => {
         "getStandingOrder",
         "getStandingOrders",
         "getRegularTransactions",
+        "detectRegularTransactions",
         "getRentalRecords",
         "createRentalRecord",
         "deleteRentalRecord",

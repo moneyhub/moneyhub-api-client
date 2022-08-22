@@ -4,6 +4,8 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, RegularTransactions} from ".."
 
+const accountId = "accountId"
+
 describe.skip("Regular transactions", () => {
   let moneyhub: MoneyhubInstance
   let userId: string
@@ -20,4 +22,10 @@ describe.skip("Regular transactions", () => {
     expectTypeOf<RegularTransactions.RegularTransaction[]>(data)
   })
 
+  it("detect regular transactions", async () => {
+    const {data} = await moneyhub.detectRegularTransactions({userId, accountId})
+    expect(data.length).to.be.above(0)
+    expect(data[0]).to.have.property("seriesId")
+    expectTypeOf<RegularTransactions.RegularTransaction[]>(data)
+  })
 })
