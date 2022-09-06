@@ -7,10 +7,10 @@ export interface UnauthenticatedRequests {
     params?: GlobalCounterpartiesSearchParams
   ) => Promise<ApiResponse<GlobalCounterparty[]>>
 
-  listConnections: () => Promise<WellKnownConnection[]>
-  listAPIConnections: () => Promise<WellKnownConnection[]>
-  listTestConnections: () => Promise<WellKnownConnection[]>
-  listBetaConnections: () => Promise<WellKnownConnection[]>
-  listPaymentsConnections: () => Promise<WellKnownConnection[]>
+  listConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
+  listAPIConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
+  listTestConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
+  listBetaConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
+  listPaymentsConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
   getOpenIdConfig: () => Promise<unknown>
 }
