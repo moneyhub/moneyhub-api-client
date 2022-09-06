@@ -1,4 +1,4 @@
-import {RequestsParams} from "src/request"
+import {RequestsParams} from "../request"
 import {SpendingGoalsRequests} from "./types/spending-goals"
 
 export default ({config, request}: RequestsParams): SpendingGoalsRequests => {

@@ -1,4 +1,4 @@
-import {RequestsParams} from "src/request"
+import {RequestsParams} from "../request"
 import {TaxRequests} from "./types/tax"
 import * as R from "ramda"
 

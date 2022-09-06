@@ -1,5 +1,5 @@
-import {ApiResponse} from "src/request"
-import {Transaction, TransactionPatch, TransactionPost, TransactionSearchParams} from "src/schema/transaction"
+import {ApiResponse} from "../../request"
+import {Transaction, TransactionPatch, TransactionPost, TransactionSearchParams} from "../../schema/transaction"
 
 export interface TransactionsRequests {
   getTransactions: ({

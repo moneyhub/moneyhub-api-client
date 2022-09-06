@@ -1,5 +1,5 @@
-import {ApiResponse} from "src/request"
-import {TransactionFile} from "src/schema/transaction"
+import {ApiResponse} from "../../request"
+import {TransactionFile} from "../../schema/transaction"
 
 export interface TransactionFilesRequests {
   addFileToTransaction: ({

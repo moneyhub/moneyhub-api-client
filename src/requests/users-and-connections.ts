@@ -1,5 +1,5 @@
-import type {RequestsParams} from "src/request"
-import type {UsersAndConnectionsRequests} from "src/requests/types/users-and-connections"
+import type {RequestsParams} from "../request"
+import type {UsersAndConnectionsRequests} from "../requests/types/users-and-connections"
 
 export default ({config, request}: RequestsParams): UsersAndConnectionsRequests => {
   const {identityServiceUrl} = config

@@ -1,5 +1,5 @@
-import {ApiResponse, SearchParams} from "src/request"
-import {Beneficiary, BeneficiaryWithDetails} from "src/schema/beneficiary"
+import {ApiResponse, SearchParams} from "../../request"
+import {Beneficiary, BeneficiaryWithDetails} from "../../schema/beneficiary"
 
 export interface BeneficiariesRequests {
   getBeneficiary: ({

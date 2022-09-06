@@ -1,4 +1,4 @@
-import type {SearchParams} from "src/request"
+import type {SearchParams} from "../request"
 
 export type PaymentActorType = "api-payee" | "mh-user-account"
 

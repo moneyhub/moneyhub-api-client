@@ -1,5 +1,5 @@
-import {ApiResponse} from "src/request"
-import {PaymentsClaims, RecurringPaymentRequest, RecurringPaymentSearchParams} from "src/schema/payment"
+import {ApiResponse} from "../../request"
+import {PaymentsClaims, RecurringPaymentRequest, RecurringPaymentSearchParams} from "../../schema/payment"
 
 export interface RecurringPaymentsRequests {
   getRecurringPayments: (params?: RecurringPaymentSearchParams) => Promise<ApiResponse<RecurringPaymentRequest[]>>

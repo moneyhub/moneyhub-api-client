@@ -8,9 +8,6 @@
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./",
-    "paths": {
-      "src": ["./src"],
-    },
     "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,

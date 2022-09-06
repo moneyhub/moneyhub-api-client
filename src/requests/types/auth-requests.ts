@@ -1,8 +1,8 @@
-import type {AccountType} from "src/schema/account"
-import type {AuthRequestPostPayment, AuthRequestPostRecurringPayment, AuthRequestPostReversePayment} from "src/schema/payment"
-import type {AuthRequestStandingOrderPost} from "src/schema/standing-order"
-import type {AuthParams, AuthRequest} from "src/schema/auth-request"
-import type {ApiResponse, SearchParams} from "src/request"
+import type {AccountType} from "../../schema/account"
+import type {AuthRequestPostPayment, AuthRequestPostRecurringPayment, AuthRequestPostReversePayment} from "../../schema/payment"
+import type {AuthRequestStandingOrderPost} from "../../schema/standing-order"
+import type {AuthParams, AuthRequest} from "../../schema/auth-request"
+import type {ApiResponse, SearchParams} from "../../request"
 
 type AuthRequestPermissions =
   | "ReadStandingOrdersBasic"

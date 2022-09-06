@@ -1,4 +1,4 @@
-import {RequestsParams} from "src/request"
+import {RequestsParams} from "../request"
 import {RecurringPaymentsRequests} from "./types/recurring-payments"
 
 export default ({config, request}: RequestsParams): RecurringPaymentsRequests => {

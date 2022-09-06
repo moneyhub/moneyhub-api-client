@@ -1,5 +1,5 @@
-import {ApiResponse} from "src/request"
-import {StandingOrderRequest, StandingOrderSearchParams} from "src/schema/standing-order"
+import {ApiResponse} from "../../request"
+import {StandingOrderRequest, StandingOrderSearchParams} from "../../schema/standing-order"
 
 export interface StandingOrdersRequests {
   getStandingOrder: ({id}: {id: string})

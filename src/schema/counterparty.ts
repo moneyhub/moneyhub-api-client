@@ -1,4 +1,4 @@
-import type {SearchParams} from "src/request"
+import type {SearchParams} from "../request"
 
 type CounterpartyType = "global" | "local"
 

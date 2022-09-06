@@ -1,5 +1,5 @@
-import type {ApiResponse} from "src/request"
-import type {SyncResponse} from "src/schema/sync"
+import type {ApiResponse} from "../../request"
+import type {SyncResponse} from "../../schema/sync"
 
 export interface SyncRequests {
   syncUserConnection: ({

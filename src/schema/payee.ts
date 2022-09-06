@@ -1,4 +1,4 @@
-import type {SearchParams} from "src/request"
+import type {SearchParams} from "../request"
 
 export interface Payee {
   id: string

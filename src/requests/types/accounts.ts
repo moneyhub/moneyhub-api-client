@@ -1,10 +1,10 @@
-import type {ApiResponse, SearchParams} from "src/request"
-import type {Account, AccountWithDetails, AccountPost} from "src/schema/account"
-import type {Balance} from "src/schema/balance"
-import type {Counterparty} from "src/schema/counterparty"
-import type {HoldingWithMatches, HoldingWithMatchesAndHistory, HoldingsValuation} from "src/schema/holding"
-import type {RecurringTransactionEstimate} from "src/schema/transaction"
-import type {StandingOrder, StandingOrderWithDetail} from "src/schema/standing-order"
+import type {ApiResponse, SearchParams} from "../../request"
+import type {Account, AccountWithDetails, AccountPost} from "../../schema/account"
+import type {Balance} from "../../schema/balance"
+import type {Counterparty} from "../../schema/counterparty"
+import type {HoldingWithMatches, HoldingWithMatchesAndHistory, HoldingsValuation} from "../../schema/holding"
+import type {RecurringTransactionEstimate} from "../../schema/transaction"
+import type {StandingOrder, StandingOrderWithDetail} from "../../schema/standing-order"
 
 export interface AccountsRequests {
   getAccounts: ({userId}: { userId: string, params?: SearchParams }) => Promise<ApiResponse<Account[]>>

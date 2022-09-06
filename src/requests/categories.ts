@@ -1,4 +1,4 @@
-import {RequestsParams} from "src/request"
+import {RequestsParams} from "../request"
 import {CategoriesRequests} from "./types/categories"
 
 export default ({config, request}: RequestsParams): CategoriesRequests => {

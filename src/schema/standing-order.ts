@@ -1,4 +1,4 @@
-import type {SearchParams} from "src/request"
+import type {SearchParams} from "../request"
 import type {Balance} from "./balance"
 import type {PaymentActorType, PaymentContext} from "./payment"
 

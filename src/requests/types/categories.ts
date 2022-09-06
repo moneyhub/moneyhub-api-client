@@ -1,5 +1,5 @@
-import {ApiResponse, SearchParams} from "src/request"
-import {Category, CategoryGroup, CategoryPost, CategoryType} from "src/schema/category"
+import {ApiResponse, SearchParams} from "../../request"
+import {Category, CategoryGroup, CategoryPost, CategoryType} from "../../schema/category"
 
 export interface CategoriesRequests {
   getCategories: ({

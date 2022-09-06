@@ -1,4 +1,4 @@
-import {RequestsParams} from "src/request"
+import {RequestsParams} from "../request"
 import {TransactionSplitsRequests} from "./types/transaction-splits"
 
 export default ({config, request}: RequestsParams): TransactionSplitsRequests => {

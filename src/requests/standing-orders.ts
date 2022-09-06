@@ -1,4 +1,4 @@
-import {ApiResponse, RequestsParams} from "src/request"
+import {ApiResponse, RequestsParams} from "../request"
 import {StandingOrdersRequests} from "./types/standing-orders"
 import {StandingOrderRequest} from "../schema/standing-order"
 

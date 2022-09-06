@@ -1,5 +1,5 @@
-import {ApiResponse} from "src/request"
-import {Payment, PaymentSearchParams} from "src/schema/payment"
+import {ApiResponse} from "../../request"
+import {Payment, PaymentSearchParams} from "../../schema/payment"
 
 export interface PaymentsRequests {
   getPayment: ({id}: {id: string}) => Promise<ApiResponse<Payment>>

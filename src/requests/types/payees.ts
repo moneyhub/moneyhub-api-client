@@ -1,5 +1,5 @@
-import {ApiResponse} from "src/request"
-import {Payee, PayeesSearchParams} from "src/schema/payee"
+import {ApiResponse} from "../../request"
+import {Payee, PayeesSearchParams} from "../../schema/payee"
 
 export interface PayeesRequests {
   addPayee: ({

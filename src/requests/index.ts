@@ -1,4 +1,4 @@
-import {RequestsParams} from "src/request"
+import {RequestsParams} from "../request"
 
 import accounts from "./accounts"
 import affordability from "./affordability"

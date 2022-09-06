@@ -1,4 +1,4 @@
-import {RequestsParams} from "src/request"
+import {RequestsParams} from "../request"
 import {AuthRequestsRequests} from "./types/auth-requests"
 
 export default ({

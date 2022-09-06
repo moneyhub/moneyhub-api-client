@@ -1,5 +1,5 @@
-import {ApiResponse, SearchParams} from "src/request"
-import {Project, ProjectPatch, ProjectPost} from "src/schema/project"
+import {ApiResponse, SearchParams} from "../../request"
+import {Project, ProjectPatch, ProjectPost} from "../../schema/project"
 
 export interface ProjectsRequests {
   getProjects: ({

@@ -1,5 +1,5 @@
-import {ApiResponse, SearchParams} from "src/request"
-import {SpendingGoal} from "src/schema/spending-goal"
+import {ApiResponse, SearchParams} from "../../request"
+import {SpendingGoal} from "../../schema/spending-goal"
 
 type SpendingGoalsPeriodType =
   | "monthly"

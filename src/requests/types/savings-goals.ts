@@ -1,5 +1,5 @@
-import {ApiResponse, SearchParams} from "src/request"
-import {SavingsGoal} from "src/schema/savings-goal"
+import {ApiResponse, SearchParams} from "../../request"
+import {SavingsGoal} from "../../schema/savings-goal"
 
 export interface SavingsGoalsRequests {
   getSavingsGoals: (

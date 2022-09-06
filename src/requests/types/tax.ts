@@ -1,5 +1,5 @@
-import {ApiResponse} from "src/request"
-import {Tax, TaxSearchParams} from "src/schema/tax"
+import {ApiResponse} from "../../request"
+import {Tax, TaxSearchParams} from "../../schema/tax"
 
 export interface TaxRequests {
   getTaxReturn: ({
