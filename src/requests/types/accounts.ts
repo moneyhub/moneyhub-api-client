@@ -49,6 +49,7 @@ export interface AccountsRequests {
   }: {
     userId: string
     accountId: string
+    params?: SearchParams
   }) => Promise<ApiResponse<Counterparty[]>>
   getAccountRecurringTransactions: ({
     userId,

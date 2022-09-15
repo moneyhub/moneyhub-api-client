@@ -32,6 +32,7 @@ export interface RequestsParams {
 export interface SearchParams {
   limit?: number
   offset?: number
+  counterpartiesVersion?: string
 }
 
 export interface ApiResponse<T> {

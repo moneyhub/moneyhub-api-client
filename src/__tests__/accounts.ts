@@ -50,6 +50,9 @@ describe("Accounts", () => {
     const {data: counterparties} = await moneyhub.getAccountCounterparties({
       userId: readOnlyUserId,
       accountId: accountIdWithCounterparties,
+      params: {
+        counterpartiesVersion: "v2",
+      },
     })
     expect(counterparties.length).to.be.greaterThan(6)
     expectTypeOf<Counterparties.Counterparty[]>(counterparties)

@@ -5,6 +5,7 @@ import * as R from "ramda"
 import type {ApiClientConfig} from "./schema/config"
 import {PaymentActorType} from "./schema/payment"
 import {StandingOrderFrequency} from "./schema/standing-order"
+import {RequestPayee} from "./schema/payee"
 
 const filterUndefined = R.reject(R.isNil)
 
@@ -357,6 +358,7 @@ export default ({
       bankId,
       payeeRef,
       payeeId,
+      payee,
       payeeType,
       amount,
       payerRef,
@@ -371,11 +373,12 @@ export default ({
     }: {
       bankId: string
       payeeRef: string
-      payeeId: string
+      payeeId?: string
       payeeType?: string
       amount: number
       payerRef: string
       payerId?: string
+      payee?: RequestPayee
       payerType?: string
       state?: string
       nonce?: string
@@ -389,8 +392,8 @@ export default ({
         throw new Error("Missing parameters")
       }
 
-      if (!payeeId) {
-        console.error("PayeeId is required")
+      if (!payeeId && !payee) {
+        console.error("PayeeId or Payee are required")
         throw new Error("Missing parameters")
       }
 
@@ -407,6 +410,7 @@ export default ({
               payeeRef,
               payerRef,
               payeeId,
+              payee,
               payeeType,
               payerId,
               payerType,
@@ -507,6 +511,7 @@ export default ({
     getRecurringPaymentAuthorizeUrl: async ({
       bankId,
       payeeId,
+      payee,
       payeeType,
       payerId,
       payerType,
@@ -525,6 +530,7 @@ export default ({
     }: {
       bankId: string
       payeeId?: string
+      payee?: RequestPayee
       payeeType?: string
       payerId?: string
       payerType?: string
@@ -546,6 +552,11 @@ export default ({
         throw new Error("Missing parameters")
       }
 
+      if (!payeeId && !payee) {
+        console.error("PayeeId or Payee are required")
+        throw new Error("Missing parameters")
+      }
+
       const scope = `recurring_payment:create openid id:${bankId}`
       const defaultClaims = {
         id_token: {
@@ -556,6 +567,7 @@ export default ({
             essential: true,
             value: {
               payeeId,
+              payee,
               payeeType,
               payerId,
               payerType,
@@ -596,6 +608,7 @@ export default ({
     getStandingOrderAuthorizeUrl: async ({
       bankId,
       payeeId,
+      payee,
       payeeType,
       payerId,
       payerType,
@@ -615,7 +628,8 @@ export default ({
       claims = {},
     }: {
       bankId: string
-      payeeId: string
+      payeeId?: string
+      payee?: RequestPayee
       payeeType?: string
       payerId?: string
       payerType?: string
@@ -639,8 +653,8 @@ export default ({
         throw new Error("Missing parameters")
       }
 
-      if (!payeeId) {
-        console.error("PayeeId is required")
+      if (!payeeId && !payee) {
+        console.error("PayeeId or Payee are required")
         throw new Error("Missing parameters")
       }
 
@@ -654,6 +668,7 @@ export default ({
             essential: true,
             value: {
               payeeId,
+              payee,
               payeeType,
               payerId,
               payerType,

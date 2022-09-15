@@ -27,7 +27,9 @@ const start = async () => {
     const result = await moneyhub.getAccountCounterparties({
       userId: options.userId,
       accountId: options.accountId,
-      counterpartiesVersion: options.counterpartiesVersion
+      params: {
+        counterpartiesVersion: options.counterpartiesVersion
+      },
     })
     console.log(JSON.stringify(result, null, 2))
 

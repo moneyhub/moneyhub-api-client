@@ -1,3 +1,15 @@
+4.20.0 / 2022-09-15
+==================
+
+**Features**
+
+* Update getAccountCounterparties to include version
+* Update getPaymentAuthorizeUrl to accept a payee instead of payeeId
+* Update getRecurringPaymentAuthorizeUrl to accept a payee instead of payeeId
+* Update getStandingOrderAuthorizeUrl to accept a payee instead of payeeId
+* Update create-payement example to accept a payee instead of payeeId
+* Update create-standing-order example to accept a payee instead of payeeId
+
 4.13.0 / 2022-01-05
 ==================
 
