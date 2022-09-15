@@ -105,6 +105,26 @@ describe("Auth Urls", () => {
     expect(url).to.be.a("string")
   })
 
+  it("gets a payment auth url without payeeId", async () => {
+    const payee = {
+      accountNumber: "12345678",
+      sortCode: "123456",
+      name: "Test",
+    }
+
+    const url = await moneyhub.getPaymentAuthorizeUrl({
+      bankId,
+      payee,
+      payeeRef: "ref",
+      amount: 1,
+      payerRef: "another-ref",
+      state,
+      nonce,
+    })
+
+    expect(url).to.be.a("string")
+  })
+
   it("gets a reconsent url for a user", async () => {
     const connections = await moneyhub.getUserConnections({
       userId: testReadOnlyUserId,

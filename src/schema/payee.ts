@@ -13,6 +13,12 @@ export interface Payee {
   userId?: string
 }
 
+export interface RequestPayee {
+  accountNumber: string
+  sortCode: string
+  name: string
+}
+
 export interface PayeesSearchParams extends SearchParams {
   userId?: string
   hasUserId?: boolean

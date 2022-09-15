@@ -574,7 +574,7 @@ const user = await moneyhub.updateUserConnection({
   userId: "user-id",
   connectionId: "connection-id",
   expiresAt: "2022-06-26T09:43:16.318+00:00"
-  })
+})
 ```
 
 ### Data API
@@ -678,6 +678,9 @@ Get account counterparties for a user. This function uses the scope `accounts:re
 const account = await moneyhub.getAccountCounterparties({
   userId: "userId",
   accountId: "accountId",
+  params: {
+    counterpartiesVersion: "v3",
+  },
 });
 ```
 
@@ -1197,7 +1200,8 @@ This is a helper function that returns an authorize url to authorize a payment t
 ```javascript
 const url = await moneyhub.getPaymentAuthorizeUrl({
   bankId: "Bank id to authorise payment from", // required
-  payeeId: "Id of payee", // required
+  payeeId: "Id of payee", // required or payee
+  payee: "Details of payee to create", // required or payeeId
   payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
   payerId: "Id of payer", // required only if payerType is defined
   payerType: "Payer type [mh-user-account]", // required only if payerId is used
@@ -1350,7 +1354,8 @@ This is a helper function that returns an authorize url to authorize a standng o
 ```javascript
 const url = await moneyhub.getStandingOrderAuthorizeUrl({
   bankId: "Bank id to authorise payment from", // required
-  payeeId: "Id of payee", // required
+  payeeId: "Id of payee", // required or payee
+  payee: "Details of payee to create", // required or payeeId
   payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
   payerId: "Id of payer", // required only if payerType is defined
   payerType: "Payer type [mh-user-account]", // required only if payerId is used
@@ -1442,7 +1447,8 @@ This is a helper function that returns an authorize url to authorize a recurring
 ```javascript
 const url = await moneyhub.getRecurringPaymentAuthorizeUrl({
   bankId: "Bank id to authorise payment from",
-  payeeId: "Id of payee",
+  payeeId: "Id of payee", // required or payee
+  payee: "Details of payee to create", // required or payeeId
   payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
   payerId: "Id of payer", // requird only if payerType is defined
   payerType: "Payer type [mh-user-account]", // required only if payerId is used
@@ -1820,9 +1826,8 @@ const config: ApiClientConfig = {} // your config goes here and is strongly type
 
 const getAccounts = ({userId}) => {
   const moneyhub = await Moneyhub(config)
-  const accounts = await moneyhub.getAccounts({userId})
+  const accounts = await moneyhub.getAccounts({ userId })
 }
 ```
 
 The default export is of the Moneyhub constructor that takes in an argument of the config. You can use `ApiClientConfig` to type that config. The client object that is returned from the constructor can then be used to make API calls. The methods are available with arguments and returns typed.
-

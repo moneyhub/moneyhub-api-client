@@ -80,8 +80,9 @@ export default ({
         },
       ),
 
-    getAccountCounterparties: async ({userId, accountId}) =>
+    getAccountCounterparties: async ({userId, accountId, params = {}}) =>
       request(`${resourceServerUrl}/accounts/${accountId}/counterparties`, {
+        searchParams: params,
         cc: {
           scope: "accounts:read transactions:read:all",
           sub: userId,

@@ -1,9 +1,12 @@
 const {Moneyhub} = require("../../src/index")
+const qs = require("querystring")
 const config = require("../config")
 const {DEFAULT_NONCE, DEFAULT_STATE, DEFAULT_BANK_ID} = require("../constants")
 
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
+
+const defaultPayee = "accountNumber=12345678&sortCode=123456&name=test"
 
 const optionDefinitions = [
   {
@@ -13,7 +16,8 @@ const optionDefinitions = [
     type: String,
     description: "required",
   },
-  {name: "payee-id", alias: "p", type: String, description: "required"},
+  {name: "payee-id", alias: "p", type: String},
+  {name: "payee", type: String},
   {name: "payee-type", type: String},
   {name: "payer-id", type: String},
   {name: "payer-type", type: String},
@@ -64,10 +68,12 @@ console.log(JSON.stringify(options, null, 2))
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
+    const payee = qs.parse(options.payee || defaultPayee)
     const data = await moneyhub.createAuthRequest({
       scope: `openid standing_orders:create id:${options["bank-id"]}`,
       standingOrder: {
         payeeId: options["payee-id"],
+        payee,
         payeeType: options["payee-type"],
         payerId: options["payer-id"],
         payerType: options["payer-type"],
