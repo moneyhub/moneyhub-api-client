@@ -188,7 +188,7 @@ const defaultClaims = {
 
 #### `getReauthAuthorizeUrlForCreatedUser`
 
-This is a helper function that returns an authorize url for a specific user to re authorize and existing connection. This function uses the scope `openid reauth`.
+This is a helper function that returns an authorize url for a specific user to re authorize an existing connection. This function uses the scope `openid reauth`.
 
 ```javascript
 const url = await moneyhub.getReauthAuthorizeUrlForCreatedUser({
@@ -215,9 +215,43 @@ const defaultClaims = {
 };
 ```
 
+#### `getReconsentAuthorizeUrlForCreatedUser`
+
+This is a helper function that returns a url for a specific user to reconsent an existing connection. This function uses the scope `openid reconsent`. The `expiresAt` date cannot be set to more than 90 days in the future. If `expiresAt` is not provided it will default to a date 90 days in the future. **Please note - this method should only be used for connections that have `tppConsent` set as `true`**.
+
+```javascript
+const url = await moneyhub.getReconsentAuthorizeUrlForCreatedUser({
+        userId: "user id",
+        connectionId: "connection ID to reconsent",
+        state: "your state value", // optional
+        nonce: "your nonce value", // optional
+        claims: claimsObject // optional
+        expiresAt: "ISO date-time string for new expiry of the connection" // optional - defaults to 90 days in future
+});
+
+// Default claims if none are provided
+const defaultClaims = {
+  id_token: {
+    sub: {
+      essential: true,
+      value: userId, // userId provided
+    },
+    "mh:con_id": {
+      essential: true,
+      value: connectionId, // connectionId provided
+    },
+    "mh:consent": {
+      value: {
+        expirationDateTime: expiresAt, // expiresAt provided. If not provided defaults to a date 90 days in the future
+      },
+    },
+  },
+};
+```
+
 #### `getRefreshAuthorizeUrlForCreatedUser`
 
-This is a helper function that returns an authorize url for a specific user to refresh and existing connection. This function uses the scope `openid refresh`. (Only relevant for legacy connections)
+This is a helper function that returns an authorize url for a specific user to refresh an existing connection. This function uses the scope `openid refresh`. (Only relevant for legacy connections)
 
 ```javascript
 const url = await moneyhub.getRefreshAuthorizeUrlForCreatedUser({
