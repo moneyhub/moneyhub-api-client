@@ -21,7 +21,7 @@ console.log(usage)
 const start = async () => {
   try {
     const keySize = options["key-size"] || 2048
-    const keyUse = options["key-use"] || "sign"
+    const keyUse = options["key-use"] || "sig"
     const alg = options.alg || "RS256"
 
     const {publicKey, privateKey} = await jose.generateKeyPair(alg, {
