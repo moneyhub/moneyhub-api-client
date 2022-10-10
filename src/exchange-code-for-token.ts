@@ -25,7 +25,7 @@ export interface LocalParams {
   max_age?: any
   state: any
   response_type?: any
-  nonce: any
+  nonce?: any
   code_verifier?: any
   sub?: any
 }
