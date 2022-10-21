@@ -45,7 +45,7 @@ export default ({
           counterpartiesCheck,
           permissions,
           expirationDateTime,
-          transactionsFromDateTime,
+          transactionFromDateTime: transactionsFromDateTime,
           sync,
         },
       }),
