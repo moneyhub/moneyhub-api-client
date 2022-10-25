@@ -11,7 +11,8 @@
     "prepare": "husky install",
     "prepublishOnly": "npm run build",
     "build": "tsc",
-    "ts-node": "ts-node"
+    "ts-node": "ts-node",
+    "snyk": "snyk test --fail-on=all --severity-threshold=high"
   },
   "keywords": [
     "moneyhub",
@@ -50,6 +51,7 @@
     "husky": "^7.0.4",
     "mocha": "^10.0.0",
     "mocha-junit-reporter": "^2.0.2",
+    "snyk": "^1.1041.0",
     "ts-node": "^10.8.0",
     "typescript": "^4.7.2"
   }
