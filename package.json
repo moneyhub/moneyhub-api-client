@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "lint": "eslint src/ examples/",
+    "lint": "eslint src/ --ignore-pattern *__tests__",
     "test": "mocha --require ts-node/register --config test/opts/integration.json",
     "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json || true",
     "prepare": "husky install",
@@ -34,7 +34,7 @@
     "ramda": "^0.27.2"
   },
   "devDependencies": {
-    "@mft/eslint-config-momentumft": "^4.0.0",
+    "@mft/eslint-config-momentumft": "^8.0.0",
     "@types/chai": "^4.3.1",
     "@types/mocha": "^9.1.1",
     "@types/ramda": "^0.28.13",
