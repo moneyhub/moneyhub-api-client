@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, AuthRequests} from ".."
 
-describe("Auth requests", () => {
+describe("Auth requests", function() {
   let moneyhub: MoneyhubInstance,
     redirectUri: string,
     testPayeeId: string
@@ -15,7 +15,7 @@ describe("Auth requests", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("creates payment auth request", async () => {
+  it("creates payment auth request", async function() {
     const {data} = await moneyhub.createAuthRequest({
       scope: "openid payment id:1ffe704d39629a929c8e293880fb449a",
       payment: {

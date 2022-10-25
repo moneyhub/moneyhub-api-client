@@ -3,7 +3,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, Affordability} from ".."
 
-describe.skip("affordability", () => {
+describe.skip("affordability", function() {
   let userId: string
   let affordabilityId: string
   let moneyhub: MoneyhubInstance
@@ -15,7 +15,7 @@ describe.skip("affordability", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("create affordability", async () => {
+  it("create affordability", async function() {
     const {data, meta, links} = await moneyhub.createAffordability({userId})
 
     expect(links).property("self").a("string")
@@ -27,7 +27,7 @@ describe.skip("affordability", () => {
     expectTypeOf<Affordability.Affordability>(data)
   })
 
-  it("get affordability", async () => {
+  it("get affordability", async function() {
     const {data, meta, links} = await moneyhub.getAffordability({userId, id: affordabilityId})
 
     expect(links).property("self").a("string")
@@ -36,7 +36,7 @@ describe.skip("affordability", () => {
     expectTypeOf<Affordability.Affordability>(data)
   })
 
-  it("get all affordability", async () => {
+  it("get all affordability", async function() {
     const {data, meta, links} = await moneyhub.getAllAffordability({userId, limit: 10, offset: 0})
 
     expect(links).property("self").a("string")

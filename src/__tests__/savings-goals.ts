@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, SavingsGoals} from "../"
 
-describe("Savings Goals", () => {
+describe("Savings Goals", function() {
   let moneyhub: MoneyhubInstance
   let userId: string
   let goalId: string
@@ -29,7 +29,7 @@ describe("Savings Goals", () => {
     accountId = account.data.id
   })
 
-  it("can create a savings goal", async () => {
+  it("can create a savings goal", async function() {
     const goal = await moneyhub.createSavingsGoal({
       userId,
       name: "savings",
@@ -42,25 +42,25 @@ describe("Savings Goals", () => {
     expectTypeOf<SavingsGoals.SavingsGoal>(goal.data)
   })
 
-  it("can get a savings goal", async () => {
+  it("can get a savings goal", async function() {
     const goal = await moneyhub.getSavingsGoal({userId, goalId})
     expect(goal.data.id).to.equal(goalId)
     expectTypeOf<SavingsGoals.SavingsGoal>(goal.data)
   })
 
-  it("can get all savings goals", async () => {
+  it("can get all savings goals", async function() {
     const goals = await moneyhub.getSavingsGoals({}, userId)
     expect(goals.data.length).to.be.greaterThan(0)
     expectTypeOf<SavingsGoals.SavingsGoal[]>(goals.data)
   })
 
-  it("can get all savings goals with limit", async () => {
+  it("can get all savings goals with limit", async function() {
     const goals = await moneyhub.getSavingsGoals({limit: 1}, userId)
     expect(goals.data.length).to.equal(1)
     expectTypeOf<SavingsGoals.SavingsGoal[]>(goals.data)
   })
 
-  it("can update a savings goal", async () => {
+  it("can update a savings goal", async function() {
     const goal = await moneyhub.updateSavingsGoal({
       goalId,
       userId,
@@ -73,7 +73,7 @@ describe("Savings Goals", () => {
     expectTypeOf<SavingsGoals.SavingsGoal>(goal.data)
   })
 
-  it("can delete a savings goal", async () => {
+  it("can delete a savings goal", async function() {
     const result = await moneyhub.deleteSavingsGoal({userId, goalId})
     expect(result).to.equal(204)
   })

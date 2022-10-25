@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Accounts, Moneyhub, MoneyhubInstance, Transactions} from ".."
 
-describe("Transactions", () => {
+describe("Transactions", function() {
   let moneyhub: MoneyhubInstance
   let transactionId: string
   let userId: string
@@ -14,7 +14,7 @@ describe("Transactions", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("can get transactions", async () => {
+  it("can get transactions", async function() {
     const {data: transactions} = await moneyhub.getTransactions({
       userId,
     })
@@ -23,7 +23,7 @@ describe("Transactions", () => {
     expectTypeOf<Transactions.Transaction[]>(transactions)
   })
 
-  it("can get transactions with limit", async () => {
+  it("can get transactions with limit", async function() {
     const {data: transactions} = await moneyhub.getTransactions({
       userId,
       params: {limit: 1},
@@ -35,7 +35,7 @@ describe("Transactions", () => {
     expectTypeOf<Transactions.Transaction[]>(transactions)
   })
 
-  it("can get one transaction", async () => {
+  it("can get one transaction", async function() {
     const {data: transaction} = await moneyhub.getTransaction({
       userId,
       transactionId,
@@ -45,7 +45,7 @@ describe("Transactions", () => {
     expectTypeOf<Transactions.Transaction>(transaction)
   })
 
-  it("can update one transaction", async () => {
+  it("can update one transaction", async function() {
     const shortDescription = new Date().toISOString()
     const transaction = {
       amount: {
@@ -64,10 +64,10 @@ describe("Transactions", () => {
     expectTypeOf<Transactions.Transaction>(data)
   })
 
-  describe("creating and deleting a manual transaction", () => {
+  describe("creating and deleting a manual transaction", function() {
     let accountId: string
 
-    before(async () => {
+    before(async function() {
       const account: Accounts.AccountPost = {
         "accountName": "Account name",
         "providerName": "Provider name",
@@ -85,11 +85,11 @@ describe("Transactions", () => {
       accountId = id
     })
 
-    after(async () => {
+    after(async function() {
       await moneyhub.deleteAccount({userId, accountId})
     })
 
-    it("creates a transaction", async () => {
+    it("creates a transaction", async function() {
       const transaction: Transactions.TransactionPost = {
         accountId,
         "amount": {
@@ -110,7 +110,7 @@ describe("Transactions", () => {
       expectTypeOf<Transactions.Transaction>(data)
     })
 
-    it("deletes transaction", async () => {
+    it("deletes transaction", async function() {
       const status = await moneyhub.deleteTransaction({userId, transactionId})
       expect(status).to.equal(204)
     })

@@ -5,7 +5,7 @@ import * as R from "ramda"
 
 import {Moneyhub, MoneyhubInstance, Transactions} from ".."
 
-describe("Transaction Splits", () => {
+describe("Transaction Splits", function() {
   let moneyhub: MoneyhubInstance
   let transactionId: string
   let splitId: string
@@ -48,23 +48,23 @@ describe("Transaction Splits", () => {
     transactionId = data.id
   })
 
-  beforeEach(async () => {
+  beforeEach(async function() {
     const {data} = await moneyhub.splitTransaction({userId, transactionId, splits})
     splitId = data[0].id
   })
 
-  after(async () => {
+  after(async function() {
     await moneyhub.deleteTransaction({userId, transactionId})
   })
 
-  it("can split a transaction", async () => {
+  it("can split a transaction", async function() {
     const {data} = await moneyhub.splitTransaction({userId, transactionId, splits})
 
     expect(data).to.have.length(2)
     expectTypeOf<Transactions.TransactionSplit[]>(data)
   })
 
-  it("can get a transactions splits", async () => {
+  it("can get a transactions splits", async function() {
     const {data} = await moneyhub.getTransactionSplits({
       userId,
       transactionId,
@@ -75,7 +75,7 @@ describe("Transaction Splits", () => {
     expectTypeOf<Transactions.TransactionSplit[]>(data)
   })
 
-  it("can update a transactions splits", async () => {
+  it("can update a transactions splits", async function() {
     const {data} = await moneyhub.patchTransactionSplit({
       userId,
       transactionId,
@@ -89,7 +89,7 @@ describe("Transaction Splits", () => {
     expectTypeOf<Transactions.TransactionSplit[]>(data)
   })
 
-  it("can delete a transactions splits", async () => {
+  it("can delete a transactions splits", async function() {
     const status = await moneyhub.deleteTransactionSplits({
       userId,
       transactionId,

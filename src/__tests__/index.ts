@@ -3,8 +3,8 @@ import {expect} from "chai"
 
 import {Moneyhub, MoneyhubInstance} from ".."
 
-describe("API client", () => {
-  describe("Client configuration", () => {
+describe("API client", function() {
+  describe("Client configuration", function() {
     let keys: any[],
       moneyhub: MoneyhubInstance
 
@@ -16,11 +16,11 @@ describe("API client", () => {
       moneyhub = await Moneyhub(this.config)
     })
 
-    it("should create client", () => {
+    it("should create client", function() {
       expect(moneyhub).to.be.an("object")
     })
 
-    it("should export the required functions", () => {
+    it("should export the required functions", function() {
       expect(Object.keys(moneyhub).sort()).to.deep.equal([
         "getAccounts",
         "getAccountsWithDetails",
@@ -141,33 +141,33 @@ describe("API client", () => {
       ].sort())
     })
 
-    describe("utility methods", () => {
-      it("exports public keys", async () => {
+    describe("utility methods", function() {
+      it("exports public keys", async function() {
         const instanceKeys = await moneyhub.keys()
         expect(instanceKeys?.keys.length).to.eql(keys.length)
       })
 
-      it("lists connections", async () => {
+      it("lists connections", async function() {
         const connections = await moneyhub.listConnections()
         expect(connections.length).to.be.greaterThan(100)
       })
 
-      it("lists api connections", async () => {
+      it("lists api connections", async function() {
         const connections = await moneyhub.listAPIConnections()
         expect(connections.length).to.be.greaterThan(10)
       })
 
-      it("lists test connections", async () => {
+      it("lists test connections", async function() {
         const connections = await moneyhub.listTestConnections()
         expect(connections.length).to.be.lessThan(10)
       })
 
-      it("gets OpenID config", async () => {
+      it("gets OpenID config", async function() {
         const openIdConfig = await moneyhub.getOpenIdConfig()
         expect((openIdConfig as any).issuer).to.be.a("string")
       })
 
-      it("gets global counterparties", async () => {
+      it("gets global counterparties", async function() {
         const counterparties = await moneyhub.getGlobalCounterparties()
         expect(counterparties.data.length).to.be.greaterThan(100)
       })

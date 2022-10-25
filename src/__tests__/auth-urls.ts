@@ -16,7 +16,7 @@ const parseJwt = (token?: string | string[]) => {
   return decodedValue
 }
 
-describe("Auth Urls", () => {
+describe("Auth Urls", function() {
   let moneyhub: MoneyhubInstance,
     testReadOnlyUserId: string
 
@@ -25,7 +25,7 @@ describe("Auth Urls", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("gets a basic auth url", async () => {
+  it("gets a basic auth url", async function() {
     const url = await moneyhub.getAuthorizeUrl({
       state,
       nonce,
@@ -39,7 +39,7 @@ describe("Auth Urls", () => {
     expect(payload).to.not.have.nested.property("claims.id_token.mh:consent.value.permissions")
   })
 
-  it("gets a basic auth url with permissions", async () => {
+  it("gets a basic auth url with permissions", async function() {
     const url = await moneyhub.getAuthorizeUrl({
       state,
       nonce,
@@ -54,7 +54,7 @@ describe("Auth Urls", () => {
     expect(payload).to.have.deep.nested.property("claims.id_token.mh:consent.value.permissions", ["permission-1"])
   })
 
-  it("gets an auth url for a user", async () => {
+  it("gets an auth url for a user", async function() {
     const url = await moneyhub.getAuthorizeUrlForCreatedUser({
       state,
       nonce,
@@ -69,7 +69,7 @@ describe("Auth Urls", () => {
     expect(payload).to.not.have.nested.property("claims.id_token.mh:consent.value.permissions")
   })
 
-  it("gets an auth url for a user with extra permissions", async () => {
+  it("gets an auth url for a user with extra permissions", async function() {
     const url = await moneyhub.getAuthorizeUrlForCreatedUser({
       state,
       nonce,
@@ -85,7 +85,7 @@ describe("Auth Urls", () => {
     expect(payload).to.have.deep.nested.property("claims.id_token.mh:consent.value.permissions", ["permission-1"])
   })
 
-  it("gets a payment auth url", async () => {
+  it("gets a payment auth url", async function() {
     const payee = await moneyhub.addPayee({
       accountNumber: "12345678",
       sortCode: "123456",
@@ -105,7 +105,7 @@ describe("Auth Urls", () => {
     expect(url).to.be.a("string")
   })
 
-  it("gets a payment auth url without payeeId", async () => {
+  it("gets a payment auth url without payeeId", async function() {
     const payee = {
       accountNumber: "12345678",
       sortCode: "123456",
@@ -125,7 +125,7 @@ describe("Auth Urls", () => {
     expect(url).to.be.a("string")
   })
 
-  it("gets a reconsent url for a user", async () => {
+  it("gets a reconsent url for a user", async function() {
     const connections = await moneyhub.getUserConnections({
       userId: testReadOnlyUserId,
     })

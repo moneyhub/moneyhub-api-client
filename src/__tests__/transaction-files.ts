@@ -6,7 +6,7 @@ import path from "path"
 
 import {Moneyhub, MoneyhubInstance, Transactions} from ".."
 
-describe("Transaction Files", () => {
+describe("Transaction Files", function() {
   let moneyhub: MoneyhubInstance
   let transactionId: string
   let fileId: string
@@ -23,7 +23,7 @@ describe("Transaction Files", () => {
     transactionId = transactions[0].id
   })
 
-  it("add a transaction file", async () => {
+  it("add a transaction file", async function() {
     const {data: file} = await moneyhub.addFileToTransaction({
       userId,
       transactionId,
@@ -39,21 +39,21 @@ describe("Transaction Files", () => {
     expectTypeOf<Transactions.TransactionFile>(file)
   })
 
-  it("gets transaction files", async () => {
+  it("gets transaction files", async function() {
     const {data: files} = await moneyhub.getTransactionFiles({userId, transactionId})
     expect(files.length).to.be.greaterThan(0)
     expect(files[0].fileName).to.be.a("string")
     expectTypeOf<Transactions.TransactionFile[]>(files)
   })
 
-  it("gets a transaction file", async () => {
+  it("gets a transaction file", async function() {
     const {data: file} = await moneyhub.getTransactionFile({userId, transactionId, fileId})
     expect(file.fileName).to.be.a("string")
     expect(file.id).to.eql(fileId)
     expectTypeOf<Transactions.TransactionFile>(file)
   })
 
-  it("deletes a transaction file", async () => {
+  it("deletes a transaction file", async function() {
     const status = await moneyhub.deleteTransactionFile({userId, transactionId, fileId})
     expect(status).to.eql(204)
   })

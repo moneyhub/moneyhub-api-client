@@ -22,7 +22,7 @@ const testRentalData: Omit<RentalRecords.RentalRecordPost, "seriesId"> = {
   rentalFrequency: "monthly",
 }
 
-describe("Rental records", () => {
+describe("Rental records", function() {
   let moneyhub: MoneyhubInstance
   let seriesId: string
   let rentalId: string
@@ -40,12 +40,12 @@ describe("Rental records", () => {
     }
   })
 
-  beforeEach(async () => {
+  beforeEach(async function() {
     const {data} = await moneyhub.createRentalRecord({rentalData: {...testRentalData, seriesId}, userId})
     rentalId = data.id
   })
 
-  afterEach(async () => {
+  afterEach(async function() {
     try {
       await moneyhub.deleteRentalRecord({userId, rentalId})
     } catch (e) {
@@ -56,14 +56,14 @@ describe("Rental records", () => {
 
   })
 
-  it("get rental record", async () => {
+  it("get rental record", async function() {
     const {data} = await moneyhub.getRentalRecords({userId})
     expect(data.length).to.be.above(0)
     expect(data[0]).to.have.property("seriesId")
     expectTypeOf<RentalRecords.RentalRecord[]>(data)
   })
 
-  it("create rental record", async () => {
+  it("create rental record", async function() {
     const {data} = await moneyhub.getRentalRecords({userId})
     expect(data.length).to.be.above(0)
     assert.containsAllKeys(data[0], {
@@ -86,7 +86,7 @@ describe("Rental records", () => {
     expectTypeOf<RentalRecords.RentalRecord[]>(data)
   })
 
-  it("delete rental record", async () => {
+  it("delete rental record", async function() {
     await moneyhub.deleteRentalRecord({userId, rentalId})
     const {data} = await moneyhub.getRentalRecords({userId})
     expect(data.length).to.eql(0)

@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, Accounts, Counterparties, Holdings, Transactions} from ".."
 
-describe("Accounts", () => {
+describe("Accounts", function() {
   let accountId: string,
     accountIdWithCounterparties: string,
     manualAccountId: string,
@@ -29,7 +29,7 @@ describe("Accounts", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("get accounts", async () => {
+  it("get accounts", async function() {
     const accounts = await moneyhub.getAccounts({userId})
     expect(accounts.data.length).to.be.at.least(2)
     const cashAccount = accounts.data.find(a => a.type === "cash:current")
@@ -40,13 +40,13 @@ describe("Accounts", () => {
     expectTypeOf<Accounts.Account[]>(accounts.data)
   })
 
-  it("get account", async () => {
+  it("get account", async function() {
     const {data: account} = await moneyhub.getAccount({userId, accountId})
     expect(account.id).to.eql(accountId)
     expectTypeOf<Accounts.Account>(account)
   })
 
-  it("get counterparties", async () => {
+  it("get counterparties", async function() {
     const {data: counterparties} = await moneyhub.getAccountCounterparties({
       userId: readOnlyUserId,
       accountId: accountIdWithCounterparties,
@@ -58,7 +58,7 @@ describe("Accounts", () => {
     expectTypeOf<Counterparties.Counterparty[]>(counterparties)
   })
 
-  it("get holdings", async () => {
+  it("get holdings", async function() {
     const {data: holdings} = await moneyhub.getAccountHoldings({
       userId: readOnlyUserId,
       accountId: pensionId,
@@ -67,7 +67,7 @@ describe("Accounts", () => {
     expectTypeOf<Holdings.HoldingsValuation[]>(holdings)
   })
 
-  xit("get recurring transactions", async () => {
+  xit("get recurring transactions", async function() {
     const {data: recurring} = await moneyhub.getAccountRecurringTransactions({
       userId,
       accountId,
@@ -76,7 +76,7 @@ describe("Accounts", () => {
     expectTypeOf<Transactions.RecurringTransactionEstimate[]>(recurring)
   })
 
-  it("creates a manual account", async () => {
+  it("creates a manual account", async function() {
     const account: Accounts.AccountPost = {
       accountName: "Account name",
       providerName: "Provider name",
@@ -97,7 +97,7 @@ describe("Accounts", () => {
     expectTypeOf<Accounts.Account>(data)
   })
 
-  it("deletes manual account", async () => {
+  it("deletes manual account", async function() {
     const status = await moneyhub.deleteAccount({userId, accountId: manualAccountId})
     expect(status).to.eql(204)
   })

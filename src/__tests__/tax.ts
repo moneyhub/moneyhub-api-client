@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, Taxes} from ".."
 
-describe("Tax", () => {
+describe("Tax", function() {
   let moneyhub: MoneyhubInstance
   let userId: string
 
@@ -13,7 +13,7 @@ describe("Tax", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("can get a tax return", async () => {
+  it("can get a tax return", async function() {
     const startDate = "2019-01-01"
     const endDate = "2020-01-01"
     const {data: tax} = await moneyhub.getTaxReturn({

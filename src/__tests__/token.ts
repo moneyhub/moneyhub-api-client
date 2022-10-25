@@ -9,14 +9,14 @@ const state = "sample-state"
 const nonce = "sample-nonce"
 const code = "X3MNigTlftG~AKzSQfmVmfvVWrq"
 
-describe.skip("Exchange Code For Token", () => {
+describe.skip("Exchange Code For Token", function() {
   let moneyhub: MoneyhubInstance
 
   before(async function() {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("exchanges the code for a token", async () => {
+  it("exchanges the code for a token", async function() {
     const tokens = await moneyhub.exchangeCodeForTokens({
       paramsFromCallback: {code, state},
       localParams: {state, nonce},

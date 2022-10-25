@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, Projects} from ".."
 
-describe("Projects", () => {
+describe("Projects", function() {
   let moneyhub: MoneyhubInstance
   let projectId: string
   let userId: string
@@ -14,7 +14,7 @@ describe("Projects", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("can create a project", async () => {
+  it("can create a project", async function() {
     const {data: project} = await moneyhub.addProject({
       userId,
       project: {
@@ -29,13 +29,13 @@ describe("Projects", () => {
     projectId = project.id
   })
 
-  it("can get a project", async () => {
+  it("can get a project", async function() {
     const {data: project} = await moneyhub.getProject({userId, projectId})
     expect(project.id).to.eql(projectId)
     expectTypeOf<Projects.Project>(project)
   })
 
-  it("can get projects", async () => {
+  it("can get projects", async function() {
     const {data: projects} = await moneyhub.getProjects({
       userId,
       params: {limit: 1},
@@ -44,7 +44,7 @@ describe("Projects", () => {
     expectTypeOf<Projects.Project[]>(projects)
   })
 
-  it("can update a project", async () => {
+  it("can update a project", async function() {
     const {data: project} = await moneyhub.updateProject({
       userId,
       projectId,
@@ -55,7 +55,7 @@ describe("Projects", () => {
     expectTypeOf<Projects.Project>(project)
   })
 
-  it("can delete a project", async () => {
+  it("can delete a project", async function() {
     const status = await moneyhub.deleteProject({userId, projectId})
     expect(status).to.eql(204)
   })

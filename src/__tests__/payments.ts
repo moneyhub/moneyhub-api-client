@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, Payments} from ".."
 
-describe("Payments", () => {
+describe("Payments", function() {
   let moneyhub: MoneyhubInstance
   let paymentId: string
   let testPaymentIdToken: string
@@ -14,7 +14,7 @@ describe("Payments", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("gets payment from token", async () => {
+  it("gets payment from token", async function() {
     const {data: payment} = await moneyhub.getPaymentFromIDToken({
       idToken: testPaymentIdToken,
     })
@@ -23,7 +23,7 @@ describe("Payments", () => {
     expectTypeOf<Payments.Payment>(payment)
   })
 
-  it("gets payment by id", async () => {
+  it("gets payment by id", async function() {
     const {data: payment} = await moneyhub.getPayment({
       id: paymentId,
     })
@@ -32,7 +32,7 @@ describe("Payments", () => {
     expectTypeOf<Payments.Payment>(payment)
   })
 
-  it("gets payments", async () => {
+  it("gets payments", async function() {
     const {data: payments} = await moneyhub.getPayments({limit: 1})
     expect(payments.length).to.eql(1)
     expectTypeOf<Payments.Payment[]>(payments)

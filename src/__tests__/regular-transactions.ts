@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, RegularTransactions} from ".."
 
-describe.skip("Regular transactions", () => {
+describe.skip("Regular transactions", function() {
   let moneyhub: MoneyhubInstance
   let userId: string
 
@@ -13,7 +13,7 @@ describe.skip("Regular transactions", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("get regular transactions", async () => {
+  it("get regular transactions", async function() {
     const {data} = await moneyhub.getRegularTransactions({userId})
     expect(data.length).to.be.above(0)
     expect(data[0]).to.have.property("seriesId")

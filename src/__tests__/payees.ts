@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, Payees} from ".."
 
-describe("Payees", () => {
+describe("Payees", function() {
   let moneyhub: MoneyhubInstance
   let payeeId: string
 
@@ -12,7 +12,7 @@ describe("Payees", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("add payee", async () => {
+  it("add payee", async function() {
     const payee = await moneyhub.addPayee({
       accountNumber: "12345678",
       sortCode: "123456",
@@ -23,7 +23,7 @@ describe("Payees", () => {
     payeeId = payee.data.id
   })
 
-  it("get payee", async () => {
+  it("get payee", async function() {
     const payee = await moneyhub.getPayee({
       id: payeeId,
     })
@@ -32,7 +32,7 @@ describe("Payees", () => {
     expectTypeOf<Payees.Payee>(payee.data)
   })
 
-  it("get payees", async () => {
+  it("get payees", async function() {
     const payees = await moneyhub.getPayees({
       limit: 1,
     })

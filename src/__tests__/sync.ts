@@ -6,7 +6,7 @@ import {Moneyhub, MoneyhubInstance, Syncs} from ".."
 
 const OB_MOCK_ID = "1ffe704d39629a929c8e293880fb449a"
 
-describe("Sync", () => {
+describe("Sync", function() {
   let moneyhub: MoneyhubInstance
   let connectionId: string | undefined
   let readOnlyUserId: string
@@ -16,7 +16,7 @@ describe("Sync", () => {
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("sync user connection", async () => {
+  it("sync user connection", async function() {
     const user = await moneyhub.getUser({userId: readOnlyUserId})
     connectionId = user.connectionIds.find(
       (id) => id.split(":")[0] === OB_MOCK_ID,
