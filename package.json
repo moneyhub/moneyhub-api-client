@@ -12,7 +12,8 @@
     "prepublishOnly": "npm run build",
     "build": "tsc",
     "ts-node": "ts-node",
-    "snyk": "snyk test --fail-on=all --severity-threshold=high"
+    "snyk-ci": "snyk test --fail-on=all --severity-threshold=high",
+    "snyk": "snyk test"
   },
   "keywords": [
     "moneyhub",
