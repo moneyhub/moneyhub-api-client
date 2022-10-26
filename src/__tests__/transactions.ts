@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Accounts, Moneyhub, MoneyhubInstance, Transactions} from ".."
 
-describe("Transactions", function() {
+describe.only("Transactions", function() {
   let moneyhub: MoneyhubInstance
   let transactionId: string
   let userId: string
@@ -66,6 +66,8 @@ describe("Transactions", function() {
 
   describe("creating and deleting a manual transaction", function() {
     let accountId: string
+    let transactionCrated: Transactions.Transaction
+    let status: any
 
     before(async function() {
       const account: Accounts.AccountPost = {
@@ -83,13 +85,7 @@ describe("Transactions", function() {
 
       const {data: {id}} = await moneyhub.createAccount({userId, account})
       accountId = id
-    })
 
-    after(async function() {
-      await moneyhub.deleteAccount({userId, accountId})
-    })
-
-    it("creates a transaction", async function() {
       const transaction: Transactions.TransactionPost = {
         accountId,
         "amount": {
@@ -105,13 +101,21 @@ describe("Transactions", function() {
       }
 
       const {data} = await moneyhub.addTransaction({userId, transaction})
-      transactionId = data.id
-      expect(data).to.have.property("id")
-      expectTypeOf<Transactions.Transaction>(data)
+      transactionCrated = data
+      status = await moneyhub.deleteTransaction({userId, transactionId: transactionCrated.id})
+
+    })
+
+    after(async function() {
+      await moneyhub.deleteAccount({userId, accountId})
+    })
+
+    it("creates a transaction", async function() {
+      expect(transactionCrated).to.have.property("id")
+      expectTypeOf<Transactions.Transaction>(transactionCrated)
     })
 
     it("deletes transaction", async function() {
-      const status = await moneyhub.deleteTransaction({userId, transactionId})
       expect(status).to.equal(204)
     })
   })
