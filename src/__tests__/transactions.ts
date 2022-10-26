@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Accounts, Moneyhub, MoneyhubInstance, Transactions} from ".."
 
-describe.only("Transactions", function() {
+describe("Transactions", function() {
   let moneyhub: MoneyhubInstance
   let transactionId: string
   let userId: string

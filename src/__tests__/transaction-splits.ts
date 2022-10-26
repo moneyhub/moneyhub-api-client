@@ -13,7 +13,7 @@ describe("Transaction Splits", function() {
   let userId: string
   let splits: Transactions.TransactionSplitPost[]
 
-  before(async function() {
+  beforeEach(async function() {
     accountId = this.config.testAccountId
     userId = this.config.testUserId
     moneyhub = await Moneyhub(this.config)
@@ -44,16 +44,13 @@ describe("Transaction Splits", function() {
       date: "2018-07-10T12:00:00+00:00",
     }
 
-    const {data} = await moneyhub.addTransaction({userId, transaction})
-    transactionId = data.id
-  })
-
-  beforeEach(async function() {
+    const {data: {id}} = await moneyhub.addTransaction({userId, transaction})
+    transactionId = id
     const {data} = await moneyhub.splitTransaction({userId, transactionId, splits})
     splitId = data[0].id
   })
 
-  after(async function() {
+  afterEach(async function() {
     await moneyhub.deleteTransaction({userId, transactionId})
   })
 
