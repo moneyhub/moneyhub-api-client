@@ -45,6 +45,16 @@ describe("Transactions", function() {
     expectTypeOf<Transactions.Transaction>(transaction)
   })
 
+  it("can get one transaction with text query param", async function() {
+    const {data: transactions} = await moneyhub.getTransactions({
+      userId,
+      params: {text: "moneyhub best"},
+    })
+
+    expect(transactions).to.have.length(1)
+    expect(transactions[0].notes).to.equal("moneyhub is the best")
+  })
+
   it("can update one transaction", async function() {
     const shortDescription = new Date().toISOString()
     const transaction = {

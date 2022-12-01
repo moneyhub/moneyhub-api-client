@@ -16,7 +16,7 @@ exports.transactions = [
     },
     "categoryId": "std:4b0255f0-0309-4509-9e05-4b4e386f9b0d",
     "longDescription": "ASDA",
-    "notes": "notes",
+    "notes": "moneyhub is the best",
     "status": "pending",
   }
 ]
