@@ -11,7 +11,7 @@ const delay = (time: number) => {
   })
 }
 
-describe.only("Transaction Splits", function() {
+describe("Transaction Splits", function() {
   let moneyhub: MoneyhubInstance
   let transactionId: string
   let splitId: string
