@@ -5,7 +5,13 @@ import * as R from "ramda"
 
 import {Moneyhub, MoneyhubInstance, Transactions} from ".."
 
-describe("Transaction Splits", function() {
+const delay = (time: number) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
+}
+
+describe.only("Transaction Splits", function() {
   let moneyhub: MoneyhubInstance
   let transactionId: string
   let splitId: string
@@ -46,8 +52,10 @@ describe("Transaction Splits", function() {
 
     const {data: {id}} = await moneyhub.addTransaction({userId, transaction})
     transactionId = id
+    await delay(500)
     const {data} = await moneyhub.splitTransaction({userId, transactionId, splits})
     splitId = data[0].id
+    await delay(500)
   })
 
   afterEach(async function() {
