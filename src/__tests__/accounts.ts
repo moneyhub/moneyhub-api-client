@@ -1,6 +1,7 @@
 /* eslint-disable max-nested-callbacks */
 import {expect} from "chai"
 import {expectTypeOf} from "expect-type"
+import {AccountBalancePost, AccountPatch} from "src/schema/account"
 
 import {Moneyhub, MoneyhubInstance, Accounts, Counterparties, Holdings, Transactions} from ".."
 
@@ -95,6 +96,33 @@ describe("Accounts", function() {
     manualAccountId = data.id
     expect(data.id).to.not.be.undefined
     expectTypeOf<Accounts.Account>(data)
+  })
+
+  it("creates a new balance", async function() {
+    const balance: AccountBalancePost = {
+      amount: {
+        value: 154700,
+      },
+      date: "2022-01-01",
+    }
+    const {data} = await moneyhub.addAccountBalance({userId, accountId: manualAccountId, balance})
+    expect(data.amount.value).to.equal(balance.amount.value)
+    expectTypeOf<Accounts.AccountBalancePost>(data)
+  })
+
+  it("updates an account", async function() {
+    const accountPatch: AccountPatch = {
+      accountName: "Updated Account Name",
+      providerName: "Updated Provider Name",
+      details: {
+        AER: 14,
+      },
+    }
+
+    const {data} = await moneyhub.updateAccount({userId, accountId: manualAccountId, account: accountPatch})
+    expect(data.accountName).equals("Updated Account Name")
+    expect(data.providerName).equals("Updated Provider Name")
+    expect(data.details.AER).to.equal(14)
   })
 
   it("deletes manual account", async function() {

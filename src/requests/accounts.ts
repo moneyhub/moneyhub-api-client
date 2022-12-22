@@ -136,5 +136,25 @@ export default ({
         },
         returnStatus: true,
       }),
+
+    addAccountBalance: async ({userId, accountId, balance}) =>
+      request(`${resourceServerUrl}/accounts/${accountId}/balances`, {
+        method: "POST",
+        cc: {
+          scope: "accounts:read accounts:write:all",
+          sub: userId,
+        },
+        body: balance,
+      }),
+
+    updateAccount: async ({userId, accountId, account}) =>
+      request(`${resourceServerUrl}/accounts/${accountId}`, {
+        method: "PATCH",
+        cc: {
+          scope: "accounts:read accounts:write:all",
+          sub: userId,
+        },
+        body: account,
+      }),
   }
 }
