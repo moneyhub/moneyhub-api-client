@@ -35,6 +35,8 @@ describe("API client", function() {
         "getAccountStandingOrders",
         "getAccountStandingOrdersWithDetail",
         "createAccount",
+        "addAccountBalance",
+        "updateAccount",
         "deleteAccount",
         "createAuthRequest",
         "completeAuthRequest",

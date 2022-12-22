@@ -98,11 +98,25 @@ export interface AccountWithDetails extends Account {
   details: AccountDetails
 }
 
+export type AccountWriteDetails = Omit<
+  AccountDetails,
+  "iban" | "pan">
 export interface AccountPost {
   accountName: string
   providerName: string
   type: Type
   accountType: AccountType
   balance: BalancePost
-  details?: AccountDetails
+  details?: AccountWriteDetails
 }
+
+interface AccountBalancePostAmount {
+  value: number
+}
+
+export interface AccountBalancePost {
+  amount: AccountBalancePostAmount
+  date: string
+}
+
+export type AccountPatch = Pick<AccountPost, "accountName" | "providerName" | "details">
