@@ -14,6 +14,8 @@ export default ({config, request}: RequestsParams): UnauthenticatedRequests => {
       request(identityServiceUrl + "/oidc/.well-known/api-connections"),
     listTestConnections: () =>
       request(identityServiceUrl + "/oidc/.well-known/test-connections"),
+    listPaymentsConnections: () =>
+      request(identityServiceUrl + "/oidc/.well-known/payments-connections"),
     listBetaConnections: () =>
       request(identityServiceUrl + "/oidc/.well-known/beta-connections"),
     getOpenIdConfig: () =>
