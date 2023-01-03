@@ -13,7 +13,7 @@ export interface AccountsRequests {
   }: {
     userId: string
     params?: SearchParams
-  }) => Promise<AccountWithDetails[]>
+  }) => Promise<ApiResponse<AccountWithDetails[]>>
   getAccount: ({userId, accountId}: { userId: string, accountId: string }) => Promise<ApiResponse<Account>>
   getAccountBalances: ({
     userId,
@@ -21,7 +21,7 @@ export interface AccountsRequests {
   }: {
     userId: string
     accountId: string
-  }) => Promise<Balance[]>
+  }) => Promise<ApiResponse<Balance[]>>
   getAccountWithDetails: ({
     userId,
     accountId,

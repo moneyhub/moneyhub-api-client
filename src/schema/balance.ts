@@ -13,6 +13,7 @@ export interface AmountPost {
 export interface Balance {
   amount: Amount
   date: string
+  type?: string
 }
 
 export interface BalancePost {
