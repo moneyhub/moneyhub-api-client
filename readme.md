@@ -1818,6 +1818,14 @@ This method will resolve with a list of all the Beta connections that a user can
 const availableConnections = await moneyhub.listBetaConnections();
 ```
 
+#### `listPaymentsConnections`
+
+This method will resolve with a list of all the payments connections that a user can connect to.
+
+```javascript
+const availableConnections = await moneyhub.listPaymentsConnections();
+```
+
 ### OpenID Config
 
 #### `getOpenIdConfig`

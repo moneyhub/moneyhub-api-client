@@ -79,6 +79,7 @@ describe("API client", function() {
         "listAPIConnections",
         "listTestConnections",
         "listBetaConnections",
+        "listPaymentsConnections",
         "getOpenIdConfig",
         "registerUser",
         "getUsers",

@@ -11,5 +11,6 @@ export interface UnauthenticatedRequests {
   listAPIConnections: () => Promise<WellKnownConnection[]>
   listTestConnections: () => Promise<WellKnownConnection[]>
   listBetaConnections: () => Promise<WellKnownConnection[]>
+  listPaymentsConnections: () => Promise<WellKnownConnection[]>
   getOpenIdConfig: () => Promise<unknown>
 }
