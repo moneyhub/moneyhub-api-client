@@ -784,6 +784,39 @@ const result = await moneyhub.deleteAccount({
 });
 ```
 
+#### `addAccountBalance`
+
+Add a balance to a manual account. This function uses the scope `accounts:read accounts:write:all`
+
+```javascript
+const result = await moneyhub.addAccountBalance({
+  userId: "userId",
+  accountId: "accountId",
+  balance: {
+    amount: {
+      value: 123
+    },
+    date: "2022-01-01",
+  }
+});
+```
+
+#### `updateAccount`
+
+Update manual account. This function uses the scope `accounts:read accounts:write:all`
+
+```javascript
+const result = await moneyhub.updateAccount({
+  userId: "userId",
+  accountId: "accountId",
+  account: {
+    accountName: "accountName",
+    providerName: "providerName"
+    details: {}
+  }
+});
+```
+
 #### `getTransactions`
 
 Get all transactions for a user. This function uses the scope `transactions:read:all`..
