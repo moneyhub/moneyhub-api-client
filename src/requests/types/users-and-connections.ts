@@ -54,6 +54,14 @@ export interface UsersAndConnectionsRequests {
     params?: SearchParams
   }) => Promise<ApiResponse<ConnectionSync[]>>
 
+  getUserSyncs: ({
+    userId,
+    params,
+  }: {
+    userId: string
+    params?: SearchParams
+  }) => Promise<ApiResponse<ConnectionSync[]>>
+
   getSync: ({
     userId,
     syncId,

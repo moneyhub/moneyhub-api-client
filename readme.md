@@ -588,6 +588,20 @@ const syncs = await moneyhub.getConnectionSyncs({
 });
 ```
 
+#### `getUserSyncs`
+
+Retrieve the syncs for a given connection ID.
+
+```javascript
+const syncs = await moneyhub.getUserSyncs({
+  userId: "user-id",
+  params: {
+    limit: 10,
+    offset: 0,
+  },
+});
+```
+
 #### `getSync`
 
 Retrieve the syncs for the given sync ID.

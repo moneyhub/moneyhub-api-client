@@ -91,6 +91,7 @@ describe("API client", function() {
         "deleteUserConnection",
         "deleteUser",
         "getConnectionSyncs",
+        "getUserSyncs",
         "getSync",
         "updateUserConnection",
         "getCategories",
