@@ -26,6 +26,9 @@
   "homepage": "https://github.com/moneyhub/moneyhub-api-client",
   "repository": "moneyhub/moneyhub-api-client",
   "license": "ISC",
+  "engines": {
+    "node": ">= 12.0.0"
+  },
   "dependencies": {
     "form-data": "^3.0.1",
     "got": "^11.8.5",
