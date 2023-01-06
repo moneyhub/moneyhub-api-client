@@ -5,6 +5,10 @@ const config = require("../config")
 
 const optionDefinitions = [
   {name: "userId", alias: "u", type: String, description: "required"},
+  {name: "limit", alias: "l", type: Number, description: "optional"},
+  {name: "offset", alias: "o", type: Number, description: "optional"},
+  {name: "showTransactionData", alias: "t", type: String, defaultValue: "true", description: "optional"},
+  {name: "showPerformanceScore", alias: "p", type: String, defaultValue: "true", description: "optional"},
 ]
 
 const usage = commandLineUsage(
@@ -21,8 +25,8 @@ const options = commandLineArgs(optionDefinitions)
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
-
-    const result = await moneyhub.getAccounts({userId: options.userId})
+    const {userId, offset, limit, showPerformanceScore, showTransactionData} = options
+    const result = await moneyhub.getAccounts({userId, params: {offset, limit, showPerformanceScore, showTransactionData}})
     console.log(JSON.stringify(result, null, 2))
 
   } catch (e) {

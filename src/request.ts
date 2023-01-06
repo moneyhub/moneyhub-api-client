@@ -33,6 +33,8 @@ export interface SearchParams {
   limit?: number
   offset?: number
   counterpartiesVersion?: string
+  showTransactionData?: boolean
+  showPerformanceScore?: boolean
 }
 
 export interface ApiResponse<T> {

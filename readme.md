@@ -618,7 +618,7 @@ const user = await moneyhub.updateUserConnection({
 Get all accounts for a user. This function uses the scope `accounts:read`.
 
 ```javascript
-const queryParams = { limit: 10, offset: 5 };
+const queryParams = { limit: 10, offset: 5 , showTransacionData: false, showPerformanceScore: true};
 const accounts = await moneyhub.getAccounts({
   userId: "userId",
   params: queryParams,
