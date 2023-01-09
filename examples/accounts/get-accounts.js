@@ -7,8 +7,8 @@ const optionDefinitions = [
   {name: "userId", alias: "u", type: String, description: "required"},
   {name: "limit", alias: "l", type: Number, description: "optional"},
   {name: "offset", alias: "o", type: Number, description: "optional"},
-  {name: "showTransactionData", alias: "t", type: String, defaultValue: "true", description: "optional"},
-  {name: "showPerformanceScore", alias: "p", type: String, defaultValue: "true", description: "optional"},
+  {name: "showTransactionData", alias: "t", type: String, description: "optional"},
+  {name: "showPerformanceScore", alias: "p", type: String, description: "optional"},
 ]
 
 const usage = commandLineUsage(
