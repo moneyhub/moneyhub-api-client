@@ -637,6 +637,30 @@ const accounts = await moneyhub.getAccountsWithDetails({
 });
 ```
 
+#### `getAccountsList`
+
+Similar to getAccounts method, however this method does not return `transactionData` and `performanceScore` by default meaning data can be retrieved more quickly. These fields can still be returned on from this method by using `showTransacionData` and `showPerformanceScore` query params. This function uses the scope `accounts:read`.
+
+```javascript
+const queryParams = { limit: 10, offset: 5 , showTransacionData: false, showPerformanceScore: true};
+const accounts = await moneyhub.getAccounts({
+  userId: "userId",
+  params: queryParams,
+});
+```
+
+#### `getAccountsListWithDetails`
+
+Similar to getAccountsWithDetails method, however this method does not return `transactionData` and `performanceScore` by default meaning data can be retrieved more quickly. These fields can still be returned on from this method by using `showTransacionData` and `showPerformanceScore` query params. This function uses the scopes `accounts:read accounts_details:read`.
+
+```javascript
+const queryParams = { limit: 10, offset: 5 };
+const accounts = await moneyhub.getAccountsWithDetails({
+  userId: "userId",
+  params: queryParams,
+});
+```
+
 #### `getAccount`
 
 Get a single account for a user by the accountId. This function uses the scope `accounts:read`.

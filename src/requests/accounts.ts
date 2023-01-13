@@ -26,6 +26,24 @@ export default ({
         },
       }),
 
+    getAccountsList: async ({userId, params = {}}) =>
+      request(`${resourceServerUrl}/accounts-list`, {
+        searchParams: params,
+        cc: {
+          scope: "accounts:read",
+          sub: userId,
+        },
+      }),
+
+    getAccountsListWithDetails: async ({userId, params = {}}) =>
+      request(`${resourceServerUrl}/accounts-list`, {
+        searchParams: params,
+        cc: {
+          scope: "accounts:read accounts_details:read",
+          sub: userId,
+        },
+      }),
+
     getAccount: async ({userId, accountId}) =>
       request(`${resourceServerUrl}/accounts/${accountId}`, {
         cc: {
