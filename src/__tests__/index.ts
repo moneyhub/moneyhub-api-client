@@ -25,6 +25,8 @@ describe("API client", function() {
         "getAccounts",
         "getAccountsWithDetails",
         "getAccount",
+        "getAccountsList",
+        "getAccountsListWithDetails",
         "getAccountBalances",
         "getAccountWithDetails",
         "getAccountHoldings",

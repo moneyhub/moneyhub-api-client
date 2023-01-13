@@ -14,6 +14,13 @@ export interface AccountsRequests {
     userId: string
     params?: SearchParams
   }) => Promise<ApiResponse<AccountWithDetails[]>>
+  getAccountsList: ({userId}: { userId: string, params?: SearchParams }) => Promise<ApiResponse<Account[]>>
+  getAccountsListWithDetails: ({
+    userId,
+  }: {
+    userId: string
+    params?: SearchParams
+  }) => Promise<ApiResponse<AccountWithDetails[]>>
   getAccount: ({userId, accountId}: { userId: string, accountId: string }) => Promise<ApiResponse<Account>>
   getAccountBalances: ({
     userId,

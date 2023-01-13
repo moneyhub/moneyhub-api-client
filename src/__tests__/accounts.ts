@@ -41,6 +41,45 @@ describe("Accounts", function() {
     expectTypeOf<Accounts.Account[]>(accounts.data)
   })
 
+  it("get accounts list", async function() {
+    const accounts = await moneyhub.getAccountsList({userId})
+    expect(accounts.data.length).to.be.at.least(2)
+    const cashAccount = accounts.data.find(a => a.type === "cash:current")
+    const pension = accounts.data.find(a => a.type === "pension")
+
+    const transactionData = accounts.data.find(a => !!a.transactionData)
+
+    expect(transactionData).to.be.undefined
+    expect(cashAccount).to.not.be.undefined
+    expect(pension).to.not.be.undefined
+    expectTypeOf<Accounts.Account[]>(accounts.data)
+  })
+
+  it("get accounts list with transactionData", async function() {
+    const accounts = await moneyhub.getAccountsList({userId, params: {showTransactionData: true}})
+    expect(accounts.data.length).to.be.at.least(2)
+    const cashAccount = accounts.data.find(a => a.type === "cash:current")
+    const pension = accounts.data.find(a => a.type === "pension")
+
+    const transactionData = accounts.data.find(a => !!a.transactionData)
+
+    expect(transactionData).to.not.be.undefined
+    expect(cashAccount).to.not.be.undefined
+    expect(pension).to.not.be.undefined
+    expectTypeOf<Accounts.Account[]>(accounts.data)
+  })
+
+  it("get accounts list with details", async function() {
+    const accounts = await moneyhub.getAccountsListWithDetails({userId})
+    expect(accounts.data.length).to.be.at.least(2)
+    const cashAccount = accounts.data.find(a => a.type === "cash:current")
+    const pension = accounts.data.find(a => a.type === "pension")
+
+    expect(cashAccount).to.not.be.undefined
+    expect(pension).to.not.be.undefined
+    expectTypeOf<Accounts.Account[]>(accounts.data)
+  })
+
   it("get account", async function() {
     const {data: account} = await moneyhub.getAccount({userId, accountId})
     expect(account.id).to.eql(accountId)
