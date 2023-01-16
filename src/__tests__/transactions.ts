@@ -4,6 +4,12 @@ import {expectTypeOf} from "expect-type"
 
 import {Accounts, Moneyhub, MoneyhubInstance, Transactions} from ".."
 
+const delay = (time: number) => {
+  return new Promise(resolve => {
+    setTimeout(resolve, time)
+  })
+}
+
 describe("Transactions", function() {
   let moneyhub: MoneyhubInstance
   let transactionId: string
@@ -112,6 +118,7 @@ describe("Transactions", function() {
 
       const {data} = await moneyhub.addTransaction({userId, transaction})
       transactionCrated = data
+      await delay(500)
       status = await moneyhub.deleteTransaction({userId, transactionId: transactionCrated.id})
 
     })
