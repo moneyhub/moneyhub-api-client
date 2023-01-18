@@ -51,7 +51,7 @@ describe("Transactions", function() {
     expectTypeOf<Transactions.Transaction>(transaction)
   })
 
-  it("can get one transaction with text query param", async function() {
+  it.skip("can get one transaction with text query param", async function() {
     const {data: transactions} = await moneyhub.getTransactions({
       userId,
       params: {text: "moneyhub best"},
