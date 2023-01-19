@@ -1,4 +1,34 @@
-4.20.0 / 2022-09-15
+5.2.1 / 2023-01-19
+==================
+
+**Features**
+
+* Add accountsList
+* Add accountsListWithDetails
+
+5.2.0 / 2023-01-03
+==================
+
+**Features**
+
+* Add addAccountBalance
+* Add updateAccount
+
+5.1.2 / 2022-10-21
+==================
+
+**Features**
+
+* Rename transactionsFromDateTime to `transactionFromDateTime` for auth requests body
+
+5.1.1 / 2022-10-10
+==================
+
+**Features**
+
+* Update exchangeCodeForTokens to make `nonce` optional
+
+5.1.0 / 2022-09-15
 ==================
 
 **Features**
@@ -9,6 +39,53 @@
 * Update getStandingOrderAuthorizeUrl to accept a payee instead of payeeId
 * Update create-payement example to accept a payee instead of payeeId
 * Update create-standing-order example to accept a payee instead of payeeId
+
+5.0.0 / 2022-08-16
+==================
+
+**Features**
+
+* Migrated API client to Typescript
+* Update getReversePaymentAuthorizeUrl to accept payerId and payerType
+
+**Bug fixes**
+
+* Fix form data for addFileToTransaction
+
+4.20.0 / 2022-06-07
+==================
+
+**Features**
+
+* Add listBetaConnections
+* Add getReconsentAuthorizeUrlForCreatedUser
+* Add updateUserConnection
+
+4.19.0 / 2022-05-11
+==================
+
+**Features**
+
+* Add getSpendingAnalysis
+
+4.18.0 / 2022-04-22
+==================
+
+**Features**
+
+* Add getSync
+* Add getConnectionSyncs
+
+4.17.0 / 2022-04-13
+==================
+
+**Features**
+
+* Add AIS consent options to following methods:
+- `getAuthorizeUrl`
+- `getAuthorizeUrlForCreatedUser`
+- `getReauthAuthorizeUrlForCreatedUser`
+- `getRefreshAuthorizeUrlForCreatedUser`
 
 4.13.0 / 2022-01-05
 ==================
