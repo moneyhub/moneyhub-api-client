@@ -72,6 +72,14 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
         },
       }),
 
+    getUserSyncs: async ({userId, params = {}}) =>
+      request(`${usersEndpoint}/${userId}/syncs`, {
+        searchParams: params,
+        cc: {
+          scope: "user:read",
+        },
+      }),
+
     getSync: async ({userId, syncId}) =>
       request(`${usersEndpoint}/${userId}/syncs/${syncId}`, {
         cc: {
