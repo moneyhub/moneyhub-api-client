@@ -774,9 +774,9 @@ export default ({
           sign: request_object_signing_alg,
         })
 
-      const pushedRequest = await client.pushedAuthorizationRequest({request})
+      const {request_uri: requestUri} = await client.pushedAuthorizationRequest({request})
 
-      const url = client.authorizationUrl(pushedRequest)
+      const url = getAuthorizeUrlFromRequestUri({requestUri})
 
       return url
     },
