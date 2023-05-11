@@ -123,6 +123,7 @@ describe("API client", function() {
         "updateSavingsGoal",
         "deleteSavingsGoal",
         "getAuthorizeUrl",
+        "getAuthorizeUrlLegacy",
         "getAuthorizeUrlFromRequestUri",
         "requestObject",
         "getRequestUri",
