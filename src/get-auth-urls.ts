@@ -8,7 +8,10 @@ import {StandingOrderFrequency} from "./schema/standing-order"
 import {RequestPayee} from "./schema/payee"
 
 const filterUndefined = R.reject(R.isNil)
-
+type PkceParams = {
+  code_challenge: string
+  code_challenge_method: string
+}
 export default ({
   client,
   config,
@@ -20,7 +23,6 @@ export default ({
     identityServiceUrl,
     client: {
       client_id,
-      request_object_signing_alg,
       redirect_uri,
       response_type,
     },
@@ -43,6 +45,60 @@ export default ({
     return claims
   }
 
+  const getAuthorizeUrlFromRequestUri = ({requestUri}: {requestUri: string}) => {
+    return `${client.issuer.authorization_endpoint}?request_uri=${requestUri}`
+  }
+
+  const getRequestObject = ({
+    scope,
+    state,
+    claims,
+    nonce,
+    pkceParams,
+  }: {
+    scope: string
+    state?: string
+    claims: object
+    nonce?: string
+    pkceParams?: PkceParams
+    }) => {
+    const authParams = filterUndefined({
+      client_id,
+      scope,
+      state,
+      nonce,
+      claims,
+      exp: Math.round(Date.now() / 1000) + 300,
+      redirect_uri,
+      response_type,
+      prompt: "consent",
+      ...pkceParams,
+    })
+
+    return client.requestObject(authParams)
+  }
+
+  const getAuthorizationUrlFromParams = async ({
+    scope,
+    state,
+    claims,
+    nonce,
+    pkceParams,
+  }: {
+    scope: string
+    state?: string
+    claims: object
+    nonce?: string
+    pkceParams?: PkceParams
+  }) => {
+    const request = await getRequestObject({scope, state, claims, nonce, pkceParams})
+    const {request_uri: requestUri} = await client.pushedAuthorizationRequest({request})
+    const url = getAuthorizeUrlFromRequestUri({
+      requestUri,
+    })
+    return url
+  }
+
   const getAuthorizeUrl = ({
     state,
     scope,
@@ -52,6 +108,7 @@ export default ({
     enableAsync,
     expirationDateTime,
     transactionFromDateTime,
+    codeChallenge,
   }: {
     state?: string
     scope: string
@@ -61,7 +118,14 @@ export default ({
     enableAsync?: boolean
     expirationDateTime?: string
     transactionFromDateTime?: string
+    codeChallenge?: string
   }): Promise<string> => {
+
+    const pkceParams = codeChallenge ? {
+      code_challenge: codeChallenge,
+      code_challenge_method: "S256",
+    } : undefined
+
     const defaultClaims = {
       id_token: {
         sub: {
@@ -93,62 +157,90 @@ export default ({
       R.mergeDeepRight(defaultClaims),
     )(claims)
 
+    return getAuthorizationUrlFromParams({
+      scope,
+      claims: _claims,
+      nonce,
+      state,
+      pkceParams,
+    })
+  }
+
+  const getAuthorizeUrlLegacy = ({
+    state,
+    scope,
+    nonce,
+    claims = {},
+    permissions,
+    enableAsync,
+    expirationDateTime,
+    transactionFromDateTime,
+    codeChallenge,
+  }: {
+    state?: string
+    scope: string
+    nonce?: string
+    claims?: any
+    permissions?: string[]
+    enableAsync?: boolean
+    expirationDateTime?: string
+    transactionFromDateTime?: string
+    codeChallenge?: string
+  }): Promise<string> => {
+
+    const pkceParams = codeChallenge ? {
+      code_challenge: codeChallenge,
+      code_challenge_method: "S256",
+    } : undefined
+
     const authParams = filterUndefined({
-      client_id,
       scope,
       state,
       nonce,
-      redirect_uri,
-      response_type,
-      prompt: "consent",
     })
 
-    return (client as any)
-      .requestObject(
-        {
-          ...authParams,
-          claims: _claims,
-          max_age: 86400,
+    const defaultClaims = {
+      id_token: {
+        sub: {
+          essential: true,
         },
-        {
-          sign: request_object_signing_alg,
+        "mh:con_id": {
+          essential: true,
         },
-      )
-      .then((request: Awaited<ReturnType<Client["requestObject"]>>) => ({
+        ...(expirationDateTime || transactionFromDateTime) && {
+          "mh:consent": {
+            "essential": true,
+            "value": {
+              ...expirationDateTime && {expirationDateTime},
+              ...transactionFromDateTime && {transactionFromDateTime},
+            },
+          },
+        },
+        ...enableAsync && {
+          "mh:sync": {
+            "essential": true,
+            "value": {"enableAsync": true},
+          },
+        },
+      },
+    }
+
+    const _claims = R.compose(
+      setPermissionsToClaims(permissions),
+      R.mergeDeepRight(defaultClaims),
+    )(claims)
+
+    return client.requestObject({
+      ...pkceParams,
+      ...authParams,
+      claims: _claims,
+      max_age: 86400,
+    })
+      .then((request) => ({
         ...authParams,
         request,
       }))
       .then(client.authorizationUrl.bind(client))
-  }
-
-  const getAuthorizeUrlFromRequestUri = ({requestUri}: {requestUri: string}) => {
-    return `${client.issuer.authorization_endpoint}?request_uri=${requestUri}`
-  }
-
-  const getRequestObject = ({
-    scope,
-    state,
-    claims,
-    nonce,
-  }: {
-    scope: string
-    state?: string
-    claims: object
-    nonce?: string
-    }) => {
-    const authParams = filterUndefined({
-      client_id,
-      scope,
-      state,
-      nonce,
-      claims,
-      exp: Math.round(Date.now() / 1000) + 300,
-      redirect_uri,
-      response_type,
-      prompt: "consent",
-    })
-
-    return client.requestObject(authParams)
   }
 
   const getRequestUri = async (requestObject: any) => {
@@ -163,6 +255,7 @@ export default ({
 
   return {
     getAuthorizeUrl,
+    getAuthorizeUrlLegacy,
     getAuthorizeUrlFromRequestUri,
     requestObject: getRequestObject,
     getRequestUri,
@@ -176,6 +269,7 @@ export default ({
       expirationDateTime,
       transactionFromDateTime,
       enableAsync,
+      codeChallenge,
     }:
     {
       bankId: string
@@ -187,6 +281,7 @@ export default ({
       expirationDateTime?: string
       transactionFromDateTime?: string
       enableAsync?: boolean
+      codeChallenge?: string
     }) => {
       const scope = `id:${bankId} openid`
       const defaultClaims = {
@@ -214,6 +309,7 @@ export default ({
         transactionFromDateTime,
         permissions,
         enableAsync,
+        codeChallenge,
       })
       return url
     },
@@ -227,6 +323,7 @@ export default ({
       expirationDateTime,
       transactionFromDateTime,
       enableAsync,
+      codeChallenge,
     }: {
       userId: string
       connectionId: string
@@ -236,6 +333,7 @@ export default ({
       expirationDateTime?: string
       transactionFromDateTime?: string
       enableAsync?: boolean
+      codeChallenge: string
     }) => {
       const scope = "openid reauth"
       const defaultClaims = {
@@ -260,6 +358,7 @@ export default ({
         expirationDateTime,
         transactionFromDateTime,
         enableAsync,
+        codeChallenge,
       })
       return url
     },
@@ -271,6 +370,7 @@ export default ({
       state,
       nonce,
       claims = {},
+      codeChallenge,
     }: {
       userId: string
       connectionId: string
@@ -278,6 +378,7 @@ export default ({
       nonce?: string
       claims?: any
       expiresAt?: string
+      codeChallenge?: string
     }) => {
       const scope = "openid reconsent"
       const defaultClaims = {
@@ -299,13 +400,13 @@ export default ({
       }
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const url = await getAuthorizeUrl({
+      return getAuthorizeUrl({
         state,
         nonce,
         scope,
         claims: _claims,
+        codeChallenge,
       })
-      return url
     },
 
     getRefreshAuthorizeUrlForCreatedUser: async ({
@@ -317,6 +418,7 @@ export default ({
       expirationDateTime,
       transactionFromDateTime,
       enableAsync,
+      codeChallenge,
     }: {
       userId?: string
       connectionId: string
@@ -326,6 +428,7 @@ export default ({
       expirationDateTime?: string
       transactionFromDateTime?: string
       enableAsync?: boolean
+      codeChallenge?: string
     }) => {
       const scope = "openid refresh"
       const defaultClaims = {
@@ -342,7 +445,7 @@ export default ({
       }
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const url = await getAuthorizeUrl({
+      return getAuthorizeUrl({
         state,
         scope,
         nonce,
@@ -350,8 +453,8 @@ export default ({
         expirationDateTime,
         transactionFromDateTime,
         enableAsync,
+        codeChallenge,
       })
-      return url
     },
 
     getPaymentAuthorizeUrl: async ({
@@ -370,6 +473,7 @@ export default ({
       readRefundAccount,
       userId,
       claims = {},
+      codeChallenge,
     }: {
       bankId: string
       payeeRef: string
@@ -386,6 +490,7 @@ export default ({
       readRefundAccount?: boolean
       userId?: string
       claims?: any
+      codeChallenge?: string
     }) => {
       if (!state) {
         console.error("State is required")
@@ -428,18 +533,13 @@ export default ({
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const request = await getRequestObject({
+      return getAuthorizeUrl({
         scope,
         state,
         claims: _claims,
         nonce,
+        codeChallenge,
       })
-
-      const requestUri = await getRequestUri(request)
-      const url = getAuthorizeUrlFromRequestUri({
-        requestUri,
-      })
-      return url
     },
 
     getReversePaymentAuthorizeUrl: async ({
@@ -451,6 +551,7 @@ export default ({
       claims = {},
       payerId,
       payerType,
+      codeChallenge,
     }: {
       bankId: string
       paymentId: string
@@ -460,6 +561,7 @@ export default ({
       claims?: any
       payerId?: string
       payerType?: PaymentActorType
+      codeChallenge?: string
     }) => {
       if (!state) {
         console.error("State is required")
@@ -494,18 +596,13 @@ export default ({
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const request = await getRequestObject({
+      return getAuthorizeUrl({
         scope,
         state,
         claims: _claims,
         nonce,
+        codeChallenge,
       })
-
-      const requestUri = await getRequestUri(request)
-      const url = getAuthorizeUrlFromRequestUri({
-        requestUri,
-      })
-      return url
     },
 
     getRecurringPaymentAuthorizeUrl: async ({
@@ -527,6 +624,7 @@ export default ({
       nonce,
       userId,
       claims = {},
+      codeChallenge,
     }: {
       bankId: string
       payeeId?: string
@@ -546,6 +644,7 @@ export default ({
       nonce?: string
       userId: string
       claims?: any
+      codeChallenge?: string
     }) => {
       if (!state) {
         console.error("State is required")
@@ -591,18 +690,13 @@ export default ({
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const request = await getRequestObject({
+      return getAuthorizeUrl({
         scope,
         state,
         claims: _claims,
         nonce,
+        codeChallenge,
       })
-
-      const requestUri = await getRequestUri(request)
-      const url = getAuthorizeUrlFromRequestUri({
-        requestUri,
-      })
-      return url
     },
 
     getStandingOrderAuthorizeUrl: async ({
@@ -626,6 +720,7 @@ export default ({
       nonce,
       context,
       claims = {},
+      codeChallenge,
     }: {
       bankId: string
       payeeId?: string
@@ -647,6 +742,7 @@ export default ({
       nonce?: string
       context: string
       claims?: any
+      codeChallenge?: string
     }) => {
       if (!state) {
         console.error("State is required")
@@ -690,18 +786,13 @@ export default ({
 
       const _claims = R.mergeDeepRight(defaultClaims, claims)
 
-      const request = await getRequestObject({
+      return getAuthorizeUrl({
         scope,
         state,
         claims: _claims,
         nonce,
+        codeChallenge,
       })
-
-      const requestUri = await getRequestUri(request)
-      const url = getAuthorizeUrlFromRequestUri({
-        requestUri,
-      })
-      return url
     },
 
     getPushedAuthorisationRequestUrl: async ({
@@ -746,39 +837,17 @@ export default ({
         R.mergeDeepRight(defaultClaims),
       )(claims)
 
-      const authParams = filterUndefined({
-        client_id,
+      return getAuthorizeUrl({
         scope,
-        state,
+        claims: _claims,
+        codeChallenge,
+        enableAsync,
+        expirationDateTime,
         nonce,
-        redirect_uri,
-        response_type,
-        prompt: "consent",
+        permissions,
+        state,
+        transactionFromDateTime,
       })
-
-      const pkceParams = codeChallenge && {
-        code_challenge: codeChallenge,
-        code_challenge_method: "S256",
-      }
-
-      const request = await (client as any).requestObject(
-        {
-          ...authParams,
-          ...pkceParams,
-          claims: _claims,
-          expirationDateTime,
-          transactionFromDateTime,
-          enableAsync,
-        },
-        {
-          sign: request_object_signing_alg,
-        })
-
-      const {request_uri: requestUri} = await client.pushedAuthorizationRequest({request})
-
-      const url = getAuthorizeUrlFromRequestUri({requestUri})
-
-      return url
     },
 
   }

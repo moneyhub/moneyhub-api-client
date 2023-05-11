@@ -113,6 +113,8 @@ The `expirationDateTime` and `transactionFromDateTime` options can be set accord
 
 Set `enableAsync` to true if you wish to make an AIS connection that won't wait for accounts and transactions to be fetched.
 
+**Note:** all methods generate an authorise URL using the Pushed Authorisation Request (PAR) method, see [here](https://docs.moneyhubenterprise.com/docs/pushed-authorisation-requests-par) for more details.
+
 #### `getAuthorizeUrl`
 
 This method returns an authorize url for your API client. You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`.
@@ -250,6 +252,23 @@ const defaultClaims = {
 ```
 
 #### `getRefreshAuthorizeUrlForCreatedUser`
+
+#### `getAuthorizeUrlLegacy`
+
+This method returns an authorize url for your API client using the legacy method (where a request object is generated and passed in as the `request` query parameter). You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`. It has the same method signature as `getAuthorizeUrl`
+
+```javascript
+const url = await moneyhub.getAuthorizeUrlLegacy({
+  scope: "openid bank-id-scope other-data-scopes",
+  state: " your state value", // optional
+  nonce: "your nonce value", //optional
+  claims: claimsObject, // optional
+  permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth URL
+  expirationDateTime: "2022-09-01T00:00:00.000Z", // optional
+  transactionFromDateTime: "2020-09-01T00:00:00.000Z", // optional,
+  enableAsync: false, // optional
+});
+```
 
 This is a helper function that returns an authorize url for a specific user to refresh an existing connection. This function uses the scope `openid refresh`. (Only relevant for legacy connections)
 

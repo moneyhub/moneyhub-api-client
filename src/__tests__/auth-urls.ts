@@ -8,13 +8,7 @@ const bankId = "1ffe704d39629a929c8e293880fb449a"
 const state = "sample-state"
 const nonce = "sample-nonce"
 
-const parseJwt = (token?: string | string[]) => {
-  if (!token || Array.isArray(token)) return undefined
-  const base64String = token.split(".")[1]
-  const decodedValue = JSON.parse(Buffer.from(base64String,
-    "base64").toString("ascii"))
-  return decodedValue
-}
+const REQUEST_URI_REGEX = /urn:ietf:params:oauth:request_uri:.+/
 
 describe("Auth Urls", function() {
   let moneyhub: MoneyhubInstance,
@@ -32,11 +26,10 @@ describe("Auth Urls", function() {
       scope: `openid id:${bankId} accounts:read`,
     })
 
-    const {request} = querystring.parse(url)
-    const payload = parseJwt(request)
+    const {request_uri} = querystring.parse(url.split("?")[1])
 
     expect(url).to.be.a("string")
-    expect(payload).to.not.have.nested.property("claims.id_token.mh:consent.value.permissions")
+    expect(request_uri).to.match(REQUEST_URI_REGEX)
   })
 
   it("gets a basic auth url with permissions", async function() {
@@ -47,11 +40,10 @@ describe("Auth Urls", function() {
       permissions: ["permission-1"],
     })
 
-    const {request} = querystring.parse(url)
-    const payload = parseJwt(request)
+    const {request_uri} = querystring.parse(url.split("?")[1])
 
     expect(url).to.be.a("string")
-    expect(payload).to.have.deep.nested.property("claims.id_token.mh:consent.value.permissions", ["permission-1"])
+    expect(request_uri).to.match(REQUEST_URI_REGEX)
   })
 
   it("gets an auth url for a user", async function() {
@@ -62,11 +54,10 @@ describe("Auth Urls", function() {
       userId: "some-user-id",
     })
 
-    const {request} = querystring.parse(url)
-    const payload = parseJwt(request)
+    const {request_uri} = querystring.parse(url.split("?")[1])
 
     expect(url).to.be.a("string")
-    expect(payload).to.not.have.nested.property("claims.id_token.mh:consent.value.permissions")
+    expect(request_uri).to.match(REQUEST_URI_REGEX)
   })
 
   it("gets an auth url for a user with extra permissions", async function() {
@@ -78,11 +69,10 @@ describe("Auth Urls", function() {
       permissions: ["permission-1"],
     })
 
-    const {request} = querystring.parse(url)
-    const payload = parseJwt(request)
+    const {request_uri} = querystring.parse(url.split("?")[1])
 
     expect(url).to.be.a("string")
-    expect(payload).to.have.deep.nested.property("claims.id_token.mh:consent.value.permissions", ["permission-1"])
+    expect(request_uri).to.match(REQUEST_URI_REGEX)
   })
 
   it("gets a payment auth url", async function() {
@@ -137,11 +127,9 @@ describe("Auth Urls", function() {
       connectionId,
     })
 
-    const {request} = querystring.parse(url)
-    const payload = parseJwt(request)
+    const {request_uri} = querystring.parse(url.split("?")[1])
 
     expect(url).to.be.a("string")
-    expect(payload).to.have.nested.property("claims.id_token.mh:consent")
-    expect(payload).to.have.nested.property("claims.id_token.mh:con_id")
+    expect(request_uri).to.match(REQUEST_URI_REGEX)
   })
 })
