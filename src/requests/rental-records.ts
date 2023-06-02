@@ -5,7 +5,7 @@ export default ({config, request}: RequestsParams): RentalRecordsRequests=> {
   const {resourceServerUrl} = config
 
   return {
-    getRentalRecords: async ({userId}) =>
+    getRentalRecords: async ({userId}, options) =>
       request(
         `${resourceServerUrl}/rental-records`,
         {
@@ -13,9 +13,10 @@ export default ({config, request}: RequestsParams): RentalRecordsRequests=> {
             scope: "rental_records:read",
             sub: userId,
           },
+          options,
         },
       ),
-    createRentalRecord: async ({userId, rentalData}) => {
+    createRentalRecord: async ({userId, rentalData}, options) => {
       return await request(
         `${resourceServerUrl}/rental-records`,
         {
@@ -25,10 +26,11 @@ export default ({config, request}: RequestsParams): RentalRecordsRequests=> {
             sub: userId,
           },
           body: rentalData,
+          options,
         },
       )
     },
-    deleteRentalRecord: async ({userId, rentalId}) => {
+    deleteRentalRecord: async ({userId, rentalId}, options) => {
       return await request(
         `${resourceServerUrl}/rental-records/${rentalId}`,
         {
@@ -37,6 +39,7 @@ export default ({config, request}: RequestsParams): RentalRecordsRequests=> {
             scope: "rental_records:write",
             sub: userId,
           },
+          options,
         },
       )
     },

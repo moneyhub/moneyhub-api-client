@@ -1,10 +1,10 @@
-import {ApiResponse, SearchParams} from "../../request"
+import {ApiResponse, ExtraOptions, SearchParams} from "../../request"
 import {SavingsGoal} from "../../schema/savings-goal"
 
 export interface SavingsGoalsRequests {
   getSavingsGoals: (
     params: SearchParams,
-    userId: string
+    userId: string, options?: ExtraOptions
   ) => Promise<ApiResponse<SavingsGoal[]>>
 
   getSavingsGoal: ({
@@ -13,7 +13,7 @@ export interface SavingsGoalsRequests {
   }: {
     goalId: string
     userId: string
-  }) => Promise<ApiResponse<SavingsGoal>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<SavingsGoal>>
 
   createSavingsGoal: ({
     name,
@@ -32,7 +32,7 @@ export interface SavingsGoalsRequests {
       currency?: string
     }
     userId: string
-  }) => Promise<ApiResponse<SavingsGoal>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<SavingsGoal>>
 
   updateSavingsGoal: ({
     goalId,
@@ -52,7 +52,7 @@ export interface SavingsGoalsRequests {
       value: number
     }
     userId: string
-  }) => Promise<ApiResponse<SavingsGoal>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<SavingsGoal>>
 
   deleteSavingsGoal: ({
     goalId,
@@ -60,5 +60,5 @@ export interface SavingsGoalsRequests {
   }: {
     goalId: string
     userId: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 }

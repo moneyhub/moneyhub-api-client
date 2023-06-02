@@ -7,87 +7,97 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
   const scimUsersEndpoint = identityServiceUrl + "/scim/users"
 
   return {
-    registerUser: async ({clientUserId}) =>
+    registerUser: async ({clientUserId}, options) =>
       request(usersEndpoint, {
         method: "POST",
         cc: {
           scope: "user:create",
         },
         body: {clientUserId},
+        options,
       }),
 
-    getUsers: async (params = {}) =>
+    getUsers: async (params = {}, options) =>
       request(usersEndpoint, {
         searchParams: params,
         cc: {
           scope: "user:read",
         },
+        options,
       }),
 
-    getSCIMUsers: async (params = {}) =>
+    getSCIMUsers: async (params = {}, options) =>
       request(scimUsersEndpoint, {
         searchParams: params,
         cc: {
           scope: "scim_user:read",
         },
+        options,
       }),
 
-    getUser: async ({userId}) =>
+    getUser: async ({userId}, options) =>
       request(`${usersEndpoint}/${userId}`, {
         cc: {
           scope: "user:read",
         },
+        options,
       }),
 
-    getUserConnections: async ({userId}) =>
+    getUserConnections: async ({userId}, options) =>
       request(`${usersEndpoint}/${userId}/connections`, {
         cc: {
           scope: "user:read",
         },
+        options,
       }),
 
-    deleteUserConnection: async ({userId, connectionId}) =>
+    deleteUserConnection: async ({userId, connectionId}, options) =>
       request(`${usersEndpoint}/${userId}/connection/${connectionId}`, {
         method: "DELETE",
         returnStatus: true,
         cc: {
           scope: "user:delete",
         },
+        options,
       }),
 
-    deleteUser: async ({userId}) =>
+    deleteUser: async ({userId}, options) =>
       request(`${usersEndpoint}/${userId}`, {
         method: "DELETE",
         returnStatus: true,
         cc: {
           scope: "user:delete",
         },
+        options,
       }),
 
-    getConnectionSyncs: async ({userId, connectionId, params = {}}) =>
+    getConnectionSyncs: async ({userId, connectionId, params = {}}, options) =>
       request(`${usersEndpoint}/${userId}/connections/${connectionId}/syncs`, {
         searchParams: params,
         cc: {
           scope: "user:read",
         },
+        options,
       }),
 
-    getUserSyncs: async ({userId, params = {}}) =>
+    getUserSyncs: async ({userId, params = {}}, options) =>
       request(`${usersEndpoint}/${userId}/syncs`, {
         searchParams: params,
         cc: {
           scope: "user:read",
         },
+        options,
       }),
 
-    getSync: async ({userId, syncId}) =>
+    getSync: async ({userId, syncId}, options) =>
       request(`${usersEndpoint}/${userId}/syncs/${syncId}`, {
         cc: {
           scope: "user:read",
         },
+        options,
       }),
 
-    updateUserConnection: async ({userId, connectionId, expiresAt}) =>
+    updateUserConnection: async ({userId, connectionId, expiresAt}, options) =>
       request(`${usersEndpoint}/${userId}/connections/${connectionId}`, {
         method: "PATCH",
         returnStatus: true,
@@ -95,6 +105,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
           scope: "user:update",
         },
         body: {expiresAt},
+        options,
       }),
   }
 }

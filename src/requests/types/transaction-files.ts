@@ -1,4 +1,4 @@
-import {ApiResponse} from "../../request"
+import {ApiResponse, ExtraOptions} from "../../request"
 import {TransactionFile} from "../../schema/transaction"
 
 export interface TransactionFilesRequests {
@@ -12,7 +12,7 @@ export interface TransactionFilesRequests {
     transactionId: string
     fileName: string
     fileData: any
-  }) => Promise<ApiResponse<TransactionFile>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<TransactionFile>>
 
   getTransactionFiles: ({
     userId,
@@ -20,7 +20,7 @@ export interface TransactionFilesRequests {
   }: {
     userId: string
     transactionId: string
-  }) => Promise<ApiResponse<TransactionFile[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<TransactionFile[]>>
 
   getTransactionFile: ({
     userId,
@@ -30,7 +30,7 @@ export interface TransactionFilesRequests {
     userId: string
     transactionId: string
     fileId: string
-  }) => Promise<ApiResponse<TransactionFile>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<TransactionFile>>
 
   deleteTransactionFile: ({
     userId,
@@ -40,5 +40,5 @@ export interface TransactionFilesRequests {
     userId: string
     transactionId: string
     fileId: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 }

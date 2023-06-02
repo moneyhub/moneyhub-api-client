@@ -1,4 +1,4 @@
-import {ApiResponse, SearchParams} from "../../request"
+import {ApiResponse, ExtraOptions, SearchParams} from "../../request"
 import {Beneficiary, BeneficiaryWithDetails} from "../../schema/beneficiary"
 
 export interface BeneficiariesRequests {
@@ -8,7 +8,7 @@ export interface BeneficiariesRequests {
   }: {
     id: string
     userId: string
-  }) => Promise<ApiResponse<Beneficiary>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Beneficiary>>
 
   getBeneficiaryWithDetail: ({
     id,
@@ -16,7 +16,7 @@ export interface BeneficiariesRequests {
   }: {
     id: string
     userId: string
-  }) => Promise<ApiResponse<BeneficiaryWithDetails>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<BeneficiaryWithDetails>>
 
   getBeneficiaries: ({
     params,
@@ -24,7 +24,7 @@ export interface BeneficiariesRequests {
   }: {
     params?: SearchParams
     userId: string
-  }) => Promise<ApiResponse<Beneficiary[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Beneficiary[]>>
 
   getBeneficiariesWithDetail: ({
     params,
@@ -32,5 +32,5 @@ export interface BeneficiariesRequests {
   }: {
     params?: SearchParams
     userId: string
-  }) => Promise<ApiResponse<BeneficiaryWithDetails[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<BeneficiaryWithDetails[]>>
 }

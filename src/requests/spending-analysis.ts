@@ -5,7 +5,7 @@ export default ({config, request}: RequestsParams): SpendingAnalysisRequests => 
   const {resourceServerUrl} = config
 
   return {
-    getSpendingAnalysis: async ({userId, dates, accountIds, categoryIds, projectIds}) => {
+    getSpendingAnalysis: async ({userId, dates, accountIds, categoryIds, projectIds}, options) => {
       return await request(
         `${resourceServerUrl}/spending-analysis`,
         {
@@ -15,6 +15,7 @@ export default ({config, request}: RequestsParams): SpendingAnalysisRequests => 
             sub: userId,
           },
           body: {dates, accountIds, categoryIds, projectIds},
+          options,
         },
       )
     },

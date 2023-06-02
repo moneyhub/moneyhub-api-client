@@ -6,22 +6,24 @@ export default ({config, request}: RequestsParams): SpendingGoalsRequests => {
   const spendingGoalsEndpoint = resourceServerUrl + "/spending-goals"
 
   return {
-    getSpendingGoals: async (params = {}, userId) =>
+    getSpendingGoals: async (params = {}, userId, options) =>
       request(spendingGoalsEndpoint, {
         searchParams: params,
         cc: {
           scope: "spending_goals:read",
           sub: userId,
         },
+        options,
       }),
-    getSpendingGoal: async ({goalId, userId}) =>
+    getSpendingGoal: async ({goalId, userId}, options) =>
       request(`${spendingGoalsEndpoint}/${goalId}`, {
         cc: {
           scope: "spending_goals:read",
           sub: userId,
         },
+        options,
       }),
-    createSpendingGoal: async ({categoryId, periodType, periodStart, amount, userId}) =>
+    createSpendingGoal: async ({categoryId, periodType, periodStart, amount, userId}, options) =>
       request(spendingGoalsEndpoint, {
         method: "POST",
         cc: {
@@ -29,8 +31,9 @@ export default ({config, request}: RequestsParams): SpendingGoalsRequests => {
           sub: userId,
         },
         body: {categoryId, periodType, periodStart, amount},
+        options,
       }),
-    updateSpendingGoal: async ({goalId, categoryId, amount, userId}) =>
+    updateSpendingGoal: async ({goalId, categoryId, amount, userId}, options) =>
       request(`${spendingGoalsEndpoint}/${goalId}`, {
         method: "PATCH",
         cc: {
@@ -38,8 +41,9 @@ export default ({config, request}: RequestsParams): SpendingGoalsRequests => {
           sub: userId,
         },
         body: {categoryId, amount},
+        options,
       }),
-    deleteSpendingGoal: async ({goalId, userId}) =>
+    deleteSpendingGoal: async ({goalId, userId}, options) =>
       request(`${spendingGoalsEndpoint}/${goalId}`, {
         method: "DELETE",
         cc: {
@@ -47,6 +51,7 @@ export default ({config, request}: RequestsParams): SpendingGoalsRequests => {
           sub: userId,
         },
         returnStatus: true,
+        options,
       }),
   }
 }

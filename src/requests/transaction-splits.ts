@@ -8,7 +8,7 @@ export default ({config, request}: RequestsParams): TransactionSplitsRequests =>
       userId,
       transactionId,
       splits,
-    }) =>
+    }, options) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/splits`, {
         method: "POST",
         cc: {
@@ -16,17 +16,19 @@ export default ({config, request}: RequestsParams): TransactionSplitsRequests =>
           sub: userId,
         },
         body: splits,
+        options,
       }),
 
     getTransactionSplits: async ({
       userId,
       transactionId,
-    }) =>
+    }, options) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/splits`, {
         cc: {
           scope: "transactions:read:all",
           sub: userId,
         },
+        options,
       }),
 
     patchTransactionSplit: async ({
@@ -34,7 +36,7 @@ export default ({config, request}: RequestsParams): TransactionSplitsRequests =>
       transactionId,
       splitId,
       split,
-    }) =>
+    }, options) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/splits/${splitId}`, {
         method: "PATCH",
         cc: {
@@ -42,12 +44,13 @@ export default ({config, request}: RequestsParams): TransactionSplitsRequests =>
           sub: userId,
         },
         body: split,
+        options,
       }),
 
     deleteTransactionSplits: async ({
       userId,
       transactionId,
-    }) =>
+    }, options) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/splits`, {
         method: "DELETE",
         cc: {
@@ -55,6 +58,7 @@ export default ({config, request}: RequestsParams): TransactionSplitsRequests =>
           sub: userId,
         },
         returnStatus: true,
+        options,
       }),
   }
 }

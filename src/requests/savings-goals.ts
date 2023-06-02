@@ -6,22 +6,24 @@ export default ({config, request}: RequestsParams): SavingsGoalsRequests => {
   const savingsGoalsEndpoint = resourceServerUrl + "/savings-goals"
 
   return {
-    getSavingsGoals: async (params = {}, userId) =>
+    getSavingsGoals: async (params = {}, userId, options) =>
       request(savingsGoalsEndpoint, {
         searchParams: params,
         cc: {
           scope: "savings_goals:read",
           sub: userId,
         },
+        options,
       }),
-    getSavingsGoal: async ({goalId, userId}) =>
+    getSavingsGoal: async ({goalId, userId}, options) =>
       request(`${savingsGoalsEndpoint}/${goalId}`, {
         cc: {
           scope: "savings_goals:read",
           sub: userId,
         },
+        options,
       }),
-    createSavingsGoal: async ({name, imageUrl, notes, accounts, amount, userId}) =>
+    createSavingsGoal: async ({name, imageUrl, notes, accounts, amount, userId}, options) =>
       request(savingsGoalsEndpoint, {
         method: "POST",
         cc: {
@@ -29,8 +31,9 @@ export default ({config, request}: RequestsParams): SavingsGoalsRequests => {
           sub: userId,
         },
         body: {name, imageUrl, notes, accounts, amount},
+        options,
       }),
-    updateSavingsGoal: async ({goalId, name, amount, imageUrl, notes, accounts, userId}) =>
+    updateSavingsGoal: async ({goalId, name, amount, imageUrl, notes, accounts, userId}, options) =>
       request(`${savingsGoalsEndpoint}/${goalId}`, {
         method: "PATCH",
         cc: {
@@ -38,8 +41,9 @@ export default ({config, request}: RequestsParams): SavingsGoalsRequests => {
           sub: userId,
         },
         body: {name, amount, imageUrl, notes, accounts},
+        options,
       }),
-    deleteSavingsGoal: async ({goalId, userId}) =>
+    deleteSavingsGoal: async ({goalId, userId}, options) =>
       request(`${savingsGoalsEndpoint}/${goalId}`, {
         method: "DELETE",
         cc: {
@@ -47,6 +51,7 @@ export default ({config, request}: RequestsParams): SavingsGoalsRequests => {
           sub: userId,
         },
         returnStatus: true,
+        options,
       }),
   }
 }

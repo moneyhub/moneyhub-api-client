@@ -2,7 +2,7 @@ import type {AccountType} from "../../schema/account"
 import type {AuthRequestPostPayment, AuthRequestPostRecurringPayment, AuthRequestPostReversePayment} from "../../schema/payment"
 import type {AuthRequestStandingOrderPost} from "../../schema/standing-order"
 import type {AuthParams, AuthRequest} from "../../schema/auth-request"
-import type {ApiResponse, SearchParams} from "../../request"
+import type {ApiResponse, ExtraOptions, SearchParams} from "../../request"
 
 type AuthRequestPermissions =
   | "ReadStandingOrdersBasic"
@@ -46,7 +46,7 @@ export interface AuthRequestsRequests {
     expirationDateTime,
     transactionsFromDateTime,
     sync,
-  }: CreateAuthRequestParams) => Promise<ApiResponse<AuthRequest>>
+  }: CreateAuthRequestParams, options?: ExtraOptions) => Promise<ApiResponse<AuthRequest>>
 
   completeAuthRequest: ({
     id,
@@ -54,9 +54,9 @@ export interface AuthRequestsRequests {
   }: {
     id: string
     authParams: AuthParams
-  }) => Promise<ApiResponse<AuthRequest>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<AuthRequest>>
 
-  getAllAuthRequests: (params?: SearchParams) => Promise<ApiResponse<AuthRequest[]>>
+  getAllAuthRequests: (params?: SearchParams, options?: ExtraOptions) => Promise<ApiResponse<AuthRequest[]>>
 
-  getAuthRequest: ({id}: {id: string}) => Promise<ApiResponse<AuthRequest>>
+  getAuthRequest: ({id}: {id: string}, options?: ExtraOptions) => Promise<ApiResponse<AuthRequest>>
 }

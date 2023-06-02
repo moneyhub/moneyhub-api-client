@@ -98,6 +98,17 @@ const moneyhub = await Moneyhub({
 })
 ```
 
+When making calls to our methods that require authentication, you can provide an extra argument at the end of these methods. This argument must be an object with these optional keys:
+
+```js
+{
+  token: "full.access.token" // if specified will be added to authorisation header of request
+  headers: {
+    Authorization: "Bearer full.access.token" // can be used to specify authorisation header or additional headers
+  }
+}
+```
+
 Once the api client has been initialised it provides a simple promise based interface with the following methods:
 
 ### Auth API

@@ -1,4 +1,4 @@
-import {ApiResponse} from "../../request"
+import {ApiResponse, ExtraOptions} from "../../request"
 import {TransactionSplit, TransactionSplitPatch, TransactionSplitPost} from "../../schema/transaction"
 
 export interface TransactionSplitsRequests {
@@ -10,7 +10,7 @@ export interface TransactionSplitsRequests {
     userId: string
     transactionId: string
     splits: TransactionSplitPost[]
-  }) => Promise<ApiResponse<TransactionSplit[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<TransactionSplit[]>>
 
   getTransactionSplits: ({
     userId,
@@ -18,7 +18,7 @@ export interface TransactionSplitsRequests {
   }: {
     userId: string
     transactionId: string
-  }) => Promise<ApiResponse<TransactionSplit[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<TransactionSplit[]>>
 
   patchTransactionSplit: ({
     userId,
@@ -30,7 +30,7 @@ export interface TransactionSplitsRequests {
     transactionId: string
     splitId: string
     split: TransactionSplitPatch
-  }) => Promise<ApiResponse<TransactionSplit[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<TransactionSplit[]>>
 
   deleteTransactionSplits: ({
     userId,
@@ -38,5 +38,5 @@ export interface TransactionSplitsRequests {
   }: {
     userId: string
     transactionId: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 }

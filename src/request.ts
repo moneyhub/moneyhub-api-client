@@ -1,4 +1,4 @@
-import got, {Options} from "got"
+import got, {Options, Headers, OptionsOfJSONResponseBody} from "got"
 import {Client} from "openid-client"
 import qs from "query-string"
 import * as R from "ramda"
@@ -14,6 +14,7 @@ interface RequestOptions extends Pick<Options, "method" | "headers" | "searchPar
     scope: string
     sub?: string
   }
+  options?: ExtraOptions
 }
 
 interface Links {
@@ -41,6 +42,11 @@ export interface ApiResponse<T> {
   data: T
   links?: Links
   meta?: object
+}
+
+export interface ExtraOptions {
+  token?: string
+  headers?: Headers
 }
 
 const getResponseBody = (err: unknown) => {
@@ -75,24 +81,33 @@ export default ({
   options: {
     timeout?: number
   }
+// eslint-disable-next-line max-statements, complexity
 }) => async <T>(
   url: string,
   opts: RequestOptions = {},
 ): Promise<T> => {
-  const gotOpts = {
+  const gotOpts: OptionsOfJSONResponseBody = {
     method: opts.method || "GET",
     headers: opts.headers || {},
     searchParams: qs.stringify(opts.searchParams),
     timeout,
   }
 
-  if (opts.cc) {
+  if (opts.options?.token) {
+    gotOpts.headers = R.assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
+  }
+
+  if (opts.options?.headers) {
+    gotOpts.headers = R.mergeDeepRight(gotOpts.headers || {}, opts.options.headers) as Headers
+  }
+
+  if (!gotOpts.headers?.Authorization && opts.cc) {
     const {access_token} = await client.grant({
       grant_type: "client_credentials",
       scope: opts.cc.scope,
       sub: opts.cc.sub,
     })
-    gotOpts.headers.Authorization = `Bearer ${access_token}`
+    gotOpts.headers = R.assoc("Authorization", `Bearer ${access_token}`, gotOpts.headers)
   }
 
   if (opts.body) {

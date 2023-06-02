@@ -1,4 +1,4 @@
-import {ApiResponse} from "../../request"
+import {ApiResponse, ExtraOptions} from "../../request"
 import {SpendingAnalysis} from "../../schema/spending-analysis"
 
 type Date = {
@@ -20,5 +20,5 @@ export interface SpendingAnalysisRequests {
     accountIds?: string[]
     categoryIds?: string[]
     projectIds?: string[]
-  }) => Promise<ApiResponse<SpendingAnalysis>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<SpendingAnalysis>>
 }

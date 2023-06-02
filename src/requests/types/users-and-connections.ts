@@ -1,4 +1,4 @@
-import type {ApiResponse, SearchParams} from "../../request"
+import type {ApiResponse, ExtraOptions, SearchParams} from "../../request"
 import type {UserConnection} from "../../schema/connection"
 import type {ConnectionSync} from "../../schema/sync"
 import type {User} from "../../schema/user"
@@ -8,27 +8,27 @@ export interface UsersAndConnectionsRequests {
     clientUserId,
   }: {
     clientUserId: string
-  }) => Promise<User>
+  }, options?: ExtraOptions) => Promise<User>
 
   getUsers: (
-    params?: SearchParams
+    params?: SearchParams, options?: ExtraOptions
   ) => Promise<ApiResponse<User[]>>
 
   getSCIMUsers: (
-    params?: SearchParams
+    params?: SearchParams, options?: ExtraOptions
   ) => Promise<ApiResponse<any>>
 
   getUser: ({
     userId,
   }: {
     userId: string
-  }) => Promise<User>
+  }, options?: ExtraOptions) => Promise<User>
 
   getUserConnections: ({
     userId,
   }: {
     userId: string
-  }) => Promise<ApiResponse<UserConnection[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<UserConnection[]>>
 
   deleteUserConnection: ({
     userId,
@@ -36,13 +36,13 @@ export interface UsersAndConnectionsRequests {
   }: {
     userId: string
     connectionId: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 
   deleteUser: ({
     userId,
   }: {
     userId: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 
   getConnectionSyncs: ({
     userId,
@@ -52,7 +52,7 @@ export interface UsersAndConnectionsRequests {
     userId: string
     connectionId: string
     params?: SearchParams
-  }) => Promise<ApiResponse<ConnectionSync[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<ConnectionSync[]>>
 
   getUserSyncs: ({
     userId,
@@ -60,7 +60,7 @@ export interface UsersAndConnectionsRequests {
   }: {
     userId: string
     params?: SearchParams
-  }) => Promise<ApiResponse<ConnectionSync[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<ConnectionSync[]>>
 
   getSync: ({
     userId,
@@ -68,7 +68,7 @@ export interface UsersAndConnectionsRequests {
   }: {
     userId: string
     syncId: string
-  }) => Promise<ApiResponse<ConnectionSync>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<ConnectionSync>>
 
   updateUserConnection: ({
     userId,
@@ -78,5 +78,5 @@ export interface UsersAndConnectionsRequests {
     userId: string
     connectionId: string
     expiresAt: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 }
