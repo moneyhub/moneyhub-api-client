@@ -5,23 +5,25 @@ export default ({config, request}: RequestsParams): ProjectsRequests => {
   const {resourceServerUrl} = config
 
   return {
-    getProjects: async ({userId, params = {}}) =>
+    getProjects: async ({userId, params = {}}, options) =>
       request(`${resourceServerUrl}/projects`, {
         searchParams: params,
         cc: {
           scope: "projects:read",
           sub: userId,
         },
+        options,
       }),
-    getProject: async ({userId, projectId}) =>
+    getProject: async ({userId, projectId}, options) =>
       request(`${resourceServerUrl}/projects/${projectId}`, {
         cc: {
           scope: "projects:read",
           sub: userId,
         },
+        options,
       }),
 
-    addProject: async ({userId, project}) =>
+    addProject: async ({userId, project}, options) =>
       request(`${resourceServerUrl}/projects`, {
         method: "POST",
         cc: {
@@ -29,9 +31,10 @@ export default ({config, request}: RequestsParams): ProjectsRequests => {
           sub: userId,
         },
         body: project,
+        options,
       }),
 
-    updateProject: async ({userId, projectId, project}) =>
+    updateProject: async ({userId, projectId, project}, options) =>
       request(`${resourceServerUrl}/projects/${projectId}`, {
         method: "PATCH",
         cc: {
@@ -39,9 +42,10 @@ export default ({config, request}: RequestsParams): ProjectsRequests => {
           sub: userId,
         },
         body: project,
+        options,
       }),
 
-    deleteProject: async ({userId, projectId}) =>
+    deleteProject: async ({userId, projectId}, options) =>
       request(`${resourceServerUrl}/projects/${projectId}`, {
         method: "DELETE",
         cc: {
@@ -49,6 +53,7 @@ export default ({config, request}: RequestsParams): ProjectsRequests => {
           sub: userId,
         },
         returnStatus: true,
+        options,
       }),
   }
 }

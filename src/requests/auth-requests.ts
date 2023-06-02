@@ -25,7 +25,7 @@ export default ({
       expirationDateTime,
       transactionsFromDateTime,
       sync,
-    }) =>
+    }, options) =>
       request(authRequestEndpoint, {
         method: "POST",
         cc: {
@@ -48,9 +48,10 @@ export default ({
           transactionFromDateTime: transactionsFromDateTime,
           sync,
         },
+        options,
       }),
 
-    completeAuthRequest: async ({id, authParams}) =>
+    completeAuthRequest: async ({id, authParams}, options) =>
       request(`${authRequestEndpoint}/${id}`, {
         method: "PATCH",
         cc: {
@@ -59,21 +60,24 @@ export default ({
         body: {
           authParams,
         },
+        options,
       }),
 
-    getAllAuthRequests: async (params) =>
+    getAllAuthRequests: async (params, options) =>
       request(authRequestEndpoint, {
         searchParams: params,
         cc: {
           scope: "auth_requests:read",
         },
+        options,
       }),
 
-    getAuthRequest: async ({id}) =>
+    getAuthRequest: async ({id}, options) =>
       request(`${authRequestEndpoint}/${id}`, {
         cc: {
           scope: "auth_requests:read",
         },
+        options,
       }),
   }
 }

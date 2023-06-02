@@ -1,4 +1,4 @@
-import {ApiResponse} from "../../request"
+import {ApiResponse, ExtraOptions} from "../../request"
 import {RentalRecord, RentalRecordPost} from "../../schema/rental-record"
 
 export interface RentalRecordsRequests {
@@ -6,7 +6,7 @@ export interface RentalRecordsRequests {
     userId,
   }: {
     userId: string
-  }) => Promise<ApiResponse<RentalRecord[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<RentalRecord[]>>
 
   createRentalRecord: ({
     userId,
@@ -14,7 +14,7 @@ export interface RentalRecordsRequests {
   }: {
     userId: string
     rentalData: RentalRecordPost
-  }) => Promise<ApiResponse<RentalRecord>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<RentalRecord>>
 
   deleteRentalRecord: ({
     userId,
@@ -22,5 +22,5 @@ export interface RentalRecordsRequests {
   }: {
     userId: string
     rentalId: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 }

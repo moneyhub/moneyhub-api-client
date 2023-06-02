@@ -1,4 +1,4 @@
-import {ApiResponse} from "../../request"
+import {ApiResponse, ExtraOptions} from "../../request"
 import {Transaction, TransactionPatch, TransactionPost, TransactionSearchParams} from "../../schema/transaction"
 
 export interface TransactionsRequests {
@@ -8,7 +8,7 @@ export interface TransactionsRequests {
   }: {
     userId: string
     params?: TransactionSearchParams
-  }) => Promise<ApiResponse<Transaction[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Transaction[]>>
 
   getTransaction: ({
     userId,
@@ -16,7 +16,7 @@ export interface TransactionsRequests {
   }: {
     userId: string
     transactionId: string
-  }) => Promise<ApiResponse<Transaction>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Transaction>>
 
   addTransaction: ({
     userId,
@@ -24,7 +24,7 @@ export interface TransactionsRequests {
   }: {
     userId: string
     transaction: TransactionPost
-  }) => Promise<ApiResponse<Transaction>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Transaction>>
 
   addTransactions: ({
     userId,
@@ -36,7 +36,7 @@ export interface TransactionsRequests {
     params?: {
       categorise?: boolean
     }
-  }) => Promise<ApiResponse<{
+  }, options?: ExtraOptions) => Promise<ApiResponse<{
     id: string
   }[]>>
 
@@ -48,7 +48,7 @@ export interface TransactionsRequests {
     userId: string
     transactionId: string
     transaction: TransactionPatch
-  }) => Promise<ApiResponse<Transaction>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Transaction>>
 
   deleteTransaction: ({
     userId,
@@ -56,5 +56,5 @@ export interface TransactionsRequests {
   }: {
     userId: string
     transactionId: string
-  }) => Promise<ApiResponse<number>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<number>>
 }

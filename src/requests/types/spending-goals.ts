@@ -1,4 +1,4 @@
-import {ApiResponse, SearchParams} from "../../request"
+import {ApiResponse, ExtraOptions, SearchParams} from "../../request"
 import {SpendingGoal} from "../../schema/spending-goal"
 
 type SpendingGoalsPeriodType =
@@ -12,7 +12,7 @@ type Amount = {
 export interface SpendingGoalsRequests {
   getSpendingGoals: (
     params: SearchParams,
-    userId: string
+    userId: string, options?: ExtraOptions
   ) => Promise<ApiResponse<SpendingGoal[]>>
 
   getSpendingGoal: ({
@@ -21,7 +21,7 @@ export interface SpendingGoalsRequests {
   }: {
     goalId: string
     userId: string
-  }) => Promise<ApiResponse<SpendingGoal>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<SpendingGoal>>
 
   createSpendingGoal: ({
     categoryId,
@@ -35,7 +35,7 @@ export interface SpendingGoalsRequests {
     periodStart?: string
     amount: Amount
     userId: string
-  }) => Promise<ApiResponse<SpendingGoal>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<SpendingGoal>>
 
   updateSpendingGoal: ({
     goalId,
@@ -47,7 +47,7 @@ export interface SpendingGoalsRequests {
     categoryId?: string
     amount?: Amount
     userId: string
-  }) => Promise<ApiResponse<SpendingGoal>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<SpendingGoal>>
 
   deleteSpendingGoal: ({
     goalId,
@@ -55,5 +55,5 @@ export interface SpendingGoalsRequests {
   }: {
     goalId: string
     userId: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 }

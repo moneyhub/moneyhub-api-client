@@ -5,22 +5,24 @@ export default ({config, request}: RequestsParams): TransactionsRequests => {
   const {resourceServerUrl} = config
 
   return {
-    getTransactions: ({userId, params}) =>
+    getTransactions: ({userId, params}, options) =>
       request(`${resourceServerUrl}/transactions`, {
         searchParams: params,
         cc: {
           scope: "transactions:read:all",
           sub: userId,
         },
+        options,
       }),
-    getTransaction: ({userId, transactionId}) =>
+    getTransaction: ({userId, transactionId}, options) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
         cc: {
           scope: "transactions:read:all",
           sub: userId,
         },
+        options,
       }),
-    addTransaction: ({userId, transaction}) =>
+    addTransaction: ({userId, transaction}, options) =>
       request(`${resourceServerUrl}/transactions`, {
         method: "POST",
         cc: {
@@ -28,8 +30,9 @@ export default ({config, request}: RequestsParams): TransactionsRequests => {
           sub: userId,
         },
         body: transaction,
+        options,
       }),
-    addTransactions: ({userId, transactions, params = {}}) =>
+    addTransactions: ({userId, transactions, params = {}}, options) =>
       request(`${resourceServerUrl}/transactions-collection`, {
         method: "POST",
         searchParams: params,
@@ -38,8 +41,9 @@ export default ({config, request}: RequestsParams): TransactionsRequests => {
           sub: userId,
         },
         body: transactions,
+        options,
       }),
-    updateTransaction: ({userId, transactionId, transaction}) =>
+    updateTransaction: ({userId, transactionId, transaction}, options) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
         method: "PATCH",
         cc: {
@@ -47,8 +51,9 @@ export default ({config, request}: RequestsParams): TransactionsRequests => {
           sub: userId,
         },
         body: transaction,
+        options,
       }),
-    deleteTransaction: ({userId, transactionId}) =>
+    deleteTransaction: ({userId, transactionId}, options) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
         method: "DELETE",
         cc: {
@@ -56,6 +61,7 @@ export default ({config, request}: RequestsParams): TransactionsRequests => {
           sub: userId,
         },
         returnStatus: true,
+        options,
       }),
   }
 }

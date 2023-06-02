@@ -1,4 +1,4 @@
-import {ApiResponse} from "../../request"
+import {ApiResponse, ExtraOptions} from "../../request"
 import {Payee, PayeesSearchParams} from "../../schema/payee"
 
 export interface PayeesRequests {
@@ -14,9 +14,9 @@ export interface PayeesRequests {
     name: string
     externalId?: string
     userId?: string
-  }) => Promise<ApiResponse<Payee>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Payee>>
 
-  getPayees: (params?: PayeesSearchParams) => Promise<ApiResponse<Payee[]>>
+  getPayees: (params?: PayeesSearchParams, options?: ExtraOptions) => Promise<ApiResponse<Payee[]>>
 
-  getPayee: ({id}: {id: string}) => Promise<ApiResponse<Payee>>
+  getPayee: ({id}: {id: string}, options?: ExtraOptions) => Promise<ApiResponse<Payee>>
 }

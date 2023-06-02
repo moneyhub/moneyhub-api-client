@@ -12,7 +12,7 @@ export default ({config, request}: RequestsParams): SyncRequests => {
       connectionId,
       customerIpAddress,
       customerLastLoggedTime,
-    }) =>
+    }, options) =>
       request(`${resourceServerUrl}/sync/${connectionId}`, {
         method: "POST",
         body: filterUndefined({customerIpAddress, customerLastLoggedTime}),
@@ -20,6 +20,7 @@ export default ({config, request}: RequestsParams): SyncRequests => {
           scope: "accounts:read accounts:write:all",
           sub: userId,
         },
+        options,
       }),
   }
 }

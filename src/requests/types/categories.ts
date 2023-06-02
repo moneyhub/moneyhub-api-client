@@ -1,4 +1,4 @@
-import {ApiResponse, SearchParams} from "../../request"
+import {ApiResponse, ExtraOptions, SearchParams} from "../../request"
 import {Category, CategoryGroup, CategoryPost, CategoryType} from "../../schema/category"
 
 export interface CategoriesRequests {
@@ -8,13 +8,13 @@ export interface CategoriesRequests {
   }: {
     userId: string
     params?: SearchParams & {type?: CategoryType}
-  }) => Promise<ApiResponse<Category[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Category[]>>
 
   getStandardCategories: ({
     params,
   }: {
     params?: SearchParams & {type?: CategoryType}
-  }) => Promise<ApiResponse<Category[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Category[]>>
 
   getCategory: ({
     userId,
@@ -24,7 +24,7 @@ export interface CategoriesRequests {
     userId: string
     categoryId: string
     params?: {type?: CategoryType}
-  }) => Promise<ApiResponse<Category>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Category>>
 
   getCategoryGroups: ({
     userId,
@@ -32,13 +32,13 @@ export interface CategoriesRequests {
   }: {
     userId: string
     params?: {type?: CategoryType}
-  }) => Promise<ApiResponse<CategoryGroup[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<CategoryGroup[]>>
 
   getStandardCategoryGroups: ({
     params,
   }: {
     params?: {type?: CategoryType}
-  }) => Promise<ApiResponse<CategoryGroup[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<CategoryGroup[]>>
 
   createCustomCategory: ({
     userId,
@@ -46,5 +46,5 @@ export interface CategoriesRequests {
   }: {
     userId: string
     category: CategoryPost
-  }) => Promise<ApiResponse<Category>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Category>>
 }

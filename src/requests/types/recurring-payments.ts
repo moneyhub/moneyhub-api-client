@@ -1,14 +1,14 @@
-import {ApiResponse} from "../../request"
+import {ApiResponse, ExtraOptions} from "../../request"
 import {PaymentsClaims, RecurringPaymentRequest, RecurringPaymentSearchParams} from "../../schema/payment"
 
 export interface RecurringPaymentsRequests {
-  getRecurringPayments: (params?: RecurringPaymentSearchParams) => Promise<ApiResponse<RecurringPaymentRequest[]>>
+  getRecurringPayments: (params?: RecurringPaymentSearchParams, options?: ExtraOptions) => Promise<ApiResponse<RecurringPaymentRequest[]>>
 
   getRecurringPayment: ({
     recurringPaymentId,
   }: {
     recurringPaymentId: string
-  }) => Promise<ApiResponse<RecurringPaymentRequest>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<RecurringPaymentRequest>>
 
   makeRecurringPayment: ({
     recurringPaymentId,
@@ -16,11 +16,11 @@ export interface RecurringPaymentsRequests {
   }: {
     recurringPaymentId: string
     payment: PaymentsClaims
-  }) => Promise<ApiResponse<RecurringPaymentRequest>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<RecurringPaymentRequest>>
 
   revokeRecurringPayment: ({
     recurringPaymentId,
   }: {
     recurringPaymentId: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 }

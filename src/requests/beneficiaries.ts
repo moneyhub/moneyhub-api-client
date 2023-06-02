@@ -1,4 +1,4 @@
-import {RequestsParams, SearchParams} from "../request"
+import {ExtraOptions, RequestsParams, SearchParams} from "../request"
 import {BeneficiariesRequests} from "./types/beneficiaries"
 export default ({config, request}: RequestsParams): BeneficiariesRequests => {
   const {resourceServerUrl} = config
@@ -12,12 +12,13 @@ export default ({config, request}: RequestsParams): BeneficiariesRequests => {
     id: string
     userId: string
     scope: string
-  }): Promise<any> =>
+  }, options?: ExtraOptions): Promise<any> =>
     request(`${resourceServerUrl}/beneficiaries/${id}`, {
       cc: {
         sub: userId,
         scope,
       },
+      options,
     })
 
   const getAllBeneficiaries = ({
@@ -28,22 +29,23 @@ export default ({config, request}: RequestsParams): BeneficiariesRequests => {
     params: SearchParams
     userId: string
     scope: string
-  }): Promise<any> =>
+  }, options?: ExtraOptions): Promise<any> =>
     request(`${resourceServerUrl}/beneficiaries`, {
       searchParams: params,
       cc: {
         sub: userId,
         scope,
       },
+      options,
     })
   return {
-    getBeneficiary: ({id, userId}) =>
-      getOneBeneficiary({id, userId, scope: BENEFICIARIES_READ_SCOPE}),
-    getBeneficiaryWithDetail: ({id, userId}) =>
-      getOneBeneficiary({id, userId, scope: BENEFICIARIES_DETAIL_READ_SCOPE}),
-    getBeneficiaries: ({userId, params = {}}) =>
-      getAllBeneficiaries({params, userId, scope: BENEFICIARIES_READ_SCOPE}),
-    getBeneficiariesWithDetail: ({userId, params = {}}) =>
-      getAllBeneficiaries({params, userId, scope: BENEFICIARIES_DETAIL_READ_SCOPE}),
+    getBeneficiary: ({id, userId}, options) =>
+      getOneBeneficiary({id, userId, scope: BENEFICIARIES_READ_SCOPE}, options),
+    getBeneficiaryWithDetail: ({id, userId}, options) =>
+      getOneBeneficiary({id, userId, scope: BENEFICIARIES_DETAIL_READ_SCOPE}, options),
+    getBeneficiaries: ({userId, params = {}}, options) =>
+      getAllBeneficiaries({params, userId, scope: BENEFICIARIES_READ_SCOPE}, options),
+    getBeneficiariesWithDetail: ({userId, params = {}}, options) =>
+      getAllBeneficiaries({params, userId, scope: BENEFICIARIES_DETAIL_READ_SCOPE}, options),
   }
 }

@@ -1,4 +1,4 @@
-import {ApiResponse} from "../../request"
+import {ApiResponse, ExtraOptions} from "../../request"
 import {RegularTransaction, RegularTransactionSearchParams} from "../../schema/regular-transaction"
 
 export interface RegularTransactionsRequests {
@@ -8,5 +8,5 @@ export interface RegularTransactionsRequests {
   }: {
     userId: string
     params?: RegularTransactionSearchParams
-  }) => Promise<ApiResponse<RegularTransaction[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<RegularTransaction[]>>
 }

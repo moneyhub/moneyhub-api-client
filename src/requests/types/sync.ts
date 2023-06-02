@@ -1,4 +1,4 @@
-import type {ApiResponse} from "../../request"
+import type {ApiResponse, ExtraOptions} from "../../request"
 import type {SyncResponse} from "../../schema/sync"
 
 export interface SyncRequests {
@@ -12,5 +12,5 @@ export interface SyncRequests {
     connectionId: string
     customerIpAddress?: string
     customerLastLoggedTime?: string
-  }) => Promise<ApiResponse<SyncResponse>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<SyncResponse>>
 }

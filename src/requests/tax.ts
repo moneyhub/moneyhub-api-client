@@ -6,13 +6,14 @@ export default ({config, request}: RequestsParams): TaxRequests => {
   const {resourceServerUrl} = config
 
   return {
-    getTaxReturn: ({userId, params = {}}) =>
+    getTaxReturn: ({userId, params = {}}, options) =>
       request(`${resourceServerUrl}/tax`, {
         searchParams: R.reject(R.isNil)(params),
         cc: {
           scope: "tax:read",
           sub: userId,
         },
+        options,
       }),
   }
 }

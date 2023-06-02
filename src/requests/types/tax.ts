@@ -1,4 +1,4 @@
-import {ApiResponse} from "../../request"
+import {ApiResponse, ExtraOptions} from "../../request"
 import {Tax, TaxSearchParams} from "../../schema/tax"
 
 export interface TaxRequests {
@@ -8,5 +8,5 @@ export interface TaxRequests {
   }: {
     userId: string
     params?: TaxSearchParams
-  }) => Promise<ApiResponse<Tax>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Tax>>
 }

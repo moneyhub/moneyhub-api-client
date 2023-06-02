@@ -1,4 +1,4 @@
-import {ApiResponse, SearchParams} from "../../request"
+import {ApiResponse, ExtraOptions, SearchParams} from "../../request"
 import {Project, ProjectPatch, ProjectPost} from "../../schema/project"
 
 export interface ProjectsRequests {
@@ -8,7 +8,7 @@ export interface ProjectsRequests {
   }: {
     userId: string
     params?: SearchParams
-  }) => Promise<ApiResponse<Project[]>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Project[]>>
 
   getProject: ({
     userId,
@@ -16,7 +16,7 @@ export interface ProjectsRequests {
   }: {
     userId: string
     projectId: string
-  }) => Promise<ApiResponse<Project>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Project>>
 
   addProject: ({
     userId,
@@ -24,7 +24,7 @@ export interface ProjectsRequests {
   }: {
     userId: string
     project: ProjectPost
-  }) => Promise<ApiResponse<Project>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Project>>
 
   updateProject: ({
     userId,
@@ -34,7 +34,7 @@ export interface ProjectsRequests {
     userId: string
     projectId: string
     project: ProjectPatch
-  }) => Promise<ApiResponse<Project>>
+  }, options?: ExtraOptions) => Promise<ApiResponse<Project>>
 
   deleteProject: ({
     userId,
@@ -42,5 +42,5 @@ export interface ProjectsRequests {
   }: {
     userId: string
     projectId: string
-  }) => Promise<number>
+  }, options?: ExtraOptions) => Promise<number>
 }

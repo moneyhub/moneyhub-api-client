@@ -7,7 +7,7 @@ export default ({config, request}: RequestsParams): TransactionFilesRequests => 
   const {resourceServerUrl} = config
 
   return {
-    addFileToTransaction: async ({userId, transactionId, fileData, fileName}) => {
+    addFileToTransaction: async ({userId, transactionId, fileData, fileName}, options) => {
       const formData = new FormData()
       formData.append("file", fileData, fileName)
       return request(
@@ -19,18 +19,20 @@ export default ({config, request}: RequestsParams): TransactionFilesRequests => 
             scope: "transactions:read:all transactions:write",
             sub: userId,
           },
+          options,
         },
       )
     },
-    getTransactionFiles: async ({userId, transactionId}) =>
+    getTransactionFiles: async ({userId, transactionId}, options) =>
       request(`${resourceServerUrl}/transactions/${transactionId}/files`, {
         cc: {
           scope: "transactions:read:all transactions:write",
           sub: userId,
         },
+        options,
       }),
 
-    getTransactionFile: async ({userId, transactionId, fileId}) =>
+    getTransactionFile: async ({userId, transactionId, fileId}, options) =>
       request(
         `${resourceServerUrl}/transactions/${transactionId}/files/${fileId}`,
         {
@@ -38,10 +40,11 @@ export default ({config, request}: RequestsParams): TransactionFilesRequests => 
             scope: "transactions:read:all transactions:write",
             sub: userId,
           },
+          options,
         },
       ),
 
-    deleteTransactionFile: async ({userId, transactionId, fileId}) =>
+    deleteTransactionFile: async ({userId, transactionId, fileId}, options) =>
       request(
         `${resourceServerUrl}/transactions/${transactionId}/files/${fileId}`,
         {
@@ -51,6 +54,7 @@ export default ({config, request}: RequestsParams): TransactionFilesRequests => 
             sub: userId,
           },
           returnStatus: true,
+          options,
         },
       ),
   }
