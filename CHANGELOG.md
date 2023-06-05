@@ -1,3 +1,10 @@
+5.3.0 / 2023-05-31
+==================
+
+**Features**
+
+* All authorisation URL generating methods use Pushed Authorisation Requests (PAR) instead of JWT Secured Authorisation Requests (JAR)
+
 5.2.1 / 2023-01-19
 ==================
 
