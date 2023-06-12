@@ -7,7 +7,7 @@ export interface BeneficiariesRequests {
     userId,
   }: {
     id: string
-    userId: string
+    userId?: string
   }, options?: ExtraOptions) => Promise<ApiResponse<Beneficiary>>
 
   getBeneficiaryWithDetail: ({
@@ -15,7 +15,7 @@ export interface BeneficiariesRequests {
     userId,
   }: {
     id: string
-    userId: string
+    userId?: string
   }, options?: ExtraOptions) => Promise<ApiResponse<BeneficiaryWithDetails>>
 
   getBeneficiaries: ({
@@ -23,7 +23,7 @@ export interface BeneficiariesRequests {
     userId,
   }: {
     params?: SearchParams
-    userId: string
+    userId?: string
   }, options?: ExtraOptions) => Promise<ApiResponse<Beneficiary[]>>
 
   getBeneficiariesWithDetail: ({
@@ -31,6 +31,6 @@ export interface BeneficiariesRequests {
     userId,
   }: {
     params?: SearchParams
-    userId: string
+    userId?: string
   }, options?: ExtraOptions) => Promise<ApiResponse<BeneficiaryWithDetails[]>>
 }

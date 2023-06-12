@@ -6,7 +6,7 @@ export interface TaxRequests {
     userId,
     params,
   }: {
-    userId: string
+    userId?: string
     params?: TaxSearchParams
   }, options?: ExtraOptions) => Promise<ApiResponse<Tax>>
 }

@@ -8,7 +8,7 @@ export interface SyncRequests {
     customerIpAddress,
     customerLastLoggedTime,
   }: {
-    userId: string
+    userId?: string
     connectionId: string
     customerIpAddress?: string
     customerLastLoggedTime?: string

@@ -16,7 +16,7 @@ export interface TransactionSplitsRequests {
     userId,
     transactionId,
   }: {
-    userId: string
+    userId?: string
     transactionId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<TransactionSplit[]>>
 

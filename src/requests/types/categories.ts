@@ -6,7 +6,7 @@ export interface CategoriesRequests {
     userId,
     params,
   }: {
-    userId: string
+    userId?: string
     params?: SearchParams & {type?: CategoryType}
   }, options?: ExtraOptions) => Promise<ApiResponse<Category[]>>
 
@@ -21,7 +21,7 @@ export interface CategoriesRequests {
     categoryId,
     params,
   }: {
-    userId: string
+    userId?: string
     categoryId: string
     params?: {type?: CategoryType}
   }, options?: ExtraOptions) => Promise<ApiResponse<Category>>
@@ -30,7 +30,7 @@ export interface CategoriesRequests {
     userId,
     params,
   }: {
-    userId: string
+    userId?: string
     params?: {type?: CategoryType}
   }, options?: ExtraOptions) => Promise<ApiResponse<CategoryGroup[]>>
 
@@ -44,7 +44,7 @@ export interface CategoriesRequests {
     userId,
     category,
   }: {
-    userId: string
+    userId?: string
     category: CategoryPost
   }, options?: ExtraOptions) => Promise<ApiResponse<Category>>
 }

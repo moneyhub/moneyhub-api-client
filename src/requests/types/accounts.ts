@@ -7,54 +7,54 @@ import type {RecurringTransactionEstimate} from "../../schema/transaction"
 import type {StandingOrder, StandingOrderWithDetail} from "../../schema/standing-order"
 
 export interface AccountsRequests {
-  getAccounts: ({userId, params}: { userId: string, params?: SearchParams }, options?: ExtraOptions) => Promise<ApiResponse<Account[]>>
+  getAccounts: ({userId, params}: { userId?: string, params?: SearchParams }, options?: ExtraOptions) => Promise<ApiResponse<Account[]>>
   getAccountsWithDetails: ({
     userId,
   }: {
-    userId: string
+    userId?: string
     params?: SearchParams
   }, options?: ExtraOptions) => Promise<ApiResponse<AccountWithDetails[]>>
-  getAccountsList: ({userId, params}: { userId: string, params?: SearchParams }, options?: ExtraOptions) => Promise<ApiResponse<Account[]>>
+  getAccountsList: ({userId, params}: { userId?: string, params?: SearchParams }, options?: ExtraOptions) => Promise<ApiResponse<Account[]>>
   getAccountsListWithDetails: ({
     userId,
   }: {
-    userId: string
+    userId?: string
     params?: SearchParams
   }, options?: ExtraOptions) => Promise<ApiResponse<AccountWithDetails[]>>
-  getAccount: ({userId, accountId}: { userId: string, accountId: string }, options?: ExtraOptions) => Promise<ApiResponse<Account>>
+  getAccount: ({userId, accountId}: { userId?: string, accountId: string }, options?: ExtraOptions) => Promise<ApiResponse<Account>>
   getAccountBalances: ({
     userId,
     accountId,
   }: {
-    userId: string
+    userId?: string
     accountId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<Balance[]>>
   getAccountWithDetails: ({
     userId,
     accountId,
   }: {
-    userId: string
+    userId?: string
     accountId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<AccountWithDetails>>
   getAccountHoldings: ({
     userId,
     accountId,
   }: {
-    userId: string
+    userId?: string
     accountId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<HoldingsValuation[]>>
   getAccountHoldingsWithMatches: ({
     userId,
     accountId,
   }: {
-    userId: string
+    userId?: string
     accountId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<HoldingWithMatches[]>>
   getAccountCounterparties: ({
     userId,
     accountId,
   }: {
-    userId: string
+    userId?: string
     accountId: string
     params?: SearchParams
   }, options?: ExtraOptions) => Promise<ApiResponse<Counterparty[]>>
@@ -62,14 +62,14 @@ export interface AccountsRequests {
     userId,
     accountId,
   }: {
-    userId: string
+    userId?: string
     accountId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<RecurringTransactionEstimate[]>>
   getAccountStandingOrders: ({
     userId,
     accountId,
   }: {
-    userId: string
+    userId?: string
     accountId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<StandingOrder[]>>
   createAccount: ({userId, account}: { userId: string, account: AccountPost }, options?: ExtraOptions) => Promise<ApiResponse<Account>>
@@ -79,7 +79,7 @@ export interface AccountsRequests {
     accountId,
     holdingId,
   }: {
-    userId: string
+    userId?: string
     accountId: string
     holdingId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<HoldingWithMatchesAndHistory>>
@@ -87,7 +87,7 @@ export interface AccountsRequests {
     userId,
     accountId,
   }: {
-    userId: string
+    userId?: string
     accountId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<StandingOrderWithDetail[]>>
   addAccountBalance: ({userId, accountId, balance}: {userId: string, accountId: string, balance: AccountBalancePost}, options?: ExtraOptions) => Promise<ApiResponse<AccountBalancePost>>

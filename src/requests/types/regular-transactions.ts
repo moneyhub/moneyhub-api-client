@@ -6,7 +6,7 @@ export interface RegularTransactionsRequests {
     userId,
     params,
   }: {
-    userId: string
+    userId?: string
     params?: RegularTransactionSearchParams
   }, options?: ExtraOptions) => Promise<ApiResponse<RegularTransaction[]>>
 }

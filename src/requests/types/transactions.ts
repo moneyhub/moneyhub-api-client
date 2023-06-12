@@ -6,7 +6,7 @@ export interface TransactionsRequests {
     userId,
     params,
   }: {
-    userId: string
+    userId?: string
     params?: TransactionSearchParams
   }, options?: ExtraOptions) => Promise<ApiResponse<Transaction[]>>
 
@@ -14,7 +14,7 @@ export interface TransactionsRequests {
     userId,
     transactionId,
   }: {
-    userId: string
+    userId?: string
     transactionId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<Transaction>>
 

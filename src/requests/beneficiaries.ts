@@ -10,7 +10,7 @@ export default ({config, request}: RequestsParams): BeneficiariesRequests => {
     scope,
   }: {
     id: string
-    userId: string
+    userId?: string
     scope: string
   }, options?: ExtraOptions): Promise<any> =>
     request(`${resourceServerUrl}/beneficiaries/${id}`, {
@@ -27,7 +27,7 @@ export default ({config, request}: RequestsParams): BeneficiariesRequests => {
     scope,
   }: {
     params: SearchParams
-    userId: string
+    userId?: string
     scope: string
   }, options?: ExtraOptions): Promise<any> =>
     request(`${resourceServerUrl}/beneficiaries`, {

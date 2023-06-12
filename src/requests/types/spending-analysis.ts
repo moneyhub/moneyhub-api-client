@@ -15,7 +15,7 @@ export interface SpendingAnalysisRequests {
     categoryIds,
     projectIds,
   }: {
-    userId: string
+    userId?: string
     dates: Date[]
     accountIds?: string[]
     categoryIds?: string[]

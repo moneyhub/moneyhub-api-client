@@ -8,7 +8,7 @@ export interface TransactionFilesRequests {
     fileData,
     fileName,
   }: {
-    userId: string
+    userId?: string
     transactionId: string
     fileName: string
     fileData: any
@@ -18,7 +18,7 @@ export interface TransactionFilesRequests {
     userId,
     transactionId,
   }: {
-    userId: string
+    userId?: string
     transactionId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<TransactionFile[]>>
 
@@ -27,7 +27,7 @@ export interface TransactionFilesRequests {
     transactionId,
     fileId,
   }: {
-    userId: string
+    userId?: string
     transactionId: string
     fileId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<TransactionFile>>
@@ -37,7 +37,7 @@ export interface TransactionFilesRequests {
     transactionId,
     fileId,
   }: {
-    userId: string
+    userId?: string
     transactionId: string
     fileId: string
   }, options?: ExtraOptions) => Promise<number>
