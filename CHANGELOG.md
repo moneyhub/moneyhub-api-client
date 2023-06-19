@@ -1,3 +1,10 @@
+5.4.0 / 2023-06-19
+==================
+
+**Features**
+
+* Requests to query data can have client provided access tokens passed in, instead of relying on us to request an access token per request. Thus allowing to complete single use with the client library.
+
 5.3.0 / 2023-05-31
 ==================
 
