@@ -1,23 +1,31 @@
 /* eslint-disable max-nested-callbacks */
 import {expect} from "chai"
-import {expectTypeOf} from "expect-type"
 
-import {Moneyhub, MoneyhubInstance, RegularTransactions} from ".."
+import {Moneyhub, MoneyhubInstance} from ".."
 
-describe.skip("Regular transactions", function() {
+describe("Regular transactions", function() {
   let moneyhub: MoneyhubInstance
   let userId: string
+  let accountId: string
 
   before(async function() {
     userId = this.config.testUserId
+    accountId = this.config.testAccountId
     moneyhub = await Moneyhub(this.config)
   })
 
-  it("get regular transactions", async function() {
-    const {data} = await moneyhub.getRegularTransactions({userId})
-    expect(data.length).to.be.above(0)
-    expect(data[0]).to.have.property("seriesId")
-    expectTypeOf<RegularTransactions.RegularTransaction[]>(data)
+  describe("Get regular transactions", function() {
+    it("is successful", async function() {
+      const {data} = await moneyhub.getRegularTransactions({userId})
+      expect(data.length).to.eql(0)
+    })
+  })
+
+  describe("Regular transactions detect", function() {
+    it("is successful", async function() {
+      const {data} = await moneyhub.detectRegularTransactions({userId, accountId})
+      expect(data.length).to.eql(0)
+    })
   })
 
 })

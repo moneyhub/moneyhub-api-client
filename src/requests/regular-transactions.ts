@@ -17,5 +17,18 @@ export default ({config, request}: RequestsParams): RegularTransactionsRequests 
           options,
         },
       ),
+
+    detectRegularTransactions: async ({userId, accountId}, options) =>
+      request(
+        `${resourceServerUrl}/regular-transactions/${accountId}/detect`,
+        {
+          cc: {
+            scope: "accounts:read regular_transactions:write regular_transactions:read transactions:read:all",
+            sub: userId,
+          },
+          options,
+          method: "POST",
+        },
+      ),
   }
 }
