@@ -104,6 +104,7 @@ describe("API client", function() {
         "getStandingOrder",
         "getStandingOrders",
         "getRegularTransactions",
+        "detectRegularTransactions",
         "getRentalRecords",
         "createRentalRecord",
         "deleteRentalRecord",

@@ -9,4 +9,12 @@ export interface RegularTransactionsRequests {
     userId?: string
     params?: RegularTransactionSearchParams
   }, options?: ExtraOptions) => Promise<ApiResponse<RegularTransaction[]>>
+
+  detectRegularTransactions: ({
+    userId,
+    accountId,
+  }: {
+    userId?: string
+    accountId: string
+  }, options?: ExtraOptions) => Promise<ApiResponse<RegularTransaction[]>>
 }
