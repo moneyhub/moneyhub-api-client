@@ -28,6 +28,11 @@ export type Type =
   | "properties:buyToLet"
   | "crypto"
 
+export type IdentificationType =
+  | "accountNumber"
+  | "savingsRollNumber"
+  | "policyNumber"
+
 interface TransactionData {
   count: number
   earliestDate: string
@@ -55,6 +60,12 @@ interface PerformanceScore {
   totals: PerformanceScoreTotals
   months: PerformanceScopeMonths[]
 }
+
+interface ProviderAccountIdentification {
+  identification: string
+  type: IdentificationType
+}
+
 export interface AccountDetails {
   AER?: number
   APR?: number
@@ -101,12 +112,14 @@ export interface AccountWithDetails extends Account {
 export type AccountWriteDetails = Omit<
   AccountDetails,
   "iban" | "pan">
+
 export interface AccountPost {
   accountName: string
   providerName: string
   type: Type
   accountType: AccountType
   balance: BalancePost
+  providerAccountIdentifications?: ProviderAccountIdentification[]
   details?: AccountWriteDetails
 }
 
