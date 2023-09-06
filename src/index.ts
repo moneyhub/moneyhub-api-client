@@ -78,6 +78,7 @@ import type * as Beneficiaries from "./schema/beneficiary"
 import type * as Categories from "./schema/category"
 import type * as Counterparties from "./schema/counterparty"
 import type * as Holdings from "./schema/holding"
+import type * as NotificationThresholds from "./schema/notification-threshold"
 import type * as Payees from "./schema/payee"
 import type * as Payments from "./schema/payment"
 import type * as Projects from "./schema/project"
@@ -101,6 +102,7 @@ export {
   Categories,
   Counterparties,
   Holdings,
+  NotificationThresholds,
   Payees,
   Payments,
   Projects,
