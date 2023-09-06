@@ -7,7 +7,7 @@ export interface UsersAndConnectionsRequests {
   registerUser: ({
     clientUserId,
   }: {
-    clientUserId: string
+    clientUserId?: string
   }, options?: ExtraOptions) => Promise<User>
 
   getUsers: (
