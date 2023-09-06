@@ -1,3 +1,14 @@
+5.5.0 / 2023-09-06
+==================
+
+**Features**
+
+* Add detectRegularTransactions
+
+**Bug Fixes**
+
+* Change registerUser's clientUserId type annotation to be optional
+
 5.4.0 / 2023-06-19
 ==================
 
