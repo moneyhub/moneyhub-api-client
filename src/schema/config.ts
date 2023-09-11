@@ -81,6 +81,7 @@ export type TokenEndpointAuthMethod =
 
 export interface ApiClientConfig {
   resourceServerUrl: string
+  osipResourceServerUrl?: string
   identityServiceUrl: string
   accountConnectUrl?: string
   options?: {
