@@ -23,13 +23,14 @@ const setupTransaction = async ({moneyhub, userId, accountId}) => {
 
 exports.setupTestData = async function(config, moneyhub) {
   const {userId} = await setupTestUser({moneyhub})
-  const [{data: {id: accountId}}] = await setupTestAccounts({moneyhub, userId})
+  const [{data: {id: accountId}}, {data: {id: pensionAccountId}}] = await setupTestAccounts({moneyhub, userId})
   const {data: {id: payeeId}} = await setupPayee({moneyhub, userId})
   const {data: {id: transactionId}} = await setupTransaction({moneyhub, userId, accountId})
   return {
     ...config,
     testUserId: userId,
     testAccountId: accountId,
+    testPensionAccountId: pensionAccountId,
     testPayeeId: payeeId,
     testTransactionId: transactionId
   }

@@ -1128,6 +1128,57 @@ const splits = await moneyhub.deleteTransactionSplits({
 });
 ```
 
+#### `getOsipAccounts`
+
+Get all accounts for a user. This function uses the scope `osip:read`.
+
+```javascript
+const queryParams = { limit: 10, offset: 5 };
+const accounts = await moneyhub.getOsipAccounts({
+  userId: "userId",
+  params: queryParams,
+});
+```
+
+#### `getOsipAccount`
+
+Get an account for a user. This function uses the scope `osip:read`.
+
+```javascript
+const queryParams = { limit: 10, offset: 5 };
+const accounts = await moneyhub.getOsipAccounts({
+  userId: "userId",
+  accountId: "accountId",
+  params: queryParams,
+});
+```
+
+#### `getOsipAccountHoldings`
+
+Get account holdings for an account. This function uses the scope `osip:read`.
+
+```javascript
+const queryParams = { limit: 10, offset: 5 };
+const accounts = await moneyhub.getOsipAccounts({
+  userId: "userId",
+  accountId: "accountId",
+  params: queryParams,
+});
+```
+
+#### `getOsipAccountTransactions`
+
+Get account transactions. This function uses the scope `osip:read`.
+
+```javascript
+const queryParams = { limit: 10, offset: 5 };
+const accounts = await moneyhub.getOsipAccounts({
+  userId: "userId",
+  accountId: "accountId",
+  params: queryParams,
+});
+```
+
 #### `getGlobalCounterparties`
 
 Get global counterparties.

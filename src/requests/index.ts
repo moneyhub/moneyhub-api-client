@@ -6,6 +6,7 @@ import authRequests from "./auth-requests"
 import beneficiaries from "./beneficiaries"
 import categories from "./categories"
 import notificationThresholds from "./notification-thresholds"
+import osip from "./osip"
 import payees from "./payees"
 import payments from "./payments"
 import projects from "./projects"
@@ -32,6 +33,7 @@ export default ({config, request}: RequestsParams) => {
     ...beneficiaries({config, request}),
     ...categories({config, request}),
     ...notificationThresholds({config, request}),
+    ...osip({config, request}),
     ...payees({config, request}),
     ...payments({config, request}),
     ...projects({config, request}),
