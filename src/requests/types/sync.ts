@@ -7,10 +7,12 @@ export interface SyncRequests {
     connectionId,
     customerIpAddress,
     customerLastLoggedTime,
+    enableAsync,
   }: {
     userId?: string
     connectionId: string
     customerIpAddress?: string
     customerLastLoggedTime?: string
+    enableAsync?: boolean
   }, options?: ExtraOptions) => Promise<ApiResponse<SyncResponse>>
 }

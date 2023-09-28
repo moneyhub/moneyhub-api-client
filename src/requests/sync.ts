@@ -12,10 +12,11 @@ export default ({config, request}: RequestsParams): SyncRequests => {
       connectionId,
       customerIpAddress,
       customerLastLoggedTime,
+      enableAsync,
     }, options) =>
       request(`${resourceServerUrl}/sync/${connectionId}`, {
         method: "POST",
-        body: filterUndefined({customerIpAddress, customerLastLoggedTime}),
+        body: filterUndefined({customerIpAddress, customerLastLoggedTime, enableAsync}),
         cc: {
           scope: "accounts:read accounts:write:all",
           sub: userId,
