@@ -1,6 +1,6 @@
 # Moneyhub API Client
 
-### Introduction
+## Introduction
 
 This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise.com/docs). It currently supports the following features:
 
@@ -27,7 +27,7 @@ This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
 
-### Upgrading from 3.x
+## Upgrading from 3.x
 
 The breaking changes when upgrading are outlined below:
 
@@ -43,7 +43,7 @@ The breaking changes when upgrading are outlined below:
 
 For the full list of changes please refer to the [changelog](CHANGELOG.md)
 
-### Upgrading from 4.x
+## Upgrading from 4.x
 
 The major upgrade from version 4.x is that the library now caters for TypeScript. To allow for this, the factory method that creates the client instance is now a named export rather than a default export.
 
@@ -55,11 +55,11 @@ const Moneyhub = require("@mft/moneyhub-api-client")
 const {Moneyhub} = require("@mft/moneyhub-api-client")
 ```
 
-### Changelog
+## Changelog
 
 [Learn about the latest improvements and breaking changes](CHANGELOG.md).
 
-### Prerequisites
+## Prerequisites
 
 To use this API client you will need:
 
@@ -67,11 +67,11 @@ To use this API client you will need:
 - The url of the Moneyhub identity service for the environment you are connecting to (https://identity.moneyhub.co.uk)
 - The url for the API gateway for the environment that you are connecting to (https://api.moneyhub.co.uk/v2.0)
 
-### To install
+## To install
 
 `npm install @mft/moneyhub-api-client`
 
-### Usage
+## Usage
 
 This module exposes a single factory function that accepts the following configuration:
 
@@ -97,7 +97,7 @@ const moneyhub = await Moneyhub({
   },
 })
 ```
-
+## Options
 When making calls to our methods that require authentication, you can provide an extra argument at the end of these methods. This argument must be an object with these optional keys:
 
 ```js
@@ -108,7 +108,36 @@ When making calls to our methods that require authentication, you can provide an
   }
 }
 ```
+Example usages
 
+```javascript
+const accounts = await moneyhub.getAccounts({
+  userId: "user-id",
+  params: {},
+}, {});
+
+const accounts = await moneyhub.getAccounts({
+  params: {},
+}, {
+  token: "full.access.token"
+});
+
+const accounts = await moneyhub.getAccounts({
+  params: {},
+}, {
+  headers: {
+    Authorization: "Bearer full.access.token"
+  }
+});
+```
+
+At least one of the following parameters needs to be passed in to any api call that requires user authentication:
+
+- **userId**: Automatically requests a token for this userId with the correct scopes
+- **token**: The token will be added as bearer authorization header
+- **Authorization header**: The full authorisation header can be passed in
+
+## API
 Once the api client has been initialised it provides a simple promise based interface with the following methods:
 
 ### Auth API
@@ -576,7 +605,7 @@ Helper method that gets the correct client credentials access token and then get
 ```javascript
 const user = await moneyhub.getUserConnections({
   userId: "user-id",
-});
+}, options);
 ```
 
 #### `syncUserConnection`
@@ -589,7 +618,7 @@ const tokens = await moneyhub.syncUserConnection({
   connectionId,
   customerIpAddress, // optional
   customerLastLoggedTime, // optional
-});
+}, options);
 ```
 
 #### `deleteUserConnection`
@@ -600,7 +629,7 @@ Helper method that gets the correct client credentials access token and then del
 const user = await moneyhub.deleteUserConnection({
   userId: "user-id",
   connectionId: "connection-id",
-});
+}, options);
 ```
 
 #### `getConnectionSyncs`
@@ -615,7 +644,7 @@ const syncs = await moneyhub.getConnectionSyncs({
     limit: 10,
     offset: 0,
   },
-});
+}, options);
 ```
 
 #### `getUserSyncs`
@@ -629,7 +658,7 @@ const syncs = await moneyhub.getUserSyncs({
     limit: 10,
     offset: 0,
   },
-});
+}, options);
 ```
 
 #### `getSync`
@@ -640,7 +669,7 @@ Retrieve the syncs for the given sync ID.
 const syncs = await moneyhub.getSync({
   userId: "user-id",
   syncId: "sync-id",
-});
+}, options);
 ```
 
 #### `updateUserConnection`
@@ -652,7 +681,7 @@ const user = await moneyhub.updateUserConnection({
   userId: "user-id",
   connectionId: "connection-id",
   expiresAt: "2022-06-26T09:43:16.318+00:00"
-})
+}, options)
 ```
 
 ### Data API
@@ -666,7 +695,7 @@ const queryParams = { limit: 10, offset: 5 , showTransacionData: false, showPerf
 const accounts = await moneyhub.getAccounts({
   userId: "userId",
   params: queryParams,
-});
+}, options);
 ```
 
 #### `getAccountsWithDetails`
@@ -678,7 +707,7 @@ const queryParams = { limit: 10, offset: 5 };
 const accounts = await moneyhub.getAccountsWithDetails({
   userId: "userId",
   params: queryParams,
-});
+}, options);
 ```
 
 #### `getAccountsList`
@@ -690,7 +719,7 @@ const queryParams = { limit: 10, offset: 5 , showTransacionData: false, showPerf
 const accounts = await moneyhub.getAccounts({
   userId: "userId",
   params: queryParams,
-});
+}, options);
 ```
 
 #### `getAccountsListWithDetails`
@@ -702,7 +731,7 @@ const queryParams = { limit: 10, offset: 5 };
 const accounts = await moneyhub.getAccountsWithDetails({
   userId: "userId",
   params: queryParams,
-});
+}, options);
 ```
 
 #### `getAccount`
@@ -713,7 +742,7 @@ Get a single account for a user by the accountId. This function uses the scope `
 const account = await moneyhub.getAccount({
   userId: "userId",
   accountId: "accountId",
-});
+}, options);
 ```
 
 #### `getAccountWithDetails`
@@ -724,7 +753,7 @@ Get a single account for a user by the accountId including extra details (sort c
 const account = await moneyhub.getAccountWithDetails({
   userId: "userId",
   accountId: "accountId",
-});
+}, options);
 ```
 
 #### `getAccountBalances`
@@ -735,7 +764,7 @@ Get account balances for a user. This function uses the scope `accounts:read`.
 const account = await moneyhub.getAccountBalances({
   userId: "userId",
   accountId: "accountId",
-});
+}, options);
 ```
 
 #### `getAccountHoldings`
@@ -746,7 +775,7 @@ Get account holdings for a user. This function uses the scope `accounts:read`.
 const account = await moneyhub.getAccountHoldings({
   userId: "userId",
   accountId: "accountId",
-});
+}, options);
 ```
 
 #### `getAccountHoldingsWithMatches`
@@ -757,7 +786,7 @@ Get account holdings with ISIN codes matchers for a user. This function uses the
 const account = await moneyhub.getAccountHoldingsWithMatches({
   userId: "userId",
   accountId: "accountId",
-});
+}, options);
 ```
 
 #### `getAccountHolding`
@@ -769,7 +798,7 @@ const account = await moneyhub.getAccountHolding({
   userId: "userId",
   accountId: "accountId",
   holdingId: "holdingId",
-});
+}, options);
 ```
 
 #### `getAccountCounterparties`
@@ -783,7 +812,7 @@ const account = await moneyhub.getAccountCounterparties({
   params: {
     counterpartiesVersion: "v3",
   },
-});
+}, options);
 ```
 
 #### `getAccountRecurringTransactions`
@@ -794,7 +823,7 @@ Get account recurring transactions for a user. This function uses the scope `acc
 const account = await moneyhub.getAccountRecurringTransactions({
   userId: "userId",
   accountId: "accountId",
-});
+}, options);
 ```
 
 #### `getAccountStandingOrders`
@@ -805,7 +834,7 @@ Get the standing orders for an account. This function uses the scope `standing_o
 const standingOrders = await moneyhub.getAccountStandingOrders({
   userId: "userId",
   accountId: "accountId",
-});
+}, options);
 ```
 
 #### `getAccountStandingOrdersWithDetail`
@@ -816,7 +845,7 @@ Get the standing orders with detail (payee information) for an account. This fun
 const standingOrders = await moneyhub.getAccountStandingOrdersWithDetail({
   userId: "userId",
   accountId: "accountId",
-});
+}, options);
 ```
 
 #### `createAccount`
@@ -838,7 +867,7 @@ const account = await moneyhub.createAccount({
       },
     },
   },
-});
+}, options);
 ```
 
 #### `deleteAccount`
@@ -849,7 +878,7 @@ Delete a manual account for a user. This function uses the scope `accounts:write
 const result = await moneyhub.deleteAccount({
   userId: "userId",
   accountId: "accountId",
-});
+}, options);
 ```
 
 #### `addAccountBalance`
@@ -866,7 +895,7 @@ const result = await moneyhub.addAccountBalance({
     },
     date: "2022-01-01",
   }
-});
+}, options);
 ```
 
 #### `updateAccount`
@@ -882,7 +911,7 @@ const result = await moneyhub.updateAccount({
     providerName: "providerName"
     details: {}
   }
-});
+}, options);
 ```
 
 #### `getTransactions`
@@ -894,7 +923,7 @@ const queryParams = { limit: 10, offset: 5 };
 const transactions = await moneyhub.getTransactions({
   userId: "userId",
   params: queryParams,
-});
+}, options);
 ```
 
 #### `getTransaction`
@@ -905,7 +934,7 @@ Get a transaction by ID for a user. This function uses the scope `transactions:r
 const transactions = await moneyhub.getTransaction({
   userId: "userId",
   transactionId: "transactionId",
-});
+}, options);
 ```
 
 #### `updateTransaction`
@@ -921,7 +950,7 @@ const transactions = await moneyhub.updateTransaction({
       value: 10,
     },
   },
-});
+}, options);
 ```
 
 #### `addTransaction`
@@ -936,7 +965,7 @@ const transactions = await moneyhub.addTransaction({
       value: 10,
     },
   },
-});
+}, options);
 ```
 
 #### `addTransactions`
@@ -961,7 +990,7 @@ const transactions = await moneyhub.addTransactions({
   params: {
     categorise: true, // optional - enable categorisatio for transactions
   },
-});
+}, options);
 ```
 
 #### `deleteTransaction`
@@ -972,7 +1001,7 @@ Delete a transaction for a user. This function uses the scopes `transactions:wri
 const result = await moneyhub.deleteTransaction({
   userId: "userId",
   id: "transactionId",
-});
+}, options);
 ```
 
 #### `getBeneficiaries`
@@ -984,7 +1013,7 @@ const queryParams = { limit: 10, offset: 5 };
 const beneficiaries = await moneyhub.getBeneficiaries({
   userId: "userId",
   params: queryParams,
-});
+}, options);
 ```
 
 #### `getBeneficiariesWithDetail`
@@ -996,7 +1025,7 @@ const queryParams = { limit: 10, offset: 5 };
 const beneficiaries = await moneyhub.getBeneficiariesWithDetail({
   userId: "userId",
   params: queryParams,
-});
+}, options);
 ```
 
 #### `getBeneficiary`
@@ -1007,7 +1036,7 @@ Get a beneficiary for a user. This function uses the scope `beneficiaries:read`
 const beneficiary = await moneyhub.getBeneficiary({
   userId: "userId",
   id: "beneficiaryId",
-});
+}, options);
 ```
 
 #### `getBeneficiaryWithDetail`
@@ -1018,7 +1047,7 @@ Get a beneficiary for a user, including beneficiary detail. This function uses t
 const beneficiary = await moneyhub.getBeneficiaryWithDetail({
   userId: "userId",
   id: "beneficiaryId",
-});
+}, options);
 ```
 
 #### `addFileToTransaction`
@@ -1031,7 +1060,7 @@ const file = await money.addFileToTransaction({
   transactionId: "transactionId",
   fileName: "file-name",
   fileData: fs.createReadStream("path/to/file.png"),
-});
+}, options);
 ```
 
 #### `getTransactionFiles`
@@ -1042,7 +1071,7 @@ Get all attachments associated with a transaction. This call requires an access 
 const files = await money.getTransactionFiles({
   userId: "userId",
   transactionId: "transactionId",
-});
+}, options);
 ```
 
 #### `getTransactionFile`
@@ -1054,7 +1083,7 @@ const files = await money.getTransactionFile({
   userId: "userId",
   transactionId: "transactionId",
   fileId: "fileId",
-});
+}, options);
 ```
 
 #### `deleteTransactionFile`
@@ -1066,7 +1095,7 @@ await money.deleteTransactionFile({
   userId: "userId",
   transactionId: "transactionId",
   fileId: "fileId",
-});
+}, options);
 ```
 
 #### `splitTransaction`
@@ -1089,7 +1118,7 @@ const splits = await moneyhub.splitTransaction({
       amount: -4000,
     },
   ],
-});
+}, options);
 ```
 
 #### `getTransactionSplits`
@@ -1100,7 +1129,7 @@ Get a transactions splits.
 const splits = await moneyhub.getTransactionSplits({
   userId: "userId",
   transactionId: "transactionId",
-});
+}, options);
 ```
 
 #### `patchTransactionSplit`
@@ -1114,7 +1143,7 @@ const splits = await moneyhub.patchTransactionSplit({
   split: {
     description: "New description",
   },
-});
+}, options);
 ```
 
 #### `deleteTransactionSplits`
@@ -1125,7 +1154,7 @@ Delete a transaction's splits and merge them back together.
 const splits = await moneyhub.deleteTransactionSplits({
   userId: "userId",
   transactionId: "transactionId",
-});
+}, options);
 ```
 
 #### `getOsipAccounts`
@@ -1197,7 +1226,7 @@ const categories = await moneyhub.getCategories({
   params: {
     type: "personal", // optional personal|business
   },
-});
+}, options);
 ```
 
 #### `getCategory`
@@ -1208,7 +1237,7 @@ Get a single category for a user. This function uses the scope `categories:read`
 const category = await moneyhub.getCategory({
   userId: "userId",
   categoryId: "categoryId",
-});
+}, options);
 ```
 
 #### `getCategoryGroups`
@@ -1221,7 +1250,7 @@ const categoryGroups = await moneyhub.getCategoryGroups({
   params: {
     type: "personal", // optional personal|business
   },
-});
+}, options);
 ```
 
 #### `getStandardCategories`
@@ -1233,7 +1262,7 @@ const categories = await moneyhub.getStandardCategories({
   params: {
     type: "personal", // optional personal|business|all
   },
-});
+}, options);
 ```
 
 #### `getStandardCategoryGroups`
@@ -1245,7 +1274,7 @@ const categoryGroups = await moneyhub.getStandardCategoryGroups({
   params: {
     type: "personal", // optional personal|business|all
   },
-});
+}, options);
 ```
 
 #### `createCustomCategory`
@@ -1260,7 +1289,7 @@ const category = await moneyhub.createCustomCategory({
     group: "group:1"
     name: "custom-category",
     },
-  })
+  }, options)
 ```
 
 ### Spending analysis
@@ -1286,7 +1315,7 @@ const projects = await moneyhub.getSpendingAnalysis({
   ],
   accountIds: ["ac9bd177-d01e-449c-9f29-d3656d2edc2e"], // optional
   categoryIds: ["std:338d2636-7f88-491d-8129-255c98da1eb8"], // optional
-});
+}, options);
 ```
 
 ### Projects
@@ -1302,7 +1331,7 @@ const projects = await moneyhub.getProjects({
     limit: "limit", // optional
     offset: "offset", // optional
   }, // optional
-});
+}, options);
 ```
 
 #### `getProject`
@@ -1313,7 +1342,7 @@ Get a single project for a user by the projectId. This function uses the scope `
 const project = await moneyhub.getProject({
   userId: "userId",
   projectId: "projectId",
-});
+}, options);
 ```
 
 #### `addProject`
@@ -1328,7 +1357,7 @@ const project = await moneyhub.addProject({
     accountIds: "id1,id2", // comma-separated list of account IDs
     type: "PropertyProject",
   },
-});
+}, options);
 ```
 
 #### `updateProject`
@@ -1345,7 +1374,7 @@ const project = await moneyhub.updateProject({
     type: "PropertyProject",
     archived: false,
   },
-});
+}, options);
 ```
 
 #### `deleteProject`
@@ -1374,7 +1403,7 @@ const result = await moneyhub.getTaxReturn({
     accountId: "accountId",
     projectId: "projectId",
   },
-});
+}, options);
 ```
 
 ### Payments
@@ -1752,7 +1781,7 @@ const queryParams = { accountID };
 const regulartransactions = await moneyhub.getRegularTransactions({
   userId: "userId",
   params: queryParams,
-});
+}, options);
 ```
 
 ### Rental records
@@ -1764,7 +1793,7 @@ This method will return the rental record for the user. Requires the scope `rent
 ```javascript
 const getRentalRecordResponse = await moneyhub.getRentalRecords({
   userId: "user-id",
-});
+}, options);
 const rentalRecord = getRentalRecordResponse.data[0];
 ```
 
@@ -1791,7 +1820,7 @@ const createRentalRecordResponse = await moneyhub.createRentalRecord({
     },
     rentalFrequency: "monthly",
   },
-});
+}, options);
 const createdRentalRecord = createRentalRecordResponse.data;
 ```
 
@@ -1803,7 +1832,7 @@ This method deletes the rental record for a user.
 await moneyhub.deleteRentalRecord({
   userId: "user-id",
   rentalId: "rental-id",
-});
+}, options);
 ```
 
 ### Spending Goals
@@ -1819,7 +1848,7 @@ const spendingGoal = await moneyhub.createSpendingGoal({
   periodStart: "20",
   periodType: "monthly",
   userId: "user-id",
-});
+}, options);
 ```
 
 #### `getSpendingGoals`
@@ -1831,7 +1860,7 @@ const spendingGoals = await moneyhub.getSpendingGoals({
   userId: "user-id",
   limit: 1,
   offset: 0,
-});
+}, options);
 const spendingGoal = spendingGoals.data[0];
 ```
 
@@ -1843,7 +1872,7 @@ This method will return the specified spending goal for the user. Requires the s
 const spendingGoals = await moneyhub.getSpendingGoal({
   userId: "user-id",
   goalId: "goal-id",
-});
+}, options);
 ```
 
 #### `updateSpendingGoal`
@@ -1856,7 +1885,7 @@ const spendingGoals = await moneyhub.updateSpendingGoal({
   goalId: "goal-id",
   categoryId: "id",
   amount: { value: 302 },
-});
+}, options);
 ```
 
 #### `deleteSpendingGoal`
@@ -1867,7 +1896,7 @@ This method will delete the specified spending goal for the user. Requires the s
 const spendingGoals = await moneyhub.deleteSpendingGoal({
   userId: "user-id",
   goalId: "goal-id",
-});
+}, options);
 ```
 
 ### Savings Goals
@@ -1884,7 +1913,7 @@ const savingsGoal = await moneyhub.createSavingsGoal({
   notes: "lots'o'money",
   userId: "user-id",
   accounts: [{ id: "1234" }],
-});
+}, options);
 ```
 
 #### `getSavingsGoals`
@@ -1896,7 +1925,7 @@ const savingsGoals = await moneyhub.getSavingsGoals({
   userId: "user-id",
   limit: 1,
   offset: 0,
-});
+}, options);
 const savingsGoal = savingsGoals.data[0];
 ```
 
@@ -1908,7 +1937,7 @@ This method will return the specified savings goal for the user. Requires the sc
 const savingsGoals = await moneyhub.getSavingsGoal({
   userId: "user-id",
   goalId: "goal-id",
-});
+}, options);
 ```
 
 #### `updateSavingsGoal`
@@ -1922,7 +1951,7 @@ const savingsGoals = await moneyhub.updateSavingsGoal({
   name: "new-name",
   amount: { value: 302 },
   accounts: [{ id: "1234" }],
-});
+}, options);
 ```
 
 #### `deleteSavingsGoal`
@@ -1933,7 +1962,7 @@ This method will delete the specified savings goal for the user. Requires the sc
 const savingsGoals = await moneyhub.deleteSavingsGoal({
   userId: "user-id",
   goalId: "goal-id",
-});
+}, options);
 ```
 
 ### Financial Connections
