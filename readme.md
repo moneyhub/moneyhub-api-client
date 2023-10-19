@@ -618,6 +618,7 @@ const tokens = await moneyhub.syncUserConnection({
   connectionId,
   customerIpAddress, // optional
   customerLastLoggedTime, // optional
+  enableAsync, // optional
 }, options);
 ```
 
