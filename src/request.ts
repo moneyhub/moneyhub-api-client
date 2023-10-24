@@ -23,6 +23,8 @@ interface Links {
   self: string
 }
 
+type Version = "v2.0" | "v2" | "v3"
+
 export type Request = <T>(url: string, opts?: RequestOptions) => Promise<T>
 
 export interface RequestsParams {
@@ -47,6 +49,7 @@ export interface ApiResponse<T> {
 export interface ExtraOptions {
   token?: string
   headers?: Headers
+  version?: Version
 }
 
 const getResponseBody = (err: unknown) => {
@@ -73,6 +76,11 @@ const attachErrorDetails = (err: unknown) => {
   throw err
 }
 
+export const addVersionToUrl = (url: string, version: Version = "v3"): string => {
+  if (url.includes("identity")) return url
+  return /\/v.+/g.test(url) ? url : `${url}/${version}`
+}
+
 export default ({
   client,
   options: {timeout},
@@ -92,6 +100,8 @@ export default ({
     searchParams: qs.stringify(opts.searchParams),
     timeout,
   }
+
+  const formattedUrl = addVersionToUrl(url, opts.options?.version)
 
   if (opts.options?.token) {
     gotOpts.headers = R.assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
@@ -122,7 +132,7 @@ export default ({
     (gotOpts as any).body = opts.formData
   }
 
-  const req = got<T>(url, gotOpts)
+  const req = got<T>(formattedUrl, gotOpts)
   if (opts.returnStatus) {
     return (req as any).then((res: any) => res.statusCode)
       .catch(attachErrorDetails)
