@@ -86,6 +86,7 @@ export interface ApiClientConfig {
   accountConnectUrl?: string
   options?: {
     timeout?: number
+    apiVersioning?: boolean
   }
   client: {
     client_id: string
