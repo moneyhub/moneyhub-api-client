@@ -10,8 +10,6 @@ export type AddPayLink = (
     payee?: RequestPayee
     reference: string
     expiry?: string
-    endToEndId?: string
-    userId?: string
   },
   options?: ExtraOptions,
 ) => Promise<ApiResponse<PayLink>>

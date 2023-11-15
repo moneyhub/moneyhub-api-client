@@ -17,6 +17,8 @@ This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise
 - Generate authorisation url for payments
 - Add Payees
 - Get Payees and payments
+- Add Pay links
+- Get Pay links
 - Get categories
 - CRUD actions on projects
 - CRUD actions on transaction attachments
@@ -1558,6 +1560,44 @@ you will receive back an ID Token that contains the payment id. This is a utilit
 ```javascript
 const paymentData = await moneyhub.getPaymentFromIDToken({
   idToken: "eyJhbGciOiJSUz...",
+});
+```
+
+#### `addPayLink`
+
+Create a pay-link for dynamically created party-to-party payments using your custom themed widget. This function uses the scope `pay_link:create`. You will receive back the pay-link details as well as the pay-link id in the response. With that id you can then render the widget i.e. https://identity.moneyhub.co.uk/widget-pages/widget-id#payLinkId=pay-link-id
+
+```javascript
+const paymentData = await moneyhub.addPayLink({
+  widgetId: "Id of the pay-link widget used to render the payment" // required
+  payee: "Details of payee to create", // required or payeeId
+  payerId: "Id of payer", // required or payee
+  amount: "Amount in pence to authorize payment", // required
+  expiry: "ISO Date-time string for pay-link expiry"
+  reference: "Payee reference", // required
+});
+```
+
+#### `getPayLink`
+
+Get a single pay-link by its id. This function uses the scope `pay_link:read`.
+
+```javascript
+const paymentData = await moneyhub.getPayLink({
+  id: "Id of the pay-link"
+});
+```
+
+#### `getPayLinks`
+
+This method returns a list of created pay-links. This function uses the scope `pay_link:read`
+
+```javascript
+const payments = await moneyhub.getPayLinks({
+  limit: "limit", // optional
+  offset: "offset", // optional
+  payeeId: "payee-id", // optional
+  widgetId: "widget-id", // optional
 });
 ```
 
