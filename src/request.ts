@@ -76,18 +76,20 @@ const attachErrorDetails = (err: unknown) => {
   throw err
 }
 
-export const addVersionToUrl = (url: string, version: Version = "v3"): string => {
+export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Version = "v3"): string => {
+  if (!apiVersioning) return url
   if (url.includes("identity")) return url
   return /\/v.+/g.test(url) ? url : `${url}/${version}`
 }
 
 export default ({
   client,
-  options: {timeout},
+  options: {timeout, apiVersioning},
 }: {
   client: Client
   options: {
     timeout?: number
+    apiVersioning: boolean
   }
 // eslint-disable-next-line max-statements, complexity
 }) => async <T>(
@@ -101,7 +103,7 @@ export default ({
     timeout,
   }
 
-  const formattedUrl = addVersionToUrl(url, opts.options?.version)
+  const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version)
 
   if (opts.options?.token) {
     gotOpts.headers = R.assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
