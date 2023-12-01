@@ -77,9 +77,14 @@ const attachErrorDetails = (err: unknown) => {
 }
 
 export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Version = "v3"): string => {
-  if (!apiVersioning) return url
-  if (url.includes("identity")) return url
-  return /\/v.+/g.test(url) ? url : `${url}/${version}`
+  if (!apiVersioning || url.includes("identity") || /\/v.+/g.test(url)) return url
+  const urlWithVersion = R.pipe(
+    R.split("/"), // split url [ "https:", "", "test.com", "path", "path2" ]
+    R.insert(3, String(version)), // insert and stringify version after domain
+    R.join("/"), // join url back together with slash
+  )(url)
+
+  return urlWithVersion
 }
 
 export default ({
