@@ -27,6 +27,8 @@ type CreateAuthRequestParams = {
   sync?: {
     enableAsync?: boolean
   }
+  customerIpAddress?: string
+  customerLastLoggedTime?: string
 }
 
 export interface AuthRequestsRequests {
@@ -46,6 +48,8 @@ export interface AuthRequestsRequests {
     expirationDateTime,
     transactionsFromDateTime,
     sync,
+    customerIpAddress,
+    customerLastLoggedTime,
   }: CreateAuthRequestParams, options?: ExtraOptions) => Promise<ApiResponse<AuthRequest>>
 
   completeAuthRequest: ({

@@ -25,6 +25,8 @@ export default ({
       expirationDateTime,
       transactionsFromDateTime,
       sync,
+      customerIpAddress,
+      customerLastLoggedTime,
     }, options) =>
       request(authRequestEndpoint, {
         method: "POST",
@@ -47,6 +49,8 @@ export default ({
           expirationDateTime,
           transactionFromDateTime: transactionsFromDateTime,
           sync,
+          customerIpAddress,
+          customerLastLoggedTime,
         },
         options,
       }),
