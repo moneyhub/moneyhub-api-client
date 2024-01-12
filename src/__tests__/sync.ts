@@ -28,9 +28,9 @@ describe("Sync", function() {
       expect(result?.data.status).to.equal("ok")
       expectTypeOf<Syncs.SyncResponse | undefined>(result?.data)
     } catch (error) {
-      // Even if a 500 or 429 is returned we are testing that the method calls the api
+      // Even if a 500, 429 (rate limit) or 403 (expired consent) is returned we are testing that the method calls the api
       const {statusCode} = (error as any).response
-      expect(statusCode).to.be.oneOf([500, 429])
+      expect(statusCode).to.be.oneOf([500, 403, 429])
     }
 
   })
