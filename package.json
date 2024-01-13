@@ -35,7 +35,7 @@
     "jose": "^4.9.3",
     "openid-client": "^4.9.1",
     "query-string": "^7.1.1",
-    "ramda": "^0.27.2"
+    "ramda": "^0.29.0"
   },
   "devDependencies": {
     "@mft/eslint-config-momentumft": "^8.0.0",
