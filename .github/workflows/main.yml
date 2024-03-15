@@ -23,3 +23,10 @@ jobs:
           issue_assignees: oke-py
           issue_labels: vulnerability,test
           dedupe_issues: true
+      - name: Run and Report Unit Tests
+        uses: moneyhub/run-and-report-tests@v1
+        with:
+          test-script: test-ci
+          report-path: test_reports/unit/report.xml
+          name: Unit
+
