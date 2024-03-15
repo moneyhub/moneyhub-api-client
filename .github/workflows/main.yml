@@ -29,18 +29,11 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
-      - name: Setup Node
+      - name: Setup Node.js 16 environment
         uses: actions/setup-node@v3
         with:
           node-version: '16'
-          registry-url: 'https://registry.npmjs.org'
       - name: Install Dependencies
         run: npm ci
-        shell: bash
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Run and Report Unit Tests
-        run: npm run test-ci
-        env:
-          NODE_CONFIG: ${{ secrets.DEV_CONFIG }}
-
+      - name: Run unit tests
+        run: npm run test

@@ -1,0 +1,279 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuites name="Mocha Tests" time="61.9860" tests="114" failures="0" skipped="6">
+  <testsuite name="Root Suite" timestamp="2024-03-15T16:46:45" tests="0" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Accounts with extra options" timestamp="2024-03-15T16:46:47" tests="4" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/accounts-with-extra-options.ts" time="1.1590" failures="0">
+    <testcase name="Accounts with extra options errors with malformed token" time="0.2460" classname="errors with malformed token">
+    </testcase>
+    <testcase name="Accounts with extra options errors with malformed headers" time="0.0750" classname="errors with malformed headers">
+    </testcase>
+    <testcase name="Accounts with extra options succeeds with given token" time="0.3930" classname="succeeds with given token">
+    </testcase>
+    <testcase name="Accounts with extra options succeeds with given headers" time="0.3280" classname="succeeds with given headers">
+    </testcase>
+  </testsuite>
+  <testsuite name="Accounts" timestamp="2024-03-15T16:46:48" tests="12" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/accounts.ts" time="4.2030" failures="0">
+    <testcase name="Accounts get accounts" time="0.3010" classname="get accounts">
+    </testcase>
+    <testcase name="Accounts get accounts list" time="0.3240" classname="get accounts list">
+    </testcase>
+    <testcase name="Accounts get accounts list with transactionData" time="0.2790" classname="get accounts list with transactionData">
+    </testcase>
+    <testcase name="Accounts get accounts list with details" time="0.4410" classname="get accounts list with details">
+    </testcase>
+    <testcase name="Accounts get account" time="0.2570" classname="get account">
+    </testcase>
+    <testcase name="Accounts get counterparties" time="0.3150" classname="get counterparties">
+    </testcase>
+    <testcase name="Accounts get holdings" time="0.2490" classname="get holdings">
+    </testcase>
+    <testcase name="Accounts creates a manual account" time="0.3250" classname="creates a manual account">
+    </testcase>
+    <testcase name="Accounts creates a new balance" time="0.2520" classname="creates a new balance">
+    </testcase>
+    <testcase name="Accounts updates an account" time="0.2900" classname="updates an account">
+    </testcase>
+    <testcase name="Accounts deletes manual account" time="0.8500" classname="deletes manual account">
+    </testcase>
+  </testsuite>
+  <testsuite name="affordability" timestamp="2024-03-15T16:46:52" tests="3" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/affordability.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Auth requests" timestamp="2024-03-15T16:46:52" tests="1" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/auth-requests.ts" time="3.1910" failures="0">
+    <testcase name="Auth requests creates payment auth request" time="3.0730" classname="creates payment auth request">
+    </testcase>
+  </testsuite>
+  <testsuite name="Auth Urls" timestamp="2024-03-15T16:46:55" tests="7" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/auth-urls.ts" time="2.0670" failures="0">
+    <testcase name="Auth Urls gets a basic auth url" time="0.3040" classname="gets a basic auth url">
+    </testcase>
+    <testcase name="Auth Urls gets a basic auth url with permissions" time="0.0980" classname="gets a basic auth url with permissions">
+    </testcase>
+    <testcase name="Auth Urls gets an auth url for a user" time="0.1220" classname="gets an auth url for a user">
+    </testcase>
+    <testcase name="Auth Urls gets an auth url for a user with extra permissions" time="0.1640" classname="gets an auth url for a user with extra permissions">
+    </testcase>
+    <testcase name="Auth Urls gets a payment auth url" time="0.4100" classname="gets a payment auth url">
+    </testcase>
+    <testcase name="Auth Urls gets a payment auth url without payeeId" time="0.0990" classname="gets a payment auth url without payeeId">
+    </testcase>
+    <testcase name="Auth Urls gets a reconsent url for a user" time="0.7350" classname="gets a reconsent url for a user">
+    </testcase>
+  </testsuite>
+  <testsuite name="Categories" timestamp="2024-03-15T16:46:57" tests="10" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/categories.ts" time="3.6180" failures="0">
+    <testcase name="Categories get standard categories" time="0.1130" classname="get standard categories">
+    </testcase>
+    <testcase name="Categories get standard category groups" time="0.1010" classname="get standard category groups">
+    </testcase>
+    <testcase name="Categories get personal categories" time="0.2650" classname="get personal categories">
+    </testcase>
+    <testcase name="Categories get personal category" time="0.4500" classname="get personal category">
+    </testcase>
+    <testcase name="Categories get personal category groups" time="0.2360" classname="get personal category groups">
+    </testcase>
+    <testcase name="Categories get business categories" time="0.4670" classname="get business categories">
+    </testcase>
+    <testcase name="Categories get business category" time="1.0060" classname="get business category">
+    </testcase>
+    <testcase name="Categories get business category groups" time="0.2060" classname="get business category groups">
+    </testcase>
+    <testcase name="Categories get all categories" time="0.2150" classname="get all categories">
+    </testcase>
+    <testcase name="Categories creates custom category" time="0.4400" classname="creates custom category">
+    </testcase>
+  </testsuite>
+  <testsuite name="API client" timestamp="2024-03-15T16:47:01" tests="0" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/index.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Client configuration" timestamp="2024-03-15T16:47:01" tests="2" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/index.ts" time="0.0000" failures="0">
+    <testcase name="API client Client configuration should create client" time="0.0000" classname="should create client">
+    </testcase>
+    <testcase name="API client Client configuration should export the required functions" time="0.0010" classname="should export the required functions">
+    </testcase>
+  </testsuite>
+  <testsuite name="utility methods" timestamp="2024-03-15T16:47:01" tests="6" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/index.ts" time="0.9090" failures="0">
+    <testcase name="API client Client configuration utility methods exports public keys" time="0.0010" classname="exports public keys">
+    </testcase>
+    <testcase name="API client Client configuration utility methods lists connections" time="0.2770" classname="lists connections">
+    </testcase>
+    <testcase name="API client Client configuration utility methods lists api connections" time="0.2180" classname="lists api connections">
+    </testcase>
+    <testcase name="API client Client configuration utility methods lists test connections" time="0.1630" classname="lists test connections">
+    </testcase>
+    <testcase name="API client Client configuration utility methods gets OpenID config" time="0.1010" classname="gets OpenID config">
+    </testcase>
+    <testcase name="API client Client configuration utility methods gets global counterparties" time="0.1430" classname="gets global counterparties">
+    </testcase>
+  </testsuite>
+  <testsuite name="Notification Thresholds" timestamp="2024-03-15T16:47:02" tests="4" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/notification-thresholds.ts" time="1.3870" failures="0">
+    <testcase name="Notification Thresholds can create a notification threshold" time="0.2360" classname="can create a notification threshold">
+    </testcase>
+    <testcase name="Notification Thresholds can get notification thresholds" time="0.2500" classname="can get notification thresholds">
+    </testcase>
+    <testcase name="Notification Thresholds can update a notification threshold" time="0.2380" classname="can update a notification threshold">
+    </testcase>
+    <testcase name="Notification Thresholds can delete a notification threshold" time="0.2690" classname="can delete a notification threshold">
+    </testcase>
+  </testsuite>
+  <testsuite name="Osip" timestamp="2024-03-15T16:47:03" tests="4" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/osip.ts" time="2.4350" failures="0">
+    <testcase name="Osip get osip accounts" time="1.3080" classname="get osip accounts">
+    </testcase>
+    <testcase name="Osip get account" time="0.2610" classname="get account">
+    </testcase>
+    <testcase name="Osip get holdings" time="0.4720" classname="get holdings">
+    </testcase>
+    <testcase name="Osip get osip transactions" time="0.2840" classname="get osip transactions">
+    </testcase>
+  </testsuite>
+  <testsuite name="Payees" timestamp="2024-03-15T16:47:06" tests="3" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/payees.ts" time="1.5820" failures="0">
+    <testcase name="Payees add payee" time="0.5950" classname="add payee">
+    </testcase>
+    <testcase name="Payees get payee" time="0.3390" classname="get payee">
+    </testcase>
+    <testcase name="Payees get payees" time="0.3420" classname="get payees">
+    </testcase>
+  </testsuite>
+  <testsuite name="Payments" timestamp="2024-03-15T16:47:07" tests="3" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/payments.ts" time="1.0560" failures="0">
+    <testcase name="Payments gets payment from token" time="0.3460" classname="gets payment from token">
+    </testcase>
+    <testcase name="Payments gets payment by id" time="0.2860" classname="gets payment by id">
+    </testcase>
+    <testcase name="Payments gets payments" time="0.3260" classname="gets payments">
+    </testcase>
+  </testsuite>
+  <testsuite name="Projects" timestamp="2024-03-15T16:47:08" tests="5" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/projects.ts" time="2.7230" failures="0">
+    <testcase name="Projects can create a project" time="1.2420" classname="can create a project">
+    </testcase>
+    <testcase name="Projects can get a project" time="0.2690" classname="can get a project">
+    </testcase>
+    <testcase name="Projects can get projects" time="0.3690" classname="can get projects">
+    </testcase>
+    <testcase name="Projects can update a project" time="0.3720" classname="can update a project">
+    </testcase>
+    <testcase name="Projects can delete a project" time="0.3060" classname="can delete a project">
+    </testcase>
+  </testsuite>
+  <testsuite name="Regular transactions" timestamp="2024-03-15T16:47:11" tests="0" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/regular-transactions.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Get regular transactions" timestamp="2024-03-15T16:47:11" tests="1" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/regular-transactions.ts" time="0.3220" failures="0">
+    <testcase name="Regular transactions Get regular transactions is successful" time="0.3200" classname="is successful">
+    </testcase>
+  </testsuite>
+  <testsuite name="Regular transactions detect" timestamp="2024-03-15T16:47:11" tests="1" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/regular-transactions.ts" time="0.6880" failures="0">
+    <testcase name="Regular transactions Regular transactions detect is successful" time="0.6880" classname="is successful">
+    </testcase>
+  </testsuite>
+  <testsuite name="Rental records" timestamp="2024-03-15T16:47:12" tests="3" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/rental-records.ts" time="4.2060" failures="0">
+    <testcase name="Rental records get rental record" time="0.2830" classname="get rental record">
+    </testcase>
+    <testcase name="Rental records create rental record" time="0.2480" classname="create rental record">
+    </testcase>
+    <testcase name="Rental records delete rental record" time="0.5200" classname="delete rental record">
+    </testcase>
+  </testsuite>
+  <testsuite name="addVersionToUrl" timestamp="2024-03-15T16:47:16" tests="10" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/request.ts" time="0.0060" failures="0">
+    <testcase name="addVersionToUrl should not add a version to an identity url" time="0.0010" classname="should not add a version to an identity url">
+    </testcase>
+    <testcase name="addVersionToUrl should add the default version to a URL without a version" time="0.0020" classname="should add the default version to a URL without a version">
+    </testcase>
+    <testcase name="addVersionToUrl should add the default version to a URL without a version but a path" time="0.0000" classname="should add the default version to a URL without a version but a path">
+    </testcase>
+    <testcase name="addVersionToUrl should add the default version to a URL without a version but a long path" time="0.0010" classname="should add the default version to a URL without a version but a long path">
+    </testcase>
+    <testcase name="addVersionToUrl should not add the default version to a URL that already has a version" time="0.0000" classname="should not add the default version to a URL that already has a version">
+    </testcase>
+    <testcase name="addVersionToUrl should add a specified version to a URL without a version" time="0.0000" classname="should add a specified version to a URL without a version">
+    </testcase>
+    <testcase name="addVersionToUrl should add a specified version to a URL without a version but a path" time="0.0000" classname="should add a specified version to a URL without a version but a path">
+    </testcase>
+    <testcase name="addVersionToUrl should add a specified version to a URL without a version but a long path" time="0.0000" classname="should add a specified version to a URL without a version but a long path">
+    </testcase>
+    <testcase name="addVersionToUrl should not add a specified version to a URL that already has a version" time="0.0000" classname="should not add a specified version to a URL that already has a version">
+    </testcase>
+    <testcase name="addVersionToUrl should not add a version to a URL if apiVersioning is false" time="0.0000" classname="should not add a version to a URL if apiVersioning is false">
+    </testcase>
+  </testsuite>
+  <testsuite name="Savings Goals" timestamp="2024-03-15T16:47:16" tests="6" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/savings-goals.ts" time="4.0660" failures="0">
+    <testcase name="Savings Goals can create a savings goal" time="0.2840" classname="can create a savings goal">
+    </testcase>
+    <testcase name="Savings Goals can get a savings goal" time="0.2930" classname="can get a savings goal">
+    </testcase>
+    <testcase name="Savings Goals can get all savings goals" time="0.2660" classname="can get all savings goals">
+    </testcase>
+    <testcase name="Savings Goals can get all savings goals with limit" time="0.2800" classname="can get all savings goals with limit">
+    </testcase>
+    <testcase name="Savings Goals can update a savings goal" time="1.0540" classname="can update a savings goal">
+    </testcase>
+    <testcase name="Savings Goals can delete a savings goal" time="1.4700" classname="can delete a savings goal">
+    </testcase>
+  </testsuite>
+  <testsuite name="Spending Goals" timestamp="2024-03-15T16:47:20" tests="6" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/spending-goals.ts" time="3.5220" failures="0">
+    <testcase name="Spending Goals can create a spending goal" time="0.5530" classname="can create a spending goal">
+    </testcase>
+    <testcase name="Spending Goals can get a spending goal" time="0.2650" classname="can get a spending goal">
+    </testcase>
+    <testcase name="Spending Goals can get all spending goals" time="0.2660" classname="can get all spending goals">
+    </testcase>
+    <testcase name="Spending Goals can get all spending goals with limit" time="0.6420" classname="can get all spending goals with limit">
+    </testcase>
+    <testcase name="Spending Goals can update a spending goal" time="0.3880" classname="can update a spending goal">
+    </testcase>
+    <testcase name="Spending Goals can delete a spending goal" time="1.2720" classname="can delete a spending goal">
+    </testcase>
+  </testsuite>
+  <testsuite name="Sync" timestamp="2024-03-15T16:47:24" tests="1" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/sync.ts" time="0.8820" failures="0">
+    <testcase name="Sync sync user connection" time="0.7510" classname="sync user connection">
+    </testcase>
+  </testsuite>
+  <testsuite name="Tax" timestamp="2024-03-15T16:47:25" tests="1" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/tax.ts" time="0.3690" failures="0">
+    <testcase name="Tax can get a tax return" time="0.2760" classname="can get a tax return">
+    </testcase>
+  </testsuite>
+  <testsuite name="Exchange Code For Token" timestamp="2024-03-15T16:47:25" tests="1" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/token.ts" time="0.0000" failures="0">
+  </testsuite>
+  <testsuite name="Transaction Files" timestamp="2024-03-15T16:47:25" tests="4" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/transaction-files.ts" time="2.8980" failures="0">
+    <testcase name="Transaction Files add a transaction file" time="1.1560" classname="add a transaction file">
+    </testcase>
+    <testcase name="Transaction Files gets transaction files" time="0.4100" classname="gets transaction files">
+    </testcase>
+    <testcase name="Transaction Files gets a transaction file" time="0.2760" classname="gets a transaction file">
+    </testcase>
+    <testcase name="Transaction Files deletes a transaction file" time="0.6270" classname="deletes a transaction file">
+    </testcase>
+  </testsuite>
+  <testsuite name="Transaction Splits" timestamp="2024-03-15T16:47:28" tests="4" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/transaction-splits.ts" time="10.7420" failures="0">
+    <testcase name="Transaction Splits can split a transaction" time="0.3340" classname="can split a transaction">
+    </testcase>
+    <testcase name="Transaction Splits can get a transactions splits" time="0.2790" classname="can get a transactions splits">
+    </testcase>
+    <testcase name="Transaction Splits can update a transactions splits" time="0.4830" classname="can update a transactions splits">
+    </testcase>
+    <testcase name="Transaction Splits can delete a transactions splits" time="0.4000" classname="can delete a transactions splits">
+    </testcase>
+  </testsuite>
+  <testsuite name="Transactions" timestamp="2024-03-15T16:47:39" tests="5" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/transactions.ts" time="0.0000" failures="0">
+    <testcase name="Transactions can get transactions" time="0.2600" classname="can get transactions">
+    </testcase>
+    <testcase name="Transactions can get transactions with limit" time="0.3740" classname="can get transactions with limit">
+    </testcase>
+    <testcase name="Transactions can get one transaction" time="0.6650" classname="can get one transaction">
+    </testcase>
+    <testcase name="Transactions can update one transaction" time="0.2890" classname="can update one transaction">
+    </testcase>
+  </testsuite>
+  <testsuite name="creating and deleting a manual transaction" timestamp="2024-03-15T16:47:41" tests="2" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/transactions.ts" time="1.8660" failures="0">
+    <testcase name="Transactions creating and deleting a manual transaction creates a transaction" time="0.0010" classname="creates a transaction">
+    </testcase>
+    <testcase name="Transactions creating and deleting a manual transaction deletes transaction" time="0.0010" classname="deletes transaction">
+    </testcase>
+  </testsuite>
+  <testsuite name="Users" timestamp="2024-03-15T16:47:42" tests="5" file="/Users/ingrid.acero/Documents/Repos/moneyhub-api-client/src/__tests__/users.ts" time="4.5760" failures="0">
+    <testcase name="Users can create a user" time="0.6700" classname="can create a user">
+    </testcase>
+    <testcase name="Users can get a created user" time="1.1000" classname="can get a created user">
+    </testcase>
+    <testcase name="Users can get all users" time="0.7420" classname="can get all users">
+    </testcase>
+    <testcase name="Users can get all users with limit" time="0.8040" classname="can get all users with limit">
+    </testcase>
+    <testcase name="Users can delete a user" time="0.4670" classname="can delete a user">
+    </testcase>
+  </testsuite>
+</testsuites>
