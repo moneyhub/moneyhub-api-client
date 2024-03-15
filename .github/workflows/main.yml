@@ -23,3 +23,20 @@ jobs:
           issue_assignees: oke-py
           issue_labels: vulnerability,test
           dedupe_issues: true
+  test-and-build:
+    name: Test and Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+      - name: Setup Node.js 16 environment
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+      - name: Install Dependencies
+        run: npm ci
+      - name: Run tests
+        run: npm run test
+        env:
+          NODE_CONFIG: ${{ secrets.DEV_CONFIG }}
+
