@@ -46,9 +46,7 @@ jobs:
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: Run and Report Unit Tests
-        uses: moneyhub/run-and-report-tests@v1
-        with:
-          test-script: test-ci
-          report-path: test-reports/unit/report.json
-          name: Unit
+        run: npm run test-ci
+        env:
+          NODE_CONFIG: ${{ secrets.DEV_CONFIG }}
 
