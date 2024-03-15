@@ -24,9 +24,4 @@ jobs:
           issue_labels: vulnerability,test
           dedupe_issues: true
       - name: Run and Report Unit Tests
-        uses: moneyhub/run-and-report-tests@v1
-        with:
-          test-script: test-ci
-          report-path: test_reports/unit/report.xml
-          name: Unit
-
+        run: npm run test:ci
