@@ -7,6 +7,8 @@ import {PaymentActorType} from "./schema/payment"
 import {StandingOrderFrequency} from "./schema/standing-order"
 import {RequestPayee} from "./schema/payee"
 
+type PermissionsAction = "add" | "replace"
+
 const filterUndefined = R.reject(R.isNil)
 type PkceParams = {
   code_challenge: string
@@ -28,7 +30,7 @@ export default ({
     },
   } = config
 
-  const setPermissionsToClaims = (permissions: any) => (claims: any) => {
+  const setPermissionsToClaims = (permissions: any, permissionsAction?: PermissionsAction) => (claims: any) => {
     if (permissions && R.is(Array, permissions)) {
       return R.mergeDeepRight(claims, {
         id_token: {
@@ -36,6 +38,7 @@ export default ({
             essential: true,
             value: {
               permissions,
+              permissionsAction: permissionsAction || "add",
             },
           },
         },
@@ -105,6 +108,7 @@ export default ({
     nonce,
     claims = {},
     permissions,
+    permissionsAction,
     enableAsync,
     expirationDateTime,
     transactionFromDateTime,
@@ -115,6 +119,7 @@ export default ({
     nonce?: string
     claims?: any
     permissions?: string[]
+    permissionsAction?: PermissionsAction
     enableAsync?: boolean
     expirationDateTime?: string
     transactionFromDateTime?: string
@@ -153,7 +158,7 @@ export default ({
     }
 
     const _claims = R.compose(
-      setPermissionsToClaims(permissions),
+      setPermissionsToClaims(permissions, permissionsAction),
       R.mergeDeepRight(defaultClaims),
     )(claims)
 
@@ -172,6 +177,7 @@ export default ({
     nonce,
     claims = {},
     permissions,
+    permissionsAction,
     enableAsync,
     expirationDateTime,
     transactionFromDateTime,
@@ -182,6 +188,7 @@ export default ({
     nonce?: string
     claims?: any
     permissions?: string[]
+    permissionsAction?: PermissionsAction
     enableAsync?: boolean
     expirationDateTime?: string
     transactionFromDateTime?: string
@@ -226,7 +233,7 @@ export default ({
     }
 
     const _claims = R.compose(
-      setPermissionsToClaims(permissions),
+      setPermissionsToClaims(permissions, permissionsAction),
       R.mergeDeepRight(defaultClaims),
     )(claims)
 
@@ -266,6 +273,7 @@ export default ({
       userId,
       claims = {},
       permissions,
+      permissionsAction,
       expirationDateTime,
       transactionFromDateTime,
       enableAsync,
@@ -278,6 +286,7 @@ export default ({
       userId: string
       claims?: any
       permissions?: string[]
+      permissionsAction?: PermissionsAction
       expirationDateTime?: string
       transactionFromDateTime?: string
       enableAsync?: boolean
@@ -296,7 +305,7 @@ export default ({
         },
       }
       const _claims = R.compose(
-        setPermissionsToClaims(permissions),
+        setPermissionsToClaims(permissions, permissionsAction),
         R.mergeDeepRight(defaultClaims),
       )(claims)
 
@@ -308,6 +317,7 @@ export default ({
         expirationDateTime,
         transactionFromDateTime,
         permissions,
+        permissionsAction,
         enableAsync,
         codeChallenge,
       })
@@ -802,6 +812,7 @@ export default ({
       userId,
       claims = {},
       permissions,
+      permissionsAction,
       expirationDateTime,
       transactionFromDateTime,
       enableAsync,
@@ -814,6 +825,7 @@ export default ({
       context?: string
       claims?: any
       permissions?: string[]
+      permissionsAction?: PermissionsAction
       expirationDateTime?: string
       transactionFromDateTime?: string
       enableAsync?: boolean
@@ -833,7 +845,7 @@ export default ({
       }
 
       const _claims = R.compose(
-        setPermissionsToClaims(permissions),
+        setPermissionsToClaims(permissions, permissionsAction),
         R.mergeDeepRight(defaultClaims),
       )(claims)
 

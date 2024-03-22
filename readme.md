@@ -174,6 +174,7 @@ const url = await moneyhub.getAuthorizeUrl({
   nonce: "your nonce value", //optional
   claims: claimsObject, // optional
   permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth URL
+  permissionsAction: "replace" // optional - replace default consent permissions. Defaults to "add"
   expirationDateTime: "2022-09-01T00:00:00.000Z", // optional
   transactionFromDateTime: "2020-09-01T00:00:00.000Z", // optional,
   enableAsync: false, // optional
@@ -210,6 +211,7 @@ const url = await moneyhub.getAuthorizeUrlForCreatedUser({
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
   permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth URL
+  permissionsAction: "replace" // optional - replace default consent permissions. Defaults to "add"
   enableAsync: false, // optional
 });
 
@@ -306,6 +308,7 @@ const url = await moneyhub.getAuthorizeUrlLegacy({
   nonce: "your nonce value", //optional
   claims: claimsObject, // optional
   permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth URL
+  permissionsAction: "replace" // optional - replace default consent permissions. Defaults to "add"
   expirationDateTime: "2022-09-01T00:00:00.000Z", // optional
   transactionFromDateTime: "2020-09-01T00:00:00.000Z", // optional,
   enableAsync: false, // optional
@@ -450,6 +453,7 @@ const tokens = await moneyhub.createAuthRequest({
   scope: "openid 1ffe704d39629a929c8e293880fb449a", // replace bank id with the bank you want to connect to
   categorisationType: "personal", // optional - defaults to personal
   permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth request
+  permissionsAction: "replace" // optional - replace default consent permissions. Defaults to "add"
 });
 ```
 
