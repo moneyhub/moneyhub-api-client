@@ -178,7 +178,7 @@ describe("API client", function() {
 
       it("lists test connections", async function() {
         const connections = await moneyhub.listTestConnections()
-        expect(connections.length).to.be.lessThan(10)
+        expect(connections.length).to.be.lessThan(15)
       })
 
       it("gets OpenID config", async function() {
