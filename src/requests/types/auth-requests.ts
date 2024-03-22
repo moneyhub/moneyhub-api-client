@@ -13,7 +13,6 @@ type AuthRequestPermissions =
   | "ReadTransactionsCredits"
   | "ReadTransactionsDebits"
   | "ReadTransactionsDetail"
-  | "ReadTransactionsBasic"
   | "ReadProducts"
   | "ReadBalances"
   | "ReadParty"
