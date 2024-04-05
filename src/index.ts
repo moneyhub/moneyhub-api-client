@@ -89,6 +89,7 @@ import type * as SavingsGoals from "./schema/savings-goal"
 import type * as SpendingAnalysis from "./schema/spending-analysis"
 import type * as SpendingGoals from "./schema/spending-goal"
 import type * as StandingOrders from "./schema/standing-order"
+import type * as Statements from "./schema/statement"
 import type * as Syncs from "./schema/sync"
 import type * as Taxes from "./schema/tax"
 import type * as Transactions from "./schema/transaction"
@@ -114,6 +115,7 @@ export {
   SpendingAnalysis,
   SpendingGoals,
   StandingOrders,
+  Statements,
   Syncs,
   Taxes,
   Transactions,
