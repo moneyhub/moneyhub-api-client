@@ -855,6 +855,28 @@ const standingOrders = await moneyhub.getAccountStandingOrdersWithDetail({
 }, options);
 ```
 
+#### `getAccountStatements`
+
+Get the statements for an account. This function uses the scope `statements_basic:read` and a connection with `ReadStatementsBasic` permission.
+
+```javascript
+const statements = await moneyhub.getAccountStatements({
+  userId: "userId",
+  accountId: "accountId",
+}, options);
+```
+
+#### `getAccountStatementsWithDetail`
+
+Get the statements with detail for an account. This function uses the scope `statements_detail:read` and a connection with `ReadStatementsDetail` permission.
+
+```javascript
+const statements = await moneyhub.getAccountStatementsWithDetail({
+  userId: "userId",
+  accountId: "accountId",
+}, options);
+```
+
 #### `createAccount`
 
 Create a manual account for a user. This function uses the scopes `accounts:read accounts:write:all`
