@@ -1,3 +1,5 @@
+import type {JWK} from "jose"
+
 export type use = "sig" | "enc";
 export type keyOperation = "sign" | "verify" | "encrypt" | "decrypt" | "wrapKey" | "unwrapKey" | "deriveKey";
 export type ECCurve = "P-256" | "secp256k1" | "P-384" | "P-521";
@@ -46,9 +48,6 @@ export interface JWKRSAKey extends KeyParameters {
   qi?: string
 }
 
-export type JSONWebKey = JWKRSAKey | JWKOKPKey | JWKECKey | JWKOctKey;
-
-
 export type TokenSigningAlgorithm =
   | "HS256"
   | "HS384"
@@ -96,6 +95,6 @@ export interface ApiClientConfig {
     request_object_signing_alg: TokenSigningAlgorithm
     redirect_uri: string
     response_type: ResponseType
-    keys: JSONWebKey[]
+    keys: JWK[]
   }
 }
