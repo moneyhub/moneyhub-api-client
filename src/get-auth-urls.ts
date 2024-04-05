@@ -6,8 +6,7 @@ import type {ApiClientConfig} from "./schema/config"
 import {PaymentActorType} from "./schema/payment"
 import {StandingOrderFrequency} from "./schema/standing-order"
 import {RequestPayee} from "./schema/payee"
-
-type PermissionsAction = "add" | "replace"
+import {PermissionsAction} from "./requests/types/auth-requests"
 
 const filterUndefined = R.reject(R.isNil)
 type PkceParams = {

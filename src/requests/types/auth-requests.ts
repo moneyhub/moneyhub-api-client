@@ -17,6 +17,8 @@ type AuthRequestPermissions =
   | "ReadBalances"
   | "ReadParty"
 
+export type PermissionsAction = "add" | "replace"
+
 type CreateAuthRequestParams = {
   redirectUri?: string
   userId?: string
@@ -30,7 +32,7 @@ type CreateAuthRequestParams = {
   benefitsCheck?: boolean
   counterpartiesCheck?: string[]
   permissions?: AuthRequestPermissions
-  permissionsAction?: "add" | "replace"
+  permissionsAction?: PermissionsAction
   expirationDateTime?: string
   transactionsFromDateTime?: string
   sync?: {
