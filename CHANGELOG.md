@@ -1,3 +1,14 @@
+6.0.0 / 2024-04-8
+==================
+
+**Breaking Changes**
+
+* End-Of-Life versions of Node.js as of October 2023 are no longer supported. Supports Node.js 18, 20, and future releases.
+
+**Features**
+
+* Add permissionsActions to authorisation URL generation methods.
+
 5.7.0 / 2023-09-11
 ==================
 
