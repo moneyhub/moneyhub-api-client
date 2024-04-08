@@ -8,6 +8,16 @@ type AuthRequestPermissions =
   | "ReadStandingOrdersBasic"
   | "ReadStandingOrdersDetail"
   | "ReadBeneficiariesDetail"
+  | "ReadAccountsDetail"
+  | "ReadAccountsBasic"
+  | "ReadTransactionsCredits"
+  | "ReadTransactionsDebits"
+  | "ReadTransactionsDetail"
+  | "ReadProducts"
+  | "ReadBalances"
+  | "ReadParty"
+
+export type PermissionsAction = "add" | "replace"
 
 type CreateAuthRequestParams = {
   redirectUri?: string
@@ -22,6 +32,7 @@ type CreateAuthRequestParams = {
   benefitsCheck?: boolean
   counterpartiesCheck?: string[]
   permissions?: AuthRequestPermissions
+  permissionsAction?: PermissionsAction
   expirationDateTime?: string
   transactionsFromDateTime?: string
   sync?: {
@@ -45,6 +56,7 @@ export interface AuthRequestsRequests {
     benefitsCheck,
     counterpartiesCheck,
     permissions,
+    permissionsAction,
     expirationDateTime,
     transactionsFromDateTime,
     sync,
