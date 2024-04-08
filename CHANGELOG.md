@@ -7,7 +7,8 @@
 
 **Features**
 
-* Add permissionsActions to authorisation URL generation methods.
+* Add permissionsAction to authorisation URL generation methods.
+* Add customerIpAddress and customerLastLoggedTime to createAuthRequest
 
 5.7.0 / 2023-09-11
 ==================
