@@ -1,3 +1,5 @@
+import {Amount} from "./amount"
+
 export enum StatementType {
   AccountClosure = "AccountClosure",
   AccountOpening = "AccountOpening",
@@ -8,7 +10,7 @@ export enum StatementType {
 
 export type StatementBenefit = {
   type: string
-  amount: number
+  amount: Amount
 }
 
 export enum StatementFeeFrequency {
@@ -27,7 +29,7 @@ export type StatementFee = {
   rate?: string
   rateType?: string
   frequency?: StatementFeeFrequency
-  amount: number
+  amount: Amount
 }
 
 export enum StatementInterestRateType {
@@ -55,15 +57,15 @@ export type StatementInterest = {
   rate?: string
   rateType?: StatementInterestRateType
   frequency?: StatementInterestFrequency
-  amount: number
+  amount: Amount
 }
 
 export type StatementAmount = {
   creditDebitIndicator: string
   type: string
-  amount: number
+  amount: Amount
   amountSubType?: string
-  localAmount?: number
+  localAmount?: Amount
   localAmountSubType?: string
 }
 
@@ -93,7 +95,7 @@ export type Statement = {
   startDate: string
   endDate: string
   creationDate: string
-  description: string[]
+  description: string
   benefits: StatementBenefit[]
   fees: StatementFee[]
   interest: StatementInterest[]
@@ -101,6 +103,6 @@ export type Statement = {
   dates: StatementDate[]
   rates: StatementRate[]
   values: StatementValue[]
-  totalValue: number
+  totalValue: Amount
   currency: string
 }
