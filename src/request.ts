@@ -4,6 +4,7 @@ import qs from "query-string"
 import * as R from "ramda"
 
 import type {ApiClientConfig} from "./schema/config"
+import {DEFAULT_API_VERSION} from "../examples/constants"
 
 interface RequestOptions extends Pick<Options, "method" | "headers" | "searchParams" | "json" | "form"> {
   searchParams?: any // needed?
@@ -23,7 +24,7 @@ interface Links {
   self: string
 }
 
-type Version = "v2.0" | "v2" | "v3"
+type Version = "v2.0" | "v2" | "v3" | "v3.0"
 
 export type Request = <T>(url: string, opts?: RequestOptions) => Promise<T>
 
@@ -76,7 +77,7 @@ const attachErrorDetails = (err: unknown) => {
   throw err
 }
 
-export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Version = "v3"): string => {
+export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Version = DEFAULT_API_VERSION): string => {
   if (!apiVersioning || url.includes("identity") || /\/v.+/g.test(url)) return url
   const urlWithVersion = R.pipe(
     R.split("/"), // split url [ "https:", "", "test.com", "path", "path2" ]
