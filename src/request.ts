@@ -4,7 +4,7 @@ import qs from "query-string"
 import * as R from "ramda"
 
 import type {ApiClientConfig} from "./schema/config"
-import {DEFAULT_API_VERSION} from "../examples/constants"
+const DEFAULT_API_VERSION: Version = "v3"
 
 interface RequestOptions extends Pick<Options, "method" | "headers" | "searchParams" | "json" | "form"> {
   searchParams?: any // needed?
