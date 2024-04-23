@@ -5,6 +5,7 @@ import type {Counterparty} from "../../schema/counterparty"
 import type {HoldingWithMatches, HoldingWithMatchesAndHistory, HoldingsValuation} from "../../schema/holding"
 import type {RecurringTransactionEstimate} from "../../schema/transaction"
 import type {StandingOrder, StandingOrderWithDetail} from "../../schema/standing-order"
+import type {Statement} from "../../schema/statement"
 
 export interface AccountsRequests {
   getAccounts: ({userId, params}: { userId?: string, params?: SearchParams }, options?: ExtraOptions) => Promise<ApiResponse<Account[]>>
@@ -72,8 +73,27 @@ export interface AccountsRequests {
     userId?: string
     accountId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<StandingOrder[]>>
-  createAccount: ({userId, account}: { userId: string, account: AccountPost }, options?: ExtraOptions) => Promise<ApiResponse<Account>>
-  deleteAccount: ({userId, accountId}: { userId: string, accountId: string }, options?: ExtraOptions) => Promise<number>
+  getAccountStandingOrdersWithDetail: ({
+    userId,
+    accountId,
+  }: {
+    userId?: string
+    accountId: string
+  }, options?: ExtraOptions) => Promise<ApiResponse<StandingOrderWithDetail[]>>
+  getAccountStatements: ({
+    userId,
+    accountId,
+  }: {
+    userId?: string
+    accountId: string
+  }, options?: ExtraOptions) => Promise<ApiResponse<Statement[]>>
+  getAccountStatementsWithDetail: ({
+    userId,
+    accountId,
+  }: {
+    userId?: string
+    accountId: string
+  }, options?: ExtraOptions) => Promise<ApiResponse<Statement[]>>
   getAccountHolding: ({
     userId,
     accountId,
@@ -83,13 +103,8 @@ export interface AccountsRequests {
     accountId: string
     holdingId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<HoldingWithMatchesAndHistory>>
-  getAccountStandingOrdersWithDetail: ({
-    userId,
-    accountId,
-  }: {
-    userId?: string
-    accountId: string
-  }, options?: ExtraOptions) => Promise<ApiResponse<StandingOrderWithDetail[]>>
-  addAccountBalance: ({userId, accountId, balance}: {userId: string, accountId: string, balance: AccountBalancePost}, options?: ExtraOptions) => Promise<ApiResponse<AccountBalancePost>>
+  createAccount: ({userId, account}: { userId: string, account: AccountPost }, options?: ExtraOptions) => Promise<ApiResponse<Account>>
+  deleteAccount: ({userId, accountId}: { userId: string, accountId: string }, options?: ExtraOptions) => Promise<number>
   updateAccount: ({userId, accountId, account}: {userId: string, accountId: string, account: AccountPatch}, options?: ExtraOptions) => Promise<ApiResponse<AccountWithDetails>>
+  addAccountBalance: ({userId, accountId, balance}: {userId: string, accountId: string, balance: AccountBalancePost}, options?: ExtraOptions) => Promise<ApiResponse<AccountBalancePost>>
 }

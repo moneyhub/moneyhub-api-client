@@ -149,6 +149,24 @@ export default ({
         options,
       }),
 
+    getAccountStatements: async ({userId, accountId}, options) =>
+      request(`${resourceServerUrl}/accounts/${accountId}/statements`, {
+        cc: {
+          scope: "accounts:read statements_basic:read",
+          sub: userId,
+        },
+        options,
+      }),
+
+    getAccountStatementsWithDetail: async ({userId, accountId}, options) =>
+      request(`${resourceServerUrl}/accounts/${accountId}/statements`, {
+        cc: {
+          scope: "accounts:read statements_detail:read",
+          sub: userId,
+        },
+        options,
+      }),
+
     createAccount: async ({userId, account}, options) =>
       request(`${resourceServerUrl}/accounts`, {
         method: "POST",

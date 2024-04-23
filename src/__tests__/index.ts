@@ -36,6 +36,8 @@ describe("API client", function() {
         "getAccountRecurringTransactions",
         "getAccountStandingOrders",
         "getAccountStandingOrdersWithDetail",
+        "getAccountStatements",
+        "getAccountStatementsWithDetail",
         "getOsipAccounts",
         "getOsipAccount",
         "getOsipAccountHoldings",
