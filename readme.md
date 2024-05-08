@@ -1447,8 +1447,9 @@ const url = await moneyhub.getPaymentAuthorizeUrl({
   payeeId: "Id of payee", // required or payee
   payee: "Details of payee to create", // required or payeeId
   payeeType: "Payee type [api-payee|mh-user-account]", // optional - defaults to api-payee
-  payerId: "Id of payer", // required only if payerType is defined
-  payerType: "Payer type [mh-user-account]", // required only if payerId is used
+  payerType: "Payer type [mh-user-account | api-payer]", // required only if payerId or payer is used
+  payerId: "Id of payer", // required only if payerType is defined as mh-user-account
+  payer: "Details of payer to use", // required if using api-payer for payerType
   amount: "Amount in pence to authorize payment",
   payeeRef: "Payee reference",
   payerRef: "Payer reference",
@@ -1500,8 +1501,9 @@ const url = await moneyhub.getReversePaymentAuthorizeUrl({
   amount: "reverse payment amount" // optional
   nonce: "your nonce value", // optional
   claims: claimsObject, // optional
-  payerId: "payer id that will make the payment", // optional
-  payerType: "api-payee|mh-user-account" // optional
+  payerType: "Payer type [mh-user-account | api-payer]", // required only if payerId or payer is used
+  payerId: "payer id that will make the payment", // required if using mh-user-account for payerType
+  payer: "Details of payer to use", // required if using api-payer for payerType
 })
 
 // Scope used with the bankId provided
