@@ -1,6 +1,9 @@
 import type {SearchParams} from "../request"
+import {RequestPayer} from "./payee"
 
 export type PaymentActorType = "api-payee" | "mh-user-account"
+
+export type PayerType = "api-payer" | "mh-user-account"
 
 export type PaymentContext =
   | "Other"
@@ -14,7 +17,8 @@ export interface AuthRequestPostPayment {
   payeeType?: PaymentActorType
   payerId?: string
   payerRef: string
-  payerType?: PaymentActorType
+  payerType?: PayerType
+  payer?: RequestPayer
   payerName?: string
   payerEmail?: string
   readRefundAccount?: boolean

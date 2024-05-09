@@ -3,9 +3,9 @@ import type {Client} from "openid-client"
 import * as R from "ramda"
 
 import type {ApiClientConfig} from "./schema/config"
-import {PaymentActorType} from "./schema/payment"
+import {PayerType, PaymentActorType} from "./schema/payment"
 import {StandingOrderFrequency} from "./schema/standing-order"
-import {RequestPayee} from "./schema/payee"
+import {RequestPayee, RequestPayer} from "./schema/payee"
 import {PermissionsAction} from "./requests/types/auth-requests"
 
 const filterUndefined = R.reject(R.isNil)
@@ -471,6 +471,7 @@ export default ({
       payeeRef,
       payeeId,
       payee,
+      payer,
       payeeType,
       amount,
       payerRef,
@@ -487,12 +488,13 @@ export default ({
       bankId: string
       payeeRef: string
       payeeId?: string
-      payeeType?: string
+      payeeType?: PaymentActorType
       amount: number
       payerRef: string
       payerId?: string
       payee?: RequestPayee
-      payerType?: string
+      payer?: RequestPayer
+      payerType?: PayerType
       state?: string
       nonce?: string
       context?: string
@@ -525,6 +527,7 @@ export default ({
               payerRef,
               payeeId,
               payee,
+              payer,
               payeeType,
               payerId,
               payerType,
@@ -560,6 +563,7 @@ export default ({
       claims = {},
       payerId,
       payerType,
+      payer,
       codeChallenge,
     }: {
       bankId: string
@@ -569,7 +573,8 @@ export default ({
       amount: number
       claims?: any
       payerId?: string
-      payerType?: PaymentActorType
+      payerType?: PayerType
+      payer?: RequestPayer
       codeChallenge?: string
     }) => {
       if (!state) {
@@ -594,6 +599,7 @@ export default ({
               payerId,
               payerType,
               paymentId,
+              payer,
               amount,
             },
           },
@@ -638,9 +644,9 @@ export default ({
       bankId: string
       payeeId?: string
       payee?: RequestPayee
-      payeeType?: string
+      payeeType?: PaymentActorType
       payerId?: string
-      payerType?: string
+      payerType?: PayerType
       reference?: string
       validFromDate?: string
       validToDate?: string
@@ -734,9 +740,9 @@ export default ({
       bankId: string
       payeeId?: string
       payee?: RequestPayee
-      payeeType?: string
+      payeeType?: PaymentActorType
       payerId?: string
-      payerType?: string
+      payerType?: PayerType
       reference: string
       frequency: StandingOrderFrequency
       numberOfPayments?: number
