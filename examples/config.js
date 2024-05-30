@@ -1,5 +1,5 @@
 const config = {
-  resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
+  resourceServerUrl: "https://api.moneyhub.co.uk/v3",
   identityServiceUrl: "https://identity.moneyhub.co.uk",
   accountConnectUrl: "https://bank-chooser.moneyhub.co.uk/account-connect.js",
   client: {

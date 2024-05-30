@@ -80,7 +80,7 @@ This module exposes a single factory function that accepts the following configu
 ```javascript
 const {Moneyhub} = require("@mft/moneyhub-api-client")
 const moneyhub = await Moneyhub({
-  resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
+  resourceServerUrl: "https://api.moneyhub.co.uk/v3",
   identityServiceUrl: "https://identity.moneyhub.co.uk",
   options: { // optional
     timeout: 60000
