@@ -2,15 +2,29 @@ import {ApiResponse, ExtraOptions} from "../../request"
 import {RequestPayee} from "../../schema/payee"
 import {PayLink, PayLinkSearchParams} from "../../schema/pay-link"
 
+interface PayLinkPost {
+  widgetId: string
+  reference: string
+  amount: number
+  endToEndId?: string
+  useOnce?: boolean
+  expiresAt?: string
+}
+
+interface PayLinkPostWithPayeeId extends PayLinkPost {
+  payeeId: string
+  payee?: never
+ }
+
+interface PayLinkPostWithPayee extends PayLinkPost {
+  payee: RequestPayee
+  payeeId?: never
+}
+
+type PayLinkPostBody = PayLinkPostWithPayeeId | PayLinkPostWithPayee
+
 export type AddPayLink = (
-  body: {
-    widgetId: string
-    payeeId?: string
-    amount?: number
-    payee?: RequestPayee
-    reference: string
-    expiry?: string
-  },
+  body: PayLinkPostBody,
   options?: ExtraOptions,
 ) => Promise<ApiResponse<PayLink>>
 
