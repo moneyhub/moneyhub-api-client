@@ -1603,8 +1603,8 @@ const paymentData = await moneyhub.addPayLink({
   amount: "Amount in pence to authorize payment", // required
   reference: "Payee reference", // required
   expiresAt: "ISO Date-time string for pay-link expiry", // optional
-  endToEndId: "Unique identifier relevant to the transaction" // optional
-  useOnce: "Boolean to indicate if the pay-link can only be consumed once."
+  endToEndId: "Unique identifier relevant to the transaction", // optional
+  useOnce: "Boolean to indicate if the pay-link can only be consumed once." // optional
 });
 ```
 
