@@ -5,10 +5,7 @@ export type PaymentActorType = "api-payee" | "mh-user-account"
 
 export type PayerType = "api-payer" | "mh-user-account"
 
-export type PaymentContext =
-  | "Other"
-  | "PartyToParty"
-  | "BillPayment"
+export type PaymentContext = "Other" | "PartyToParty" | "BillPayment"
 
 export interface AuthRequestPostPayment {
   amount: number
@@ -25,15 +22,9 @@ export interface AuthRequestPostPayment {
   context?: PaymentContext
 }
 
-type PeriodType =
-  | "Day"
-  | "Week"
-  | "Fortnight"
-  | "Month"
-  | "Half-year"
-  | "Year"
+type PeriodType = "Day" | "Week" | "Fortnight" | "Month" | "Half-year" | "Year";
 
-type PeriodAlignment = "Consent" | "Calendar"
+type PeriodAlignment = "Consent" | "Calendar";
 
 interface PeriodicLimit {
   amount?: number
@@ -42,7 +33,7 @@ interface PeriodicLimit {
   periodAlignment?: PeriodAlignment
 }
 
-type RecurringPaymentType = "Sweeping" | "Other"
+type RecurringPaymentType = "Sweeping" | "Other";
 
 export interface AuthRequestPostRecurringPayment {
   payeeId?: string
@@ -80,18 +71,15 @@ type PaymentStatus =
   | "abandoned"
   | "error:paymentSubmission"
   | "error:redirect"
-  | "error:tokenGrant"
+  | "error:tokenGrant";
 
 type ChargeBearer =
   | "BorneByCreditor"
   | "BorneByDebtor"
   | "FollowingServiceLevel"
-  | "Shared"
+  | "Shared";
 
-type ChargeType =
-  | "CHAPSOut"
-  | "BalanceTransferOut"
-  | "MoneyTransferOut"
+type ChargeType = "CHAPSOut" | "BalanceTransferOut" | "MoneyTransferOut";
 
 interface Charge {
   bearer?: ChargeBearer
@@ -139,27 +127,31 @@ export interface RecurringPaymentSearchParams extends SearchParams {
 }
 
 type RecurringPaymentStatus =
-  | "InProgress"
-  | "AwaitingAuthorisation"
+  | "Accepted"
+  | "AcceptedCancellationRequest"
+  | "AcceptedTechnicalValidation"
+  | "AcceptedCustomerProfile"
+  | "AcceptedFundsChecked"
+  | "AcceptedWithChange"
+  | "Pending"
   | "Rejected"
-  | "Authorised"
-  | "Revoked"
-  | "Expired"
-
-interface RecurringPayment {
-  reference: string
-  validFromDate?: string
-  validToDate?: string
-  maximumIndividualAmount: number
-  currency: string
-  periodicLimits: PeriodicLimit[]
-  type: RecurringPaymentType[]
-}
+  | "AcceptedSettlementInProcess"
+  | "AcceptedSettlementCompleted"
+  | "AcceptedWithoutPosting"
+  | "AcceptedCreditSettlementCompleted"
+  | "Cancelled"
+  | "NoCancellationProcess"
+  | "PartiallyAcceptedCancellationRequest"
+  | "PartiallyAcceptedTechnicalCorrect"
+  | "PaymentCancelled"
+  | "PendingCancellationRequest"
+  | "Received"
+  | "RejectedCancellationRequest";
 
 export interface RecurringPaymentRequest {
-  id: string
-  status?: RecurringPaymentStatus
-  createdAt: string
-  updatedAt?: string
-  recurringPayment?: RecurringPayment
+  paymentSubmissionId: string
+  providerStatus: RecurringPaymentStatus
+  status: PaymentStatus
+  submittedAt: string
+  authRequestId: string
 }
