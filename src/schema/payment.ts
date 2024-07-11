@@ -5,10 +5,7 @@ export type PaymentActorType = "api-payee" | "mh-user-account"
 
 export type PayerType = "api-payer" | "mh-user-account"
 
-export type PaymentContext =
-  | "Other"
-  | "PartyToParty"
-  | "BillPayment"
+export type PaymentContext = "Other" | "PartyToParty" | "BillPayment"
 
 export interface AuthRequestPostPayment {
   amount: number
@@ -25,13 +22,7 @@ export interface AuthRequestPostPayment {
   context?: PaymentContext
 }
 
-type PeriodType =
-  | "Day"
-  | "Week"
-  | "Fortnight"
-  | "Month"
-  | "Half-year"
-  | "Year"
+type PeriodType = "Day" | "Week" | "Fortnight" | "Month" | "Half-year" | "Year"
 
 type PeriodAlignment = "Consent" | "Calendar"
 
@@ -88,10 +79,7 @@ type ChargeBearer =
   | "FollowingServiceLevel"
   | "Shared"
 
-type ChargeType =
-  | "CHAPSOut"
-  | "BalanceTransferOut"
-  | "MoneyTransferOut"
+type ChargeType = "CHAPSOut" | "BalanceTransferOut" | "MoneyTransferOut"
 
 interface Charge {
   bearer?: ChargeBearer
@@ -138,15 +126,7 @@ export interface RecurringPaymentSearchParams extends SearchParams {
   userId?: string
 }
 
-type RecurringPaymentStatus =
-  | "InProgress"
-  | "AwaitingAuthorisation"
-  | "Rejected"
-  | "Authorised"
-  | "Revoked"
-  | "Expired"
-
-interface RecurringPayment {
+export interface RecurringPayment{
   reference: string
   validFromDate?: string
   validToDate?: string
@@ -156,10 +136,18 @@ interface RecurringPayment {
   type: RecurringPaymentType[]
 }
 
+type RecurringPaymentStatus =
+  | "Pending"
+  | "Rejected"
+  | "AcceptedSettlementInProcess"
+  | "AcceptedSettlementCompleted"
+  | "AcceptedWithoutPosting"
+  | "AcceptedCreditSettlementCompleted"
+
 export interface RecurringPaymentRequest {
-  id: string
-  status?: RecurringPaymentStatus
-  createdAt: string
-  updatedAt?: string
-  recurringPayment?: RecurringPayment
+  paymentSubmissionId: string
+  providerStatus: RecurringPaymentStatus
+  status: PaymentStatus
+  submittedAt: string
+  authRequestId: string
 }
