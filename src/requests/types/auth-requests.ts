@@ -40,6 +40,8 @@ type CreateAuthRequestParams = {
   }
   customerIpAddress?: string
   customerLastLoggedTime?: string
+  accountTypes?: string[]
+  accountIdentification?: string[]
 }
 
 export interface AuthRequestsRequests {
@@ -62,6 +64,8 @@ export interface AuthRequestsRequests {
     sync,
     customerIpAddress,
     customerLastLoggedTime,
+    accountTypes,
+    accountIdentification,
   }: CreateAuthRequestParams, options?: ExtraOptions) => Promise<ApiResponse<AuthRequest>>
 
   completeAuthRequest: ({
