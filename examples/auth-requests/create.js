@@ -11,6 +11,7 @@ const optionDefinitions = [
   {name: "permissions", alias: "p", description: "comma separated extra permissions", type: String},
   {name: "ip", alias: "i", description: "ip-address", type: String},
   {name: "customerLastLoggedTime", alias: "t", type: String},
+  {name: "accountTypes", alias: "f", type: Array},
 ]
 
 const usage = commandLineUsage({
@@ -21,7 +22,7 @@ console.log(usage)
 
 const options = commandLineArgs(optionDefinitions)
 
-const {userId, bankId, permissions, ip, customerLastLoggedTime} = options
+const {userId, bankId, permissions, ip, customerLastLoggedTime, accountTypes} = options
 
 if (!userId) throw new Error("userId is required")
 
@@ -34,7 +35,8 @@ const start = async () => {
       userId,
       permissions: permissions && permissions.split(","),
       customerIpAddress: ip,
-      customerLastLoggedTime
+      customerLastLoggedTime,
+      accountTypes
     })
     console.log(data)
   } catch (e) {

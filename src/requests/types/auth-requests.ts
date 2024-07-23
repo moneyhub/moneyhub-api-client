@@ -35,6 +35,7 @@ type CreateAuthRequestParams = {
   permissionsAction?: PermissionsAction
   expirationDateTime?: string
   transactionsFromDateTime?: string
+  accountTypes: AccountType[]
   sync?: {
     enableAsync?: boolean
   }
@@ -62,6 +63,7 @@ export interface AuthRequestsRequests {
     sync,
     customerIpAddress,
     customerLastLoggedTime,
+    accountTypes,
   }: CreateAuthRequestParams, options?: ExtraOptions) => Promise<ApiResponse<AuthRequest>>
 
   completeAuthRequest: ({

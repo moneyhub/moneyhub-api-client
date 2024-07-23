@@ -28,6 +28,7 @@ export default ({
       sync,
       customerIpAddress,
       customerLastLoggedTime,
+      accountTypes,
     }, options) =>
       request(authRequestEndpoint, {
         method: "POST",
@@ -53,6 +54,7 @@ export default ({
           sync,
           customerIpAddress,
           customerLastLoggedTime,
+          accountTypes,
         },
         options,
       }),
