@@ -26,6 +26,24 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
         options,
       }),
 
+    registerSCIMUser: async ({
+      externalId,
+      name,
+      emails,
+    }, options) =>
+      request(scimUsersEndpoint, {
+        method: "POST",
+        cc: {
+          scope: "scim_user:write",
+        },
+        body: {
+          externalId,
+          name,
+          emails,
+        },
+        options,
+      }),
+
     getSCIMUsers: async (params = {}, options) =>
       request(scimUsersEndpoint, {
         searchParams: params,

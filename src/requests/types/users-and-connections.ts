@@ -2,6 +2,7 @@ import type {ApiResponse, ExtraOptions, SearchParams} from "../../request"
 import type {UserConnection} from "../../schema/connection"
 import type {ConnectionSync} from "../../schema/sync"
 import type {User} from "../../schema/user"
+import type {SCIMUser} from "../../schema/scim-user"
 
 export interface UsersAndConnectionsRequests {
   registerUser: ({
@@ -16,6 +17,9 @@ export interface UsersAndConnectionsRequests {
 
   getSCIMUsers: (
     params?: SearchParams, options?: ExtraOptions
+  ) => Promise<ApiResponse<any>>
+
+  registerSCIMUser: (user: SCIMUser, options?: ExtraOptions
   ) => Promise<ApiResponse<any>>
 
   getUser: ({
