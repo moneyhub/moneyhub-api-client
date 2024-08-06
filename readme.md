@@ -691,6 +691,23 @@ const user = await moneyhub.updateUserConnection({
 }, options)
 ```
 
+### SCIM User Management
+
+Registers a SCIM user.
+
+```javascript
+const user = await moneyhub.registerUser({
+  externalId: "your user id", 
+  name: {
+     givenName: "Andrea",
+    familyName: "Hedley"
+  },
+  emails: [{
+    value: "andrea.hedley@moneyhub.com"
+  }]
+});
+```
+
 ### Data API
 
 #### `getAccounts`
