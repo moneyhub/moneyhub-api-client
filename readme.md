@@ -696,7 +696,7 @@ const user = await moneyhub.updateUserConnection({
 Registers a SCIM user.
 
 ```javascript
-const user = await moneyhub.registerUser({
+const user = await moneyhub.registerSCIMUser({
   externalId: "your user id", 
   name: {
      givenName: "Andrea",
