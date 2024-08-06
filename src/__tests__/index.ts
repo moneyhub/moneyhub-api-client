@@ -94,6 +94,7 @@ describe("API client", function() {
         "registerUser",
         "getUsers",
         "getSCIMUsers",
+        "registerSCIMUser",
         "getUser",
         "getUserConnections",
         "deleteUserConnection",
