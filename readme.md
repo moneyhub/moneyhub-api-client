@@ -699,12 +699,20 @@ Registers a SCIM user.
 const user = await moneyhub.registerSCIMUser({
   externalId: "your user id", 
   name: {
-     givenName: "Andrea",
+    givenName: "Andrea",
     familyName: "Hedley"
   },
   emails: [{
     value: "andrea.hedley@moneyhub.com"
   }]
+});
+```
+
+Fetch a SCIM user.
+
+```javascript
+const user = await moneyhub.getSCIMUser({
+  userId: "userId"
 });
 ```
 

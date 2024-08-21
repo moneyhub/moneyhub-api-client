@@ -19,6 +19,10 @@ export interface UsersAndConnectionsRequests {
     params?: SearchParams, options?: ExtraOptions
   ) => Promise<ApiResponse<any>>
 
+  getSCIMUser: (
+    {userId}: {userId: string}, options?: ExtraOptions
+  ) => Promise<ApiResponse<any>>
+
   registerSCIMUser: (user: SCIMUser, options?: ExtraOptions
   ) => Promise<ApiResponse<any>>
 
