@@ -93,6 +93,7 @@ describe("API client", function() {
         "getOpenIdConfig",
         "registerUser",
         "getUsers",
+        "getSCIMUser",
         "getSCIMUsers",
         "registerSCIMUser",
         "getUser",
