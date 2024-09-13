@@ -5,6 +5,7 @@ import * as R from "ramda"
 
 import type {ApiClientConfig} from "./schema/config"
 const DEFAULT_API_VERSION: Version = "v3"
+const DEFAULT_MAX_RETRY_AFTER = 5000
 
 interface RequestOptions extends Pick<Options, "method" | "headers" | "searchParams" | "json" | "form"> {
   searchParams?: any // needed?
@@ -90,11 +91,12 @@ export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Ve
 
 export default ({
   client,
-  options: {timeout, apiVersioning},
+  options: {timeout, maxRetryAfter = DEFAULT_MAX_RETRY_AFTER, apiVersioning},
 }: {
   client: Client
   options: {
     timeout?: number
+    maxRetryAfter?: number
     apiVersioning: boolean
   }
 // eslint-disable-next-line max-statements, complexity
@@ -107,6 +109,9 @@ export default ({
     headers: opts.headers || {},
     searchParams: qs.stringify(opts.searchParams),
     timeout,
+    retry: {
+      maxRetryAfter,
+    },
   }
 
   const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version)
