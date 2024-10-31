@@ -109,6 +109,7 @@ export default ({
     permissions,
     permissionsAction,
     enableAsync,
+    accVerification,
     expirationDateTime,
     transactionFromDateTime,
     codeChallenge,
@@ -120,6 +121,7 @@ export default ({
     permissions?: string[]
     permissionsAction?: PermissionsAction
     enableAsync?: boolean
+    accVerification?: boolean
     expirationDateTime?: string
     transactionFromDateTime?: string
     codeChallenge?: string
@@ -151,6 +153,12 @@ export default ({
           "mh:sync": {
             "essential": true,
             "value": {"enableAsync": true},
+          },
+          ...accVerification && {
+            "mh:account_verification": {
+              "essential": true,
+              "value": {"accVerification": true},
+            },
           },
         },
       },
