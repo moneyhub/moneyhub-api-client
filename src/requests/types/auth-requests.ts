@@ -38,6 +38,9 @@ type CreateAuthRequestParams = {
   sync?: {
     enableAsync?: boolean
   }
+  accountVerification?: {
+    accVerification?: boolean
+  }
   customerIpAddress?: string
   customerLastLoggedTime?: string
   accountTypes?: string[]
@@ -62,6 +65,7 @@ export interface AuthRequestsRequests {
     expirationDateTime,
     transactionsFromDateTime,
     sync,
+    accountVerification,
     customerIpAddress,
     customerLastLoggedTime,
     accountTypes,
