@@ -78,6 +78,31 @@ export type TokenEndpointAuthMethod =
   | "client_secret_jwt"
   | "private_key_jwt";
 
+interface ApiClientConfigCredentialsBase {
+  client_id: string
+  token_endpoint_auth_method: TokenEndpointAuthMethod
+  id_token_signed_response_alg: TokenSigningAlgorithm
+  request_object_signing_alg: TokenSigningAlgorithm
+  redirect_uri: string
+  response_type: ResponseType
+  keys: JWK[]
+}
+
+export interface ApiClientConfigCredentialsBasic extends ApiClientConfigCredentialsBase {
+  token_endpoint_auth_method: "client_secret_basic"
+  client_secret: string
+}
+
+export interface ApiClientConfigCredentialsOther extends ApiClientConfigCredentialsBase {
+  token_endpoint_auth_method:
+    | "client_secret_post"
+    | "client_secret_jwt"
+    | "private_key_jwt"
+  client_secret?: string
+}
+
+export type ApiClientConfigCredentials = ApiClientConfigCredentialsBasic | ApiClientConfigCredentialsOther
+
 export interface ApiClientConfig {
   resourceServerUrl: string
   osipResourceServerUrl?: string
@@ -87,14 +112,5 @@ export interface ApiClientConfig {
     timeout?: number
     apiVersioning?: boolean
   }
-  client: {
-    client_id: string
-    client_secret: string
-    token_endpoint_auth_method: TokenEndpointAuthMethod
-    id_token_signed_response_alg: TokenSigningAlgorithm
-    request_object_signing_alg: TokenSigningAlgorithm
-    redirect_uri: string
-    response_type: ResponseType
-    keys: JWK[]
-  }
+  client: ApiClientConfigCredentials
 }
