@@ -150,4 +150,5 @@ export interface RecurringPaymentRequest {
   status: PaymentStatus
   submittedAt: string
   authRequestId: string
+  revokedAt?: string
 }
