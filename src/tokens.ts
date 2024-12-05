@@ -135,7 +135,7 @@ export default ({
 
     refreshTokens: ({refreshToken}: {refreshToken: string | TokenSet}) => client.refresh(refreshToken),
 
-    getClientCredentialTokens: ({scope, sub}: {scope: string, sub: string}) =>
+    getClientCredentialTokens: ({scope, sub}: {scope: string, sub?: string}) =>
       client.grant({
         grant_type: "client_credentials",
         scope,
