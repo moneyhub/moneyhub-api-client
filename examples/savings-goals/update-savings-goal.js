@@ -10,7 +10,8 @@ const optionDefinitions = [
   {name: "imageUrl", alias: "s", type: String},
   {name: "notes", alias: "t", type: String},
   {name: "accounts", alias: "a", type: Array, description: "required"},
-  {name: "goalId", alias: "g", type: String, description: "required"}
+  {name: "goalId", alias: "g", type: String, description: "required"},
+  {name: "targetDate", alias: "d", type: String}
 ]
 
 const usage = commandLineUsage(
@@ -21,7 +22,7 @@ const usage = commandLineUsage(
 )
 console.log(usage)
 
-const {name, value, imageUrl, notes, userId, accounts, goalId} = commandLineArgs(optionDefinitions)
+const {name, value, imageUrl, notes, userId, accounts, goalId, targetDate} = commandLineArgs(optionDefinitions)
 
 if (!userId) throw new Error("userId is required")
 if (!goalId) throw new Error("goalId is required")
@@ -39,7 +40,8 @@ const start = async () => {
       notes,
       userId,
       accounts: accounts.map(id => ({id})),
-      goalId
+      goalId,
+      targetDate
     })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {

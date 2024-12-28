@@ -23,24 +23,43 @@ export default ({config, request}: RequestsParams): SavingsGoalsRequests => {
         },
         options,
       }),
-    createSavingsGoal: async ({name, imageUrl, notes, accounts, amount, userId}, options) =>
+    createSavingsGoal: async ({
+      name,
+      imageUrl,
+      notes,
+      accounts,
+      amount,
+      userId,
+      targetDate,
+    },
+    options) =>
       request(savingsGoalsEndpoint, {
         method: "POST",
         cc: {
           scope: "savings_goals:read savings_goals:write:all",
           sub: userId,
         },
-        body: {name, imageUrl, notes, accounts, amount},
+        body: {name, imageUrl, notes, accounts, amount, targetDate},
         options,
       }),
-    updateSavingsGoal: async ({goalId, name, amount, imageUrl, notes, accounts, userId}, options) =>
+    updateSavingsGoal: async ({
+      goalId,
+      name,
+      amount,
+      imageUrl,
+      notes,
+      accounts,
+      userId,
+      targetDate,
+    },
+    options) =>
       request(`${savingsGoalsEndpoint}/${goalId}`, {
         method: "PATCH",
         cc: {
           scope: "savings_goals:read savings_goals:write",
           sub: userId,
         },
-        body: {name, amount, imageUrl, notes, accounts},
+        body: {name, amount, imageUrl, notes, accounts, targetDate},
         options,
       }),
     deleteSavingsGoal: async ({goalId, userId}, options) =>
