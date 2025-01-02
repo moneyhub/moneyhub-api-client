@@ -22,6 +22,7 @@ export interface SavingsGoalsRequests {
     accounts,
     amount,
     userId,
+    targetDate,
   }: {
     name: string
     imageUrl?: string
@@ -32,6 +33,7 @@ export interface SavingsGoalsRequests {
       currency?: string
     }
     userId: string
+    targetDate?: string
   }, options?: ExtraOptions) => Promise<ApiResponse<SavingsGoal>>
 
   updateSavingsGoal: ({
@@ -42,6 +44,7 @@ export interface SavingsGoalsRequests {
     notes,
     accounts,
     userId,
+    targetDate,
   }: {
     goalId: string
     name?: string
@@ -52,6 +55,7 @@ export interface SavingsGoalsRequests {
       value: number
     }
     userId: string
+    targetDate?: string
   }, options?: ExtraOptions) => Promise<ApiResponse<SavingsGoal>>
 
   deleteSavingsGoal: ({

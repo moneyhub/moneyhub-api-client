@@ -42,6 +42,20 @@ describe("Savings Goals", function() {
     expectTypeOf<SavingsGoals.SavingsGoal>(goal.data)
   })
 
+  it("can create a savings goal with targetDate", async function() {
+    const goal = await moneyhub.createSavingsGoal({
+      userId,
+      name: "savings",
+      amount: {value: 100},
+      accounts: [{id: accountId}],
+      targetDate: "2026-01-01",
+    })
+    goalId = goal.data.id
+    expect(goal.data.name).to.equal("savings")
+    expect(goal.data.amount.value).to.equal(100)
+    expectTypeOf<SavingsGoals.SavingsGoal>(goal.data)
+  })
+
   it("can get a savings goal", async function() {
     const goal = await moneyhub.getSavingsGoal({userId, goalId})
     expect(goal.data.id).to.equal(goalId)
@@ -67,6 +81,21 @@ describe("Savings Goals", function() {
       amount: {value: 329},
       accounts: [{id: accountId}],
       name: "new-name",
+    })
+    expect(goal.data.amount.value).to.equal(329)
+    expect(goal.data.name).to.equal("new-name")
+    expectTypeOf<SavingsGoals.SavingsGoal>(goal.data)
+  })
+
+
+  it("can update a savings goal with targetDate", async function() {
+    const goal = await moneyhub.updateSavingsGoal({
+      goalId,
+      userId,
+      amount: {value: 329},
+      accounts: [{id: accountId}],
+      name: "new-name",
+      targetDate: "2026-01-01",
     })
     expect(goal.data.amount.value).to.equal(329)
     expect(goal.data.name).to.equal("new-name")

@@ -11,4 +11,5 @@ export interface SavingsGoal {
   accounts: {
     id: string
   }[]
+  targetDate?: string
 }
