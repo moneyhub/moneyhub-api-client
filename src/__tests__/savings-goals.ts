@@ -43,12 +43,15 @@ describe("Savings Goals", function() {
   })
 
   it("can create a savings goal with targetDate", async function() {
+    const today = new Date()
+    const futureDate = new Date(today.setMonth(today.getMonth() + 12)).toISOString().split("T")[0]
+
     const goal = await moneyhub.createSavingsGoal({
       userId,
       name: "savings",
       amount: {value: 100},
       accounts: [{id: accountId}],
-      targetDate: "2026-01-01",
+      targetDate: futureDate,
     })
     goalId = goal.data.id
     expect(goal.data.name).to.equal("savings")
@@ -89,13 +92,15 @@ describe("Savings Goals", function() {
 
 
   it("can update a savings goal with targetDate", async function() {
+    const today = new Date()
+    const futureDate = new Date(today.setMonth(today.getMonth() + 12)).toISOString().split("T")[0]
     const goal = await moneyhub.updateSavingsGoal({
       goalId,
       userId,
       amount: {value: 329},
       accounts: [{id: accountId}],
       name: "new-name",
-      targetDate: "2026-01-01",
+      targetDate: futureDate,
     })
     expect(goal.data.amount.value).to.equal(329)
     expect(goal.data.name).to.equal("new-name")

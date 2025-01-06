@@ -35,7 +35,7 @@ const start = async () => {
 
     const result = await moneyhub.updateSavingsGoal({
       name,
-      amount: {value},
+      ...value ? {amount: {value}} : {},
       imageUrl,
       notes,
       userId,
