@@ -1,3 +1,4 @@
+import R from "ramda"
 import {RequestsParams} from "../request"
 import {SavingsGoalsRequests} from "./types/savings-goals"
 
@@ -52,16 +53,20 @@ export default ({config, request}: RequestsParams): SavingsGoalsRequests => {
       userId,
       targetDate,
     },
-    options) =>
-      request(`${savingsGoalsEndpoint}/${goalId}`, {
+    options) => {
+      const receivedBody = {name, amount, imageUrl, notes, accounts, targetDate}
+      // Send only the fields that are not null
+      const filteredBody: Record<string, any> = R.pickBy(R.complement(R.isNil), receivedBody)
+      return request(`${savingsGoalsEndpoint}/${goalId}`, {
         method: "PATCH",
         cc: {
           scope: "savings_goals:read savings_goals:write",
           sub: userId,
         },
-        body: {name, amount, imageUrl, notes, accounts, targetDate},
+        body: filteredBody,
         options,
-      }),
+      })
+    },
     deleteSavingsGoal: async ({goalId, userId}, options) =>
       request(`${savingsGoalsEndpoint}/${goalId}`, {
         method: "DELETE",
