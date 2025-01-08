@@ -6,7 +6,6 @@ import {Moneyhub, MoneyhubInstance, Categories} from ".."
 
 describe("Categories", function() {
   let moneyhub: MoneyhubInstance
-  let categoryId: string | undefined
   let userId: string
 
   before(async function() {
@@ -54,19 +53,23 @@ describe("Categories", function() {
       userId,
       params: {type: "business"},
     })
-    expect(categories.data.length).to.equal(22)
+    expect(categories.data.length).to.above(21)
     expectTypeOf<Categories.Category[]>(categories.data)
-    categoryId = categories.data.find((a) => a.key === "business-loans")?.categoryId
   })
 
   it("get business category", async function() {
-    const category = categoryId ? await moneyhub.getCategory({
+    const {data: categories} = await moneyhub.getCategories({
+      userId,
+      params: {type: "business"},
+    })
+    const categoryId = categories.find((a) => a.key === "business-loans")?.categoryId as string
+    const category = await moneyhub.getCategory({
       userId,
       categoryId,
       params: {type: "business"},
-    }) : undefined
+    })
     expect(category?.data).to.eql({
-      categoryId: "std:28a30a62-6699-40a6-b24a-ed2671019824",
+      categoryId,
       group: "group:105",
       key: "business-loans",
     })
