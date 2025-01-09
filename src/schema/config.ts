@@ -78,6 +78,12 @@ export type TokenEndpointAuthMethod =
   | "client_secret_jwt"
   | "private_key_jwt";
 
+export interface MutualTLSOptions {
+  tls_client_certificate_bound_access_tokens?: boolean
+  cert: string
+  key: string
+}
+
 interface ApiClientConfigCredentialsBase {
   client_id: string
   token_endpoint_auth_method: TokenEndpointAuthMethod
@@ -86,6 +92,7 @@ interface ApiClientConfigCredentialsBase {
   redirect_uri: string
   response_type: ResponseType
   keys: JWK[]
+  mTLS?: MutualTLSOptions
 }
 
 export interface ApiClientConfigCredentialsBasic extends ApiClientConfigCredentialsBase {

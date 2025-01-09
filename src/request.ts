@@ -3,7 +3,7 @@ import {Client} from "openid-client"
 import qs from "query-string"
 import * as R from "ramda"
 
-import type {ApiClientConfig} from "./schema/config"
+import type {ApiClientConfig, MutualTLSOptions} from "./schema/config"
 const DEFAULT_API_VERSION: Version = "v3"
 const DEFAULT_MAX_RETRY_AFTER = 5000
 
@@ -91,13 +91,14 @@ export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Ve
 
 export default ({
   client,
-  options: {timeout, maxRetryAfter = DEFAULT_MAX_RETRY_AFTER, apiVersioning},
+  options: {timeout, maxRetryAfter = DEFAULT_MAX_RETRY_AFTER, apiVersioning, mTLS},
 }: {
   client: Client
   options: {
     timeout?: number
     maxRetryAfter?: number
     apiVersioning: boolean
+    mTLS?: MutualTLSOptions
   }
 // eslint-disable-next-line max-statements, complexity
 }) => async <T>(
@@ -143,6 +144,13 @@ export default ({
 
   if (opts.formData) {
     (gotOpts as any).body = opts.formData
+  }
+
+  if (mTLS) {
+    gotOpts.https = {
+      certificate: mTLS.cert,
+      key: mTLS.key,
+    }
   }
 
   const req = got<T>(formattedUrl, gotOpts)
