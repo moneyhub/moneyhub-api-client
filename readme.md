@@ -83,7 +83,13 @@ const moneyhub = await Moneyhub({
   resourceServerUrl: "https://api.moneyhub.co.uk/v3",
   identityServiceUrl: "https://identity.moneyhub.co.uk",
   options: { // optional
-    timeout: 60000
+    timeout: 60000, // request timeout in milliseconds
+    retry: {
+      limit: 3, // maximum number of retries
+      methods: ["GET", "HEAD", "PUT", "DELETE", "OPTIONS", "TRACE"], // HTTP methods to retry
+      statusCodes: [408, 413, 429, 500, 502, 503, 504, 521, 522, 524], // status codes to retry on
+      maxRetryAfter: 5000 // maximum time to wait between retries in milliseconds
+    },
   }
   client: {
     client_id: "your client id",

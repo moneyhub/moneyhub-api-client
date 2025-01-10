@@ -1,4 +1,4 @@
-import got, {Options, Headers, OptionsOfJSONResponseBody} from "got"
+import got, {Options, Headers, OptionsOfJSONResponseBody, Method} from "got"
 import {Client} from "openid-client"
 import qs from "query-string"
 import * as R from "ramda"
@@ -6,6 +6,34 @@ import * as R from "ramda"
 import type {ApiClientConfig, MutualTLSOptions} from "./schema/config"
 const DEFAULT_API_VERSION: Version = "v3"
 const DEFAULT_MAX_RETRY_AFTER = 5000
+const DEFAULT_RETRY_LIMIT = 2
+const DEFAULT_RETRY_METHODS: Method[] = [
+  "GET",
+  "HEAD",
+  "PUT",
+  "DELETE",
+  "OPTIONS",
+  "TRACE",
+]
+const DEFAULT_RETRY_STATUS_CODES: number[] = [
+  408, // Request Timeout
+  413, // Payload Too Large
+  429, // Too Many Requests
+  500, // Internal Server Error
+  502, // Bad Gateway
+  503, // Service Unavailable
+  504, // Gateway Timeout
+  521, // Web Server Is Down
+  522, // Connection Timed Out
+  524,  // A Timeout Occurred
+]
+
+interface RetryOptions {
+  limit?: number
+  methods?: Method[]
+  statusCodes?: number[]
+  maxRetryAfter?: number
+}
 
 interface RequestOptions extends Pick<Options, "method" | "headers" | "searchParams" | "json" | "form"> {
   searchParams?: any // needed?
@@ -17,6 +45,7 @@ interface RequestOptions extends Pick<Options, "method" | "headers" | "searchPar
     sub?: string
   }
   options?: ExtraOptions
+  retry?: RetryOptions
 }
 
 interface Links {
@@ -52,7 +81,10 @@ export interface ExtraOptions {
   token?: string
   headers?: Headers
   version?: Version
+  retry?: RetryOptions
 }
+
+
 
 const getResponseBody = (err: unknown) => {
   let body: {
@@ -89,30 +121,39 @@ export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Ve
   return urlWithVersion
 }
 
+const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {}) => {
+  return {
+    limit: requestOptions.retry?.limit || retry.limit || DEFAULT_RETRY_LIMIT,
+    methods: requestOptions.retry?.methods || retry.methods || DEFAULT_RETRY_METHODS,
+    statusCodes: requestOptions.retry?.statusCodes || retry.statusCodes || DEFAULT_RETRY_STATUS_CODES,
+    maxRetryAfter: requestOptions.retry?.maxRetryAfter || retry.maxRetryAfter || DEFAULT_MAX_RETRY_AFTER,
+  }
+}
+
 export default ({
   client,
-  options: {timeout, maxRetryAfter = DEFAULT_MAX_RETRY_AFTER, apiVersioning, mTLS},
+  options: {timeout, apiVersioning, mTLS, retry = {}},
 }: {
   client: Client
   options: {
     timeout?: number
-    maxRetryAfter?: number
     apiVersioning: boolean
     mTLS?: MutualTLSOptions
+    retry?: RetryOptions
   }
 // eslint-disable-next-line max-statements, complexity
 }) => async <T>(
   url: string,
   opts: RequestOptions = {},
 ): Promise<T> => {
+  const retryOptions = getRetryOptions(retry, opts.options)
+
   const gotOpts: OptionsOfJSONResponseBody = {
     method: opts.method || "GET",
     headers: opts.headers || {},
     searchParams: qs.stringify(opts.searchParams),
     timeout,
-    retry: {
-      maxRetryAfter,
-    },
+    retry: retryOptions,
   }
 
   const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version)
