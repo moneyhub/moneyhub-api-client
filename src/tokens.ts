@@ -89,10 +89,10 @@ export default ({
     redirectUri: redirect_uri,
   })
 
-  const createJWTBearerGrantToken = async (sub: string) => {
+  const createJWTBearerGrantToken = async (subject: string) => {
     if (request_object_signing_alg === "none") throw new Error("request_object_signing_alg can't be 'none'")
 
-    const privateJWK =  keys.find(({alg}) => alg === request_object_signing_alg) as JWK
+    const privateJWK = keys.find(({alg}) => alg === request_object_signing_alg) as JWK
     if (!privateJWK) throw new Error(`Private key with alg ${request_object_signing_alg} missing`)
 
     const privateKey = await jose.importJWK(privateJWK)
@@ -100,7 +100,7 @@ export default ({
     return await createSignedJWT({
       alg: request_object_signing_alg,
       kid: privateJWK.kid,
-      sub,
+      sub: subject,
       audience: `${identityServiceUrl}/oidc`,
       issuer: client_id,
       privateKey,
