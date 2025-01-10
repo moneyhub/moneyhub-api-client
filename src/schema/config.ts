@@ -1,4 +1,5 @@
 import type {JWK} from "jose"
+import {KeyObject} from "tls"
 
 export type use = "sig" | "enc";
 export type keyOperation = "sign" | "verify" | "encrypt" | "decrypt" | "wrapKey" | "unwrapKey" | "deriveKey";
@@ -78,6 +79,12 @@ export type TokenEndpointAuthMethod =
   | "client_secret_jwt"
   | "private_key_jwt";
 
+export interface MutualTLSOptions {
+  tls_client_certificate_bound_access_tokens?: boolean
+  cert: string | Buffer | Array<string | Buffer>
+  key: string | Buffer | Array<string | Buffer | KeyObject>
+}
+
 interface ApiClientConfigCredentialsBase {
   client_id: string
   token_endpoint_auth_method: TokenEndpointAuthMethod
@@ -86,6 +93,7 @@ interface ApiClientConfigCredentialsBase {
   redirect_uri: string
   response_type: ResponseType
   keys: JWK[]
+  mTLS?: MutualTLSOptions
 }
 
 export interface ApiClientConfigCredentialsBasic extends ApiClientConfigCredentialsBase {

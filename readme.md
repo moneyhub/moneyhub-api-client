@@ -96,6 +96,12 @@ const moneyhub = await Moneyhub({
     keys: [
       /* your jwks */
     ],
+    /* optionally use Mutual TLS certificates */
+    mTLS: {
+      tls_client_certificate_bound_access_tokens: true,
+      cert: readFileSync(path.join(__dirname, "../certs/cert.pem")),
+      key: readFileSync(path.join(__dirname, "../certs/key.pem")),
+    }
   },
 })
 ```

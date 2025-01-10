@@ -26,6 +26,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
       redirect_uri,
       keys,
       token_endpoint_auth_method,
+      mTLS,
     },
   } = config
 
@@ -33,6 +34,10 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
 
   custom.setHttpOptionsDefaults({
     timeout,
+    ...mTLS ? {
+      cert: mTLS.cert,
+      key: mTLS.key,
+    } : {},
   })
 
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl + "/oidc")
@@ -45,6 +50,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
       redirect_uri,
       token_endpoint_auth_method,
       request_object_signing_alg,
+      tls_client_certificate_bound_access_tokens: mTLS?.tls_client_certificate_bound_access_tokens || false,
     },
     {keys},
   )
@@ -53,7 +59,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
 
   const request = req({
     client,
-    options: {timeout, apiVersioning},
+    options: {timeout, apiVersioning, mTLS},
   })
 
   const moneyhub = {
