@@ -1,3 +1,4 @@
+import type {Method} from "got"
 import type {JWK} from "jose"
 
 export type use = "sig" | "enc";
@@ -111,6 +112,12 @@ export interface ApiClientConfig {
   options?: {
     timeout?: number
     apiVersioning?: boolean
+    retry?: {
+      limit?: number
+      methods?: Method[]
+      statusCodes?: number[]
+      maxRetryAfter?: number
+    }
   }
   client: ApiClientConfigCredentials
 }

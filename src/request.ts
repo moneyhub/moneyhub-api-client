@@ -1,4 +1,4 @@
-import got, {Options, Headers, OptionsOfJSONResponseBody} from "got"
+import got, {Options, Headers, OptionsOfJSONResponseBody, Method} from "got"
 import {Client} from "openid-client"
 import qs from "query-string"
 import * as R from "ramda"
@@ -6,6 +6,27 @@ import * as R from "ramda"
 import type {ApiClientConfig} from "./schema/config"
 const DEFAULT_API_VERSION: Version = "v3"
 const DEFAULT_MAX_RETRY_AFTER = 5000
+const DEFAULT_RETRY_LIMIT = 2
+const DEFAULT_RETRY_METHODS: Method[] = [
+  "GET",
+  "HEAD",
+  "PUT",
+  "DELETE",
+  "OPTIONS",
+  "TRACE",
+]
+const DEFAULT_RETRY_STATUS_CODES: number[] = [
+  408, // Request Timeout
+  413, // Payload Too Large
+  429, // Too Many Requests
+  500, // Internal Server Error
+  502, // Bad Gateway
+  503, // Service Unavailable
+  504, // Gateway Timeout
+  521, // Web Server Is Down
+  522, // Connection Timed Out
+  524,  // A Timeout Occurred
+]
 
 interface RequestOptions extends Pick<Options, "method" | "headers" | "searchParams" | "json" | "form"> {
   searchParams?: any // needed?
@@ -17,6 +38,12 @@ interface RequestOptions extends Pick<Options, "method" | "headers" | "searchPar
     sub?: string
   }
   options?: ExtraOptions
+  retry?: {
+    limit?: number
+    methods?: Method[]
+    statusCodes?: number[]
+    maxRetryAfter?: number
+  }
 }
 
 interface Links {
@@ -52,6 +79,12 @@ export interface ExtraOptions {
   token?: string
   headers?: Headers
   version?: Version
+  retry?: {
+    limit?: number
+    methods?: Method[]
+    statusCodes?: number[]
+    maxRetryAfter?: number
+  }
 }
 
 const getResponseBody = (err: unknown) => {
@@ -91,26 +124,35 @@ export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Ve
 
 export default ({
   client,
-  options: {timeout, maxRetryAfter = DEFAULT_MAX_RETRY_AFTER, apiVersioning},
+  options: {timeout, apiVersioning, retry = {}},
 }: {
   client: Client
   options: {
     timeout?: number
-    maxRetryAfter?: number
     apiVersioning: boolean
+    retry?: {
+      limit?: number
+      methods?: Method[]
+      statusCodes?: number[]
+      maxRetryAfter?: number
+    }
   }
 // eslint-disable-next-line max-statements, complexity
 }) => async <T>(
   url: string,
   opts: RequestOptions = {},
 ): Promise<T> => {
+
   const gotOpts: OptionsOfJSONResponseBody = {
     method: opts.method || "GET",
     headers: opts.headers || {},
     searchParams: qs.stringify(opts.searchParams),
     timeout,
     retry: {
-      maxRetryAfter,
+      limit: retry.limit || DEFAULT_RETRY_LIMIT, // Number of retries
+      methods: retry.methods || DEFAULT_RETRY_METHODS, // Methods to retry
+      statusCodes: retry.statusCodes || DEFAULT_RETRY_STATUS_CODES, // Status codes to retry on
+      maxRetryAfter: retry.maxRetryAfter || DEFAULT_MAX_RETRY_AFTER,
     },
   }
 
