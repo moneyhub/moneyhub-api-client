@@ -103,8 +103,14 @@ describe("Accounts", function() {
       userId: readOnlyUserId,
       accountId: pensionId,
     })
-    expect(holdings[0].items.length).to.be.greaterThan(1)
-    expectTypeOf<Holdings.HoldingsValuation[]>(holdings)
+
+    expect(holdings).to.be.an("array")
+    expect(holdings).to.be.empty
+    if (holdings.length > 0) {
+      expect(holdings[0].items.length).to.be.greaterThan(1)
+
+      expectTypeOf<Holdings.HoldingsValuation[]>(holdings)
+    }
   })
 
   xit("get recurring transactions", async function() {

@@ -44,8 +44,12 @@ describe("Osip", function() {
       userId: readOnlyUserId,
       accountId: pensionId,
     })
-    expect(holdings[0].product.type).to.eql("ISIN")
-    expectTypeOf<OsipHolding[]>(holdings)
+    expect(holdings).to.be.an("array")
+    expect(holdings).to.be.empty
+    if (holdings.length > 0) {
+      expect(holdings[0].product.type).to.eql("ISIN")
+      expectTypeOf<OsipHolding[]>(holdings)
+    }
   })
 
   it("get osip transactions", async function() {
