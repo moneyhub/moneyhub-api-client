@@ -83,6 +83,7 @@ import type * as Balances from "./schema/balance"
 import type * as Beneficiaries from "./schema/beneficiary"
 import type * as Categories from "./schema/category"
 import type * as Counterparties from "./schema/counterparty"
+import type * as Connections from "./schema/connection"
 import type * as Holdings from "./schema/holding"
 import type * as NotificationThresholds from "./schema/notification-threshold"
 import type * as Osip from "./schema/osip"
@@ -109,6 +110,7 @@ export {
   Beneficiaries,
   Categories,
   Counterparties,
+  Connections,
   Holdings,
   NotificationThresholds,
   Osip,
