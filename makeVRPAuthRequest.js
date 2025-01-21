@@ -1,7 +1,7 @@
-const {Moneyhub} = require("../../src/index")
+const {Moneyhub} = require("./src/index")
 const qs = require("querystring")
-const config = require("../config")
-const {DEFAULT_BANK_ID} = require("../constants")
+const config = require("./examples/config")
+const {DEFAULT_BANK_ID} = require("./examples/constants")
 
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
@@ -55,17 +55,14 @@ console.log(JSON.stringify(options, null, 2))
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
-    const payee = {accountNumber: "12345678", sortCode: "123456", name: "M&S MASTERCARD"}
+    const payee = qs.parse(options.payee || defaultPayee)
     const data = await moneyhub.createAuthRequest({
-      scope: `openid payment id:${options["bank-id"]}`,
-      payment: {
+      scope: `openid recurring_payment:create id:${options["bank-id"]}`,
+      recurringPayment: {
         payeeId: options["payee-id"],
         payee,
-        amount: options.amount,
-        payeeRef: options["payee-ref"],
-        payerRef: "5299301096439048",
+        reference: "testing",
         context: options.context,
-        readRefundAccount: options["read-refund-account"],
       },
       redirectUri: config.client.redirect_uri,
     })

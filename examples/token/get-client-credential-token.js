@@ -26,7 +26,7 @@ const start = async () => {
 
     const data = await moneyhub.getClientCredentialTokens({
       scope: options.scopes,
-      sub: options.userId,
+      sub: undefined,
     })
     console.log(JSON.stringify(data, null, 2))
   } catch (e) {

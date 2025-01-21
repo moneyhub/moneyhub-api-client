@@ -1,7 +1,11 @@
-const {Moneyhub} = require("../../src/index")
+const {Moneyhub} = require("./src/index")
 const qs = require("querystring")
-const config = require("../config")
-const {DEFAULT_BANK_ID} = require("../constants")
+const config = require("./examples/config")
+const {DEFAULT_BANK_ID} = require("./examples/constants")
+const readline = require("readline").createInterface({
+  input: process.stdin,
+  output: process.stdout
+})
 
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
@@ -43,6 +47,37 @@ const optionDefinitions = [
   },
 ]
 
+const askQuestions = () => {
+  const answers = {}
+
+  return new Promise((resolve) => {
+    readline.question("Enter Code: ", (code) => {
+      answers.code = code
+      resolve()
+    })
+  })
+    .then(() => {
+      return new Promise((resolve) => {
+        readline.question("Enter State: ", (state) => {
+          answers.state = state
+          resolve()
+        })
+      })
+    })
+    .then(() => {
+      return new Promise((resolve) => {
+        readline.question("Enter Id Token: ", (idToken) => {
+          answers.idToken = idToken
+          resolve()
+        })
+      })
+    })
+    .then(() => {
+      readline.close()
+      return answers
+    })
+}
+
 const usage = commandLineUsage({
   header: "Options",
   optionList: optionDefinitions,
@@ -55,17 +90,13 @@ console.log(JSON.stringify(options, null, 2))
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
-    const payee = {accountNumber: "12345678", sortCode: "123456", name: "M&S MASTERCARD"}
+    const payee = qs.parse(options.payee || defaultPayee)
     const data = await moneyhub.createAuthRequest({
       scope: `openid payment id:${options["bank-id"]}`,
       payment: {
-        payeeId: options["payee-id"],
-        payee,
         amount: options.amount,
-        payeeRef: options["payee-ref"],
-        payerRef: "5299301096439048",
-        context: options.context,
-        readRefundAccount: options["read-refund-account"],
+        payee,
+        payerRef: "testing",
       },
       redirectUri: config.client.redirect_uri,
     })
