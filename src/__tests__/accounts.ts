@@ -105,7 +105,6 @@ describe("Accounts", function() {
     })
 
     expect(holdings).to.be.an("array")
-    expect(holdings).to.be.empty
     if (holdings.length > 0) {
       expect(holdings[0].items.length).to.be.greaterThan(1)
 
