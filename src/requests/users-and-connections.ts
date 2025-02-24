@@ -52,15 +52,6 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
         options,
       }),
 
-    getSCIMUsers: async (params = {}, options) =>
-      request(scimUsersEndpoint, {
-        searchParams: params,
-        cc: {
-          scope: "scim_user:read",
-        },
-        options,
-      }),
-
     getUser: async ({userId}, options) =>
       request(`${usersEndpoint}/${userId}`, {
         cc: {
