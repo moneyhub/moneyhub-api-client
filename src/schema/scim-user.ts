@@ -3,10 +3,10 @@ interface Emails {
   }
 
 export interface SCIMUser {
-    externalId?: string
-    name: {
+    externalId: string
+    name?: {
       familyName: string
       givenName: string
     }
-    emails: Emails[]
+    emails?: Emails[]
   }
