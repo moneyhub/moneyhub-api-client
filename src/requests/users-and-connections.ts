@@ -63,7 +63,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
     getUserConnections: async ({userId}, options) =>
       request(`${usersEndpoint}/${userId}/connections`, {
         cc: {
-          scope: "user:read",
+          scope: "connection:read",
         },
         options,
       }),
@@ -73,7 +73,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
         method: "DELETE",
         returnStatus: true,
         cc: {
-          scope: "user:delete",
+          scope: "connection:delete",
         },
         options,
       }),
@@ -92,7 +92,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
       request(`${usersEndpoint}/${userId}/connections/${connectionId}/syncs`, {
         searchParams: params,
         cc: {
-          scope: "user:read",
+          scope: "connection:read",
         },
         options,
       }),
@@ -101,7 +101,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
       request(`${usersEndpoint}/${userId}/syncs`, {
         searchParams: params,
         cc: {
-          scope: "user:read",
+          scope: "connection:read",
         },
         options,
       }),
@@ -109,7 +109,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
     getSync: async ({userId, syncId}, options) =>
       request(`${usersEndpoint}/${userId}/syncs/${syncId}`, {
         cc: {
-          scope: "user:read",
+          scope: "connection:read",
         },
         options,
       }),
@@ -119,7 +119,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
         method: "PATCH",
         returnStatus: true,
         cc: {
-          scope: "user:update",
+          scope: "connection:update",
         },
         body: {expiresAt},
         options,
