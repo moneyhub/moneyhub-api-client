@@ -1,4 +1,4 @@
-type ConnectionType = "api" | "legacy" | "test" | "zoopla" | "mouseprice"
+type ConnectionType = "api" | "legacy" | "test" | "zoopla" | "mouseprice" | "autotrader"
 
 interface AccountType {
   beta: boolean
@@ -34,11 +34,14 @@ export interface UserConnection {
   name: string
   type: ConnectionType
   connectedOn: string
-  lastUpdated: string
-  expiresAt: string
   accountIds: string[]
-  status: "ok" | "error"
+  status: "ok" | "error" | "never"
+  extendedStatus?: "expired" | "stoppedSyncing"
+  lastUpdated?: string
+  expiresAt?: string
   error?: "resync" | "sync_error" | "sync_partial" | "mfa_required" | "credentials_error"
   userConsentedAt?: string
-  tppConsent?:boolean
+  tppConsent?: boolean
+  singleSyncOnly?: boolean
+  useMfa?: boolean
 }
