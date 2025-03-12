@@ -45,6 +45,7 @@ type CreateAuthRequestParams = {
   customerLastLoggedTime?: string
   accountTypes?: string[]
   accountIdentification?: string[]
+  env?: string
 }
 
 export interface AuthRequestsRequests {
@@ -70,6 +71,7 @@ export interface AuthRequestsRequests {
     customerLastLoggedTime,
     accountTypes,
     accountIdentification,
+    env,
   }: CreateAuthRequestParams, options?: ExtraOptions) => Promise<ApiResponse<AuthRequest>>
 
   completeAuthRequest: ({

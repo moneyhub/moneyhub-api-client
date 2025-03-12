@@ -31,6 +31,7 @@ export default ({
       customerLastLoggedTime,
       accountTypes,
       accountIdentification,
+      env,
     }, options) =>
       request(authRequestEndpoint, {
         method: "POST",
@@ -59,6 +60,7 @@ export default ({
           accountTypes,
           accountIdentification,
           accountVerification,
+          env,
         },
         options,
       }),
