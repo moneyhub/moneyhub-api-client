@@ -1,4 +1,4 @@
-import got, {Options, Headers, OptionsOfJSONResponseBody, Method} from "got"
+import got, {Options, Headers, OptionsOfJSONResponseBody, Method, Agents} from "got"
 import {Client} from "openid-client"
 import qs from "query-string"
 import * as R from "ramda"
@@ -132,12 +132,13 @@ const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {})
 
 export default ({
   client,
-  options: {timeout, apiVersioning, mTLS, retry = {}},
+  options: {timeout, apiVersioning, agent, mTLS, retry = {}},
 }: {
   client: Client
   options: {
     timeout?: number
     apiVersioning: boolean
+    agent?: Agents
     mTLS?: MutualTLSOptions
     retry?: RetryOptions
   }
@@ -154,6 +155,10 @@ export default ({
     searchParams: qs.stringify(opts.searchParams),
     timeout,
     retry: retryOptions,
+  }
+
+  if (agent) {
+    (gotOpts as Options).agent = agent
   }
 
   const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version)

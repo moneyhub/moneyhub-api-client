@@ -30,7 +30,8 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
     },
   } = config
 
-  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, retry = {}} = options
+  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, agent, retry = {}} = options
+
   custom.setHttpOptionsDefaults({
     timeout,
     ...mTLS ? {
@@ -58,7 +59,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
 
   const request = req({
     client,
-    options: {timeout, apiVersioning, mTLS, retry},
+    options: {timeout, apiVersioning, agent, mTLS, retry},
   })
 
   const moneyhub = {
