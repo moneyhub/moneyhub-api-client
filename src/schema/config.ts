@@ -1,6 +1,7 @@
 import type {Method} from "got"
 import type {JWK} from "jose"
 import {KeyObject} from "tls"
+import {Agents} from "got"
 
 export type use = "sig" | "enc";
 export type keyOperation = "sign" | "verify" | "encrypt" | "decrypt" | "wrapKey" | "unwrapKey" | "deriveKey";
@@ -113,19 +114,20 @@ export interface ApiClientConfigCredentialsOther extends ApiClientConfigCredenti
 export type ApiClientConfigCredentials = ApiClientConfigCredentialsBasic | ApiClientConfigCredentialsOther
 
 export interface ApiClientConfig {
-  resourceServerUrl: string
-  osipResourceServerUrl?: string
-  identityServiceUrl: string
-  accountConnectUrl?: string
-  options?: {
-    timeout?: number
-    apiVersioning?: boolean
-    retry?: {
-      limit?: number
-      methods?: Method[]
-      statusCodes?: number[]
-      maxRetryAfter?: number
+    resourceServerUrl: string
+    osipResourceServerUrl?: string
+    identityServiceUrl: string
+    accountConnectUrl?: string
+    options?: {
+      timeout?: number
+      apiVersioning?: boolean
+      agent?: Agents
+      retry?: {
+        limit?: number
+        methods?: Method[]
+        statusCodes?: number[]
+        maxRetryAfter?: number
+      }
     }
+    client: ApiClientConfigCredentials
   }
-  client: ApiClientConfigCredentials
-}
