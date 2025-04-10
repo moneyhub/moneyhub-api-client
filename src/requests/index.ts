@@ -25,6 +25,7 @@ import transactionSplits from "./transaction-splits"
 import transactions from "./transactions"
 import unauthenticated from "./unauthenticated"
 import usersAndConnections from "./users-and-connections"
+import resellerCheck from "./reseller-check"
 
 export default ({config, request}: RequestsParams) => {
   return {
@@ -53,5 +54,6 @@ export default ({config, request}: RequestsParams) => {
     ...transactions({config, request}),
     ...unauthenticated({config, request}),
     ...usersAndConnections({config, request}),
+    ...resellerCheck({config, request}),
   }
 }

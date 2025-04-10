@@ -2073,6 +2073,18 @@ const savingsGoals = await moneyhub.deleteSavingsGoal({
 }, options);
 ```
 
+#### `createResellerCheckRequest`
+
+This method will delete the specified savings goal for the user. Requires the scope `savings_goals:write:all`.
+
+```javascript
+const resellerCheck = await moneyhub.createResellerCheckRequest({
+  companyRegistrationNumber: "AB123456",
+  telephone: "1234678"
+  email: "email@email.com"
+}, options);
+```
+
 ### Financial Connections
 
 #### `listConnections`
