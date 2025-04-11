@@ -2075,7 +2075,7 @@ const savingsGoals = await moneyhub.deleteSavingsGoal({
 
 #### `createResellerCheckRequest`
 
-This method will delete the specified savings goal for the user. Requires the scope `savings_goals:write:all`.
+This method will create a reseller check for verifying 4th party compliance. Requires the scope `reseller:create`.
 
 ```javascript
 const resellerCheck = await moneyhub.createResellerCheckRequest({
