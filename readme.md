@@ -2073,6 +2073,18 @@ const savingsGoals = await moneyhub.deleteSavingsGoal({
 }, options);
 ```
 
+#### `createResellerCheckRequest`
+
+This method will create a reseller check for verifying 4th party compliance. Requires the scope `reseller:create`.
+
+```javascript
+const resellerCheck = await moneyhub.createResellerCheckRequest({
+  companyRegistrationNumber: "AB123456",
+  telephone: "1234678"
+  email: "email@email.com"
+}, options);
+```
+
 ### Financial Connections
 
 #### `listConnections`

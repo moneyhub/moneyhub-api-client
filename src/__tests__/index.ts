@@ -145,6 +145,7 @@ describe("API client", function() {
         "getPaymentAuthorizeUrl",
         "getReversePaymentAuthorizeUrl",
         "getRecurringPaymentAuthorizeUrl",
+        "createResellerCheckRequest",
         "getStandingOrderAuthorizeUrl",
         "createAffordability",
         "getAffordability",
