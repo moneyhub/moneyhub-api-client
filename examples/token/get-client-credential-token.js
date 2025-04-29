@@ -5,7 +5,7 @@ const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
 
 const optionDefinitions = [
-  {name: "userId", alias: "u", type: String, description: "required"},
+  {name: "userId", alias: "u", type: String},
   {name: "scopes", alias: "s", defaultValue: DEFAULT_DATA_SCOPES_USE_CASE_2, type: String},
 ]
 
@@ -19,8 +19,6 @@ const usage = commandLineUsage(
 console.log(usage)
 
 const options = commandLineArgs(optionDefinitions)
-
-if (!options.userId) throw new Error("userId needs to be provided")
 
 const start = async () => {
   try {
