@@ -1,3 +1,11 @@
+6.91.0 / 2025-05-01
+==================
+
+**Features**
+
+* Add options for proxy agents
+* Add createResellerCheckRequest method
+
 6.8.0 / 2025-03-12
 ==================
 
