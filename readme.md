@@ -1284,6 +1284,29 @@ const accounts = await moneyhub.getGlobalCounterparties();
 
 #### `getCategories`
 
+Returns categories for a given list of transactions. This function uses the scope `categorisation`.
+
+```javascript
+const data = await moneyhub.categoriseTransactions({
+    accountId: "b72f2a5d-c43f-4db1-8143-6f6682ac132c",
+    accountType: "cash",
+    transactions: [
+      {
+        id: "b72f2a5d-c43f-4db1-8143-6f6682ac132c",
+        description: "Amazon",
+        amount: {
+          value: -3000,
+        },
+        date: "2025-05-02T15:50:19.603Z",
+        proprietaryTransactionCode: "DEBIT",
+        merchantCategoryCode: "OT42"
+      },
+    ],
+  })
+```
+
+#### `getCategories`
+
 Get all categories for a user. This function uses the scope `categories:read`.
 
 ```javascript
