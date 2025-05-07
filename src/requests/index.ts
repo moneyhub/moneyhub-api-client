@@ -26,6 +26,7 @@ import transactions from "./transactions"
 import unauthenticated from "./unauthenticated"
 import usersAndConnections from "./users-and-connections"
 import resellerCheck from "./reseller-check"
+import categoriseTransactions from "./categorise-transactions"
 
 export default ({config, request}: RequestsParams) => {
   return {
@@ -55,5 +56,6 @@ export default ({config, request}: RequestsParams) => {
     ...unauthenticated({config, request}),
     ...usersAndConnections({config, request}),
     ...resellerCheck({config, request}),
+    ...categoriseTransactions({config, request}),
   }
 }

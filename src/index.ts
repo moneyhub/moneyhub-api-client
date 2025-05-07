@@ -82,6 +82,7 @@ import type * as AuthRequests from "./schema/auth-request"
 import type * as Balances from "./schema/balance"
 import type * as Beneficiaries from "./schema/beneficiary"
 import type * as Categories from "./schema/category"
+import type * as CategorisedTransactions from "./schema/categorised-transactions"
 import type * as Counterparties from "./schema/counterparty"
 import type * as Connections from "./schema/connection"
 import type * as Holdings from "./schema/holding"
@@ -109,6 +110,7 @@ export {
   Balances,
   Beneficiaries,
   Categories,
+  CategorisedTransactions,
   Counterparties,
   Connections,
   Holdings,

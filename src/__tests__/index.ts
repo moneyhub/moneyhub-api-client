@@ -49,6 +49,7 @@ describe("API client", function() {
         "updateAccount",
         "deleteAccount",
         "createAuthRequest",
+        "categoriseTransactions",
         "completeAuthRequest",
         "getAllAuthRequests",
         "getAuthRequest",
