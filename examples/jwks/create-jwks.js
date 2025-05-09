@@ -57,6 +57,7 @@ const start = async () => {
     console.log(JSON.stringify(privateJWKS, null, 4))
   } catch (e) {
     console.log(e)
+    console.error(e.response.body)
   }
 }
 

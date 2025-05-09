@@ -29,6 +29,7 @@ const start = async () => {
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {
     console.log(e)
+    console.error(e.response.body)
   }
 }
 

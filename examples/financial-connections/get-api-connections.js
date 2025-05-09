@@ -8,7 +8,8 @@ const start = async () => {
     const result = await moneyhub.listAPIConnections()
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {
-    console.log(e)
+    console.error(e)
+    console.error(e.response.body)
   }
 }
 

@@ -84,6 +84,7 @@ const start = async () => {
 
   } catch (e) {
     console.log(e)
+    console.error(e.response.body)
   }
 }
 

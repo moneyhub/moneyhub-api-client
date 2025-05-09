@@ -93,6 +93,7 @@ const start = async () => {
     console.log(url)
   } catch (e) {
     console.error(e)
+    console.error(e.response.body)
   }
 }
 
