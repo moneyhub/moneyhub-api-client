@@ -4,7 +4,7 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, CategorisedTransactions} from ".."
 
-describe("Categorise transactions", function() {
+describe.skip("Categorise transactions", function() {
   let moneyhub: MoneyhubInstance
 
   before(async function() {

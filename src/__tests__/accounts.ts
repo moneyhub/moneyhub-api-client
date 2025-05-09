@@ -112,7 +112,7 @@ describe("Accounts", function() {
     }
   })
 
-  xit("get recurring transactions", async function() {
+  it.skip("get recurring transactions", async function() {
     const {data: recurring} = await moneyhub.getAccountRecurringTransactions({
       userId,
       accountId,
