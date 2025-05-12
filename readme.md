@@ -1282,7 +1282,7 @@ Get global counterparties.
 const accounts = await moneyhub.getGlobalCounterparties();
 ```
 
-#### `getCategories`
+#### `categoriseTransactions`
 
 Returns categories for a given list of transactions. This function uses the scope `categorisation`.
 
