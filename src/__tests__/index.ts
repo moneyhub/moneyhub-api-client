@@ -3,7 +3,7 @@ import {expect} from "chai"
 
 import {Moneyhub, MoneyhubInstance} from ".."
 
-describe.only("API client", function() {
+describe("API client", function() {
   describe("Client configuration", function() {
     let keys: any[],
       moneyhub: MoneyhubInstance
