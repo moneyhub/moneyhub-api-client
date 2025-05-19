@@ -191,9 +191,16 @@ describe("API client", function() {
         expect((openIdConfig as any).issuer).to.be.a("string")
       })
 
-      it("gets global counterparties", async function() {
-        const counterparties = await moneyhub.getGlobalCounterparties()
+      it("gets global counterparties v2", async function() {
+        const counterparties = await moneyhub.getGlobalCounterparties({}, {version: "v2"})
         expect(counterparties.data.length).to.be.greaterThan(100)
+        expect(counterparties.data[0].id).to.match(/^global:/)
+      })
+
+      it("gets global counterparties v3", async function() {
+        const counterparties = await moneyhub.getGlobalCounterparties({limit: 100}, {version: "v3"})
+        expect(counterparties.data.length).to.be.equal(100)
+        expect(counterparties.data[0].id).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)
       })
     })
   })
