@@ -1,13 +1,14 @@
 import qs from "query-string"
-import {RequestsParams} from "../request"
+import {RequestsParams, ExtraOptions} from "../request"
 import {UnauthenticatedRequests} from "./types/unauthenticated"
 
 export default ({config, request}: RequestsParams): UnauthenticatedRequests => {
   const {resourceServerUrl, identityServiceUrl} = config
   return {
-    getGlobalCounterparties: (params = {}) =>
+    getGlobalCounterparties: (params = {}, options?: ExtraOptions) =>
       request(`${resourceServerUrl}/global-counterparties`, {
         searchParams: params,
+        options,
       }),
     listConnections: (query?: {clientId?: string}) =>
       request(`${identityServiceUrl}/oidc/.well-known/all-connections?${query && qs.stringify(query)}`),

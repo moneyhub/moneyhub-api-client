@@ -119,7 +119,8 @@ When making calls to our methods that require authentication, you can provide an
   token: "full.access.token" // if specified will be added to authorisation header of request
   headers: {
     Authorization: "Bearer full.access.token" // can be used to specify authorisation header or additional headers
-  }
+  },
+  version: "v3" // Forces an specific API version when calling the method
 }
 ```
 Example usages
@@ -142,6 +143,12 @@ const accounts = await moneyhub.getAccounts({
   headers: {
     Authorization: "Bearer full.access.token"
   }
+});
+
+const accounts = await moneyhub.getAccountsList({
+  params: {},
+}, {
+  version: "v2"
 });
 ```
 

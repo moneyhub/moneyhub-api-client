@@ -42,7 +42,7 @@ describe("Accounts", function() {
   })
 
   it("get accounts list", async function() {
-    const accounts = await moneyhub.getAccountsList({userId})
+    const accounts = await moneyhub.getAccountsList({userId}, {version: "v2"})
     expect(accounts.data.length).to.be.at.least(2)
     const cashAccount = accounts.data.find(a => a.type === "cash:current")
     const pension = accounts.data.find(a => a.type === "pension")
@@ -56,7 +56,7 @@ describe("Accounts", function() {
   })
 
   it("get accounts list with transactionData", async function() {
-    const accounts = await moneyhub.getAccountsList({userId, params: {showTransactionData: true}})
+    const accounts = await moneyhub.getAccountsList({userId, params: {showTransactionData: true}}, {version: "v2"})
     expect(accounts.data.length).to.be.at.least(2)
     const cashAccount = accounts.data.find(a => a.type === "cash:current")
     const pension = accounts.data.find(a => a.type === "pension")
@@ -70,7 +70,7 @@ describe("Accounts", function() {
   })
 
   it("get accounts list with details", async function() {
-    const accounts = await moneyhub.getAccountsListWithDetails({userId})
+    const accounts = await moneyhub.getAccountsListWithDetails({userId}, {version: "v2"})
     expect(accounts.data.length).to.be.at.least(2)
     const cashAccount = accounts.data.find(a => a.type === "cash:current")
     const pension = accounts.data.find(a => a.type === "pension")
@@ -93,7 +93,7 @@ describe("Accounts", function() {
       params: {
         counterpartiesVersion: "v2",
       },
-    })
+    }, {version: "v2"})
     expect(counterparties.length).to.be.greaterThan(6)
     expectTypeOf<Counterparties.Counterparty[]>(counterparties)
   })
