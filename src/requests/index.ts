@@ -10,6 +10,7 @@ import osip from "./osip"
 import payees from "./payees"
 import payments from "./payments"
 import payLinks from "./pay-links"
+import payFiles from "./pay-file"
 import projects from "./projects"
 import recurringPayments from "./recurring-payments"
 import regularTransactions from "./regular-transactions"
@@ -41,6 +42,7 @@ export default ({config, request}: RequestsParams) => {
     ...payees({config, request}),
     ...payments({config, request}),
     ...payLinks({config, request}),
+    ...payFiles({config, request}),
     ...projects({config, request}),
     ...recurringPayments({config, request}),
     ...regularTransactions({config, request}),

@@ -9,7 +9,7 @@ const localConfig = {
     token_endpoint_auth_method: "private_key_jwt",
     id_token_signed_response_alg: "RS256",
     request_object_signing_alg: "RS256",
-    redirect_uri: "https://invite.moneyhub.co.uk/api/callback",
+    redirect_uri: "https://example.com",
     response_type: "code id_token",
     keys: [
       {
@@ -80,8 +80,8 @@ const devConfig = {
     token_endpoint_auth_method: "private_key_jwt",
     id_token_signed_response_alg: "RS256",
     request_object_signing_alg: "none",
-    redirect_uri: "http://localhost:3001",
-    response_type: "code",
+    redirect_uri: "https://invite.moneyhub.co.uk/api/callback",
+    response_type: "code id_token",
     keys: [
       {
         e: "AQAB",
@@ -142,7 +142,7 @@ const prodConfig = {
     token_endpoint_auth_method: "private_key_jwt",
     id_token_signed_response_alg: "RS256",
     request_object_signing_alg: "RS256",
-    redirect_uri: "https://invite.moneyhub.co.uk/api/callback",
+    redirect_uri: "https://example.com",
     response_type: "code id_token",
     keys: [
       {
@@ -254,6 +254,22 @@ const payLinkDemoClient = {
         alg: "RS256",
       },
     ],
+  },
+};
+
+const resellerClient = {
+  resourceServerUrl: "https://api.moneyhub.co.uk/v2.0",
+  identityServiceUrl: "https://identity.moneyhub.co.uk/oidc",
+  accountConnectUrl: "https://bank-chooser.moneyhub.co.uk/account-connect.js",
+  client: {
+    client_id: "11bdcbff-6342-42c4-8fda-340a148c434e",
+    client_secret: "12c52e16-7f22-4fc8-af84-3ca31c16061a",
+    token_endpoint_auth_method: "private_key_jwt",
+    id_token_signed_response_alg: "RS256",
+    request_object_signing_alg: "RS256",
+    redirect_uri: "https://payments-onboarding.moneyhub.co.uk/api/callback",
+    response_type: "code id_token",
+    keys: [{"kty":"RSA","n":"0YwK3ftFB-thpCoVSJHkTV_GcLJcOGOY4z0caLlrQraNStZvsYw0WODFJQ-vsTVSrMAx4aiw3LOA98BnYGmnMeIwzfW-uld1QjiUAsPeSppUw_ZTsoBbUnbyFSQhiP_pBiGJ20V1irq-6rhj-QIjgs6P3stC7O563UFdME--0l6jOcofCevJjl5nbSmxlpgXR4yweWUraovKBWrGp_SgQbdQyaNBnTg1gBQlpDBt3EychT9fIeqXCmkXX25ZliVoMg8UwmEXZoB_PhfaId2561Gor7o0U2IGgKCS_bBvun7vud4siiUeJWN6fK30DG2e3dXAdQiTwISrZH1wwe9nXQ","e":"AQAB","d":"0BecaxkuUlED4_0OqcSHzfbAoAXf4ve1SmTTo4QO6m9THPCadtze1yxPWyCavwZPFdK_NnNJP8La3i4p-uqw6K7Q_JeAUpirj5mUErLkO33Lk9c5AtjI17nbafc5fk104WvI9QGjWqNdGMcIMK5ZCXuMEBoWWifxx2sz2dg3jbw1o_JA-X69Qde5ciK_TUCJ3g5K8eJOFsKTKD7XJE_Z_P0752GDvpIS9yatB68-JC6EVuTgLV3i6KPzs45qmCg6MxH9ptnIA8tLng0ax1TTpCBj1SmqqnskuC8sVo1f49-XYUTzS_WdnbH8UyBNx5OMrCIMs0Tp5kiXLAhrjSLpGQ","p":"6Dejt10Zdt7chgZJ-d7PhA6ZCBIjbpswmMA5AnwxzE7FJ81wwq9DefnHv79KYQ2b54rlp9akoHY_3nl8k8hwyFHq-b_tfaFVblDlU3aQj0fnCkBqHxoFch6BHKHkBVNBmJ0NUHGw9CB9a2hSOhnlMx8Owxhe3Aus8YpRd9_DoC8","q":"5wIGScwWDg01EeUDOT9_alvjdKtVN2Gp_xtpq-2dn6tkCgy4YT03eluA3MFUszZf7TKkVIvohpkLBP5jAHUmwe07IR5xz7tKPMumTyxymAp7Xi3OaW6NGTpjGcnn-NSTwx-BTG7EUpmOFw1iu3dYoL0TP8UdV5cwphiC74YD4jM","dp":"K8Cv_BByh88dxbLRpV6xwrPtaXPhcSmUUnOFSk6UI2aEByfSIxxanlTNqfck0Hx773hgJOtwQTuGdSh2rHGLrnKgz0W2PYF0U0CytLMWMajegzP3yrxgYkwVD4wBJm-1YEfXBl0ldhnZB6-0LnZKlQM5CNFCrjsU7r2c8_UZKsk","dq":"ZHGs6kmjDVkQykcZr7q8XDK4I_KbiwkcMaBpwif_cX3Ecdo2EZHcnYdL8LDfc00hSLHMYjazVFMXR4SU544I3CmanDvwoLJ_BRBHsAVTjmiAW-Lu7Uj0cRPCI2R3SOqllSINxn4jPwclkUBwvbKXBs0voXrD12IV9SKTTDKpXaE","qi":"meso6ONTHZvGKQPpB6sg5EC0dHMJRmIJ5iVFgjjO5ljiJJ52pQ8H2m769CI2ik57rIbtX0pmTCe4N7UUY_tXjbD0VbTWtjXKW553p66QLELS5jyABGEFiT-geqc3FY5PwR5H5707-n69Zyg0CfeUvyXKbGS-ytXBISc2eS0cTwo","kid":"r_Hz8--PeiKmuN-5StE3jcoVakcYwCTzhPQW-DmBzGM","use":"sig","alg":"RS256"}],
   },
 };
 

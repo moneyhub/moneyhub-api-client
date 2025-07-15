@@ -63,7 +63,7 @@ const start = async () => {
         payee,
         amount: options.amount,
         payeeRef: options["payee-ref"],
-        payerRef: "5299301096439048",
+        payerRef: options["payer-ref"],
         context: options.context,
         readRefundAccount: options["read-refund-account"],
       },

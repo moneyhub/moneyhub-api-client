@@ -81,7 +81,7 @@ const start = async () => {
       recurringPaymentAmount: 10,
       finalPaymentAmount: options["final-amount"],
       currency: options.currency,
-      firstPaymentDate: "2024-07-25T23:00:00.000Z",
+      firstPaymentDate: "2025-07-25T23:00:00.000Z",
       recurringPaymentDate: options["recurring-date"],
       finalPaymentDate: options["final-date"],
       context: options.context,

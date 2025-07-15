@@ -106,6 +106,12 @@ const start = async () => {
       amount: options.amount,
       payeeRef: options["payee-ref"],
       payerRef: options["payer-ref"],
+      // payerType: "api-payer",
+      // payer: {
+      //   accountNumber: 12345678,
+      //   sortCode: 123456,
+      //   name: "hello",
+      // },
       state: options.state,
       nonce: options.nonce,
       userId: options["user-id"],
