@@ -86,6 +86,7 @@ export interface Account {
   providerReference?: string
   connectionId?: string
   providerId?: string
+  providerParentAccountId?: string
   accountReference?: string
   accountHolderName?: string
   accountType?: AccountType
