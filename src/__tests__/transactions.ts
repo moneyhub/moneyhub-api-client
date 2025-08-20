@@ -51,6 +51,37 @@ describe("Transactions", function() {
     expectTypeOf<Transactions.Transaction>(transaction)
   })
 
+  it("can get unenriched transactions", async function() {
+    const {data: transactions} = await moneyhub.getUnenrichedTransactions({
+      userId,
+    })
+
+    expect(transactions.length).to.be.greaterThan(1)
+    expectTypeOf<Transactions.TransactionUnenriched[]>(transactions)
+  })
+
+  it("can get unenriched transactions with limit", async function() {
+    const {data: transactions} = await moneyhub.getUnenrichedTransactions({
+      userId,
+      params: {limit: 1},
+    })
+
+    transactionId = transactions[0].id
+
+    expect(transactions.length).to.eql(1)
+    expectTypeOf<Transactions.TransactionUnenriched[]>(transactions)
+  })
+
+  it("can get one unenriched transaction", async function() {
+    const {data: transaction} = await moneyhub.getUnenrichedTransaction({
+      userId,
+      transactionId,
+    })
+
+    expect(transaction.id).to.equal(transactionId)
+    expectTypeOf<Transactions.TransactionUnenriched>(transaction)
+  })
+
   it.skip("can get one transaction with text query param", async function() {
     const {data: transactions} = await moneyhub.getTransactions({
       userId,

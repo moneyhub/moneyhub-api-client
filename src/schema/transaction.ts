@@ -1,4 +1,3 @@
-import type {SearchParams} from "../request"
 import type {Amount, Balance} from "./balance"
 
 export interface RecurringTransactionEstimate {
@@ -39,7 +38,9 @@ export interface TransactionSplitPatch {
   projectId?: string
 }
 
-export interface TransactionSearchParams extends SearchParams {
+export interface TransactionSearchParams {
+  limit?: number
+  offset?: number
   ids?: string[]
   startDate?: string
   endDate?: string
@@ -58,7 +59,23 @@ export interface TransactionSearchParams extends SearchParams {
   counterpartyIdsV2?: string[]
   counterpartiesVersion?: "v2" | "v3"
   enhancedCategories?: string
+  onlyCount?: boolean
 }
+export type TransactionUnenrichedSearchParams = Pick<
+  TransactionSearchParams,
+  | "limit"
+  | "offset"
+  | "startDate"
+  | "endDate"
+  | "startDateModified"
+  | "endDateModified"
+  | "text"
+  | "accountId"
+  | "accountIds"
+  | "creditDebitIndicator"
+  | "onlyCount"
+  | "contains"
+>
 
 interface CardInstrument {
   name?: string
@@ -89,6 +106,8 @@ export interface Transaction {
   categoryIdConfirmed: boolean
   date: string
   dateModified: string
+  dateCreated?: string
+  valueDate?: string
   id: string
   longDescription: string
   providerId?: string
@@ -116,7 +135,36 @@ export interface Transaction {
   debtorAccount?: CreditorDebtorAccount
   creditorAgent?: CreditorDebtorAgent
   debtorAgent?: CreditorDebtorAgent
+  transactionReference?: string
+  transactionInformation?: string
 }
+
+export type TransactionUnenriched = Pick<
+  Transaction,
+  | "accountId"
+  | "amount"
+  | "date"
+  | "dateModified"
+  | "dateCreated"
+  | "valueDate"
+  | "id"
+  | "longDescription"
+  | "providerId"
+  | "status"
+  | "transactionCode"
+  | "proprietaryTransactionCode"
+  | "balance"
+  | "balanceType"
+  | "statementReference"
+  | "merchantCategoryCode"
+  | "cardInstrument"
+  | "creditorAccount"
+  | "debtorAccount"
+  | "creditorAgent"
+  | "debtorAgent"
+  | "transactionReference"
+  | "transactionInformation"
+>
 
 export interface TransactionPost {
   accountId: string
