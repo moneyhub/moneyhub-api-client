@@ -69,12 +69,10 @@ export type TransactionUnenrichedSearchParams = Pick<
   | "endDate"
   | "startDateModified"
   | "endDateModified"
-  | "text"
   | "accountId"
   | "accountIds"
   | "creditDebitIndicator"
   | "onlyCount"
-  | "contains"
 >
 
 interface CardInstrument {
