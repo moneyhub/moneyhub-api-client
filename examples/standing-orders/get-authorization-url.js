@@ -66,7 +66,11 @@ const start = async () => {
 
     const url = await moneyhub.getStandingOrderAuthorizeUrl({
       bankId: options["bank-id"],
-      payeeId: options["payee-id"],
+      payee: {
+        accountNumber: "12345678",
+        sortCode: "123456",
+        name: "John Doe",
+      },
       payeeType: options["payee-type"],
       payerId: options["payer-id"],
       payerType: options["payer-type"],
@@ -76,7 +80,7 @@ const start = async () => {
         day: options["frequency-day"],
         week: options["frequency-week"],
       },
-      numberOfPayments: 5,
+      // numberOfPayments: 5,
       firstPaymentAmount: 50,
       recurringPaymentAmount: 10,
       finalPaymentAmount: options["final-amount"],

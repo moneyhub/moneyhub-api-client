@@ -9,7 +9,7 @@ const localConfig = {
     token_endpoint_auth_method: "private_key_jwt",
     id_token_signed_response_alg: "RS256",
     request_object_signing_alg: "RS256",
-    redirect_uri: "https://example.com",
+    redirect_uri: "https://invite.moneyhub.co.uk/api/callback",
     response_type: "code id_token",
     keys: [
       {
@@ -273,4 +273,4 @@ const resellerClient = {
   },
 };
 
-module.exports = prodConfig
+module.exports = testConfig
