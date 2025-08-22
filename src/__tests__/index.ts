@@ -162,6 +162,7 @@ describe("API client", function() {
         "exchangeCodeForTokens",
         "refreshTokens",
         "getClientCredentialTokens",
+        "getConsentHistory",
         "keys",
         "generators",
       ].sort())
