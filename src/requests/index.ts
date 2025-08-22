@@ -27,6 +27,7 @@ import unauthenticated from "./unauthenticated"
 import usersAndConnections from "./users-and-connections"
 import resellerCheck from "./reseller-check"
 import categoriseTransactions from "./categorise-transactions"
+import consentHistory from "./consent-history"
 
 export default ({config, request}: RequestsParams) => {
   return {
@@ -57,5 +58,6 @@ export default ({config, request}: RequestsParams) => {
     ...usersAndConnections({config, request}),
     ...resellerCheck({config, request}),
     ...categoriseTransactions({config, request}),
+    ...consentHistory({config, request}),
   }
 }
