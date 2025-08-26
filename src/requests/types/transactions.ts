@@ -1,5 +1,5 @@
 import {ApiResponse, ExtraOptions} from "../../request"
-import {Transaction, TransactionPatch, TransactionPost, TransactionSearchParams} from "../../schema/transaction"
+import {Transaction, TransactionPatch, TransactionPost, TransactionSearchParams,  TransactionUnenrichedSearchParams, TransactionUnenriched} from "../../schema/transaction"
 
 export interface TransactionsRequests {
   getTransactions: ({
@@ -9,6 +9,13 @@ export interface TransactionsRequests {
     userId?: string
     params?: TransactionSearchParams
   }, options?: ExtraOptions) => Promise<ApiResponse<Transaction[]>>
+  getUnenrichedTransactions: ({
+    userId,
+    params,
+  }: {
+    userId?: string
+    params?: TransactionUnenrichedSearchParams
+  }, options?: ExtraOptions) => Promise<ApiResponse<TransactionUnenriched[]>>
 
   getTransaction: ({
     userId,
@@ -17,6 +24,13 @@ export interface TransactionsRequests {
     userId?: string
     transactionId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<Transaction>>
+  getUnenrichedTransaction: ({
+    userId,
+    transactionId,
+  }: {
+    userId?: string
+    transactionId: string
+  }, options?: ExtraOptions) => Promise<ApiResponse<TransactionUnenriched>>
 
   addTransaction: ({
     userId,

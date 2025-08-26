@@ -14,6 +14,23 @@ export default ({config, request}: RequestsParams): TransactionsRequests => {
         },
         options,
       }),
+    getUnenrichedTransactions: ({userId, params}, options) =>
+      request(`${resourceServerUrl}/transactions/unenriched`, {
+        searchParams: params,
+        cc: {
+          scope: "transactions_unenriched:read:all",
+          sub: userId,
+        },
+        options,
+      }),
+    getUnenrichedTransaction: ({userId, transactionId}, options) =>
+      request(`${resourceServerUrl}/transactions/unenriched/${transactionId}`, {
+        cc: {
+          scope: "transactions_unenriched:read:all",
+          sub: userId,
+        },
+        options,
+      }),
     getTransaction: ({userId, transactionId}, options) =>
       request(`${resourceServerUrl}/transactions/${transactionId}`, {
         cc: {
