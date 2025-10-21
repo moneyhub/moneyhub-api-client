@@ -5,12 +5,13 @@ export default ({config, request}: RequestsParams): ConsentHistoryRequests => {
   const {identityServiceUrl} = config
 
   return {
-    getConsentHistory: async (params = {}, options) =>
+    getConsentHistory: async (params, options) =>
       request(`${identityServiceUrl}/consent-history`, {
         method: "GET",
         searchParams: params,
         cc: {
-          scope: "consent-history:read",
+          scope: "consent_history:read",
+          sub: params?.userId,
         },
         options,
       }),

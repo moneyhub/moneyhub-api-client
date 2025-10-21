@@ -38,6 +38,7 @@ const optionDefinitions = [
     description: "required",
   },
   {name: "nonce", alias: "n", defaultValue: DEFAULT_NONCE, type: String},
+  {name: "type", alias: "t", type: String, description: "VRP type: Sweeping|Other"}
 ]
 
 const usage = commandLineUsage({
@@ -85,6 +86,7 @@ const start = async () => {
       maximumIndividualAmount: options["maximum-amount"],
       currency: options.currency,
       periodicLimits,
+      type: options.type,
       context: options.context,
       state: options.state,
       nonce: options.nonce,

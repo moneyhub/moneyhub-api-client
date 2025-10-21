@@ -1,0 +1,1695 @@
+
+> @mft/moneyhub-api-client@6.93.1 ts-node
+> ts-node ./examples/transactions/get-transactions.js -u 68ee4b97a3d8274a92fe330f
+
+
+Options
+
+  -u, --userId string                  required 
+  -a, --accountId string                        
+  -c, --categoryId string                       
+  -p, --projectId string                        
+  -s, --startDate string                        
+  -e, --endDate string                          
+  -l, --limit number                            
+  -o, --offset number                           
+  -v, --counterpartiesVersion string   required 
+
+{
+  "data": [
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "SAINSBURYS-BROSTOL Bristol",
+      "counterpartyId": "260d13adb795201c54602f5553252e3229725f4b1ed7b67fef415fd33617e39e",
+      "amount": {
+        "value": -990,
+        "majorUnits": 9,
+        "minorUnits": 90,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-14T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.376Z",
+      "dateCreated": "2025-10-14T13:12:18.230Z",
+      "id": "9a274b5f-42b5-4230-8d06-70a436f98865",
+      "longDescription": "SAINSBURYS-BROSTOL BRISTOL         GB",
+      "status": "pending",
+      "providerId": "1432025287090808060010000-0184TP0000000000009900000000000009900000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-14T00:00:00.000Z",
+      "transactionInformation": "SAINSBURYS-BROSTOL BRISTOL         GB  ",
+      "transactionReference": "SAINSBURYS-BROSTOL BRISTOL         GB  "
+    },
+    {
+      "categoryId": "std:f1acac40-302b-4787-929e-259ad230f505",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Intl Paypal Patreon in CA US",
+      "counterpartyId": "d1a0f8202b261e19ea9a6c7ae8587a61baf61b94d1c6255d3a9be2e90b52a375",
+      "amount": {
+        "value": -470,
+        "majorUnits": 4,
+        "minorUnits": 70,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-14T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.378Z",
+      "dateCreated": "2025-10-14T13:12:18.231Z",
+      "id": "203041f2-4ee9-43dc-89f0-def3cdfa14eb",
+      "longDescription": "INTL CARD 12345678 PAYPAL *PATREON IN 4029357733   CA US",
+      "status": "pending",
+      "providerId": "1422025287010933120010000-0295TP0000000000004700000000000004700000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-14T00:00:00.000Z",
+      "transactionInformation": "INTL CARD 12345678 PAYPAL *PATREON IN 4029357733   CA US ",
+      "transactionReference": "INTL CARD 12345678 PAYPAL *PATREON IN 4029357733   CA US "
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "SAINSBURYS-BROSTOL Bristol",
+      "counterpartyId": "260d13adb795201c54602f5553252e3229725f4b1ed7b67fef415fd33617e39e",
+      "amount": {
+        "value": -200,
+        "majorUnits": 2,
+        "minorUnits": 0,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.380Z",
+      "dateCreated": "2025-10-14T13:12:18.231Z",
+      "id": "7d68a169-b5ab-4fb8-867b-2d043375084a",
+      "longDescription": "SAINSBURYS-BROSTOL BRISTOL         GB",
+      "status": "pending",
+      "providerId": "1332025286185250870010000-0216TP0000000000002000000000000002000000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "SAINSBURYS-BROSTOL BRISTOL         GB  ",
+      "transactionReference": "SAINSBURYS-BROSTOL BRISTOL         GB  "
+    },
+    {
+      "categoryId": "std:cdc55410-176d-4c71-9bb2-6988b5d4913d",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Intl K8RHSVLL SP TGP Begleri IL US",
+      "counterpartyId": "05ad11ea9dbcc3ffd397f5f9abb40e49ea6b4ffa9c7f421791a25ec0f75f7b92",
+      "amount": {
+        "value": -6200,
+        "majorUnits": 62,
+        "minorUnits": 0,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.382Z",
+      "dateCreated": "2025-10-14T13:12:18.231Z",
+      "id": "bff495e2-f35b-4b98-8092-63fb96b4186d",
+      "longDescription": "INTL CARD K8RHSVLL SP TGP BEGLERI +18038816052 IL US",
+      "status": "pending",
+      "providerId": "1332025286180627000010000-0295TP0000000000062000000000000062000000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "INTL CARD K8RHSVLL SP TGP BEGLERI +18038816052 IL US ",
+      "transactionReference": "INTL CARD K8RHSVLL SP TGP BEGLERI +18038816052 IL US "
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "SAINSBURYS-BROSTOL Bristol",
+      "counterpartyId": "260d13adb795201c54602f5553252e3229725f4b1ed7b67fef415fd33617e39e",
+      "amount": {
+        "value": -440,
+        "majorUnits": 4,
+        "minorUnits": 40,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.384Z",
+      "dateCreated": "2025-10-14T13:12:18.231Z",
+      "id": "606faf71-3f4e-405d-96a7-6c87feb1f8e3",
+      "longDescription": "SAINSBURYS-BROSTOL BRISTOL         GB",
+      "status": "pending",
+      "providerId": "1332025286170047990010000-0184TP0000000000004400000000000004400000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "SAINSBURYS-BROSTOL BRISTOL         GB  ",
+      "transactionReference": "SAINSBURYS-BROSTOL BRISTOL         GB  "
+    },
+    {
+      "categoryId": "std:8fc131b4-225b-42f8-a589-faf0ad179d5c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Dominos Bristol CI",
+      "counterpartyId": "3699ea02882318d29d496c7044a70a21ed38cb03eb64a17368fc12504d95424c",
+      "amount": {
+        "value": -1550,
+        "majorUnits": 15,
+        "minorUnits": 50,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.385Z",
+      "dateCreated": "2025-10-14T13:12:18.232Z",
+      "id": "9d93e79c-ef65-4dde-8fd9-42a799ad7bc1",
+      "longDescription": "Dominos Bristol Ci Bristol         GB",
+      "status": "pending",
+      "providerId": "1332025286165722100010000-0184TP0000000000015500000000000015500000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "Dominos Bristol Ci Bristol         GB  ",
+      "transactionReference": "Dominos Bristol Ci Bristol         GB  "
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Central England Co Wolverhampton",
+      "counterpartyId": "0196ae0c9f13b267c791f275580edd6d32cbb6ddaa8d5671b050af34f4109fa8",
+      "amount": {
+        "value": -350,
+        "majorUnits": 3,
+        "minorUnits": 50,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.387Z",
+      "dateCreated": "2025-10-14T13:12:18.232Z",
+      "id": "38604a0c-a115-4546-87d4-6dc26923bd96",
+      "longDescription": "CENTRAL ENGLAND CO WOLVERHAMPTON   GB",
+      "status": "pending",
+      "providerId": "1332025286135720020010000-0216TP0000000000003500000000000003500000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "CENTRAL ENGLAND CO WOLVERHAMPTON   GB  ",
+      "transactionReference": "CENTRAL ENGLAND CO WOLVERHAMPTON   GB  "
+    },
+    {
+      "categoryId": "std:ad69da6e-fe17-40e8-bc4d-349c8addc14e",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "UBR Pending.uber. London",
+      "counterpartyId": "6c996325d5610b6fe4a01417a428590f5bddfb4e7429713ee10fce249509750d",
+      "amount": {
+        "value": -692,
+        "majorUnits": 6,
+        "minorUnits": 92,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.388Z",
+      "dateCreated": "2025-10-14T13:12:18.232Z",
+      "id": "f594c8d3-24dc-487b-b41b-0a98afb086bd",
+      "longDescription": "UBR* PENDING.UBER. London          GB",
+      "status": "pending",
+      "providerId": "1332025286133942490010000-0297TP0000000000006920000000000006920000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "UBR* PENDING.UBER. London          GB  ",
+      "transactionReference": "UBR* PENDING.UBER. London          GB  "
+    },
+    {
+      "categoryId": "std:ad69da6e-fe17-40e8-bc4d-349c8addc14e",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Trainline London",
+      "counterpartyId": "global:341c773bd2e12d4508e6f2870b00ecd205aed713685b7b1ac50b0a241b2077a5",
+      "amount": {
+        "value": -5850,
+        "majorUnits": 58,
+        "minorUnits": 50,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.390Z",
+      "dateCreated": "2025-10-14T13:12:18.232Z",
+      "id": "522cc1c0-b94d-4241-a56c-8cdfe9bc736c",
+      "longDescription": "TRAINLINE LONDON          GB",
+      "status": "pending",
+      "providerId": "1332025286130054410010000-0297TP0000000000058500000000000058500000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "TRAINLINE LONDON          GB  ",
+      "transactionReference": "TRAINLINE LONDON          GB  "
+    },
+    {
+      "categoryId": "std:65ebdcdb-c46b-478f-bbbc-feabeb0b4342",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Schuh Limited Livingston",
+      "counterpartyId": "c07fa6a94c4a01d49a19ec227c2b558a1be25e4ebfa140fb71982d67a9cd88d0",
+      "amount": {
+        "value": -13000,
+        "majorUnits": 130,
+        "minorUnits": 0,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.391Z",
+      "dateCreated": "2025-10-14T13:12:18.232Z",
+      "id": "fd922dae-15d9-49bc-8206-5b712f7764a7",
+      "longDescription": "schuh limited Livingston      GB",
+      "status": "pending",
+      "providerId": "1322025285224415700010000-0250TP0000000000130000000000000130000000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "schuh limited Livingston      GB  ",
+      "transactionReference": "schuh limited Livingston      GB  "
+    },
+    {
+      "categoryId": "std:cdc55410-176d-4c71-9bb2-6988b5d4913d",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Amznmktplace",
+      "counterpartyId": "global:13dbb5c043ee5fb759d26e33eead84d499e184bcf5d786f6e4ab38f9a1b4682d",
+      "amount": {
+        "value": -2568,
+        "majorUnits": 25,
+        "minorUnits": 68,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.394Z",
+      "dateCreated": "2025-10-14T13:12:18.232Z",
+      "id": "5b134523-4da9-493b-b4b4-6cf9cce825b1",
+      "longDescription": "AMZNMktplace*9I33Wamazon.co.uk",
+      "status": "posted",
+      "providerId": "1332025286165011750100000-0291VB0000000000025680000000000025680000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 109204,
+        "majorUnits": 1092,
+        "minorUnits": 4,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "AMZNMktplace*9I33Wamazon.co.uk",
+      "transactionReference": "AMZNMktplace*9I33Wamazon.co.uk"
+    },
+    {
+      "categoryId": "std:6b1f0079-4a42-401a-867b-30ea56fc9e63",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "VER STU S Barbers Wolverhampton",
+      "counterpartyId": "46d9f1e88e3f1667aec7caa64e4f2126e064837791c01fd8c43f00d58824928f",
+      "amount": {
+        "value": -3190,
+        "majorUnits": 31,
+        "minorUnits": 90,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.395Z",
+      "dateCreated": "2025-10-14T13:12:18.233Z",
+      "id": "8d0c617e-00b3-4646-8fc9-a868239dce9f",
+      "longDescription": "VER*STU S BARBERS WOLVERHAMPTON",
+      "status": "posted",
+      "providerId": "1332025286165011750090000-0210VB0000000000031900000000000031900000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 111772,
+        "majorUnits": 1117,
+        "minorUnits": 72,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "VER*STU S BARBERS WOLVERHAMPTON",
+      "transactionReference": "VER*STU S BARBERS WOLVERHAMPTON"
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "CO-OPERATIVE Food Merry Hill",
+      "counterpartyId": "565dadaa88082fb751b4212d6a5d5b5b98f6b4b4d234e9c6671ada1d85755e6e",
+      "amount": {
+        "value": -2018,
+        "majorUnits": 20,
+        "minorUnits": 18,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-13T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.397Z",
+      "dateCreated": "2025-10-14T13:12:18.233Z",
+      "id": "8472a6d9-de2b-4ff5-84b0-ccee7866b5a2",
+      "longDescription": "CO-OPERATIVE FOOD MERRY HILL",
+      "status": "posted",
+      "providerId": "1332025286165011750080000-0210VB0000000000020180000000000020180000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 114962,
+        "majorUnits": 1149,
+        "minorUnits": 62,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-13T00:00:00.000Z",
+      "transactionInformation": "CO-OPERATIVE FOOD MERRY HILL",
+      "transactionReference": "CO-OPERATIVE FOOD MERRY HILL"
+    },
+    {
+      "categoryId": "std:8fc131b4-225b-42f8-a589-faf0ad179d5c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Just eat.co.uk Ltd London",
+      "counterpartyId": "606759a7a054e5b5a1b0580158d98707ae2c7e97e9259494ac79e3a58dabc35e",
+      "amount": {
+        "value": -1569,
+        "majorUnits": 15,
+        "minorUnits": 69,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-12T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.392Z",
+      "dateCreated": "2025-10-14T13:12:18.232Z",
+      "id": "d9be6a9e-74c9-4567-8ffc-e4c05262a2a4",
+      "longDescription": "Just Eat.Co.UK Ltd London          GB",
+      "status": "pending",
+      "providerId": "1232025285144431400010000-0297TP0000000000015690000000000015690000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-12T00:00:00.000Z",
+      "transactionInformation": "Just Eat.Co.UK Ltd London          GB  ",
+      "transactionReference": "Just Eat.Co.UK Ltd London          GB  "
+    },
+    {
+      "categoryId": "std:6446bcc2-c594-414a-b2eb-422d020c3aa5",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Paypal X.",
+      "counterpartyId": "2db45d30fb76ed82b759eeb2efc68bc414b8a5087fe9a2646e72dd4f6f9d70ed",
+      "amount": {
+        "value": -393,
+        "majorUnits": 3,
+        "minorUnits": 93,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-11T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.393Z",
+      "dateCreated": "2025-10-14T13:12:18.232Z",
+      "id": "9d999367-30f9-47e3-9207-cf4084cb374f",
+      "longDescription": "PAYPAL *X. 35314369001     GB",
+      "status": "pending",
+      "providerId": "1132025284104544080010000-0297TP0000000000003930000000000003930000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "cardInstrument": {
+        "pan": "xxxxxxxxxxxx6214",
+        "cardSchemeName": "VISA"
+      },
+      "valueDate": "2025-10-11T00:00:00.000Z",
+      "transactionInformation": "PAYPAL *X. 35314369001     GB  ",
+      "transactionReference": "PAYPAL *X. 35314369001     GB  "
+    },
+    {
+      "categoryId": "std:8fc131b4-225b-42f8-a589-faf0ad179d5c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Luke B Takeout",
+      "counterpartyId": "5116f5ce13a6296d54a33cb2561d78f15a5e8a1e3bee9268fa09443726d996f9",
+      "amount": {
+        "value": -2250,
+        "majorUnits": 22,
+        "minorUnits": 50,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-11T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.398Z",
+      "dateCreated": "2025-10-14T13:12:18.233Z",
+      "id": "583a8706-e5a3-457c-a743-ad76ef7b3b65",
+      "longDescription": "Luke B            Takeout",
+      "status": "posted",
+      "providerId": "1132025284183944259910000-0220P10000000000022500000000000022500000000000BP",
+      "proprietaryTransactionCode": {
+        "code": "BP"
+      },
+      "balance": {
+        "value": 116980,
+        "majorUnits": 1169,
+        "minorUnits": 80,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-11T00:00:00.000Z",
+      "transactionInformation": "Luke B            Takeout",
+      "transactionReference": "Luke B            Takeout"
+    },
+    {
+      "categoryId": "std:eaa96546-6bb7-433e-933d-23f0fe9916c8",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Daniel Millsdabelltom",
+      "counterpartyId": "6341367c625325f584933c5e307d884332ac0be1ca0bf2cd8bafb07122ce5416",
+      "amount": {
+        "value": -6500,
+        "majorUnits": 65,
+        "minorUnits": 0,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-10T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.399Z",
+      "dateCreated": "2025-10-14T13:12:18.233Z",
+      "id": "2288805c-06d6-458b-8886-d0e6ebdc10a8",
+      "longDescription": "Daniel MillsDaBellTom 10/10",
+      "status": "posted",
+      "providerId": "1032025283173043959860000-0222P10000000000065000000000000065000000000000BP",
+      "proprietaryTransactionCode": {
+        "code": "BP"
+      },
+      "balance": {
+        "value": 119230,
+        "majorUnits": 1192,
+        "minorUnits": 30,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-10T00:00:00.000Z",
+      "transactionInformation": "Daniel MillsDaBellTom 10/10",
+      "transactionReference": "Daniel MillsDaBellTom 10/10"
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "CO-OPERATIVE Food Merry Hill",
+      "counterpartyId": "565dadaa88082fb751b4212d6a5d5b5b98f6b4b4d234e9c6671ada1d85755e6e",
+      "amount": {
+        "value": -1365,
+        "majorUnits": 13,
+        "minorUnits": 65,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-10T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.400Z",
+      "dateCreated": "2025-10-14T13:12:18.233Z",
+      "id": "b40bc16e-5d9a-4b73-b219-5bf5422461a8",
+      "longDescription": "CO-OPERATIVE FOOD MERRY HILL",
+      "status": "posted",
+      "providerId": "1032025283155009810060000-0210VB0000000000013650000000000013650000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 125730,
+        "majorUnits": 1257,
+        "minorUnits": 30,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-10T00:00:00.000Z",
+      "transactionInformation": "CO-OPERATIVE FOOD MERRY HILL",
+      "transactionReference": "CO-OPERATIVE FOOD MERRY HILL"
+    },
+    {
+      "categoryId": "std:2bf1875a-2672-4eeb-9ae8-f2390cf0514c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Test V3",
+      "counterpartyId": "fc35489d6d5fd274e4203c0841bbd25b9041957bed1c8a333eb8f014bd4f2c42",
+      "amount": {
+        "value": 21,
+        "majorUnits": 0,
+        "minorUnits": 21,
+        "currency": "GBP"
+      },
+      "accountId": "61ef476a-758f-4109-b746-d7d4ad3105a5",
+      "date": "2025-10-09T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:18.670Z",
+      "dateCreated": "2025-10-14T13:12:18.205Z",
+      "id": "cd7af3a3-6577-45a2-ace9-b93749b32322",
+      "longDescription": "400828 01634593   test v3",
+      "status": "posted",
+      "providerId": "0932025282111311719180000+0940P20000000000000210000000000000210000000000OBT",
+      "proprietaryTransactionCode": {
+        "code": "OBT"
+      },
+      "balance": {
+        "value": 23,
+        "majorUnits": 0,
+        "minorUnits": 23,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-09T00:00:00.000Z",
+      "transactionInformation": "400828 01634593   test v3",
+      "transactionReference": "400828 01634593   test v3"
+    },
+    {
+      "categoryId": "std:379c7ed2-27f3-401f-b581-f6507934f0f0",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "steamgames.com",
+      "counterpartyId": "f35f843491ccc28ba53324738d63521dac6099e8757d78cea4dd52c39982b35c",
+      "amount": {
+        "value": -1000,
+        "majorUnits": 10,
+        "minorUnits": 0,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-09T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.401Z",
+      "dateCreated": "2025-10-14T13:12:18.233Z",
+      "id": "ee492c3a-a02c-409f-8b0e-d4989cd5c5e1",
+      "longDescription": "INT'L 0004308881  STEAMGAMES.COM 425Hamburg",
+      "status": "posted",
+      "providerId": "0932025282195004420030000-0292VD0000000000010000000000000010000000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 127095,
+        "majorUnits": 1270,
+        "minorUnits": 95,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-09T00:00:00.000Z",
+      "transactionInformation": "INT'L 0004308881  STEAMGAMES.COM 425Hamburg",
+      "transactionReference": "INT'L 0004308881  STEAMGAMES.COM 425Hamburg"
+    },
+    {
+      "categoryId": "std:8fc131b4-225b-42f8-a589-faf0ad179d5c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Vanilla Kitchen Wowolverhampton",
+      "counterpartyId": "61a1989037507721485b1397c23ca8cee7c36a0d4af5fcfbfe42f72c9904440a",
+      "amount": {
+        "value": -2885,
+        "majorUnits": 28,
+        "minorUnits": 85,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-09T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.402Z",
+      "dateCreated": "2025-10-14T13:12:18.233Z",
+      "id": "0b9febfe-b0be-4046-a590-ef129caed18f",
+      "longDescription": "Vanilla Kitchen WoWolverhampton",
+      "status": "posted",
+      "providerId": "0932025282155008760020000-0210VB0000000000028850000000000028850000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 128095,
+        "majorUnits": 1280,
+        "minorUnits": 95,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-09T00:00:00.000Z",
+      "transactionInformation": "Vanilla Kitchen WoWolverhampton",
+      "transactionReference": "Vanilla Kitchen WoWolverhampton"
+    },
+    {
+      "categoryId": "std:8fc131b4-225b-42f8-a589-faf0ad179d5c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Foodhub Datman.je",
+      "counterpartyId": "b541db908d73f1b525c2ce9d83e6968e8929cddfcd580c0a81d52e72fee332e5",
+      "amount": {
+        "value": -2572,
+        "majorUnits": 25,
+        "minorUnits": 72,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-09T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.404Z",
+      "dateCreated": "2025-10-14T13:12:18.233Z",
+      "id": "4f82e24b-9f0c-4dd8-82f9-a392db997b65",
+      "longDescription": "Foodhub           datman.je",
+      "status": "posted",
+      "providerId": "0932025282155008760010000-0130VB0000000000025720000000000025720000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 130980,
+        "majorUnits": 1309,
+        "minorUnits": 80,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-09T00:00:00.000Z",
+      "transactionInformation": "Foodhub           datman.je",
+      "transactionReference": "Foodhub           datman.je"
+    },
+    {
+      "categoryId": "std:2bf1875a-2672-4eeb-9ae8-f2390cf0514c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Test V3",
+      "counterpartyId": "fc35489d6d5fd274e4203c0841bbd25b9041957bed1c8a333eb8f014bd4f2c42",
+      "amount": {
+        "value": -21,
+        "majorUnits": 0,
+        "minorUnits": 21,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-09T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.405Z",
+      "dateCreated": "2025-10-14T13:12:18.233Z",
+      "id": "0df5affc-7bc2-495b-8b44-56926f809cc8",
+      "longDescription": "400828 21634607   test v3",
+      "status": "posted",
+      "providerId": "0932025282111311719790000-0313P20000000000000210000000000000210000000000OBT",
+      "proprietaryTransactionCode": {
+        "code": "OBT"
+      },
+      "balance": {
+        "value": 133552,
+        "majorUnits": 1335,
+        "minorUnits": 52,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-09T00:00:00.000Z",
+      "transactionInformation": "400828 21634607   test v3",
+      "transactionReference": "400828 21634607   test v3"
+    },
+    {
+      "categoryId": "std:2bf1875a-2672-4eeb-9ae8-f2390cf0514c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Sarah Bailey Monies",
+      "counterpartyId": "47eed5bc7a679933f23215c3f2b9b671e35bfd57283cd5e40185796eedafaa62",
+      "amount": {
+        "value": 39000,
+        "majorUnits": 390,
+        "minorUnits": 0,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-09T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.406Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "ca817b3e-2871-4ebe-bff6-b9e17eefe222",
+      "longDescription": "SARAH BAILEY      monies",
+      "status": "posted",
+      "providerId": "0902025282002715609760000+0777FP0000000000390000000000000390000000000000CR",
+      "proprietaryTransactionCode": {
+        "code": "CR"
+      },
+      "balance": {
+        "value": 133573,
+        "majorUnits": 1335,
+        "minorUnits": 73,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-09T00:00:00.000Z",
+      "transactionInformation": "SARAH BAILEY      monies",
+      "transactionReference": "SARAH BAILEY      monies"
+    },
+    {
+      "categoryId": "std:f1acac40-302b-4787-929e-259ad230f505",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Paypal Patreon",
+      "counterpartyId": "fcd3bf6051c718e8956f60759c6cc36d72d7b0579af82a13212896d586cd610e",
+      "amount": {
+        "value": -388,
+        "majorUnits": 3,
+        "minorUnits": 88,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-08T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.407Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "acf7ce6a-9132-4a5b-a138-fb44e43a937a",
+      "longDescription": "INT'L 0096793442  PAYPAL *PATREON IN4029357733",
+      "status": "posted",
+      "providerId": "0832025281195004370050000-0292VD0000000000003880000000000003880000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 94573,
+        "majorUnits": 945,
+        "minorUnits": 73,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-08T00:00:00.000Z",
+      "transactionInformation": "INT'L 0096793442  PAYPAL *PATREON IN4029357733",
+      "transactionReference": "INT'L 0096793442  PAYPAL *PATREON IN4029357733"
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "CO-OPERATIVE Food Merry Hill",
+      "counterpartyId": "565dadaa88082fb751b4212d6a5d5b5b98f6b4b4d234e9c6671ada1d85755e6e",
+      "amount": {
+        "value": -1150,
+        "majorUnits": 11,
+        "minorUnits": 50,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-08T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.408Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "fdc95401-c863-41ca-a8a8-7f17055500ab",
+      "longDescription": "CO-OPERATIVE FOOD MERRY HILL",
+      "status": "posted",
+      "providerId": "0832025281155009200080000-0210VB0000000000011500000000000011500000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 94961,
+        "majorUnits": 949,
+        "minorUnits": 61,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-08T00:00:00.000Z",
+      "transactionInformation": "CO-OPERATIVE FOOD MERRY HILL",
+      "transactionReference": "CO-OPERATIVE FOOD MERRY HILL"
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "CO-OPERATIVE Food Merry Hill",
+      "counterpartyId": "565dadaa88082fb751b4212d6a5d5b5b98f6b4b4d234e9c6671ada1d85755e6e",
+      "amount": {
+        "value": -1755,
+        "majorUnits": 17,
+        "minorUnits": 55,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-08T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.409Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "7e61f6ad-4898-43d3-acc7-00621c1b23b2",
+      "longDescription": "CO-OPERATIVE FOOD MERRY HILL",
+      "status": "posted",
+      "providerId": "0832025281155009200070000-0210VB0000000000017550000000000017550000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 96111,
+        "majorUnits": 961,
+        "minorUnits": 11,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-08T00:00:00.000Z",
+      "transactionInformation": "CO-OPERATIVE FOOD MERRY HILL",
+      "transactionReference": "CO-OPERATIVE FOOD MERRY HILL"
+    },
+    {
+      "categoryId": "std:f1acac40-302b-4787-929e-259ad230f505",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "AD Free for",
+      "counterpartyId": "84adf56f2a50ef4902865cb4bdf5e52df6bccacf3e1db48836bca5f23285b77f",
+      "amount": {
+        "value": -299,
+        "majorUnits": 2,
+        "minorUnits": 99,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-07T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.410Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "6317dc06-e2b3-4062-be9d-794529d49fe5",
+      "longDescription": "Ad free for PrimeV353-12477661",
+      "status": "posted",
+      "providerId": "0732025280155008280010000-0134VB0000000000002990000000000002990000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 97866,
+        "majorUnits": 978,
+        "minorUnits": 66,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-07T00:00:00.000Z",
+      "transactionInformation": "Ad free for PrimeV353-12477661",
+      "transactionReference": "Ad free for PrimeV353-12477661"
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "CO-OPERATIVE Food Merry Hill",
+      "counterpartyId": "565dadaa88082fb751b4212d6a5d5b5b98f6b4b4d234e9c6671ada1d85755e6e",
+      "amount": {
+        "value": -429,
+        "majorUnits": 4,
+        "minorUnits": 29,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-06T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.411Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "9255f52f-ad21-4d42-992e-5643bc652fcb",
+      "longDescription": "CO-OPERATIVE FOOD MERRY HILL",
+      "status": "posted",
+      "providerId": "0632025279165145340030000-0210VB0000000000004290000000000004290000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 98165,
+        "majorUnits": 981,
+        "minorUnits": 65,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-06T00:00:00.000Z",
+      "transactionInformation": "CO-OPERATIVE FOOD MERRY HILL",
+      "transactionReference": "CO-OPERATIVE FOOD MERRY HILL"
+    },
+    {
+      "categoryId": "std:8fc131b4-225b-42f8-a589-faf0ad179d5c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Balti Palace WV3 7WOLVERHAMPTON",
+      "counterpartyId": "a295072b11d6a4c2850166e3d6980a4f4caad9e50b8ec1212bcbf823e808dab3",
+      "amount": {
+        "value": -7890,
+        "majorUnits": 78,
+        "minorUnits": 90,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-06T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.412Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "3b71814b-1275-4df0-a35d-a98b78cd2ffb",
+      "longDescription": "Balti Palace WV3 7Wolverhampton",
+      "status": "posted",
+      "providerId": "0632025279165145340020000-0210VB0000000000078900000000000078900000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 98594,
+        "majorUnits": 985,
+        "minorUnits": 94,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-06T00:00:00.000Z",
+      "transactionInformation": "Balti Palace WV3 7Wolverhampton",
+      "transactionReference": "Balti Palace WV3 7Wolverhampton"
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "CO-OPERATIVE Food Merry Hill",
+      "counterpartyId": "565dadaa88082fb751b4212d6a5d5b5b98f6b4b4d234e9c6671ada1d85755e6e",
+      "amount": {
+        "value": -725,
+        "majorUnits": 7,
+        "minorUnits": 25,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-06T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.413Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "d9719d6b-b259-41ba-b398-0d69bd13ba80",
+      "longDescription": "CO-OPERATIVE FOOD MERRY HILL",
+      "status": "posted",
+      "providerId": "0632025279155015700100000-0210VB0000000000007250000000000007250000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 106484,
+        "majorUnits": 1064,
+        "minorUnits": 84,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-06T00:00:00.000Z",
+      "transactionInformation": "CO-OPERATIVE FOOD MERRY HILL",
+      "transactionReference": "CO-OPERATIVE FOOD MERRY HILL"
+    },
+    {
+      "categoryId": "std:f1acac40-302b-4787-929e-259ad230f505",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Paypal Patreon",
+      "counterpartyId": "fcd3bf6051c718e8956f60759c6cc36d72d7b0579af82a13212896d586cd610e",
+      "amount": {
+        "value": -931,
+        "majorUnits": 9,
+        "minorUnits": 31,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-03T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.414Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "bd538fa5-ac1a-4945-a89b-12350e22afce",
+      "longDescription": "INT'L 0057833600  PAYPAL *PATREON IN4029357733",
+      "status": "posted",
+      "providerId": "0332025276195003950020000-0292VD0000000000009310000000000009310000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 107209,
+        "majorUnits": 1072,
+        "minorUnits": 9,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-03T00:00:00.000Z",
+      "transactionInformation": "INT'L 0057833600  PAYPAL *PATREON IN4029357733",
+      "transactionReference": "INT'L 0057833600  PAYPAL *PATREON IN4029357733"
+    },
+    {
+      "categoryId": "std:379c7ed2-27f3-401f-b581-f6507934f0f0",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Blizzard",
+      "counterpartyId": "8e3dea92b4686cab5fb8a65aa6784cfcc120ebcb7e5e2150f37a2b29f116f7a8",
+      "amount": {
+        "value": -999,
+        "majorUnits": 9,
+        "minorUnits": 99,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-03T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.415Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "ed0ea1e6-465b-4a6f-9da2-1c191a7c9cff",
+      "longDescription": "INT'L 0057833598  BLIZZARD EU3091466VERSAILLES",
+      "status": "posted",
+      "providerId": "0332025276195003950010000-0292VD0000000000009990000000000009990000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 108140,
+        "majorUnits": 1081,
+        "minorUnits": 40,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-03T00:00:00.000Z",
+      "transactionInformation": "INT'L 0057833598  BLIZZARD EU3091466VERSAILLES",
+      "transactionReference": "INT'L 0057833598  BLIZZARD EU3091466VERSAILLES"
+    },
+    {
+      "categoryId": "std:5fcad251-0300-4898-8b72-8cd0c3654797",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Non-Sterling Transaction Fee",
+      "counterpartyId": "3a6e146c8b606a1039e01c2b64319dd88b0095c557d9ba4bb1972d10a59c3a87",
+      "amount": {
+        "value": -28,
+        "majorUnits": 0,
+        "minorUnits": 28,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-03T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.417Z",
+      "dateCreated": "2025-10-14T13:12:18.234Z",
+      "id": "bf7dcc50-35dd-4b9d-9065-caf983103a5d",
+      "longDescription": "Non-Sterling      Transaction Fee",
+      "status": "posted",
+      "providerId": "0332025276191522080480015-0246VD0000000000000280000000000000280000000000DR",
+      "proprietaryTransactionCode": {
+        "code": "DR"
+      },
+      "balance": {
+        "value": 109139,
+        "majorUnits": 1091,
+        "minorUnits": 39,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-03T00:00:00.000Z",
+      "transactionInformation": "Non-Sterling      Transaction Fee",
+      "transactionReference": "Non-Sterling      Transaction Fee"
+    },
+    {
+      "categoryId": "std:6446bcc2-c594-414a-b2eb-422d020c3aa5",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "render.com",
+      "counterpartyId": "21417846af3d7d6e41e8b4d83566d049535ac3728c7a1a2a5c513d68522d53b7",
+      "amount": {
+        "value": -1045,
+        "majorUnits": 10,
+        "minorUnits": 45,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-03T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.418Z",
+      "dateCreated": "2025-10-14T13:12:18.235Z",
+      "id": "662d8648-7047-49a1-a36a-2d4fc99fc970",
+      "longDescription": "INT'L 0057833599  RENDER.COM        RENDER.COM        USD 14.00 @ 1.3397 Visa Rate",
+      "status": "posted",
+      "providerId": "0332025276191522080480000-0292VD0000000000010450000000000010450000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 109167,
+        "majorUnits": 1091,
+        "minorUnits": 67,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-03T00:00:00.000Z",
+      "transactionInformation": "INT'L 0057833599  RENDER.COM        RENDER.COM        USD 14.00 @ 1.3397 Visa Rate",
+      "transactionReference": "INT'L 0057833599  RENDER.COM        RENDER.COM        USD 14.00 @ 1.3397 Visa Rate"
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "CO-OP Group (sf)",
+      "counterpartyId": "ca0150c2c3fcae71b2b1ad23f68161e6e94eb83991a2460f4101ab40126e3ca4",
+      "amount": {
+        "value": -7885,
+        "majorUnits": 78,
+        "minorUnits": 85,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-03T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.419Z",
+      "dateCreated": "2025-10-14T13:12:18.235Z",
+      "id": "254e0f7d-3205-474b-8bdc-ed908b950ff4",
+      "longDescription": "CO-OP GROUP 070361PENN (SF)",
+      "status": "posted",
+      "providerId": "0332025276155009850060000-0210VB0000000000078850000000000078850000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 110212,
+        "majorUnits": 1102,
+        "minorUnits": 12,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-03T00:00:00.000Z",
+      "transactionInformation": "CO-OP GROUP 070361PENN (SF)",
+      "transactionReference": "CO-OP GROUP 070361PENN (SF)"
+    },
+    {
+      "categoryId": "std:eaa96546-6bb7-433e-933d-23f0fe9916c8",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Daniel Millsdabelltom",
+      "counterpartyId": "6341367c625325f584933c5e307d884332ac0be1ca0bf2cd8bafb07122ce5416",
+      "amount": {
+        "value": -6500,
+        "majorUnits": 65,
+        "minorUnits": 0,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-03T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.420Z",
+      "dateCreated": "2025-10-14T13:12:18.235Z",
+      "id": "26a8cdbb-32d0-4d3d-81be-25284bf06be6",
+      "longDescription": "Daniel MillsDaBellTom 03/10",
+      "status": "posted",
+      "providerId": "0332025276135125099530000-0222P10000000000065000000000000065000000000000BP",
+      "proprietaryTransactionCode": {
+        "code": "BP"
+      },
+      "balance": {
+        "value": 118097,
+        "majorUnits": 1180,
+        "minorUnits": 97,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-03T00:00:00.000Z",
+      "transactionInformation": "Daniel MillsDaBellTom 03/10",
+      "transactionReference": "Daniel MillsDaBellTom 03/10"
+    },
+    {
+      "categoryId": "std:5fcad251-0300-4898-8b72-8cd0c3654797",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Non-Sterling Transaction Fee",
+      "counterpartyId": "3a6e146c8b606a1039e01c2b64319dd88b0095c557d9ba4bb1972d10a59c3a87",
+      "amount": {
+        "value": -12,
+        "majorUnits": 0,
+        "minorUnits": 12,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-02T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.421Z",
+      "dateCreated": "2025-10-14T13:12:18.235Z",
+      "id": "f2a7e29f-d926-4a75-a973-aecec4c919b5",
+      "longDescription": "Non-Sterling      Transaction Fee",
+      "status": "posted",
+      "providerId": "0232025275191314150110015-0246VD0000000000000120000000000000120000000000DR",
+      "proprietaryTransactionCode": {
+        "code": "DR"
+      },
+      "balance": {
+        "value": 124597,
+        "majorUnits": 1245,
+        "minorUnits": 97,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-02T00:00:00.000Z",
+      "transactionInformation": "Non-Sterling      Transaction Fee",
+      "transactionReference": "Non-Sterling      Transaction Fee"
+    },
+    {
+      "categoryId": "std:f1acac40-302b-4787-929e-259ad230f505",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Subscribestar",
+      "counterpartyId": "5af0d33a895032ca8390e7ba664121e1f79a0d5bb0289ed45a162e7ea20489fa",
+      "amount": {
+        "value": -465,
+        "majorUnits": 4,
+        "minorUnits": 65,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-02T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.422Z",
+      "dateCreated": "2025-10-14T13:12:18.237Z",
+      "id": "6ea5b98c-f989-4d30-b5a9-bf15a4fe18e3",
+      "longDescription": "INT'L 0049907464  SUBSCRIBESTAR     202-753-8082      USD 6.22 @ 1.3376  Visa Rate",
+      "status": "posted",
+      "providerId": "0232025275191314150110000-0131VD0000000000004650000000000004650000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 124609,
+        "majorUnits": 1246,
+        "minorUnits": 9,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-02T00:00:00.000Z",
+      "transactionInformation": "INT'L 0049907464  SUBSCRIBESTAR     202-753-8082      USD 6.22 @ 1.3376  Visa Rate",
+      "transactionReference": "INT'L 0049907464  SUBSCRIBESTAR     202-753-8082      USD 6.22 @ 1.3376  Visa Rate"
+    },
+    {
+      "categoryId": "std:a2d41243-ab21-4d02-ac0d-daa3621e4b49",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "CO-OP Group (sf)",
+      "counterpartyId": "ca0150c2c3fcae71b2b1ad23f68161e6e94eb83991a2460f4101ab40126e3ca4",
+      "amount": {
+        "value": -1700,
+        "majorUnits": 17,
+        "minorUnits": 0,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-02T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.423Z",
+      "dateCreated": "2025-10-14T13:12:18.237Z",
+      "id": "5e2835b7-974c-4099-a9d8-ef58915e976a",
+      "longDescription": "CO-OP GROUP 070361PENN (SF)",
+      "status": "posted",
+      "providerId": "0232025275155010590100000-0210VB0000000000017000000000000017000000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 125074,
+        "majorUnits": 1250,
+        "minorUnits": 74,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-02T00:00:00.000Z",
+      "transactionInformation": "CO-OP GROUP 070361PENN (SF)",
+      "transactionReference": "CO-OP GROUP 070361PENN (SF)"
+    },
+    {
+      "categoryId": "std:6446bcc2-c594-414a-b2eb-422d020c3aa5",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Google Play Apps London",
+      "counterpartyId": "8572316cdf1524f3f7a768306983cc2d1d2d2e3f49f5a193cb0c685bd0f261f9",
+      "amount": {
+        "value": -2399,
+        "majorUnits": 23,
+        "minorUnits": 99,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-02T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.424Z",
+      "dateCreated": "2025-10-14T13:12:18.237Z",
+      "id": "e47f74b9-af42-4b7a-8395-e9cfd0f0d5be",
+      "longDescription": "Google Play Apps  London",
+      "status": "posted",
+      "providerId": "0232025275155010590090000-0134VB0000000000023990000000000023990000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 126774,
+        "majorUnits": 1267,
+        "minorUnits": 74,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-02T00:00:00.000Z",
+      "transactionInformation": "Google Play Apps  London",
+      "transactionReference": "Google Play Apps  London"
+    },
+    {
+      "categoryId": "std:8fc131b4-225b-42f8-a589-faf0ad179d5c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "throne.com",
+      "counterpartyId": "aa234dea1714fecb88fbeb4defd8257e3bae2a0b1c82045ad392ae79879479c5",
+      "amount": {
+        "value": -3058,
+        "majorUnits": 30,
+        "minorUnits": 58,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-10-01T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.425Z",
+      "dateCreated": "2025-10-14T13:12:18.237Z",
+      "id": "e738f34a-31b6-41f8-a8ec-21e757c82975",
+      "longDescription": "INT'L 0041793498  THRONE.COM        THRONE.COM",
+      "status": "posted",
+      "providerId": "0132025274195004460020000-0292VD0000000000030580000000000030580000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 129173,
+        "majorUnits": 1291,
+        "minorUnits": 73,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-10-01T00:00:00.000Z",
+      "transactionInformation": "INT'L 0041793498  THRONE.COM        THRONE.COM",
+      "transactionReference": "INT'L 0041793498  THRONE.COM        THRONE.COM"
+    },
+    {
+      "categoryId": "std:8fc131b4-225b-42f8-a589-faf0ad179d5c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Deliveroo London",
+      "counterpartyId": "global:093738f1221c83ecd273dd84fb2911e0dfa942f1b41eba95bbbf3a2fe00991c8",
+      "amount": {
+        "value": -2946,
+        "majorUnits": 29,
+        "minorUnits": 46,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-09-30T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.426Z",
+      "dateCreated": "2025-10-14T13:12:18.237Z",
+      "id": "8ffbe338-3f6b-40b9-951f-3a4fa129a80d",
+      "longDescription": "DELIVEROO         LONDON",
+      "status": "posted",
+      "providerId": "3032025273155009410110000-0291VB0000000000029460000000000029460000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 132231,
+        "majorUnits": 1322,
+        "minorUnits": 31,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-09-30T00:00:00.000Z",
+      "transactionInformation": "DELIVEROO         LONDON",
+      "transactionReference": "DELIVEROO         LONDON"
+    },
+    {
+      "categoryId": "std:2bf1875a-2672-4eeb-9ae8-f2390cf0514c",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Sarah Bailey Bills",
+      "counterpartyId": "9ba66b783a36c1b1bd47f11c141cf752ba17a06176c08bfaa65f93b2e92046a5",
+      "amount": {
+        "value": -290014,
+        "majorUnits": 2900,
+        "minorUnits": 14,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-09-30T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.427Z",
+      "dateCreated": "2025-10-14T13:12:18.237Z",
+      "id": "e82fa6f0-8785-476f-a1cc-a37c58b7eb15",
+      "longDescription": "Sarah Bailey      Bills",
+      "status": "posted",
+      "providerId": "3032025273111615779350000-0220P10000000002900140000000002900140000000000BP",
+      "proprietaryTransactionCode": {
+        "code": "BP"
+      },
+      "balance": {
+        "value": 135177,
+        "majorUnits": 1351,
+        "minorUnits": 77,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-09-30T00:00:00.000Z",
+      "transactionInformation": "Sarah Bailey      Bills",
+      "transactionReference": "Sarah Bailey      Bills"
+    },
+    {
+      "categoryId": "std:2551f73b-aaba-4503-a923-362287c4fcf7",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Moneyhub Financial",
+      "counterpartyId": "381bf43d433d38b2e681aec28fbce60b828dd51e6463cb09af25460184dbd7bb",
+      "amount": {
+        "value": 411341,
+        "majorUnits": 4113,
+        "minorUnits": 41,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-09-30T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.428Z",
+      "dateCreated": "2025-10-14T13:12:18.237Z",
+      "id": "3e904b58-3442-45d5-a6ac-ee983e7d1ff8",
+      "longDescription": "MONEYHUB FINANCIAL",
+      "status": "posted",
+      "providerId": "3012025272025006850060000+0670H 0000000004113410000000004113410000000000CR",
+      "proprietaryTransactionCode": {
+        "code": "CR"
+      },
+      "balance": {
+        "value": 425191,
+        "majorUnits": 4251,
+        "minorUnits": 91,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-09-30T00:00:00.000Z",
+      "transactionInformation": "MONEYHUB FINANCIAL",
+      "transactionReference": "MONEYHUB FINANCIAL"
+    },
+    {
+      "categoryId": "std:5fcad251-0300-4898-8b72-8cd0c3654797",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Non-Sterling Transaction Fee",
+      "counterpartyId": "3a6e146c8b606a1039e01c2b64319dd88b0095c557d9ba4bb1972d10a59c3a87",
+      "amount": {
+        "value": -9,
+        "majorUnits": 0,
+        "minorUnits": 9,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-09-29T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.430Z",
+      "dateCreated": "2025-10-14T13:12:18.238Z",
+      "id": "ad4e85eb-8c76-4e32-a502-3c88786b3e84",
+      "longDescription": "Non-Sterling      Transaction Fee",
+      "status": "posted",
+      "providerId": "2932025272191451360030015-0246VD0000000000000090000000000000090000000000DR",
+      "proprietaryTransactionCode": {
+        "code": "DR"
+      },
+      "balance": {
+        "value": 13850,
+        "majorUnits": 138,
+        "minorUnits": 50,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-09-29T00:00:00.000Z",
+      "transactionInformation": "Non-Sterling      Transaction Fee",
+      "transactionReference": "Non-Sterling      Transaction Fee"
+    },
+    {
+      "categoryId": "std:f1acac40-302b-4787-929e-259ad230f505",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "of London",
+      "counterpartyId": "004e4286bdd093c989105820764cf1d4796ab6632669271cf45cd2099f71b99e",
+      "amount": {
+        "value": -360,
+        "majorUnits": 3,
+        "minorUnits": 60,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-09-29T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.431Z",
+      "dateCreated": "2025-10-14T13:12:18.238Z",
+      "id": "2661af2a-8a99-430d-adb3-ebe3169970d9",
+      "longDescription": "INT'L 0018750752  OF                LONDON            USD 4.80 @ 1.3333  Visa Rate",
+      "status": "posted",
+      "providerId": "2932025272191451360030000-0292VD0000000000003600000000000003600000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 13859,
+        "majorUnits": 138,
+        "minorUnits": 59,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-09-29T00:00:00.000Z",
+      "transactionInformation": "INT'L 0018750752  OF                LONDON            USD 4.80 @ 1.3333  Visa Rate",
+      "transactionReference": "INT'L 0018750752  OF                LONDON            USD 4.80 @ 1.3333  Visa Rate"
+    },
+    {
+      "categoryId": "std:6446bcc2-c594-414a-b2eb-422d020c3aa5",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Google Play Apps London",
+      "counterpartyId": "8572316cdf1524f3f7a768306983cc2d1d2d2e3f49f5a193cb0c685bd0f261f9",
+      "amount": {
+        "value": -649,
+        "majorUnits": 6,
+        "minorUnits": 49,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-09-29T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.432Z",
+      "dateCreated": "2025-10-14T13:12:18.238Z",
+      "id": "1208cba7-ce37-44e5-8c12-3246fbe39838",
+      "longDescription": "Google Play Apps  London",
+      "status": "posted",
+      "providerId": "2932025272165014330070000-0291VB0000000000006490000000000006490000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 14219,
+        "majorUnits": 142,
+        "minorUnits": 19,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-09-29T00:00:00.000Z",
+      "transactionInformation": "Google Play Apps  London",
+      "transactionReference": "Google Play Apps  London"
+    },
+    {
+      "categoryId": "std:6446bcc2-c594-414a-b2eb-422d020c3aa5",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Google Play Apps London",
+      "counterpartyId": "8572316cdf1524f3f7a768306983cc2d1d2d2e3f49f5a193cb0c685bd0f261f9",
+      "amount": {
+        "value": -459,
+        "majorUnits": 4,
+        "minorUnits": 59,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-09-29T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.433Z",
+      "dateCreated": "2025-10-14T13:12:18.238Z",
+      "id": "b3d910b7-b6d3-46f6-8ff0-cd2148821214",
+      "longDescription": "Google Play Apps  London",
+      "status": "posted",
+      "providerId": "2932025272165014330060000-0291VB0000000000004590000000000004590000000000VIS",
+      "proprietaryTransactionCode": {
+        "code": "VIS"
+      },
+      "balance": {
+        "value": 14868,
+        "majorUnits": 148,
+        "minorUnits": 68,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-09-29T00:00:00.000Z",
+      "transactionInformation": "Google Play Apps  London",
+      "transactionReference": "Google Play Apps  London"
+    },
+    {
+      "categoryId": "std:bccc15d0-8c88-477d-be4e-04b775768c2d",
+      "categoryIdConfirmed": false,
+      "notes": "",
+      "shortDescription": "Screwfix DIR Ltd W",
+      "counterpartyId": "3fe98e5e619b8f86100df71960fff30d6b36435cc65a1db403fe614a6e99989a",
+      "amount": {
+        "value": -578,
+        "majorUnits": 5,
+        "minorUnits": 78,
+        "currency": "GBP"
+      },
+      "accountId": "92ff76b6-0267-4b33-97bb-d664f8278066",
+      "date": "2025-09-29T00:00:00.000Z",
+      "dateModified": "2025-10-14T13:12:19.434Z",
+      "dateCreated": "2025-10-14T13:12:18.238Z",
+      "id": "6845d7fb-d3b4-457c-af17-7073c57c2eb0",
+      "longDescription": "SCREWFIX DIR LTD  W HAMPTON1797",
+      "status": "posted",
+      "providerId": "2932025272165014330050000-0210VB0000000000005780000000000005780000000000)))",
+      "proprietaryTransactionCode": {
+        "code": ")))"
+      },
+      "balance": {
+        "value": 15327,
+        "majorUnits": 153,
+        "minorUnits": 27,
+        "currency": "GBP"
+      },
+      "balanceType": "InterimAvailable",
+      "valueDate": "2025-09-29T00:00:00.000Z",
+      "transactionInformation": "SCREWFIX DIR LTD  W HAMPTON1797",
+      "transactionReference": "SCREWFIX DIR LTD  W HAMPTON1797"
+    }
+  ],
+  "meta": {
+    "correlationId": "26db7160-661d-42de-a393-42a25d781118",
+    "limit": 50,
+    "offset": 0,
+    "count": 50
+  },
+  "links": {
+    "next": "https://api.moneyhub.co.uk/v2/transactions?offset=50&limit=50",
+    "self": "https://api.moneyhub.co.uk/v2/transactions"
+  }
+}

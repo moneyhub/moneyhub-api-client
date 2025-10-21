@@ -273,4 +273,4 @@ const resellerClient = {
   },
 };
 
-module.exports = testConfig
+module.exports = prodConfig

@@ -6,7 +6,7 @@ const config = require("../config")
 const optionDefinitions = [
   {name: "limit", alias: "l", type: Number, defaultValue: 10},
   {name: "offset", alias: "o", type: Number, defaultValue: 0},
-  {name: "userId", alias: "u", type: String},
+  {name: "userId", alias: "u", type: String, required: true},
 ]
 
 const usage = commandLineUsage(
@@ -24,9 +24,9 @@ const start = async () => {
     const moneyhub = await Moneyhub(config)
 
     const result = await moneyhub.getConsentHistory({
+      userId: options.userId,
       limit: options.limit,
       offset: options.offset,
-      userId: options.userId,
     })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {

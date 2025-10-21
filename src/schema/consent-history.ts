@@ -1,7 +1,7 @@
 import type {SearchParams} from "../request"
 
 export interface ConsentHistorySearchParams extends SearchParams {
-  userId?: string
+  userId: string
 }
 
 interface AccountDetails {
