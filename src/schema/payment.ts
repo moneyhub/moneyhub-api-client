@@ -152,3 +152,16 @@ export interface RecurringPaymentRequest {
   authRequestId: string
   revokedAt?: string
 }
+
+export interface FundsConfirmationRequest {
+  amount: string
+  currency: string
+}
+
+export interface FundsConfirmationResponse {
+  fundsAvailable: boolean
+  fundsAvailableAt: string
+  amount: string
+  currency: string
+  recurringPaymentId: string
+}
