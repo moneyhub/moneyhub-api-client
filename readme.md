@@ -989,7 +989,7 @@ const result = await moneyhub.updateAccount({
 
 #### `getTransactions`
 
-Get all transactions for a user. This function uses the scope `transactions:read:all`..
+Get all transactions for a user that have been enhanced with our data-enrichment engine. This function uses the scope `transactions:read:all`..
 
 ```javascript
 const queryParams = { limit: 10, offset: 5 };
@@ -1001,10 +1001,33 @@ const transactions = await moneyhub.getTransactions({
 
 #### `getTransaction`
 
-Get a transaction by ID for a user. This function uses the scope `transactions:read:all`..
+Get a transaction by ID for a user that has been enhanced with our data-enrichment engine. This function uses the scope `transactions:read:all`..
 
 ```javascript
 const transactions = await moneyhub.getTransaction({
+  userId: "userId",
+  transactionId: "transactionId",
+}, options);
+```
+
+#### `getUnenrichedTransactions`
+
+Get all unenriched transactions for a user. This function uses the scope `transactions_unenriched:read:all`..
+
+```javascript
+const queryParams = { limit: 10, offset: 5 };
+const transactions = await moneyhub.getUnenrichedTransactions({
+  userId: "userId",
+  params: queryParams,
+}, options);
+```
+
+#### `getUnenrichedTransaction`
+
+Get an unenriched transaction by ID for a user. This function uses the scope `transactions_unenriched:read:all`..
+
+```javascript
+const transactions = await moneyhub.getUnenrichedTransaction({
   userId: "userId",
   transactionId: "transactionId",
 }, options);

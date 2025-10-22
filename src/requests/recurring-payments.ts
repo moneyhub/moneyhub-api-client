@@ -40,5 +40,15 @@ export default ({config, request}: RequestsParams): RecurringPaymentsRequests =>
         },
         options,
       }),
+
+    confirmFundsForRecurringPayment: async ({recurringPaymentId, fundsConfirmation}, options) =>
+      request(`${identityServiceUrl}/recurring-payments/${recurringPaymentId}/funds-confirmation`, {
+        method: "POST",
+        body: fundsConfirmation,
+        cc: {
+          scope: "recurring_payment:funds_confirmation",
+        },
+        options,
+      }),
   }
 }

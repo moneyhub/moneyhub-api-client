@@ -72,6 +72,8 @@ describe("API client", function() {
         "getTaxReturn",
         "getTransactions",
         "getTransaction",
+        "getUnenrichedTransactions",
+        "getUnenrichedTransaction",
         "addTransaction",
         "addTransactions",
         "updateTransaction",
