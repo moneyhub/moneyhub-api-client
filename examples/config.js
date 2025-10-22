@@ -273,4 +273,4 @@ const resellerClient = {
   },
 };
 
-module.exports = prodConfig
+module.exports = localConfig

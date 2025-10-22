@@ -39,10 +39,8 @@ const start = async () => {
     })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {
-    if (e.response && e.response.body) {
-      const {message} = JSON.parse(e.response.body)
-      console.error(`Error: ${message}`)
-    } else console.error(e)
+    console.error(e)
+    console.error(e.response.body)
   }
 }
 
