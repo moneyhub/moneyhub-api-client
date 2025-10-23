@@ -8,13 +8,18 @@ const {teardownTestData} = require("./teardown-test-data")
 
 exports.mochaHooks = async () => {
   const moneyhub = await setupMoneyhubClient(config)
+  let testConfig = null
+
   return {
     async beforeAll() {
-      this.config = await setupTestData(config, moneyhub)
+      testConfig = await setupTestData(config, moneyhub)
+      this.config = testConfig
     },
+    
     async afterAll() {
-      return await teardownTestData(this.config, moneyhub)
+      if (testConfig) {
+        await teardownTestData(testConfig, moneyhub)
+      }
     }
   }
-
 }
