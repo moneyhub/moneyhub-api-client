@@ -165,6 +165,7 @@ describe("API client", function() {
         "getConsentHistory",
         "keys",
         "generators",
+        "confirmFundsForRecurringPayment",
       ].sort())
     })
 
