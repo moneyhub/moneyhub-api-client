@@ -6,7 +6,7 @@ const config = require("../config")
 const optionDefinitions = [
   {name: "id", alias: "i", type: String, description: "Recurring payment ID (required)"},
   {name: "amount", alias: "a", type: String, defaultValue: "10.00", description: "Amount to check (required)"},
-  {name: "currency", alias: "c", type: String, defaultValue: "GBP", description: "Currency code (required)"},
+  {name: "currency", alias: "c", type: String, defaultValue: "GBP", description: "Currency code"},
 ]
 
 const usage = commandLineUsage(
