@@ -41,7 +41,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
           externalId,
           name,
           emails,
-          subtenant,
+          "urn:ietf:params:scim:schemas:extension:moneyhub:2.0:Subtenant": subtenant,
         },
         options,
       }),
