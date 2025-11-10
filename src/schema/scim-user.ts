@@ -9,4 +9,8 @@ export interface SCIMUser {
       givenName: string
     }
     emails?: Emails[]
+    subtenant?: {
+      name: string
+      providerId: string
+    }
   }

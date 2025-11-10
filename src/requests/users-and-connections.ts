@@ -30,6 +30,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
       externalId,
       name,
       emails,
+      subtenant,
     }, options) =>
       request(scimUsersEndpoint, {
         method: "POST",
@@ -40,6 +41,7 @@ export default ({config, request}: RequestsParams): UsersAndConnectionsRequests 
           externalId,
           name,
           emails,
+          "urn:ietf:params:scim:schemas:extension:moneyhub:2.0:Subtenant": subtenant,
         },
         options,
       }),
