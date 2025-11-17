@@ -1,5 +1,5 @@
 const {Moneyhub} = require("../../src/index")
-const config = require("../config")
+const config = require("../config-test")
 const crypto = require("crypto")
 
 function generateRandomId(length) {
@@ -14,6 +14,8 @@ const optionDefinitions = [
   {name: "familyName", alias: "f", defaultValue: "Taylor", type: String, description: "required"},
   {name: "givenName", alias: "n", defaultValue: "Alex", type: String, description: "required"},
   {name: "email", alias: "e", type: String, description: "required"},
+  {name: "subtenantName", alias: "s", type: String, description: "optional"},
+  {name: "subtenantProviderId", alias: "p", type: String, description: "optional"},
 ]
 
 const usage = commandLineUsage(
@@ -24,7 +26,7 @@ const usage = commandLineUsage(
 )
 console.log(usage)
 
-const {externalId, familyName, givenName, email} = commandLineArgs(optionDefinitions)
+const {externalId, familyName, givenName, email, subtenantName, subtenantProviderId} = commandLineArgs(optionDefinitions)
 
 const start = async () => {
   try {
@@ -41,6 +43,11 @@ const start = async () => {
           value: email,
         },
       ],
+      ...(subtenantName && subtenantProviderId ? {subtenant: {
+        name: subtenantName,
+        providerId: subtenantProviderId,
+      }
+      } : {}),
     })
     console.log(JSON.stringify(user, null, 2))
 
