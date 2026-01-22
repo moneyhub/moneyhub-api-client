@@ -11,6 +11,7 @@
     "prepare": "husky install",
     "prepublishOnly": "npm run build",
     "build": "tsc",
+    "create-jwks": "node examples/jwks/create-jwks.js",
     "ts-node": "ts-node",
     "snyk-ci": "snyk test --fail-on=all --severity-threshold=high",
     "snyk": "snyk test"
