@@ -73,6 +73,23 @@ To use this API client you will need:
 
 `npm install @mft/moneyhub-api-client`
 
+## Creating JWKS
+
+If you need to generate JWKS (JSON Web Key Set) for authentication with `private_key_jwt`, you can use the provided script:
+
+```bash
+npm run create-jwks -- --key-alg RS256 --key-size 2048 --key-use sig --alg RS256
+```
+
+### Options
+
+- `--key-alg`: The key algorithm (default: uses the value from `--alg`)
+- `--key-size`: The key size in bits (default: 2048)
+- `--key-use`: The key usage, typically `sig` for signing (default: sig)
+- `--alg`: The signing algorithm, e.g., `RS256`, `RS384`, `RS512` (default: RS256)
+
+This will generate both public and private JWKS. The public keys should be added to your API client configuration in the Moneyhub Admin portal, and the private keys should be used as the `keys` value when configuring the Moneyhub API client.
+
 ## Usage
 
 This module exposes a single factory function that accepts the following configuration:
