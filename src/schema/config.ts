@@ -115,6 +115,7 @@ export type ApiClientConfigCredentials = ApiClientConfigCredentialsBasic | ApiCl
 
 export interface ApiClientConfig {
     resourceServerUrl: string
+    caasResourceServerUrl?: string
     osipResourceServerUrl?: string
     identityServiceUrl: string
     accountConnectUrl?: string

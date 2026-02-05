@@ -1066,6 +1066,18 @@ const transactions = await moneyhub.updateTransaction({
 }, options);
 ```
 
+#### `caasPatchTransaction`
+
+Update a transaction category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`.
+
+```javascript
+const result = await moneyhub.caasPatchTransaction({
+  accountId: "accountId",
+  transactionId: "transactionId",
+  l2CategoryId: "21",
+}, options);
+```
+
 #### `addTransaction`
 
 Add a transaction for a user. Please note, transaction must belong to an account that is transaction-able. This function uses the scopes `transactions:read:all transactions:write:all`..
