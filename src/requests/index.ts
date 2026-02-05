@@ -23,6 +23,7 @@ import tax from "./tax"
 import transactionFiles from "./transaction-files"
 import transactionSplits from "./transaction-splits"
 import transactions from "./transactions"
+import caasTransactions from "./caas/transactions"
 import unauthenticated from "./unauthenticated"
 import usersAndConnections from "./users-and-connections"
 import resellerCheck from "./reseller-check"
@@ -54,6 +55,7 @@ export default ({config, request}: RequestsParams) => {
     ...transactionFiles({config, request}),
     ...transactionSplits({config, request}),
     ...transactions({config, request}),
+    ...caasTransactions({config, request}),
     ...unauthenticated({config, request}),
     ...usersAndConnections({config, request}),
     ...resellerCheck({config, request}),

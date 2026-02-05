@@ -9,3 +9,4 @@ dist/
 .dccache
 .idea/
 .DS_Store
+.vscode/settings.json

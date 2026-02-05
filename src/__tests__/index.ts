@@ -76,6 +76,7 @@ describe("API client", function() {
         "getUnenrichedTransaction",
         "addTransaction",
         "addTransactions",
+        "caasPatchTransaction",
         "updateTransaction",
         "deleteTransaction",
         "addFileToTransaction",

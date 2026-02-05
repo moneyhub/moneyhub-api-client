@@ -11,8 +11,13 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
   const config = R.evolve(
     {
       identityServiceUrl: (val: ApiClientConfig["identityServiceUrl"]) => val.replace("/oidc", ""),
+      caasResourceServerUrl: (val: ApiClientConfig["resourceServerUrl"]) =>
+        `${val.replace(/\/v\d+(\.\d+)?\b/, "")}/caas/v1`,
     },
-    apiClientConfig,
+    {
+      ...apiClientConfig,
+      caasResourceServerUrl: apiClientConfig.resourceServerUrl,
+    },
   )
 
   const {
