@@ -21,5 +21,20 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
         },
       )
     },
+    caasEnrichTransactions: ({transactions}, options) => {
+
+      return request<ApiResponse<CaasTransaction[]>>(
+        `${caasResourceServerUrl}/transactions/enrich`,
+        {
+          method: "POST",
+          cc: {
+            scope: "caas:transactions:write",
+          },
+          body: {transactions},
+
+          options,
+        },
+      )
+    },
   }
 }
