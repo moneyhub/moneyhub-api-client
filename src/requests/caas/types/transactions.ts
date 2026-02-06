@@ -31,6 +31,22 @@ export interface CaasTransactionsRequests {
   }: {
     transactions: CaasTransactionInput[]
   }, options?: ExtraOptions) => Promise<ApiResponse<CaasTransaction[]>>
+  caasGetTransactions: ({
+    userId,
+    accountId,
+    limit,
+  }: {
+    userId?: string
+    accountId: string
+    limit?: number
+  }, options?: ExtraOptions) => Promise<ApiResponse<CaasTransaction[]>>
+  caasDeleteTransaction: ({
+    accountId,
+    transactionId,
+  }: {
+    accountId: string
+    transactionId: string
+  }, options?: ExtraOptions) => Promise<void>
 }
 
 export interface CaasTransaction {

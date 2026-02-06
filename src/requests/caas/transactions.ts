@@ -36,5 +36,31 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
         },
       )
     },
+    caasGetTransactions: ({userId, accountId, limit}, options) => {
+      return request<ApiResponse<CaasTransaction[]>>(
+        `${caasResourceServerUrl}/transactions`,
+        {
+          cc: {
+            scope: "caas:transactions:read",
+          },
+          searchParams: {accountId, userId, limit},
+
+          options,
+        },
+      )
+    },
+    caasDeleteTransaction: ({accountId, transactionId}, options) => {
+      return request<void>(
+        `${caasResourceServerUrl}/accounts/${accountId}/transactions/${transactionId}`,
+        {
+          method: "DELETE",
+          cc: {
+            scope: "caas:transactions:delete",
+          },
+
+          options,
+        },
+      )
+    },
   }
 }

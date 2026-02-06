@@ -23,7 +23,12 @@ import tax from "./tax"
 import transactionFiles from "./transaction-files"
 import transactionSplits from "./transaction-splits"
 import transactions from "./transactions"
+import caasAccounts from "./caas/accounts"
+import caasCategories from "./caas/categories"
+import caasCounterparties from "./caas/counterparties"
+import caasGeotags from "./caas/geotags"
 import caasTransactions from "./caas/transactions"
+import caasUsers from "./caas/users"
 import unauthenticated from "./unauthenticated"
 import usersAndConnections from "./users-and-connections"
 import resellerCheck from "./reseller-check"
@@ -55,7 +60,12 @@ export default ({config, request}: RequestsParams) => {
     ...transactionFiles({config, request}),
     ...transactionSplits({config, request}),
     ...transactions({config, request}),
+    ...caasAccounts({config, request}),
+    ...caasCategories({config, request}),
+    ...caasCounterparties({config, request}),
+    ...caasGeotags({config, request}),
     ...caasTransactions({config, request}),
+    ...caasUsers({config, request}),
     ...unauthenticated({config, request}),
     ...usersAndConnections({config, request}),
     ...resellerCheck({config, request}),
