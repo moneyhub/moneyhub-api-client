@@ -1,5 +1,21 @@
 import {ApiResponse, ExtraOptions} from "../../../request"
 
+export interface CaasTransactionInput {
+  userId: string
+  accountId: string
+  providerId: string
+  transactionId: string
+  accountType: string
+  txCode: string
+  date: string
+  status: string
+  description: string
+  amount: number
+  currency: string
+  merchantCategoryCode: string
+  cardPresent: boolean
+}
+
 export interface CaasTransactionsRequests {
   caasPatchTransaction: ({
     accountId,
@@ -9,6 +25,11 @@ export interface CaasTransactionsRequests {
     accountId: string
     transactionId: string
     l2CategoryId: string
+  }, options?: ExtraOptions) => Promise<ApiResponse<CaasTransaction[]>>
+  caasEnrichTransactions: ({
+    transactions,
+  }: {
+    transactions: CaasTransactionInput[]
   }, options?: ExtraOptions) => Promise<ApiResponse<CaasTransaction[]>>
 }
 
