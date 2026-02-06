@@ -26,6 +26,7 @@ This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise
 - Get a tax return for a subset of transactions
 - Get the regular transactions on an account
 - Get beneficiaries
+- CAAS (Categorisation as a Service) API for advanced transaction enrichment and categorisation
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
 
@@ -1063,18 +1064,6 @@ const transactions = await moneyhub.updateTransaction({
       value: 10,
     },
   },
-}, options);
-```
-
-#### `caasPatchTransaction`
-
-Update a transaction category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`.
-
-```javascript
-const result = await moneyhub.caasPatchTransaction({
-  accountId: "accountId",
-  transactionId: "transactionId",
-  l2CategoryId: "21",
 }, options);
 ```
 
@@ -2164,6 +2153,129 @@ const resellerCheck = await moneyhub.createResellerCheckRequest({
   companyRegistrationNumber: "AB123456",
   telephone: "1234678"
   email: "email@email.com"
+}, options);
+```
+
+### CAAS API
+
+The CAAS (Categorisation as a Service) API provides advanced transaction enrichment, categorisation, and management capabilities. All CAAS endpoints use dedicated scopes prefixed with `caas:`.
+
+#### `caasEnrichTransactions`
+
+Enrich transactions with detailed categorisation, counterparty information, and geolocation data. This function uses the scope `caas:transactions:write`.
+
+```javascript
+const transactions = [
+  {
+    userId: "0a1327eb-26b9-4abc-b932-ff61cb27b227",
+    accountId: "10ed62b0-05f7-4a24-8ed1-0c503fc58924",
+    transactionId: "a8b7c6d5-e4f3-2a1b-3c4d-5e6f7a8b9c01",
+    accountType: "cash",
+    txCode: "",
+    date: "2025-12-01T00:00:00.000Z",
+    status: "posted",
+    description: "Tesco Milton Keynes",
+    amount: -125.67,
+    currency: "GBP",
+    merchantCategoryCode: "5411",
+    cardPresent: true,
+  },
+];
+
+const result = await moneyhub.caasEnrichTransactions({
+  transactions: transactions,
+}, options);
+```
+
+#### `caasGetTransactions`
+
+Get transactions from the CAAS API with optional filtering by user and limit. This function uses the scope `caas:transactions:read`.
+
+```javascript
+const result = await moneyhub.caasGetTransactions({
+  accountId: "accountId",
+  userId: "userId", // optional
+  limit: 50, // optional
+}, options);
+```
+
+#### `caasPatchTransaction`
+
+Update a transaction category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`.
+
+```javascript
+const result = await moneyhub.caasPatchTransaction({
+  accountId: "accountId",
+  transactionId: "transactionId",
+  l2CategoryId: "21",
+}, options);
+```
+
+#### `caasDeleteTransaction`
+
+Delete a transaction via the CAAS endpoint. This function uses the scope `caas:transactions:delete`.
+
+```javascript
+await moneyhub.caasDeleteTransaction({
+  accountId: "accountId",
+  transactionId: "transactionId",
+}, options);
+```
+
+#### `caasGetCategories`
+
+Get all available CAAS categories. This function uses the scope `caas:categories:read`.
+
+```javascript
+const result = await moneyhub.caasGetCategories(options);
+```
+
+#### `caasGetCategoryGroups`
+
+Get all available CAAS category groups. This function uses the scope `caas:categories:read`.
+
+```javascript
+const result = await moneyhub.caasGetCategoryGroups(options);
+```
+
+#### `caasGetCounterparties`
+
+Get counterparties with optional pagination. This function uses the scope `caas:transactions:read`.
+
+```javascript
+const result = await moneyhub.caasGetCounterparties({
+  limit: 50, // optional
+  offset: 0, // optional
+}, options);
+```
+
+#### `caasGetGeotags`
+
+Get geotag information for specific geotag IDs. This function uses the scope `caas:transactions:read`.
+
+```javascript
+const result = await moneyhub.caasGetGeotags({
+  geotagIds: ["geotag-id-1", "geotag-id-2"],
+}, options);
+```
+
+#### `caasDeleteAccount`
+
+Delete an account via the CAAS endpoint. This function uses the scope `caas:users:delete`.
+
+```javascript
+await moneyhub.caasDeleteAccount({
+  accountId: "accountId",
+}, options);
+```
+
+#### `caasDeleteUser`
+
+Delete a user via the CAAS endpoint. This function uses the scope `caas:users:delete`.
+
+```javascript
+await moneyhub.caasDeleteUser({
+  userId: "userId",
 }, options);
 ```
 

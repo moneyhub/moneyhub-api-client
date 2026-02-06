@@ -152,7 +152,7 @@ export default ({
   const gotOpts: OptionsOfJSONResponseBody = {
     method: opts.method || "GET",
     headers: opts.headers || {},
-    searchParams: qs.stringify(opts.searchParams),
+    searchParams: opts.searchParams ? qs.stringify(R.reject(R.isNil)(opts.searchParams)) : undefined,
     timeout,
     retry: retryOptions,
   }
