@@ -2,7 +2,7 @@ const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
 const {Moneyhub} = require("../../src/index")
 const config = require("../config")
-const R = require("ramda")
+const {omit} = require("ramda")
 
 const optionDefinitions = [
   {name: "userId", alias: "u", type: String, description: "required"},
@@ -36,7 +36,7 @@ const start = async () => {
 
     const result = await moneyhub.getUnenrichedTransactions({
       userId: options.userId,
-      params: R.omit(["userId"], options)
+      params: omit(["userId"], options)
     })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {

@@ -1,6 +1,6 @@
 import {RequestsParams} from "../request"
 import {TaxRequests} from "./types/tax"
-import * as R from "ramda"
+import {reject, isNil} from "ramda"
 
 export default ({config, request}: RequestsParams): TaxRequests => {
   const {resourceServerUrl} = config
@@ -8,7 +8,7 @@ export default ({config, request}: RequestsParams): TaxRequests => {
   return {
     getTaxReturn: ({userId, params = {}}, options) =>
       request(`${resourceServerUrl}/tax`, {
-        searchParams: R.reject(R.isNil)(params),
+        searchParams: reject(isNil, params),
         cc: {
           scope: "tax:read",
           sub: userId,

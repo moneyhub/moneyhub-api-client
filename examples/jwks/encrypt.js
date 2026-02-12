@@ -2,10 +2,10 @@
 const {importJWK, CompactEncrypt} = require("jose")
 const fs = require("fs")
 const got = require("got")
-const R = require("ramda")
+const {last} = require("ramda")
 const config = require("../config")
 const run = async () => {
-  const file = R.last(process.argv)
+  const file = last(process.argv)
   if (!file || file.includes("encrypt.js")) {
     console.log("Please add the file you wish to encrypt as the final argument")
     process.exit(1)

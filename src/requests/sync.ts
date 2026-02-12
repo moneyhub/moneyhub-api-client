@@ -1,7 +1,7 @@
-import * as R from "ramda"
+import {reject, isNil} from "ramda"
 import {RequestsParams} from "../request"
 import {SyncRequests} from "./types/sync"
-const filterUndefined = R.reject(R.isNil)
+const filterUndefined = reject(isNil)
 
 export default ({config, request}: RequestsParams): SyncRequests => {
   const {resourceServerUrl} = config

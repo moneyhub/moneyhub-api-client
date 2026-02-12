@@ -1,7 +1,7 @@
 import got, {Options, Headers, OptionsOfJSONResponseBody, Method, Agents} from "got"
 import {Client} from "openid-client"
 import qs from "query-string"
-import * as R from "ramda"
+import {reject, isNil, pathOr, pipe, split, insert, join, assoc, mergeDeepRight} from "ramda"
 
 import type {ApiClientConfig, MutualTLSOptions} from "./schema/config"
 const DEFAULT_API_VERSION: Version = "v3"
@@ -93,7 +93,7 @@ const getResponseBody = (err: unknown) => {
     details?: string
   } = {}
   try {
-    const {code, message, details} = JSON.parse(R.pathOr("{}", ["response", "body"], err))
+    const {code, message, details} = JSON.parse(pathOr("{}", ["response", "body"], err))
     body = {code, message, details: typeof details === "object" ? JSON.stringify(details) : details}
   } catch (e) {
     body = {}
@@ -112,10 +112,10 @@ const attachErrorDetails = (err: unknown) => {
 
 export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Version = DEFAULT_API_VERSION): string => {
   if (!apiVersioning || url.includes("identity") || /\/v.+/g.test(url)) return url
-  const urlWithVersion = R.pipe(
-    R.split("/"), // split url [ "https:", "", "test.com", "path", "path2" ]
-    R.insert(3, String(version)), // insert and stringify version after domain
-    R.join("/"), // join url back together with slash
+  const urlWithVersion = pipe(
+    split("/"), // split url [ "https:", "", "test.com", "path", "path2" ]
+    insert(3, String(version)), // insert and stringify version after domain
+    join("/"), // join url back together with slash
   )(url)
 
   return urlWithVersion
@@ -152,7 +152,7 @@ export default ({
   const gotOpts: OptionsOfJSONResponseBody = {
     method: opts.method || "GET",
     headers: opts.headers || {},
-    searchParams: opts.searchParams ? qs.stringify(R.reject(R.isNil)(opts.searchParams)) : undefined,
+    searchParams: opts.searchParams ? qs.stringify(reject(isNil)(opts.searchParams)) : undefined,
     timeout,
     retry: retryOptions,
   }
@@ -164,11 +164,11 @@ export default ({
   const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version)
 
   if (opts.options?.token) {
-    gotOpts.headers = R.assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
+    gotOpts.headers = assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
   }
 
   if (opts.options?.headers) {
-    gotOpts.headers = R.mergeDeepRight(gotOpts.headers || {}, opts.options.headers) as Headers
+    gotOpts.headers = mergeDeepRight(gotOpts.headers || {}, opts.options.headers) as Headers
   }
 
   if (!gotOpts.headers?.Authorization && opts.cc) {
@@ -177,7 +177,7 @@ export default ({
       scope: opts.cc.scope,
       sub: opts.cc.sub,
     })
-    gotOpts.headers = R.assoc("Authorization", `Bearer ${access_token}`, gotOpts.headers)
+    gotOpts.headers = assoc("Authorization", `Bearer ${access_token}`, gotOpts.headers)
   }
 
   if (opts.body) {

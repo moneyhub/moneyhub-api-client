@@ -2,13 +2,13 @@ import {Issuer, custom, generators} from "openid-client"
 import getAuthUrlsFactory from "./get-auth-urls"
 import getTokensFactory from "./tokens"
 import requestsFactory from "./requests"
-import * as R from "ramda"
+import {evolve} from "ramda"
 import req from "./request"
 import type {ApiClientConfig} from "./schema/config"
 const DEFAULT_TIMEOUT = 60000
 
 const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
-  const config = R.evolve(
+  const config = evolve(
     {
       identityServiceUrl: (val: ApiClientConfig["identityServiceUrl"]) => val.replace("/oidc", ""),
       caasResourceServerUrl: (val: ApiClientConfig["resourceServerUrl"]) =>

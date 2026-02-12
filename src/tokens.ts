@@ -1,5 +1,5 @@
 import type {Client, TokenSet} from "openid-client"
-import * as R from "ramda"
+import {reject, isNil} from "ramda"
 import * as jose from "jose"
 import type {ApiClientConfig} from "./schema/config"
 import type {JWK, KeyLike} from "jose"
@@ -7,7 +7,7 @@ import * as crypto from "crypto"
 import exchangeCodeForTokensFactory from "./exchange-code-for-token"
 
 const random = (length = 32) =>
-  jose.base64url.encode(crypto.randomBytes(length))
+  jose.base64url.encode(new Uint8Array(crypto.randomBytes(length)))
 
 const createSignedJWT = async ({
   alg,
@@ -37,7 +37,7 @@ const createSignedJWT = async ({
     .sign(privateKey)
 
 
-const filterUndefined = R.reject(R.isNil)
+const filterUndefined = reject(isNil)
 
 const exchangeCodeForTokensErrorMessage = `
 Missing Parameters in exchangeCodeForTokens method.
