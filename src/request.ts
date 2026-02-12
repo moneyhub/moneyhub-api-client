@@ -121,19 +121,76 @@ export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Ve
   return urlWithVersion
 }
 
-const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {}) => {
-  return {
-    limit: requestOptions.retry?.limit || retry.limit || DEFAULT_RETRY_LIMIT,
-    methods: requestOptions.retry?.methods || retry.methods || DEFAULT_RETRY_METHODS,
-    statusCodes: requestOptions.retry?.statusCodes || retry.statusCodes || DEFAULT_RETRY_STATUS_CODES,
-    maxRetryAfter: requestOptions.retry?.maxRetryAfter || retry.maxRetryAfter || DEFAULT_MAX_RETRY_AFTER,
+const pickRetryValue = <K extends keyof RetryOptions>(
+  requestOptions: ExtraOptions,
+  retry: RetryOptions,
+  key: K,
+  defaultValue: NonNullable<RetryOptions[K]>,
+): NonNullable<RetryOptions[K]> =>
+  (requestOptions.retry?.[key] ?? retry[key] ?? defaultValue) as NonNullable<RetryOptions[K]>
+
+const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {}) => ({
+  limit: pickRetryValue(requestOptions, retry, "limit", DEFAULT_RETRY_LIMIT),
+  methods: pickRetryValue(requestOptions, retry, "methods", DEFAULT_RETRY_METHODS),
+  statusCodes: pickRetryValue(requestOptions, retry, "statusCodes", DEFAULT_RETRY_STATUS_CODES),
+  maxRetryAfter: pickRetryValue(requestOptions, retry, "maxRetryAfter", DEFAULT_MAX_RETRY_AFTER),
+})
+
+const applyAgent = (gotOpts: OptionsOfJSONResponseBody, agent?: Agents) => {
+  if (agent) {
+    (gotOpts as Options).agent = agent
   }
 }
 
-export default ({
-  client,
-  options: {timeout, apiVersioning, agent, mTLS, retry = {}},
-}: {
+const applyAuthHeaders = (
+  gotOpts: OptionsOfJSONResponseBody,
+  opts: RequestOptions,
+) => {
+  if (opts.options?.token) {
+    gotOpts.headers = assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
+  }
+  if (opts.options?.headers) {
+    gotOpts.headers = mergeDeepRight(gotOpts.headers || {}, opts.options.headers) as Headers
+  }
+}
+
+const applyClientCredentials = async (
+  gotOpts: OptionsOfJSONResponseBody,
+  client: Client,
+  opts: RequestOptions,
+) => {
+  if (!gotOpts.headers?.Authorization && opts.cc) {
+    const {access_token} = await client.grant({
+      grant_type: "client_credentials",
+      scope: opts.cc.scope,
+      sub: opts.cc.sub,
+    })
+    gotOpts.headers = assoc("Authorization", `Bearer ${access_token}`, gotOpts.headers)
+  }
+}
+
+const applyBodyOptions = (gotOpts: OptionsOfJSONResponseBody, opts: RequestOptions) => {
+  if (opts.body) {
+    (gotOpts as any).json = opts.body
+  }
+  if (opts.form) {
+    (gotOpts as any).form = opts.form
+  }
+  if (opts.formData) {
+    (gotOpts as any).body = opts.formData
+  }
+}
+
+const applyMTLS = (gotOpts: OptionsOfJSONResponseBody, mTLS?: MutualTLSOptions) => {
+  if (mTLS) {
+    gotOpts.https = {
+      certificate: mTLS.cert,
+      key: mTLS.key,
+    }
+  }
+}
+
+interface RequestFactoryParams {
   client: Client
   options: {
     timeout?: number
@@ -142,11 +199,14 @@ export default ({
     mTLS?: MutualTLSOptions
     retry?: RetryOptions
   }
-// eslint-disable-next-line max-statements, complexity
-}) => async <T>(
+}
+
+async function executeRequest<T>(
   url: string,
-  opts: RequestOptions = {},
-): Promise<T> => {
+  opts: RequestOptions,
+  params: RequestFactoryParams,
+): Promise<T> {
+  const {client, options: {timeout, apiVersioning, agent, mTLS, retry = {}}} = params
   const retryOptions = getRetryOptions(retry, opts.options)
 
   const gotOpts: OptionsOfJSONResponseBody = {
@@ -157,47 +217,12 @@ export default ({
     retry: retryOptions,
   }
 
-  if (agent) {
-    (gotOpts as Options).agent = agent
-  }
-
+  applyAgent(gotOpts, agent)
   const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version)
-
-  if (opts.options?.token) {
-    gotOpts.headers = assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
-  }
-
-  if (opts.options?.headers) {
-    gotOpts.headers = mergeDeepRight(gotOpts.headers || {}, opts.options.headers) as Headers
-  }
-
-  if (!gotOpts.headers?.Authorization && opts.cc) {
-    const {access_token} = await client.grant({
-      grant_type: "client_credentials",
-      scope: opts.cc.scope,
-      sub: opts.cc.sub,
-    })
-    gotOpts.headers = assoc("Authorization", `Bearer ${access_token}`, gotOpts.headers)
-  }
-
-  if (opts.body) {
-    (gotOpts as any).json = opts.body
-  }
-
-  if (opts.form) {
-    (gotOpts as any).form = opts.form
-  }
-
-  if (opts.formData) {
-    (gotOpts as any).body = opts.formData
-  }
-
-  if (mTLS) {
-    gotOpts.https = {
-      certificate: mTLS.cert,
-      key: mTLS.key,
-    }
-  }
+  applyAuthHeaders(gotOpts, opts)
+  await applyClientCredentials(gotOpts, client, opts)
+  applyBodyOptions(gotOpts, opts)
+  applyMTLS(gotOpts, mTLS)
 
   const req = got<T>(formattedUrl, gotOpts)
   if (opts.returnStatus) {
@@ -208,3 +233,8 @@ export default ({
   return (req as any).json()
     .catch(attachErrorDetails)
 }
+
+export default (params: RequestFactoryParams): Request => async <T>(
+  url: string,
+  opts: RequestOptions = {},
+): Promise<T> => executeRequest<T>(url, opts, params)

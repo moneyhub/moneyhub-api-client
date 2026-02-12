@@ -1,4 +1,4 @@
-/* eslint-disable max-nested-callbacks */
+
 import {expect, assert} from "chai"
 import {expectTypeOf} from "expect-type"
 

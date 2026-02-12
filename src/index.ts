@@ -47,6 +47,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
 
   const moneyhubIssuer = await Issuer.discover(identityServiceUrl + "/oidc")
 
+  type ClientJwks = ConstructorParameters<typeof moneyhubIssuer.Client>[1]
   const client = new moneyhubIssuer.Client(
     {
       client_id,
@@ -57,7 +58,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
       request_object_signing_alg,
       tls_client_certificate_bound_access_tokens: mTLS?.tls_client_certificate_bound_access_tokens || false,
     },
-    {keys},
+    {keys} as ClientJwks,
   )
 
   client[custom.clock_tolerance] = 10
