@@ -1,5 +1,5 @@
 import type {Client, TokenSet} from "openid-client"
-import * as R from "ramda"
+import {reject, isNil} from "ramda"
 import * as jose from "jose"
 import type {ApiClientConfig} from "./schema/config"
 import type {JWK, KeyLike} from "jose"
@@ -37,7 +37,7 @@ const createSignedJWT = async ({
     .sign(privateKey)
 
 
-const filterUndefined = R.reject(R.isNil)
+const filterUndefined = reject(isNil)
 
 const exchangeCodeForTokensErrorMessage = `
 Missing Parameters in exchangeCodeForTokens method.

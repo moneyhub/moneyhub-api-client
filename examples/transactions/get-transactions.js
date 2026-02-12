@@ -2,7 +2,7 @@ const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
 const {Moneyhub} = require("../../src/index")
 const config = require("../config")
-const R = require("ramda")
+const {omit} = require("ramda")
 
 const optionDefinitions = [
   {name: "userId", alias: "u", type: String, description: "required"},

@@ -2,7 +2,7 @@ import {Issuer, custom, generators, type IssuerMetadata} from "openid-client"
 import getAuthUrlsFactory from "./get-auth-urls"
 import getTokensFactory from "./tokens"
 import requestsFactory from "./requests"
-import * as R from "ramda"
+import {evolve, pick} from "ramda"
 import req from "./request"
 import {getDiscovery, getDiscoveryWithGatewayUrl} from "./discovery"
 import {createGetOpenIdConfig} from "./oidc-config"
@@ -11,7 +11,7 @@ const DEFAULT_TIMEOUT = 60000
 const DEFAULT_OIDC_CACHE_TTL_MS = 3600000 // 1 hour
 
 function buildConfig(apiClientConfig: ApiClientConfig) {
-  return R.evolve(
+  return evolve(
     {
       identityServiceUrl: (val: ApiClientConfig["identityServiceUrl"]) => val.replace("/oidc", ""),
       gatewayIdentityServiceUrl: (val: ApiClientConfig["gatewayIdentityServiceUrl"]) =>
@@ -56,7 +56,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
   const moneyhubIssuer = new Issuer(discoveryMetadata as IssuerMetadata)
   const client = new moneyhubIssuer.Client(
     {
-      ...R.pick(["client_id", "client_secret", "id_token_signed_response_alg", "redirect_uri", "token_endpoint_auth_method", "request_object_signing_alg"], clientCreds),
+      ...pick(["client_id", "client_secret", "id_token_signed_response_alg", "redirect_uri", "token_endpoint_auth_method", "request_object_signing_alg"], clientCreds),
       tls_client_certificate_bound_access_tokens: mTLS?.tls_client_certificate_bound_access_tokens || false,
     },
     {keys: clientCreds.keys},

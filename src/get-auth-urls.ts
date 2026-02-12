@@ -1,6 +1,6 @@
 import got from "got"
 import type {Client} from "openid-client"
-import * as R from "ramda"
+import {reject, isNil, mergeDeepRight, compose, is} from "ramda"
 
 import type {ApiClientConfig} from "./schema/config"
 import {PayerType, PaymentActorType} from "./schema/payment"
@@ -8,7 +8,7 @@ import {StandingOrderFrequency} from "./schema/standing-order"
 import {RequestPayee, RequestPayer} from "./schema/payee"
 import {PermissionsAction} from "./requests/types/auth-requests"
 
-const filterUndefined = R.reject(R.isNil)
+const filterUndefined = reject(isNil)
 type PkceParams = {
   code_challenge: string
   code_challenge_method: string
@@ -30,8 +30,8 @@ export default ({
   } = config
 
   const setPermissionsToClaims = (permissions: any, permissionsAction?: PermissionsAction) => (claims: any) => {
-    if (permissions && R.is(Array, permissions)) {
-      return R.mergeDeepRight(claims, {
+    if (permissions && is(Array, permissions)) {
+      return mergeDeepRight(claims, {
         id_token: {
           "mh:consent": {
             essential: true,
@@ -164,9 +164,9 @@ export default ({
       },
     }
 
-    const _claims = R.compose(
+    const _claims = compose(
       setPermissionsToClaims(permissions, permissionsAction),
-      R.mergeDeepRight(defaultClaims),
+      mergeDeepRight(defaultClaims),
     )(claims)
 
     return getAuthorizationUrlFromParams({
@@ -239,9 +239,9 @@ export default ({
       },
     }
 
-    const _claims = R.compose(
+    const _claims = compose(
       setPermissionsToClaims(permissions, permissionsAction),
-      R.mergeDeepRight(defaultClaims),
+      mergeDeepRight(defaultClaims),
     )(claims)
 
     return client.requestObject({
@@ -311,9 +311,9 @@ export default ({
           },
         },
       }
-      const _claims = R.compose(
+      const _claims = compose(
         setPermissionsToClaims(permissions, permissionsAction),
-        R.mergeDeepRight(defaultClaims),
+        mergeDeepRight(defaultClaims),
       )(claims)
 
       const url = await getAuthorizeUrl({
@@ -365,7 +365,7 @@ export default ({
           },
         },
       }
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       const url = await getAuthorizeUrl({
         state,
@@ -415,7 +415,7 @@ export default ({
           },
         },
       }
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         state,
@@ -460,7 +460,7 @@ export default ({
           },
         },
       }
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         state,
@@ -551,7 +551,7 @@ export default ({
         },
       }
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         scope,
@@ -617,7 +617,7 @@ export default ({
         },
       }
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         scope,
@@ -711,7 +711,7 @@ export default ({
         },
       }
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         scope,
@@ -807,7 +807,7 @@ export default ({
         },
       }
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         scope,
@@ -857,9 +857,9 @@ export default ({
         },
       }
 
-      const _claims = R.compose(
+      const _claims = compose(
         setPermissionsToClaims(permissions, permissionsAction),
-        R.mergeDeepRight(defaultClaims),
+        mergeDeepRight(defaultClaims),
       )(claims)
 
       return getAuthorizeUrl({
