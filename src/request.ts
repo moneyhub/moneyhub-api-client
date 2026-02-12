@@ -3,6 +3,7 @@ import {Client} from "openid-client"
 import qs from "query-string"
 import * as R from "ramda"
 
+import {rewriteResourceServerResponseUrls} from "./discovery"
 import type {ApiClientConfig, MutualTLSOptions} from "./schema/config"
 const DEFAULT_API_VERSION: Version = "v3"
 const DEFAULT_MAX_RETRY_AFTER = 5000
@@ -58,8 +59,13 @@ type Version = "v2.0" | "v2" | "v3" | "v3.0"
 
 export type Request = <T>(url: string, opts?: RequestOptions) => Promise<T>
 
+/** Optional internal fields (e.g. cachedOpenIdConfig) set by the client, not part of public ApiClientConfig */
+export interface RequestsParamsConfig extends ApiClientConfig {
+  cachedOpenIdConfig?: Record<string, unknown>
+}
+
 export interface RequestsParams {
-  config: ApiClientConfig
+  config: RequestsParamsConfig
   request: Request
 }
 
@@ -133,6 +139,7 @@ const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {})
 export default ({
   client,
   options: {timeout, apiVersioning, agent, mTLS, retry = {}},
+  resourceServerUrl,
 }: {
   client: Client
   options: {
@@ -142,6 +149,7 @@ export default ({
     mTLS?: MutualTLSOptions
     retry?: RetryOptions
   }
+  resourceServerUrl: string
 // eslint-disable-next-line max-statements, complexity
 }) => async <T>(
   url: string,
@@ -205,6 +213,11 @@ export default ({
       .catch(attachErrorDetails)
   }
 
-  return (req as any).json()
-    .catch(attachErrorDetails)
+  const body = await (req as any).json().catch(attachErrorDetails) as T
+
+  if (resourceServerUrl && formattedUrl.startsWith(resourceServerUrl)) {
+    return rewriteResourceServerResponseUrls(body, resourceServerUrl) as T
+  }
+
+  return body
 }

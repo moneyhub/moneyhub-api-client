@@ -3,7 +3,8 @@ import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance, Affordability} from ".."
 
-describe.skip("affordability", function() {
+// Skipped: affordability suite requires specific API access
+describe.skip("affordability", function() { // eslint-disable-line mocha/no-skipped-tests
   let userId: string
   let affordabilityId: string
   let moneyhub: MoneyhubInstance

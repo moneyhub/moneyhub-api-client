@@ -21,6 +21,8 @@ export default ({config, request}: RequestsParams): UnauthenticatedRequests => {
     listBetaConnections: (query?: {clientId?: string}) =>
       request(`${identityServiceUrl}/oidc/.well-known/beta-connections?${query && qs.stringify(query)}`),
     getOpenIdConfig: () =>
-      request(`${identityServiceUrl}/oidc/.well-known/openid-configuration`),
+      config.cachedOpenIdConfig != null
+        ? Promise.resolve(config.cachedOpenIdConfig)
+        : request(`${identityServiceUrl}/oidc/.well-known/openid-configuration`),
   }
 }

@@ -176,6 +176,48 @@ At least one of the following parameters needs to be passed in to any api call t
 - **token**: The token will be added as bearer authorization header
 - **Authorization header**: The full authorisation header can be passed in
 
+## Using the client behind a gateway
+
+When your application sits behind a gateway and all traffic to Moneyhub must go through that gateway, set `identityServiceUrl` and/or `resourceServerUrl` in the config to your gateway base URL(s). The client will:
+
+- **Identity**: Fetch the OpenID discovery document from your gateway and rewrite any URLs in it to use your configured `identityServiceUrl`, so that authorization, token exchange, and JWKS requests all go through the gateway.
+- **Resource server**: Rewrite URLs in API response bodies (e.g. `links.self`, `links.next`, `links.prev`) so that any use of those links by your application also goes through your configured `resourceServerUrl`.
+
+**Verifying behaviour**: Run the unit tests for the rewrite logic with `npx mocha --require ts-node/register "src/__tests__/discovery.ts"`; run the full test suite as described in [Running Tests](#running-tests); in production, check your gateway access logs to confirm identity and API requests hit the gateway, or inspect `getOpenIdConfig()` and any `response.links` to see gateway URLs.
+
+### Security considerations
+
+The following points are intended for security review (e.g. by banks or regulated entities).
+
+- **Rewrite target is always configured**  
+  URLs are rewritten only to the base URLs you supply in config (`identityServiceUrl`, `resourceServerUrl`). The client never uses a URL from a response or discovery document as the *target* of the rewrite. An attacker who could influence response content cannot cause the client to send traffic to an arbitrary or malicious host; the replacement is always your configured base.
+
+- **TLS and certificates**  
+  The client validates TLS only to the configured base (the gateway). The gateway is responsible for TLS to the upstream identity and API services. No new certificate or trust store requirements are introduced by the library.
+
+- **OIDC issuer claim and discovery `issuer`**  
+  ID tokens from the identity provider carry an `iss` (issuer) claim. Many OIDC clients validate that the token’s `iss` matches the Issuer’s `issuer` from discovery. When using a gateway, the implementation may leave the discovery `issuer` field unchanged so that token validation continues to expect the IdP’s canonical `iss`; or the identity service behind the gateway may be configured to issue tokens with `iss` equal to the gateway URL. See the release notes or implementation docs for the chosen behaviour so you can align with your IdP and validation policies.
+
+- **Response body integrity**  
+  The client modifies response bodies (e.g. `links`) for resource server responses. If you sign or checksum the *full* response body elsewhere, rewriting URL fields would invalidate that. Treat the client as the consumer of the API for integrity purposes, or apply signing after the client (e.g. at the gateway) so the signed payload is the rewritten one.
+
+- **Secrets**  
+  Client credentials, keys, and tokens are used as in the standard flow. No new storage, logging, or transmission of secrets is introduced by the gateway rewrite logic.
+
+### Governance considerations
+
+- **Change control and risk**  
+  The gateway feature alters outbound request behaviour (discovery used for the Issuer) and response bodies (resource server links). Release notes and CHANGELOG describe the change. Summary: enables gateway-only routing; no new external dependency; rewrite targets are config-only; considerations include issuer claim alignment and response body integrity as above.
+
+- **Audit and assurance**  
+  To demonstrate that all traffic to Moneyhub goes through your approved gateway, use the configured base URLs and the verification steps above (tests, gateway logs, inspection of `getOpenIdConfig()` and `response.links`). Internal or external audit can rely on config plus these verification steps.
+
+- **Third-party and supply chain**  
+  No new third-party dependencies are introduced. The client uses existing libraries in a way that supports gateway routing. Rewrite targets are never taken from responses or discovery documents.
+
+- **Regulatory and outsourcing**  
+  Use of a gateway is your architectural choice; this feature makes it possible for the client to honour that choice. Regulatory implications (e.g. outsourcing, record-keeping) remain with your use of the gateway and the Moneyhub service, not with the library change itself.
+
 ## API
 Once the api client has been initialised it provides a simple promise based interface with the following methods:
 

@@ -1,3 +1,14 @@
+Unreleased
+==========
+
+**Features**
+
+* **Gateway URL rewriting**: When using the client behind a gateway, set `identityServiceUrl` and/or `resourceServerUrl` to your gateway base URL(s). The client will:
+  * Fetch the OpenID discovery document from your gateway and rewrite endpoint URLs (authorization, token, JWKS, etc.) to use your configured identity base, so all OIDC traffic goes through the gateway. The discovery `issuer` field is left unchanged so that JWT `iss` claim validation continues to work.
+  * Rewrite URLs in resource server response bodies (e.g. `links.self`, `links.next`, `links.prev`) so that any use of those links by your application also goes through your configured resource server base.
+* `getOpenIdConfig()` now returns the rewritten discovery metadata when gateway rewriting is used, so consumers see consistent gateway URLs.
+* See the readme section "Using the client behind a gateway" for configuration, verification steps, and security/governance considerations.
+
 6.91.0 / 2025-05-01
 ==================
 
