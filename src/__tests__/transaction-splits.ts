@@ -1,7 +1,7 @@
 /* eslint-disable max-nested-callbacks */
 import {expect} from "chai"
 import {expectTypeOf} from "expect-type"
-import * as R from "ramda"
+import {path} from "ramda"
 
 import {Moneyhub, MoneyhubInstance, Transactions} from ".."
 
@@ -75,8 +75,8 @@ describe("Transaction Splits", function() {
       transactionId,
     })
     expect(data).to.have.length(2)
-    expect(R.path([0, "amount", "value"], data)).to.be.oneOf([-1500, -800])
-    expect(R.path([0, "description"], data)).to.be.oneOf(["Split 1", "Split 2"])
+    expect(path([0, "amount", "value"], data)).to.be.oneOf([-1500, -800])
+    expect(path([0, "description"], data)).to.be.oneOf(["Split 1", "Split 2"])
     expectTypeOf<Transactions.TransactionSplit[]>(data)
   })
 
@@ -90,7 +90,7 @@ describe("Transaction Splits", function() {
       },
     })
     expect(data).to.have.length(2)
-    expect(R.path([0, "description"], data)).to.equal("New Description")
+    expect(path([0, "description"], data)).to.equal("New Description")
     expectTypeOf<Transactions.TransactionSplit[]>(data)
   })
 
