@@ -512,13 +512,11 @@ export default ({
       codeChallenge?: string
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: State is required")
       }
 
       if (!payeeId && !payee) {
-        console.error("PayeeId or Payee are required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: PayeeId or Payee are required")
       }
 
       const scope = `payment openid id:${bankId}`
@@ -586,13 +584,11 @@ export default ({
       codeChallenge?: string
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: State is required")
       }
 
       if (!paymentId) {
-        console.error("PayeeId is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: PaymentId is required")
       }
 
       const scope = `reverse_payment openid id:${bankId}`
@@ -670,13 +666,11 @@ export default ({
       codeChallenge?: string
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: State is required")
       }
 
       if (!payeeId && !payee) {
-        console.error("PayeeId or Payee are required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: PayeeId or Payee are required")
       }
 
       const scope = `recurring_payment:create openid id:${bankId}`
@@ -768,13 +762,11 @@ export default ({
       codeChallenge?: string
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: State is required")
       }
 
       if (!payeeId && !payee) {
-        console.error("PayeeId or Payee are required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: PayeeId or Payee are required")
       }
 
       const scope = `standing_orders:create openid id:${bankId}`
