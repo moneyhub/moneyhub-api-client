@@ -147,12 +147,24 @@ export const addVersionToUrl = (
   return urlWithVersion
 }
 
-const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {}) => {
-  return {
-    limit: requestOptions.retry?.limit || retry.limit || DEFAULT_RETRY_LIMIT,
-    methods: requestOptions.retry?.methods || retry.methods || DEFAULT_RETRY_METHODS,
-    statusCodes: requestOptions.retry?.statusCodes || retry.statusCodes || DEFAULT_RETRY_STATUS_CODES,
-    maxRetryAfter: requestOptions.retry?.maxRetryAfter || retry.maxRetryAfter || DEFAULT_MAX_RETRY_AFTER,
+const pickRetryValue = <K extends keyof RetryOptions>(
+  requestOptions: ExtraOptions,
+  retry: RetryOptions,
+  key: K,
+  defaultValue: NonNullable<RetryOptions[K]>,
+): NonNullable<RetryOptions[K]> =>
+  (requestOptions.retry?.[key] ?? retry[key] ?? defaultValue) as NonNullable<RetryOptions[K]>
+
+const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {}) => ({
+  limit: pickRetryValue(requestOptions, retry, "limit", DEFAULT_RETRY_LIMIT),
+  methods: pickRetryValue(requestOptions, retry, "methods", DEFAULT_RETRY_METHODS),
+  statusCodes: pickRetryValue(requestOptions, retry, "statusCodes", DEFAULT_RETRY_STATUS_CODES),
+  maxRetryAfter: pickRetryValue(requestOptions, retry, "maxRetryAfter", DEFAULT_MAX_RETRY_AFTER),
+})
+
+const applyAgent = (gotOpts: OptionsOfJSONResponseBody, agent?: Agents) => {
+  if (agent) {
+    (gotOpts as Options).agent = agent
   }
 }
 
@@ -181,8 +193,10 @@ export default ({
 // eslint-disable-next-line max-statements, complexity
 }) => async <T>(
   url: string,
-  opts: RequestOptions = {},
-): Promise<T> => {
+  opts: RequestOptions,
+  params: RequestFactoryParams,
+): Promise<T> {
+  const {client, options: {timeout, apiVersioning, agent, mTLS, retry = {}}} = params
   const retryOptions = getRetryOptions(retry, opts.options)
 
   const gotOpts: OptionsOfJSONResponseBody = {
@@ -262,3 +276,8 @@ export default ({
 
   return rewriteResourceServerResponseUrls(body, requestBase) as T
 }
+
+export default (params: RequestFactoryParams): Request => async <T>(
+  url: string,
+  opts: RequestOptions = {},
+): Promise<T> => executeRequest<T>(url, opts, params)
