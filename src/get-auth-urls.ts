@@ -154,11 +154,11 @@ export default ({
             "essential": true,
             "value": {"enableAsync": true},
           },
-          ...accVerification && {
-            "mh:account_verification": {
-              "essential": true,
-              "value": {"accVerification": true},
-            },
+        },
+        ...accVerification && {
+          "mh:account_verification": {
+            "essential": true,
+            "value": {"accVerification": true},
           },
         },
       },

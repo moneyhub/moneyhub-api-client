@@ -6,7 +6,11 @@
   "types": "dist/index.d.ts",
   "scripts": {
     "lint": "eslint src/ ",
-    "test": "mocha --require ts-node/register --config test/opts/integration.json",
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "mocha --require ts-node/register --config test/opts/unit.json",
+    "test:coverage": "c8 --reporter=text --reporter=lcov --include=src/**/*.ts --exclude=src/__tests__/** --lines 90 --functions 90 --branches 90 --statements 90 mocha --require ts-node/register --config test/opts/unit.json",
+    "test:integration": "mocha --require ts-node/register --config test/opts/integration.json",
+    "test:integration:coverage": "c8 --reporter=text --reporter=lcov --include=src/**/*.ts --exclude=src/__tests__/** --lines 90 --functions 90 --branches 90 --statements 90 mocha --require ts-node/register --config test/opts/integration.json",
     "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json || true",
     "prepare": "husky",
     "prepublishOnly": "npm run build",
@@ -57,6 +61,8 @@
     "snyk": "^1.1302.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.6.3",
-    "@eslint/eslintrc": "^3.2.0"
+    "@eslint/eslintrc": "^3.2.0",
+    "c8": "^10.1.2",
+    "proxyquire": "^2.1.3"
   }
 }
