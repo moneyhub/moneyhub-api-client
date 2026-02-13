@@ -1,4 +1,7 @@
+# Dependencies
 node_modules/
+
+# Local and config (secrets, environment overrides)
 examples/config.js
 examples/config-local.js
 examples/config.local.js
@@ -6,8 +9,15 @@ config/local.json
 config/default.json
 config/prod.json
 config/dev.json
+
+# Build output and caches
 dist/
 .dccache
+coverage
+
+# IDE and editor
 .idea/
-.DS_Store
 .vscode/settings.json
+
+# OS
+.DS_Store
