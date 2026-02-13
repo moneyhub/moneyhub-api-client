@@ -33,7 +33,7 @@ const start = async () => {
 
     const result = await moneyhub.getTransactions({
       userId: options.userId,
-      params: R.omit(["userId"], options)
+      params: omit(["userId"], options)
     })
     console.log(JSON.stringify(result, null, 2))
   } catch (e) {

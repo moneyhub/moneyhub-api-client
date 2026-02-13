@@ -1,6 +1,6 @@
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
-const {generateKeyPair, exportJWK, calculateJwkThumbprint} = require("jose")
+
 
 const optionDefinitions = [
   {name: "key-alg", type: String},
@@ -19,6 +19,7 @@ console.log(usage)
 
 // eslint-disable-next-line max-statements
 const start = async () => {
+  const {generateKeyPair, exportJWK, calculateJwkThumbprint} = await import("jose")
   try {
     const keySize = options["key-size"] || 2048
     const keyUse = options["key-use"] || "sig"

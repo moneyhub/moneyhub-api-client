@@ -100,6 +100,7 @@ describe("API client", function() {
         "getJWTBearerToken",
         "listConnections",
         "listAPIConnections",
+        "listLegacyConnections",
         "listTestConnections",
         "listBetaConnections",
         "listPaymentsConnections",
@@ -135,6 +136,8 @@ describe("API client", function() {
         "makeRecurringPayment",
         "revokeRecurringPayment",
         "getSpendingAnalysis",
+        "getStandardFinancialStatement",
+        "getStandardFinancialStatements",
         "getSpendingGoals",
         "getSpendingGoal",
         "createSpendingGoal",
@@ -193,6 +196,11 @@ describe("API client", function() {
       it("lists api connections", async function() {
         const connections = await moneyhub.listAPIConnections()
         expect(connections.length).to.be.greaterThan(10)
+      })
+
+      it("lists legacy connections", async function() {
+        const connections = await moneyhub.listLegacyConnections()
+        expect(Array.isArray(connections)).to.be.true
       })
 
       it("lists test connections", async function() {
