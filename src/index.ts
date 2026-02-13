@@ -1,9 +1,10 @@
-import {Issuer, custom, generators} from "openid-client"
+import {Issuer, custom, generators, type IssuerMetadata} from "openid-client"
 import getAuthUrlsFactory from "./get-auth-urls"
 import getTokensFactory from "./tokens"
 import requestsFactory from "./requests"
 import * as R from "ramda"
 import req from "./request"
+import {getDiscoveryWithBaseUrl} from "./discovery"
 import type {ApiClientConfig} from "./schema/config"
 const DEFAULT_TIMEOUT = 60000
 
@@ -45,7 +46,12 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
     } : {},
   })
 
-  const moneyhubIssuer = await Issuer.discover(identityServiceUrl + "/oidc")
+  const discoveryMetadata = await getDiscoveryWithBaseUrl(identityServiceUrl, {
+    timeout,
+    agent: options.agent,
+    mTLS: mTLS ?? undefined,
+  })
+  const moneyhubIssuer = new Issuer(discoveryMetadata as IssuerMetadata)
 
   const client = new moneyhubIssuer.Client(
     {
@@ -62,15 +68,21 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
 
   client[custom.clock_tolerance] = 10
 
+  const configWithCache = {
+    ...config,
+    cachedOpenIdConfig: discoveryMetadata,
+  }
+
   const request = req({
     client,
     options: {timeout, apiVersioning, agent, mTLS, retry},
+    resourceServerUrl: config.resourceServerUrl,
   })
 
   const moneyhub = {
     ...getAuthUrlsFactory({client, config}),
     ...getTokensFactory({client, config}),
-    ...requestsFactory({config, request}),
+    ...requestsFactory({config: configWithCache, request}),
     keys: () => (keys && keys.length ? {keys} : null),
     generators,
   }

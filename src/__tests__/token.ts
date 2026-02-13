@@ -9,7 +9,8 @@ const state = "sample-state"
 const nonce = "sample-nonce"
 const code = "X3MNigTlftG~AKzSQfmVmfvVWrq"
 
-describe.skip("Exchange Code For Token", function() {
+// Skipped: requires OAuth code exchange setup
+describe.skip("Exchange Code For Token", function() { // eslint-disable-line mocha/no-skipped-tests
   let moneyhub: MoneyhubInstance
 
   before(async function() {
