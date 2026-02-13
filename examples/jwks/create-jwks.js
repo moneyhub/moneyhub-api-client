@@ -1,6 +1,6 @@
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
-const jose = require("jose")
+
 
 const optionDefinitions = [
   {name: "key-alg", type: String},
@@ -19,20 +19,21 @@ console.log(usage)
 
 // eslint-disable-next-line max-statements
 const start = async () => {
+  const {generateKeyPair, exportJWK, calculateJwkThumbprint} = await import("jose")
   try {
     const keySize = options["key-size"] || 2048
     const keyUse = options["key-use"] || "sig"
     const alg = options.alg || "RS256"
 
-    const {publicKey, privateKey} = await jose.generateKeyPair(alg, {
+    const {publicKey, privateKey} = await generateKeyPair(alg, {
       extractable: true,
       modulusLength: keySize,
     })
 
-    const exportedPrivateJWT = await jose.exportJWK(privateKey)
-    const exportedPublicJWT = await jose.exportJWK(publicKey)
+    const exportedPrivateJWT = await exportJWK(privateKey)
+    const exportedPublicJWT = await exportJWK(publicKey)
 
-    const kid = await jose.calculateJwkThumbprint(exportedPublicJWT)
+    const kid = await calculateJwkThumbprint(exportedPublicJWT)
 
     const privateJWT = {...exportedPrivateJWT, kid, use: keyUse, alg}
     const publicJWT = {...exportedPublicJWT, kid, use: keyUse, alg}

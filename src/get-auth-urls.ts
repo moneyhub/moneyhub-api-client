@@ -1,6 +1,6 @@
 import got from "got"
 import type {Client} from "openid-client"
-import * as R from "ramda"
+import {reject, isNil, mergeDeepRight, compose, is} from "ramda"
 
 import type {ApiClientConfig} from "./schema/config"
 import {PayerType, PaymentActorType} from "./schema/payment"
@@ -8,7 +8,7 @@ import {StandingOrderFrequency} from "./schema/standing-order"
 import {RequestPayee, RequestPayer} from "./schema/payee"
 import {PermissionsAction} from "./requests/types/auth-requests"
 
-const filterUndefined = R.reject(R.isNil)
+const filterUndefined = reject(isNil)
 type PkceParams = {
   code_challenge: string
   code_challenge_method: string
@@ -30,8 +30,8 @@ export default ({
   } = config
 
   const setPermissionsToClaims = (permissions: any, permissionsAction?: PermissionsAction) => (claims: any) => {
-    if (permissions && R.is(Array, permissions)) {
-      return R.mergeDeepRight(claims, {
+    if (permissions && is(Array, permissions)) {
+      return mergeDeepRight(claims, {
         id_token: {
           "mh:consent": {
             essential: true,
@@ -154,19 +154,19 @@ export default ({
             "essential": true,
             "value": {"enableAsync": true},
           },
-          ...accVerification && {
-            "mh:account_verification": {
-              "essential": true,
-              "value": {"accVerification": true},
-            },
+        },
+        ...accVerification && {
+          "mh:account_verification": {
+            "essential": true,
+            "value": {"accVerification": true},
           },
         },
       },
     }
 
-    const _claims = R.compose(
+    const _claims = compose(
       setPermissionsToClaims(permissions, permissionsAction),
-      R.mergeDeepRight(defaultClaims),
+      mergeDeepRight(defaultClaims),
     )(claims)
 
     return getAuthorizationUrlFromParams({
@@ -239,9 +239,9 @@ export default ({
       },
     }
 
-    const _claims = R.compose(
+    const _claims = compose(
       setPermissionsToClaims(permissions, permissionsAction),
-      R.mergeDeepRight(defaultClaims),
+      mergeDeepRight(defaultClaims),
     )(claims)
 
     return client.requestObject({
@@ -311,9 +311,9 @@ export default ({
           },
         },
       }
-      const _claims = R.compose(
+      const _claims = compose(
         setPermissionsToClaims(permissions, permissionsAction),
-        R.mergeDeepRight(defaultClaims),
+        mergeDeepRight(defaultClaims),
       )(claims)
 
       const url = await getAuthorizeUrl({
@@ -365,7 +365,7 @@ export default ({
           },
         },
       }
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       const url = await getAuthorizeUrl({
         state,
@@ -415,7 +415,7 @@ export default ({
           },
         },
       }
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         state,
@@ -460,7 +460,7 @@ export default ({
           },
         },
       }
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         state,
@@ -512,13 +512,11 @@ export default ({
       codeChallenge?: string
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: State is required")
       }
 
       if (!payeeId && !payee) {
-        console.error("PayeeId or Payee are required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: PayeeId or Payee are required")
       }
 
       const scope = `payment openid id:${bankId}`
@@ -551,7 +549,7 @@ export default ({
         },
       }
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         scope,
@@ -586,13 +584,11 @@ export default ({
       codeChallenge?: string
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: State is required")
       }
 
       if (!paymentId) {
-        console.error("PayeeId is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: PaymentId is required")
       }
 
       const scope = `reverse_payment openid id:${bankId}`
@@ -617,7 +613,7 @@ export default ({
         },
       }
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         scope,
@@ -670,13 +666,11 @@ export default ({
       codeChallenge?: string
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: State is required")
       }
 
       if (!payeeId && !payee) {
-        console.error("PayeeId or Payee are required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: PayeeId or Payee are required")
       }
 
       const scope = `recurring_payment:create openid id:${bankId}`
@@ -711,7 +705,7 @@ export default ({
         },
       }
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         scope,
@@ -768,13 +762,11 @@ export default ({
       codeChallenge?: string
     }) => {
       if (!state) {
-        console.error("State is required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: State is required")
       }
 
       if (!payeeId && !payee) {
-        console.error("PayeeId or Payee are required")
-        throw new Error("Missing parameters")
+        throw new Error("Missing parameters: PayeeId or Payee are required")
       }
 
       const scope = `standing_orders:create openid id:${bankId}`
@@ -807,7 +799,7 @@ export default ({
         },
       }
 
-      const _claims = R.mergeDeepRight(defaultClaims, claims)
+      const _claims = mergeDeepRight(defaultClaims, claims)
 
       return getAuthorizeUrl({
         scope,
@@ -857,9 +849,9 @@ export default ({
         },
       }
 
-      const _claims = R.compose(
+      const _claims = compose(
         setPermissionsToClaims(permissions, permissionsAction),
-        R.mergeDeepRight(defaultClaims),
+        mergeDeepRight(defaultClaims),
       )(claims)
 
       return getAuthorizeUrl({

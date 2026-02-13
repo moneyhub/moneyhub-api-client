@@ -1,13 +1,13 @@
 import type {Client, TokenSet} from "openid-client"
-import * as R from "ramda"
-import * as jose from "jose"
+import {reject, isNil} from "ramda"
+import {SignJWT, base64url, importJWK} from "jose"
 import type {ApiClientConfig} from "./schema/config"
-import type {JWK, KeyLike} from "jose"
-import * as crypto from "crypto"
+import type {CryptoKey, JWK, KeyObject} from "jose"
+import {randomBytes} from "crypto"
 import exchangeCodeForTokensFactory from "./exchange-code-for-token"
 
 const random = (length = 32) =>
-  jose.base64url.encode(crypto.randomBytes(length))
+  base64url.encode(new Uint8Array(randomBytes(length)))
 
 const createSignedJWT = async ({
   alg,
@@ -23,10 +23,10 @@ const createSignedJWT = async ({
     audience: string
     issuer: string
     sub: string
-    privateKey: KeyLike | Uint8Array
+    privateKey: CryptoKey | KeyObject | JWK | Uint8Array
     expirationTime: string | undefined
   }) =>
-  new jose.SignJWT({})
+  new SignJWT({})
     .setProtectedHeader({alg, kid})
     .setSubject(sub)
     .setAudience(audience)
@@ -37,7 +37,7 @@ const createSignedJWT = async ({
     .sign(privateKey)
 
 
-const filterUndefined = R.reject(R.isNil)
+const filterUndefined = reject(isNil)
 
 const exchangeCodeForTokensErrorMessage = `
 Missing Parameters in exchangeCodeForTokens method.
@@ -95,7 +95,7 @@ export default ({
     const privateJWK = keys.find(({alg}) => alg === request_object_signing_alg) as JWK
     if (!privateJWK) throw new Error(`Private key with alg ${request_object_signing_alg} missing`)
 
-    const privateKey = await jose.importJWK(privateJWK)
+    const privateKey = await importJWK(privateJWK)
 
     return await createSignedJWT({
       alg: request_object_signing_alg,
@@ -127,8 +127,7 @@ export default ({
 
     exchangeCodeForTokens: ({paramsFromCallback, localParams}: Parameters<typeof exchangeCodeForTokens>[0]) => {
       if (!paramsFromCallback || !localParams) {
-        console.error(exchangeCodeForTokensErrorMessage)
-        throw new Error("Missing parameters")
+        throw new Error(exchangeCodeForTokensErrorMessage)
       }
       return exchangeCodeForTokens({paramsFromCallback, localParams})
     },

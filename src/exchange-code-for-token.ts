@@ -2,7 +2,7 @@
 /* eslint-disable max-statements */
 import {TokenSet} from "openid-client"
 import type {Client} from "openid-client"
-import * as R from "ramda"
+import {pick} from "ramda"
 
 const ALLOWED_PARAMS = [
   "access_token",
@@ -55,7 +55,7 @@ export default ({
     paramsFromCallback: ParamsFromCallback
     localParams: LocalParams
   }): Promise<TokenSet> => {
-    const params = R.pick(ALLOWED_PARAMS, paramsFromCallback)
+    const params = pick(ALLOWED_PARAMS, paramsFromCallback)
     const checks = localParams
 
     if (client.default_max_age && !checks.max_age)

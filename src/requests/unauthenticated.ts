@@ -14,6 +14,8 @@ export default ({config, request}: RequestsParams): UnauthenticatedRequests => {
       request(`${identityServiceUrl}/oidc/.well-known/all-connections?${query && qs.stringify(query)}`),
     listAPIConnections: (query?: {clientId?: string}) =>
       request(`${identityServiceUrl}/oidc/.well-known/api-connections?${query && qs.stringify(query)}`),
+    listLegacyConnections: (query?: {clientId?: string}) =>
+      request(`${identityServiceUrl}/oidc/.well-known/legacy-connections?${query && qs.stringify(query)}`),
     listTestConnections: (query?: {clientId?: string}) =>
       request(`${identityServiceUrl}/oidc/.well-known/test-connections?${query && qs.stringify(query)}`),
     listPaymentsConnections: (query?: {clientId?: string}) =>
