@@ -116,8 +116,37 @@ const attachErrorDetails = (err: unknown) => {
   throw err
 }
 
+/** Path prefixes used by the identity service (auth, pay-links, payees, OIDC, etc.). Versioning is not applied to these. */
+const IDENTITY_PATH_PREFIXES = [
+  "/oidc",
+  "/auth-requests",
+  "/pay-links",
+  "/payees",
+  "/payments",
+  "/consent-history",
+  "/recurring-payments",
+  "/standing-orders",
+  "/users",
+  "/scim/",
+  "/reseller-check",
+  "/request",
+]
+
+const isIdentityServiceUrl = (url: string): boolean => {
+  if (url.includes("identity")) return true
+  try {
+    const path = new URL(url).pathname
+    return IDENTITY_PATH_PREFIXES.some((prefix) => {
+      const withSlash = prefix.endsWith("/") ? prefix : prefix + "/"
+      return path === prefix || path.startsWith(withSlash)
+    })
+  } catch {
+    return false
+  }
+}
+
 export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Version = DEFAULT_API_VERSION): string => {
-  if (!apiVersioning || url.includes("identity") || /\/v.+/g.test(url)) return url
+  if (!apiVersioning || isIdentityServiceUrl(url) || /\/v.+/g.test(url)) return url
   const urlWithVersion = R.pipe(
     R.split("/"), // split url [ "https:", "", "test.com", "path", "path2" ]
     R.insert(3, String(version)), // insert and stringify version after domain
