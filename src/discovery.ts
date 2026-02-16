@@ -137,7 +137,7 @@ export function inferCanonicalBaseFromLinkUrl(linkUrl: string): string | null {
       const versionPath = "/" + pathParts.slice(0, versionIndex + 1).join("/")
       return `${u.origin}${versionPath}`
     }
-    return `${u.origin}${u.pathname}`
+    return u.origin
   } catch {
     return null
   }
@@ -164,5 +164,7 @@ export function rewriteResourceServerResponseUrls<T>(
   const canonicalBase = inferCanonicalBaseFromLinkUrl(links.self)
   if (!canonicalBase || canonicalBase === targetBase) return body
 
-  return rewriteUrlsInObject(body, canonicalBase, targetBase)
+  const result = {...(body as Record<string, unknown>)}
+  result.links = rewriteUrlsInObject(links, canonicalBase, targetBase)
+  return result as unknown as T
 }

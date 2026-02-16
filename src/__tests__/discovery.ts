@@ -82,9 +82,9 @@ describe("discovery URL rewrite", function() {
       expect(inferCanonicalBaseFromLinkUrl(url)).to.equal("https://api.moneyhub.co.uk/v3")
     })
 
-    it("handles path without version segment", function() {
+    it("returns origin only when path has no version segment", function() {
       const url = "https://api.example.com/accounts"
-      expect(inferCanonicalBaseFromLinkUrl(url)).to.equal("https://api.example.com/accounts")
+      expect(inferCanonicalBaseFromLinkUrl(url)).to.equal("https://api.example.com")
     })
 
     it("returns null for invalid URL", function() {
@@ -124,6 +124,36 @@ describe("discovery URL rewrite", function() {
 
     it("returns body unchanged for non-object", function() {
       expect(rewriteResourceServerResponseUrls(null, resourceServerUrl)).to.equal(null)
+    })
+
+    it("rewrites all link URLs when no version segment (canonical base is origin only)", function() {
+      const body = {
+        data: [],
+        links: {
+          self: "https://api.example.com/accounts/123",
+          next: "https://api.example.com/transactions?offset=10",
+        },
+      }
+      const out = rewriteResourceServerResponseUrls(body, resourceServerUrl)
+      expect((out as typeof body).links?.self).to.equal("https://gateway.example.com/v3/accounts/123")
+      expect((out as typeof body).links?.next).to.equal("https://gateway.example.com/v3/transactions?offset=10")
+    })
+
+    it("rewrites only links and leaves data and meta unchanged", function() {
+      const canonicalUrlInData = "https://api.moneyhub.co.uk/v3/accounts/123"
+      const body = {
+        data: [{id: "1", href: canonicalUrlInData}],
+        meta: {source: canonicalUrlInData},
+        links: {
+          self: "https://api.moneyhub.co.uk/v3/accounts",
+          next: "https://api.moneyhub.co.uk/v3/accounts?offset=10",
+        },
+      }
+      const out = rewriteResourceServerResponseUrls(body, resourceServerUrl)
+      expect((out as typeof body).links?.self).to.equal("https://gateway.example.com/v3/accounts")
+      expect((out as typeof body).links?.next).to.equal("https://gateway.example.com/v3/accounts?offset=10")
+      expect((out as typeof body).data).to.eql(body.data)
+      expect((out as typeof body).meta).to.eql(body.meta)
     })
   })
 
