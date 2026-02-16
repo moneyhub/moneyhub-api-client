@@ -7,6 +7,7 @@ import req from "./request"
 import {getDiscoveryWithBaseUrl} from "./discovery"
 import type {ApiClientConfig} from "./schema/config"
 const DEFAULT_TIMEOUT = 60000
+const DEFAULT_OIDC_CACHE_TTL_MS = 3600000 // 1 hour
 
 const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
   const config = R.evolve(
@@ -36,7 +37,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
     },
   } = config
 
-  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, agent, retry = {}} = options
+  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, agent, openIdConfigCacheTtlMs = DEFAULT_OIDC_CACHE_TTL_MS, retry = {}} = options
 
   custom.setHttpOptionsDefaults({
     timeout,
@@ -68,9 +69,11 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
 
   client[custom.clock_tolerance] = 10
 
+  const oidcCache = {value: discoveryMetadata as Record<string, unknown>, cachedAt: Date.now()}
   const configWithCache = {
     ...config,
-    cachedOpenIdConfig: discoveryMetadata,
+    oidcCache,
+    openIdConfigCacheTtlMs,
   }
 
   const request = req({

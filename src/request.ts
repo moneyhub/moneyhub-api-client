@@ -59,9 +59,16 @@ type Version = "v2.0" | "v2" | "v3" | "v3.0"
 
 export type Request = <T>(url: string, opts?: RequestOptions) => Promise<T>
 
-/** Optional internal fields (e.g. cachedOpenIdConfig) set by the client, not part of public ApiClientConfig */
+/** OIDC discovery cache entry with value and timestamp for TTL. */
+export interface OidcCacheEntry {
+  value: Record<string, unknown>
+  cachedAt: number
+}
+
+/** Optional internal fields (e.g. oidcCache) set by the client, not part of public ApiClientConfig */
 export interface RequestsParamsConfig extends ApiClientConfig {
-  cachedOpenIdConfig?: Record<string, unknown>
+  oidcCache?: OidcCacheEntry
+  openIdConfigCacheTtlMs?: number
 }
 
 export interface RequestsParams {

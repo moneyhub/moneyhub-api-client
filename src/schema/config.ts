@@ -123,6 +123,9 @@ export interface ApiClientConfig {
       timeout?: number
       apiVersioning?: boolean
       agent?: Agents
+
+      /** TTL in ms for the OIDC discovery document cache. Default 3600000 (1 hour). */
+      openIdConfigCacheTtlMs?: number
       retry?: {
         limit?: number
         methods?: Method[]
