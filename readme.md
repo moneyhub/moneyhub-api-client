@@ -197,7 +197,7 @@ With this enabled, the client will:
 - **Identity**: Fetch the OpenID discovery document from your gateway and rewrite any URLs in it to use your configured `identityServiceUrl`, so that authorization, token exchange, and JWKS requests all go through the gateway.
 - **Resource server**: Rewrite URLs in API response bodies (e.g. `links.self`, `links.next`, `links.prev`) so that any use of those links by your application also goes through your configured `resourceServerUrl`.
 
-**Verifying behaviour**: Run the unit tests for the rewrite logic with `npx mocha --require ts-node/register "src/__tests__/discovery.ts"`; run the full test suite as described in [Running Tests](#running-tests); in production, check your gateway access logs to confirm identity and API requests hit the gateway, or inspect `getOpenIdConfig()` and any `response.links` to see gateway URLs.
+**Verifying behaviour**: Run the unit tests for the rewrite logic with `npx mocha --require ts-node/register "src/__tests__/discovery.ts"`; run the integration tests for gateway rewriting with `npm run test -- -g "Gateway URL rewriting"` (or run the full test suite as described in [Running Tests](#running-tests)); in production, check your gateway access logs to confirm identity and API requests hit the gateway, or inspect `getOpenIdConfig()` and any `response.links` to see gateway URLs.
 
 ### Security considerations
 
