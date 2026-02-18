@@ -4,7 +4,8 @@ import getTokensFactory from "./tokens"
 import requestsFactory from "./requests"
 import * as R from "ramda"
 import req from "./request"
-import {getDiscoveryWithBaseUrl} from "./discovery"
+import {getDiscovery, getDiscoveryWithGatewayUrl} from "./discovery"
+import {createGetOpenIdConfig} from "./oidc-config"
 import type {ApiClientConfig} from "./schema/config"
 const DEFAULT_TIMEOUT = 60000
 const DEFAULT_OIDC_CACHE_TTL_MS = 3600000 // 1 hour
@@ -37,7 +38,7 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
     },
   } = config
 
-  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, agent, openIdConfigCacheTtlMs = DEFAULT_OIDC_CACHE_TTL_MS, retry = {}} = options
+  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, agent, enableGatewayUrlRewriting = false, openIdConfigCacheTtlMs = DEFAULT_OIDC_CACHE_TTL_MS, retry = {}} = options
 
   custom.setHttpOptionsDefaults({
     timeout,
@@ -47,11 +48,17 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
     } : {},
   })
 
-  const discoveryMetadata = await getDiscoveryWithBaseUrl(identityServiceUrl, {
-    timeout,
-    agent: options.agent,
-    mTLS: mTLS ?? undefined,
-  })
+  const discoveryMetadata = enableGatewayUrlRewriting
+    ? await getDiscoveryWithGatewayUrl(identityServiceUrl, {
+      timeout,
+      agent: options.agent,
+      mTLS: mTLS ?? undefined,
+    })
+    : await getDiscovery(identityServiceUrl, {
+      timeout,
+      agent: options.agent,
+      mTLS: mTLS ?? undefined,
+    })
   const moneyhubIssuer = new Issuer(discoveryMetadata as IssuerMetadata)
 
   const client = new moneyhubIssuer.Client(
@@ -69,23 +76,26 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
 
   client[custom.clock_tolerance] = 10
 
-  const oidcCache = {value: discoveryMetadata as Record<string, unknown>, cachedAt: Date.now()}
-  const configWithCache = {
-    ...config,
-    oidcCache,
-    openIdConfigCacheTtlMs,
-  }
-
-  const request = req({
+  const requestFn = req({
     client,
     options: {timeout, apiVersioning, agent, mTLS, retry},
     resourceServerUrl: config.resourceServerUrl,
+    identityServiceUrl,
+    enableGatewayUrlRewriting,
   })
+
+  const getOpenIdConfig = createGetOpenIdConfig({
+    identityServiceUrl,
+    enableGatewayUrlRewriting,
+    openIdConfigCacheTtlMs,
+    request: requestFn,
+  })
+  const configWithGetOpenIdConfig = {...config, getOpenIdConfig}
 
   const moneyhub = {
     ...getAuthUrlsFactory({client, config}),
     ...getTokensFactory({client, config}),
-    ...requestsFactory({config: configWithCache, request}),
+    ...requestsFactory({config: configWithGetOpenIdConfig, request: requestFn}),
     keys: () => (keys && keys.length ? {keys} : null),
     generators,
   }

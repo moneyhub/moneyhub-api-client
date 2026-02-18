@@ -59,16 +59,9 @@ type Version = "v2.0" | "v2" | "v3" | "v3.0"
 
 export type Request = <T>(url: string, opts?: RequestOptions) => Promise<T>
 
-/** OIDC discovery cache entry with value and timestamp for TTL. */
-export interface OidcCacheEntry {
-  value: Record<string, unknown>
-  cachedAt: number
-}
-
-/** Optional internal fields (e.g. oidcCache) set by the client, not part of public ApiClientConfig */
+/** Optional internal fields set by the client, not part of public ApiClientConfig */
 export interface RequestsParamsConfig extends ApiClientConfig {
-  oidcCache?: OidcCacheEntry
-  openIdConfigCacheTtlMs?: number
+  getOpenIdConfig: () => Promise<Record<string, unknown>>
 }
 
 export interface RequestsParams {
@@ -123,37 +116,28 @@ const attachErrorDetails = (err: unknown) => {
   throw err
 }
 
-/** Path prefixes used by the identity service (auth, pay-links, payees, OIDC, etc.). Versioning is not applied to these. */
-const IDENTITY_PATH_PREFIXES = [
-  "/oidc",
-  "/auth-requests",
-  "/pay-links",
-  "/payees",
-  "/payments",
-  "/consent-history",
-  "/recurring-payments",
-  "/standing-orders",
-  "/users",
-  "/scim/",
-  "/reseller-check",
-  "/request",
-]
-
-const isIdentityServiceUrl = (url: string): boolean => {
-  if (url.includes("identity")) return true
-  try {
-    const path = new URL(url).pathname
-    return IDENTITY_PATH_PREFIXES.some((prefix) => {
-      const withSlash = prefix.endsWith("/") ? prefix : prefix + "/"
-      return path === prefix || path.startsWith(withSlash)
-    })
-  } catch {
-    return false
+/**
+ * Returns true if the URL should not have a version segment added (identity service has no API versioning).
+ * When identityServiceUrl is provided (e.g. gateway or identity base), any URL under that base is left unchanged.
+ * @param {string} url - Request URL to check
+ * @param {string} [identityServiceUrl] - Optional identity service base URL
+ * @returns {boolean} True if the URL is an identity service URL and should not be versioned
+ */
+const isIdentityServiceUrl = (url: string, identityServiceUrl?: string): boolean => {
+  if (identityServiceUrl) {
+    const base = identityServiceUrl.replace(/\/$/, "")
+    return url === base || url.startsWith(base + "/")
   }
+  return url.includes("identity")
 }
 
-export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Version = DEFAULT_API_VERSION): string => {
-  if (!apiVersioning || isIdentityServiceUrl(url) || /\/v.+/g.test(url)) return url
+export const addVersionToUrl = (
+  url: string,
+  apiVersioning: boolean,
+  version: Version = DEFAULT_API_VERSION,
+  identityServiceUrl?: string,
+): string => {
+  if (!apiVersioning || isIdentityServiceUrl(url, identityServiceUrl) || /\/v.+/g.test(url)) return url
   const urlWithVersion = R.pipe(
     R.split("/"), // split url [ "https:", "", "test.com", "path", "path2" ]
     R.insert(3, String(version)), // insert and stringify version after domain
@@ -176,6 +160,8 @@ export default ({
   client,
   options: {timeout, apiVersioning, agent, mTLS, retry = {}},
   resourceServerUrl,
+  identityServiceUrl,
+  enableGatewayUrlRewriting = false,
 }: {
   client: Client
   options: {
@@ -186,6 +172,8 @@ export default ({
     retry?: RetryOptions
   }
   resourceServerUrl: string
+  identityServiceUrl?: string
+  enableGatewayUrlRewriting?: boolean
 // eslint-disable-next-line max-statements, complexity
 }) => async <T>(
   url: string,
@@ -205,7 +193,7 @@ export default ({
     (gotOpts as Options).agent = agent
   }
 
-  const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version)
+  const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version, identityServiceUrl)
 
   if (opts.options?.token) {
     gotOpts.headers = R.assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
@@ -251,7 +239,7 @@ export default ({
 
   const body = await (req as any).json().catch(attachErrorDetails) as T
 
-  if (resourceServerUrl && formattedUrl.startsWith(resourceServerUrl)) {
+  if (enableGatewayUrlRewriting && resourceServerUrl && formattedUrl.startsWith(resourceServerUrl)) {
     return rewriteResourceServerResponseUrls(body, resourceServerUrl) as T
   }
 

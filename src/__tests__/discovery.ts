@@ -2,9 +2,11 @@ import {expect} from "chai"
 import {
   rewriteUrlsInObject,
   rewriteDiscoveryUrls,
+  rewriteDiscoveryDocForIdentityUrl,
   inferCanonicalBaseFromLinkUrl,
   rewriteResourceServerResponseUrls,
 } from "../discovery"
+import {createGetOpenIdConfig} from "../oidc-config"
 import type {Request} from "../request"
 import unauthenticated from "../requests/unauthenticated"
 
@@ -157,7 +159,7 @@ describe("discovery URL rewrite", function() {
     })
   })
 
-  describe("getOpenIdConfig refresh path", function() {
+  describe("rewriteDiscoveryDocForIdentityUrl", function() {
     const canonical = "https://identity.moneyhub.co.uk/oidc"
     const gatewayBase = "https://gateway.example.com/identity/oidc"
     const rawDoc = {
@@ -167,23 +169,59 @@ describe("discovery URL rewrite", function() {
       jwks_uri: canonical + "/.well-known/jwks.json",
     }
 
-    it("applies rewriteDiscoveryUrls when cache expires so gateway URLs are cached", async function() {
+    it("rewrites discovery doc for identity URL so gateway URLs are used", function() {
+      const rewritten = rewriteDiscoveryDocForIdentityUrl(gatewayBase.replace("/oidc", ""), rawDoc)
+      expect(rewritten.issuer).to.equal(canonical)
+      expect(rewritten.authorization_endpoint).to.equal(gatewayBase + "/authorize")
+      expect(rewritten.token_endpoint).to.equal(gatewayBase + "/token")
+      expect(rewritten.jwks_uri).to.equal(gatewayBase + "/.well-known/jwks.json")
+    })
+  })
+
+  describe("getOpenIdConfig via createGetOpenIdConfig (TTLCache)", function() {
+    const canonical = "https://identity.moneyhub.co.uk/oidc"
+    const gatewayBase = "https://gateway.example.com/identity/oidc"
+    const rawDoc = {
+      issuer: canonical,
+      authorization_endpoint: canonical + "/authorize",
+      token_endpoint: canonical + "/token",
+      jwks_uri: canonical + "/.well-known/jwks.json",
+    }
+
+    it("returns rewritten discovery when enableGatewayUrlRewriting is true and applies TTL cache", async function() {
       const request: Request = async () => rawDoc as any
-      const oidcCache = {value: {} as Record<string, unknown>, cachedAt: 0}
-      const config = {
-        resourceServerUrl: "https://gateway.example.com/v3",
+      const getOpenIdConfig = createGetOpenIdConfig({
         identityServiceUrl: gatewayBase.replace("/oidc", ""),
+        enableGatewayUrlRewriting: true,
         openIdConfigCacheTtlMs: 3600000,
-        oidcCache,
-        client: {client_id: "test", client_secret: "secret"},
-      } as any
-      const api = unauthenticated({config, request})
-      const result = await api.getOpenIdConfig() as Record<string, unknown>
+        request,
+      })
+      const result = (await getOpenIdConfig()) as Record<string, unknown>
       expect(result.issuer).to.equal(canonical)
       expect(result.authorization_endpoint).to.equal(gatewayBase + "/authorize")
       expect(result.token_endpoint).to.equal(gatewayBase + "/token")
       expect(result.jwks_uri).to.equal(gatewayBase + "/.well-known/jwks.json")
-      expect(oidcCache.value).to.eql(result)
+      const cached = await getOpenIdConfig()
+      expect(cached).to.eql(result)
+    })
+
+    it("getOpenIdConfig is delegated from unauthenticated", async function() {
+      const request: Request = async () => rawDoc as any
+      const getOpenIdConfig = createGetOpenIdConfig({
+        identityServiceUrl: gatewayBase.replace("/oidc", ""),
+        enableGatewayUrlRewriting: true,
+        openIdConfigCacheTtlMs: 0,
+        request,
+      })
+      const config = {
+        resourceServerUrl: "https://gateway.example.com/v3",
+        identityServiceUrl: gatewayBase.replace("/oidc", ""),
+        getOpenIdConfig,
+        client: {client_id: "test", client_secret: "secret"},
+      } as any
+      const api = unauthenticated({config, request})
+      const result = (await api.getOpenIdConfig()) as Record<string, unknown>
+      expect(result.authorization_endpoint).to.equal(gatewayBase + "/authorize")
     })
   })
 })

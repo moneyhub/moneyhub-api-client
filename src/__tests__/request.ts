@@ -62,14 +62,13 @@ describe("addVersionToUrl", function() {
     expect(addVersionToUrl(url, false)).to.eql(url)
   })
 
-  it("should not add a version to identity-service paths when hostname does not contain 'identity' (gateway)", function() {
-    const base = "https://my-gateway.example.com"
-    expect(addVersionToUrl(`${base}/auth-requests`, true)).to.eql(`${base}/auth-requests`)
-    expect(addVersionToUrl(`${base}/pay-links`, true)).to.eql(`${base}/pay-links`)
-    expect(addVersionToUrl(`${base}/payees`, true)).to.eql(`${base}/payees`)
-    expect(addVersionToUrl(`${base}/consent-history`, true)).to.eql(`${base}/consent-history`)
-    expect(addVersionToUrl(`${base}/oidc/.well-known/openid-configuration`, true)).to.eql(`${base}/oidc/.well-known/openid-configuration`)
-    expect(addVersionToUrl(`${base}/users`, true)).to.eql(`${base}/users`)
-    expect(addVersionToUrl(`${base}/scim/users`, true)).to.eql(`${base}/scim/users`)
+  it("should not add a version to identity-service paths when identityServiceUrl is provided (gateway)", function() {
+    const identityServiceUrl = "https://my-gateway.example.com"
+    expect(addVersionToUrl(`${identityServiceUrl}/auth-requests`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/auth-requests`)
+    expect(addVersionToUrl(`${identityServiceUrl}/pay-links`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/pay-links`)
+    expect(addVersionToUrl(`${identityServiceUrl}/payees`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/payees`)
+    expect(addVersionToUrl(`${identityServiceUrl}/oidc/.well-known/openid-configuration`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/oidc/.well-known/openid-configuration`)
+    expect(addVersionToUrl(`${identityServiceUrl}/users`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/users`)
+    expect(addVersionToUrl(`${identityServiceUrl}/scim/users`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/scim/users`)
   })
 })

@@ -36,7 +36,7 @@ The breaking changes when upgrading are outlined below:
 
 - Normalisation of all methods to use object destructuring to pass parameters. Please refer to the docs of each method when migrating to this version
 
-- Delete methods only return the status code when succesful
+- Delete methods only return the status code when successful
 
 - All methods to retrieve data return the body response as json, on previous versions some methods were returning the full response from the got library.
 
@@ -178,7 +178,21 @@ At least one of the following parameters needs to be passed in to any api call t
 
 ## Using the client behind a gateway
 
-When your application sits behind a gateway and all traffic to Moneyhub must go through that gateway, set `identityServiceUrl` and/or `resourceServerUrl` in the config to your gateway base URL(s). The client will:
+When your application sits behind a gateway and all traffic to Moneyhub must go through that gateway, set `options.enableGatewayUrlRewriting: true` and set `identityServiceUrl` and/or `resourceServerUrl` in the config to your gateway base URL(s). Example:
+
+```javascript
+const moneyhub = await Moneyhub({
+  resourceServerUrl: "https://my-gateway.example.com/moneyhub/v3",
+  identityServiceUrl: "https://my-gateway.example.com/moneyhub/identity",
+  options: {
+    enableGatewayUrlRewriting: true,
+    openIdConfigCacheTtlMs: 3600000, // optional; default 1 hour
+  },
+  client: { /* ... */ },
+})
+```
+
+With this enabled, the client will:
 
 - **Identity**: Fetch the OpenID discovery document from your gateway and rewrite any URLs in it to use your configured `identityServiceUrl`, so that authorization, token exchange, and JWKS requests all go through the gateway.
 - **Resource server**: Rewrite URLs in API response bodies (e.g. `links.self`, `links.next`, `links.prev`) so that any use of those links by your application also goes through your configured `resourceServerUrl`.
@@ -213,7 +227,7 @@ The following points are intended for security review (e.g. by banks or regulate
   To demonstrate that all traffic to Moneyhub goes through your approved gateway, use the configured base URLs and the verification steps above (tests, gateway logs, inspection of `getOpenIdConfig()` and `response.links`). Internal or external audit can rely on config plus these verification steps.
 
 - **Third-party and supply chain**  
-  No new third-party dependencies are introduced. The client uses existing libraries in a way that supports gateway routing. Rewrite targets are never taken from responses or discovery documents.
+  The client uses `@isaacs/ttlcache` for OIDC discovery caching when gateway rewriting is enabled. Rewrite targets are never taken from responses or discovery documents.
 
 - **Regulatory and outsourcing**  
   Use of a gateway is your architectural choice; this feature makes it possible for the client to honour that choice. Regulatory implications (e.g. outsourcing, record-keeping) remain with your use of the gateway and the Moneyhub service, not with the library change itself.
@@ -424,10 +438,10 @@ const defaultClaims = {
 #### `exchangeCodeForTokensLegacy`
 
 This is a legacy method to get tokens for a user.
-After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
+After a user has successfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
 
 ```javascript
-const tokens = await moneyhub.exchangeCodeForTokens({
+const tokens = await moneyhub.exchangeCodeForTokensLegacy({
   code: "the authorization code",
   nonce: "your nonce value", // optional
   state: "your state value", // optional
@@ -437,7 +451,7 @@ const tokens = await moneyhub.exchangeCodeForTokens({
 
 #### `exchangeCodeForTokens`
 
-After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this method to retrieve access, refresh and id tokens for the user.
+After a user has successfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this method to retrieve access, refresh and id tokens for the user.
 
 The signature for this method changed in v3.
 The previous function is available at 'exchangeCodeForTokensLegacy'
@@ -591,7 +605,7 @@ const tokens = await moneyhub.createAuthRequest({
 
 #### `completeAuthRequest`
 
-Completes an auth request succesfully
+Completes an auth request successfully
 
 ```javascript
 const tokens = await moneyhub.completeAuthRequest({
@@ -2367,10 +2381,13 @@ const availableConnections = await moneyhub.listPaymentsConnections();
 
 #### `getOpenIdConfig`
 
-This method will resolve with our open id configuration.
+Returns the OpenID Connect discovery document (e.g. `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`). 
+
+> [!IMPORTANT]
+> When [gateway URL rewriting](#using-the-client-behind-a-gateway) is enabled, endpoint URLs in the document are rewritten to use your configured `identityServiceUrl`; the result is cached for `openIdConfigCacheTtlMs` (default 1 hour).
 
 ```javascript
-const availableConnections = await moneyhub.getOpenIdConfig();
+const openIdConfig = await moneyhub.getOpenIdConfig();
 ```
 
 ### Examples
@@ -2393,7 +2410,7 @@ The tests use root level Mocha hooks to set up and teardown test data. When addi
 
 ### Troubleshooting tests
 
-- If any errors occurr during test setup or teardown, this should appear as happening in the "before all" or "after all" hook in `"{root}"` with the error.
+- If any errors occur during test setup or teardown, this should appear as happening in the "before all" or "after all" hook in `"{root}"` with the error.
 - Errors in the `before all` hook can cause errors in the `after all` hook as it won't be able to find data to clear up.
 
 ## TypeScript
@@ -2409,4 +2426,4 @@ const getAccounts = ({userId}) => {
 }
 ```
 
-The default export is of the Moneyhub constructor that takes in an argument of the config. You can use `ApiClientConfig` to type that config. The client object that is returned from the constructor can then be used to make API calls. The methods are available with arguments and returns typed.
+The named export `Moneyhub` is the factory function that creates the client; it takes your config (typed with `ApiClientConfig`) and returns a promise of the client instance. The client object can then be used to make API calls, with methods, arguments and return types all typed.

@@ -124,6 +124,12 @@ export interface ApiClientConfig {
       apiVersioning?: boolean
       agent?: Agents
 
+      /**
+       * When true, discovery and resource-server response URLs are rewritten to use the configured
+       * identityServiceUrl and resourceServerUrl (e.g. when behind a gateway). Default false.
+       */
+      enableGatewayUrlRewriting?: boolean
+
       /** TTL in ms for the OIDC discovery document cache. Default 3600000 (1 hour). */
       openIdConfigCacheTtlMs?: number
       retry?: {

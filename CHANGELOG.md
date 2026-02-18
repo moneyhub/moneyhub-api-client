@@ -3,10 +3,12 @@ Unreleased
 
 **Features**
 
-* **Gateway URL rewriting**: When using the client behind a gateway, set `identityServiceUrl` and/or `resourceServerUrl` to your gateway base URL(s). The client will:
+* **Gateway URL rewriting (opt-in)**: When using the client behind a gateway, set `options.enableGatewayUrlRewriting: true` and set `identityServiceUrl` and/or `resourceServerUrl` to your gateway base URL(s). The client will:
   * Fetch the OpenID discovery document from your gateway and rewrite endpoint URLs (authorization, token, JWKS, etc.) to use your configured identity base, so all OIDC traffic goes through the gateway. The discovery `issuer` field is left unchanged so that JWT `iss` claim validation continues to work.
   * Rewrite URLs in resource server response bodies (e.g. `links.self`, `links.next`, `links.prev`) so that any use of those links by your application also goes through your configured resource server base.
-* `getOpenIdConfig()` now returns the rewritten discovery metadata when gateway rewriting is used, so consumers see consistent gateway URLs.
+  * When disabled (default), no URL rewriting is performed, keeping behaviour simple for most clients.
+* `getOpenIdConfig()` uses a TTL cache backed by `@isaacs/ttlcache` (no cache on config); when gateway rewriting is enabled it returns the rewritten discovery metadata so consumers see consistent gateway URLs.
+* Identity URLs are detected for versioning via the configured `identityServiceUrl` base (no hardcoded path prefix list); when provided, any request URL under that base does not have an API version segment added.
 * See the readme section "Using the client behind a gateway" for configuration, verification steps, and security/governance considerations.
 
 6.91.0 / 2025-05-01
@@ -183,7 +185,7 @@ Unreleased
 **Breaking Changes**
 
 * Normalisation of all methods to use object destructuring to pass parameters. Please refer to the docs of each method when migrating to this version
-* Delete methods only return the status code when succesful
+* Delete methods only return the status code when successful
 * All methods to retrieve data return the body response as json, on previous versions some methods were returning the full response from the got library.
 * When our API response code is not 2xx an HTTP error is thrown. Includes a response property with more information.
 * Removal of all the methods with the suffix `WithToken`. To migrate to this version you can use the method with the same name but without the suffix. e.g `getUserConnectionsWithToken()` => `getUserConnections()`

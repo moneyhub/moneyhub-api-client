@@ -82,20 +82,43 @@ export interface OpenIDDiscoveryMetadata {
 }
 
 /**
- * Fetches the OpenID discovery document from identityServiceUrl/oidc and rewrites
- * all endpoint URLs (but not the issuer field) to use the configured base, so that
- * when used behind a gateway all OIDC traffic goes through the gateway.
- * @param {string} identityServiceUrl - Identity service base URL (e.g. https://identity.moneyhub.co.uk)
- * @param {DiscoveryOptions} options - Optional timeout, agent or mTLS settings
- * @returns {Promise<OpenIDDiscoveryMetadata>} OpenID discovery metadata with URLs rewritten for the gateway
+ * Normalised OIDC base for the given identity service URL (no trailing slash).
+ * @param {string} identityServiceUrl - Identity service base URL
+ * @returns {string} OIDC base URL with no trailing slash
  */
-export async function getDiscoveryWithBaseUrl(
+const oidcBaseFromIdentityUrl = (identityServiceUrl: string): string =>
+  (identityServiceUrl.replace(/\/oidc\/?$/, "") + "/oidc").replace(/\/$/, "")
+
+/**
+ * Rewrites a discovery document so endpoint URLs use the identity service base (e.g. gateway).
+ * Single source of truth for canonical/target computation; used by both initial fetch and cache refresh.
+ * @param {string} identityServiceUrl - Identity service base URL (e.g. gateway or https://identity.moneyhub.co.uk)
+ * @param {Record<string, unknown>} doc - Raw OIDC discovery document
+ * @returns {Record<string, unknown>} Discovery document with endpoint URLs rewritten (issuer unchanged)
+ */
+export function rewriteDiscoveryDocForIdentityUrl(
+  identityServiceUrl: string,
+  doc: Record<string, unknown>,
+): Record<string, unknown> {
+  const issuer = doc?.issuer
+  if (!issuer || typeof issuer !== "string") return doc
+  const canonicalBase = issuer.replace(/\/$/, "")
+  const targetBase = oidcBaseFromIdentityUrl(identityServiceUrl)
+  return rewriteDiscoveryUrls(doc, canonicalBase, targetBase)
+}
+
+/**
+ * Fetches the raw OpenID discovery document from identityServiceUrl/oidc (no URL rewriting).
+ * @param {string} identityServiceUrl - Identity service base URL
+ * @param {DiscoveryOptions} options - Optional timeout, agent or mTLS settings
+ * @returns {Promise<OpenIDDiscoveryMetadata>} Raw OpenID discovery metadata
+ */
+export async function getDiscovery(
   identityServiceUrl: string,
   options: DiscoveryOptions = {},
 ): Promise<OpenIDDiscoveryMetadata> {
-  const base = identityServiceUrl.replace(/\/oidc\/?$/, "") + "/oidc"
+  const base = oidcBaseFromIdentityUrl(identityServiceUrl)
   const url = `${base}/.well-known/openid-configuration`
-
   const gotOpts: OptionsOfJSONResponseBody = {
     timeout: options.timeout,
     responseType: "json",
@@ -109,16 +132,24 @@ export async function getDiscoveryWithBaseUrl(
       key: options.mTLS.key,
     }
   }
-
   const doc = (await got(url, gotOpts).json()) as Record<string, unknown>
-  const issuer = doc.issuer as string
-  if (!issuer || typeof issuer !== "string") {
-    return doc as OpenIDDiscoveryMetadata
-  }
+  return doc as OpenIDDiscoveryMetadata
+}
 
-  const canonicalBase = issuer.replace(/\/$/, "")
-  const targetBase = base.replace(/\/$/, "")
-  const rewritten = rewriteDiscoveryUrls(doc, canonicalBase, targetBase)
+/**
+ * Fetches the OpenID discovery document from identityServiceUrl/oidc and rewrites
+ * all endpoint URLs (but not the issuer field) to use the configured identity service url, so that
+ * when used behind a gateway all OIDC traffic goes through the gateway.
+ * @param {string} identityServiceUrl - Identity service URL (e.g. https://identity.moneyhub.co.uk)
+ * @param {DiscoveryOptions} options - Optional timeout, agent or mTLS settings
+ * @returns {Promise<OpenIDDiscoveryMetadata>} OpenID discovery metadata with URLs rewritten for the gateway
+ */
+export async function getDiscoveryWithGatewayUrl(
+  identityServiceUrl: string,
+  options: DiscoveryOptions = {},
+): Promise<OpenIDDiscoveryMetadata> {
+  const doc = (await getDiscovery(identityServiceUrl, options)) as Record<string, unknown>
+  const rewritten = rewriteDiscoveryDocForIdentityUrl(identityServiceUrl, doc)
   return rewritten as OpenIDDiscoveryMetadata
 }
 
