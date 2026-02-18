@@ -188,6 +188,20 @@ describe("discovery URL rewrite", function() {
       jwks_uri: canonical + "/.well-known/jwks.json",
     }
 
+    it("returns discovery unchanged when enableGatewayUrlRewriting is false", async function() {
+      const request: Request = async () => rawDoc as any
+      const getOpenIdConfig = createGetOpenIdConfig({
+        identityServiceUrl: gatewayBase.replace("/oidc", ""),
+        enableGatewayUrlRewriting: false,
+        openIdConfigCacheTtlMs: 0,
+        request,
+      })
+      const result = (await getOpenIdConfig()) as Record<string, unknown>
+      expect(result).to.eql(rawDoc)
+      expect(result.authorization_endpoint).to.equal(canonical + "/authorize")
+      expect(result.token_endpoint).to.equal(canonical + "/token")
+    })
+
     it("returns rewritten discovery when enableGatewayUrlRewriting is true and applies TTL cache", async function() {
       const request: Request = async () => rawDoc as any
       const getOpenIdConfig = createGetOpenIdConfig({
