@@ -1,11 +1,12 @@
-Unreleased
+6.95.0 / 2026-02-23
 ==========
 
 **Features**
 
-* **Gateway behaviour**: When `gatewayIdentityServiceUrl` is set, discovery is fetched from it and endpoint URLs in the document are rewritten to that base (discovery `issuer` is left unchanged for JWT validation). When `gatewayResourceServerUrl` (or `gatewayCaasResourceServerUrl` or `gatewayOsipResourceServerUrl`) is set, the client uses that URL for that API and rewrites response link URLs to it. When a gateway URL is not set for a resource, no rewriting occurs for that resource.
-* `getOpenIdConfig()` uses a TTL cache backed by `@isaacs/ttlcache` and returns discovery with endpoint URLs rewritten to `gatewayIdentityServiceUrl` only when that option is set.
+* **Gateway behaviour**: When `gatewayIdentityServiceUrl` is set, discovery is fetched from it and endpoint URLs in the document are rewritten to that base (discovery `issuer` is left unchanged for JWT validation). When `gatewayResourceServerUrl`, `gatewayCaasResourceServerUrl`, or `gatewayOsipResourceServerUrl` is set, the client uses that URL for that API and rewrites response link URLs in the response body to it. When `gatewayAccountConnectUrl` is set, the client uses that URL for the account-connect API (request routing only; link rewriting applies to resource server, CaaS, and OSIP only). When a gateway URL is not set for a resource, no rewriting occurs for that resource.
+* `getOpenIdConfig()` uses a TTL cache backed by `@isaacs/ttlcache` (configurable via `options.openIdConfigCacheTtlMs`) and returns discovery with endpoint URLs rewritten to `gatewayIdentityServiceUrl` only when that option is set.
 * Identity URLs are detected for versioning via the effective identity base (no hardcoded path prefix list); when provided, any request URL under that base does not have an API version segment added.
+* See the readme section **Using the client behind a gateway** for configuration, verification, and security notes.
 
 6.91.0 / 2025-05-01
 ==================
