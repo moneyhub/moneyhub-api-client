@@ -1,3 +1,30 @@
+7.0.0 / 2026-02-23
+==========
+
+This major release updates the Node.js requirement and upgrades dependencies for security and compatibility. It also adds test infrastructure, documentation, and minor improvements.
+
+**Breaking Changes**
+
+* Node.js 12, 14, 16, and 18 are no longer supported; requires Node.js >= 20.20.0.
+
+**Dependency upgrades**
+
+* **jose** upgraded to v6 (from v5).
+* **TypeScript** upgraded to v5.
+* **ESLint** upgraded to v9 (flat config).
+* **form-data** ^3.0.4 → ^4.0.5, **query-string** ^7.1.1 → ^9.3.1, **ramda** ^0.27.2 → ^0.32.0.
+* Dev dependencies: **@mft/eslint-config-momentumft**, **@types/chai**, **@types/mocha**, and related tooling updated.
+
+**Tooling and development**
+
+* Added `.nvmrc` (Node 20).
+* Test scripts split into `test:unit` and `test:integration`; `test` runs both. Added `test:coverage` and `test:integration:coverage` with c8.
+* Husky pre-commit and pre-push scripts simplified; pre-push runs tests across multiple Node versions.
+* Ramda imports refactored to use named imports instead of the full library.
+* **ENDPOINT_COVERAGE.md** added to document API definitions and client method coverage.
+* New and expanded unit tests (discovery, exchange-code-for-token, get-auth-urls, request, tokens, requests modules, and various endpoint tests).
+* TypeScript config and ts-node options clarified.
+
 6.95.0 / 2026-02-23
 ==========
 
@@ -22,7 +49,7 @@
 * Update User Connection Types
 
 
-6.0.0 / 2024-04-8
+6.0.0 / 2024-04-08
 ==================
 
 **Breaking Changes**

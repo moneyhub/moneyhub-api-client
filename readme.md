@@ -26,6 +26,7 @@ This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise
 - Get a tax return for a subset of transactions
 - Get the regular transactions on an account
 - Get beneficiaries
+- Create reseller check requests and get consent history
 - CAAS (Categorisation as a Service) API for advanced transaction enrichment and categorisation
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
@@ -58,6 +59,10 @@ const Moneyhub = require("@mft/moneyhub-api-client")
 const {Moneyhub} = require("@mft/moneyhub-api-client")
 ```
 
+## Upgrading from 6.x
+
+Version **7.0.0** is a major release whose only changes are the dependancies and therefore the Node.js requirement: **Node.js 12, 14, 16, and 18 is no longer supported; you need Node.js >= 20.20.0.** Ensure your runtime and CI use Node 20.20 or later when upgrading to 7.x.
+
 ## Changelog
 
 [Learn about the latest improvements and breaking changes](CHANGELOG.md).
@@ -66,9 +71,10 @@ const {Moneyhub} = require("@mft/moneyhub-api-client")
 
 To use this API client you will need:
 
+- Node.js >= 20.20.0
 - A `client_id`, `client_secret` and `redirect_uri` of a registered API client
 - The url of the Moneyhub identity service for the environment you are connecting to (https://identity.moneyhub.co.uk)
-- The url for the API gateway for the environment that you are connecting to (https://api.moneyhub.co.uk/v2.0)
+- The url for the API gateway for the environment that you are connecting to (e.g. https://api.moneyhub.co.uk/v3)
 
 ## To install
 
@@ -102,13 +108,15 @@ const moneyhub = await Moneyhub({
   identityServiceUrl: "https://identity.moneyhub.co.uk",
   options: { // optional
     timeout: 60000, // request timeout in milliseconds
+    openIdConfigCacheTtlMs: 3600000, // optional; TTL for OIDC discovery cache (default 1 hour)
+    agent: undefined, // optional; proxy agent (e.g. HttpsProxyAgent) for requests
     retry: {
       limit: 3, // maximum number of retries
       methods: ["GET", "HEAD", "PUT", "DELETE", "OPTIONS", "TRACE"], // HTTP methods to retry
       statusCodes: [408, 413, 429, 500, 502, 503, 504, 521, 522, 524], // status codes to retry on
       maxRetryAfter: 5000 // maximum time to wait between retries in milliseconds
     },
-  }
+  },
   client: {
     client_id: "your client id",
     client_secret: "your client secret",
@@ -2208,7 +2216,7 @@ This method will create a reseller check for verifying 4th party compliance. Req
 ```javascript
 const resellerCheck = await moneyhub.createResellerCheckRequest({
   companyRegistrationNumber: "AB123456",
-  telephone: "1234678"
+  telephone: "1234678",
   email: "email@email.com"
 }, options);
 ```

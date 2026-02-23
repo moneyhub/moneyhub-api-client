@@ -178,5 +178,74 @@ describe("request (unit)", function() {
       await request("https://api.example.com/accounts")
       expect(capturedUrl!).to.equal("https://api.example.com/v3/accounts")
     })
+
+    it("should send formData as body when opts.formData is provided", async function() {
+      let capturedOpts: any
+      const mockGot = (_url: string, opts: any) => {
+        capturedOpts = opts
+        return {json: () => Promise.resolve({})}
+      }
+      const requestModule = proxyquire("../request", {got: mockGot})
+      const request = requestModule.default({
+        client: {},
+        options: {apiVersioning: true},
+      })
+      const formData = {append: () => {}}
+      await request("https://api.example.com/things", {formData})
+      expect(capturedOpts.body).to.equal(formData)
+    })
+
+    it("should pass mTLS cert and key to got when provided in options", async function() {
+      let capturedOpts: any
+      const mockGot = (_url: string, opts: any) => {
+        capturedOpts = opts
+        return {json: () => Promise.resolve({})}
+      }
+      const requestModule = proxyquire("../request", {got: mockGot})
+      const request = requestModule.default({
+        client: {},
+        options: {apiVersioning: true, mTLS: {cert: "cert-pem", key: "key-pem"}},
+      } as any)
+      await request("https://api.example.com/things")
+      expect(capturedOpts.https?.certificate).to.equal("cert-pem")
+      expect(capturedOpts.https?.key).to.equal("key-pem")
+    })
+
+    it("should rewrite response links when gateway URL is set and body has links", async function() {
+      const gatewayBase = "https://gateway.example.com/v3"
+      const bodyWithCanonicalLinks = {
+        data: [{id: "1"}],
+        links: {
+          self: "https://api.moneyhub.co.uk/v3/accounts",
+          next: "https://api.moneyhub.co.uk/v3/accounts?offset=10",
+        },
+      }
+      const mockGot = () => ({
+        json: () => Promise.resolve(bodyWithCanonicalLinks),
+      })
+      const requestModule = proxyquire("../request", {got: mockGot})
+      const request = requestModule.default({
+        client: {},
+        options: {apiVersioning: true},
+        gatewayResourceServerUrl: gatewayBase,
+      } as any)
+      const result = await request(`${gatewayBase}/accounts`) as typeof bodyWithCanonicalLinks
+      expect(result.links?.self).to.equal("https://gateway.example.com/v3/accounts")
+      expect(result.links?.next).to.equal("https://gateway.example.com/v3/accounts?offset=10")
+    })
+
+    it("should return body unchanged when gateway is set but response has no links", async function() {
+      const gatewayBase = "https://gateway.example.com/v3"
+      const bodyNoLinks = {data: []}
+      const mockGot = () => ({json: () => Promise.resolve(bodyNoLinks)})
+      const requestModule = proxyquire("../request", {got: mockGot})
+      const request = requestModule.default({
+        client: {},
+        options: {apiVersioning: true},
+        gatewayResourceServerUrl: gatewayBase,
+      } as any)
+      const result = await request(`${gatewayBase}/accounts`)
+      expect(result).to.eql(bodyNoLinks)
+    })
   })
 })
