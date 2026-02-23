@@ -110,6 +110,20 @@ describe("discovery URL rewrite", function() {
       expect((out as typeof body).links?.next).to.equal("https://gateway.example.com/v3/accounts?offset=10")
     })
 
+    it("rewrites links when gateway URL has no version segment", function() {
+      const gatewayWithoutVersion = "https://gateway.example.com"
+      const body = {
+        data: [{id: "1"}],
+        links: {
+          self: "https://api.moneyhub.co.uk/v3/accounts",
+          next: "https://api.moneyhub.co.uk/v3/accounts?offset=10",
+        },
+      }
+      const out = rewriteResourceServerResponseUrls(body, gatewayWithoutVersion)
+      expect((out as typeof body).links?.self).to.equal("https://gateway.example.com/accounts")
+      expect((out as typeof body).links?.next).to.equal("https://gateway.example.com/accounts?offset=10")
+    })
+
     it("returns body unchanged when no links", function() {
       const body = {data: []}
       expect(rewriteResourceServerResponseUrls(body, resourceServerUrl)).to.eql(body)

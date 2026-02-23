@@ -174,7 +174,6 @@ export default ({
     mTLS?: MutualTLSOptions
     retry?: RetryOptions
   }
-  resourceServerUrl: string
   identityServiceUrl?: string
   gatewayResourceServerUrl?: string
   gatewayCaasResourceServerUrl?: string
@@ -244,16 +243,22 @@ export default ({
 
   const body = await (req as any).json().catch(attachErrorDetails) as T
 
-  const requestBase = inferCanonicalBaseFromLinkUrl(formattedUrl)
-  if (!requestBase) return body
-
   const gatewayBases = [gatewayResourceServerUrl, gatewayCaasResourceServerUrl, gatewayOsipResourceServerUrl]
     .filter((u): u is string => Boolean(u))
     .map(normaliseBase)
   if (gatewayBases.length === 0) return body
 
-  const normalisedRequestBase = normaliseBase(requestBase)
-  if (!gatewayBases.some((base) => normaliseBase(base) === normalisedRequestBase)) return body
+  const normalisedFormattedUrl = normaliseBase(formattedUrl)
+  const isGatewayRequest = gatewayBases.some(
+    (base) => normalisedFormattedUrl === base || normalisedFormattedUrl.startsWith(base + "/"),
+  )
+  if (!isGatewayRequest) return body
+
+  const requestBase = inferCanonicalBaseFromLinkUrl(formattedUrl)
+  if (!requestBase) return body
+
+  const links = (body as Record<string, unknown>)?.links as { self?: string } | undefined
+  if (!links || typeof links.self !== "string") return body
 
   return rewriteResourceServerResponseUrls(body, requestBase) as T
 }

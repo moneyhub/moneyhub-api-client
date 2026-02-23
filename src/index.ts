@@ -14,6 +14,8 @@ function buildConfig(apiClientConfig: ApiClientConfig) {
   return R.evolve(
     {
       identityServiceUrl: (val: ApiClientConfig["identityServiceUrl"]) => val.replace("/oidc", ""),
+      gatewayIdentityServiceUrl: (val: ApiClientConfig["gatewayIdentityServiceUrl"]) =>
+        val == null ? val : val.replace(/\/oidc\/?$/, ""),
       caasResourceServerUrl: (val: ApiClientConfig["resourceServerUrl"]) =>
         `${val.replace(/\/v\d+(\.\d+)?\b/, "")}/caas/v1`,
     },
@@ -64,7 +66,6 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
   const requestFn = req({
     client,
     options: {timeout, apiVersioning, agent, mTLS, retry},
-    resourceServerUrl: urls.resource,
     identityServiceUrl: urls.identity,
     gatewayResourceServerUrl: config.gatewayResourceServerUrl,
     gatewayCaasResourceServerUrl: config.gatewayCaasResourceServerUrl,
