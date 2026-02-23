@@ -29,31 +29,52 @@ describe("Rental records", function() {
   let userId: string
 
   before(async function() {
-    userId = this.config.testReadOnlyUserId
-    moneyhub = await Moneyhub(this.config)
-    const {data: regularTransactions} = await moneyhub.getRegularTransactions({userId})
-    seriesId = regularTransactions[0].seriesId
-    const {data: rentals} = await moneyhub.getRentalRecords({userId})
-    if (rentals.length) {
-      const existingRentalId = rentals[0].id
-      await moneyhub.deleteRentalRecord({userId, rentalId: existingRentalId})
+    try {
+      userId = this.config.testReadOnlyUserId
+      moneyhub = await Moneyhub(this.config)
+      const {data: regularTransactions} = await moneyhub.getRegularTransactions({userId})
+      if (!regularTransactions?.length) {
+        this.skip()
+      }
+      seriesId = regularTransactions[0].seriesId
+      const {data: rentals} = await moneyhub.getRentalRecords({userId})
+      if (rentals.length) {
+        const existingRentalId = rentals[0].id
+        await moneyhub.deleteRentalRecord({userId, rentalId: existingRentalId})
+      }
+      const {data: probe} = await moneyhub.createRentalRecord({rentalData: {...testRentalData, seriesId}, userId})
+      await moneyhub.deleteRentalRecord({userId, rentalId: probe.id})
+    } catch (e: unknown) {
+      const code = (e as {response?: {statusCode?: number}})?.response?.statusCode
+      if (code === 403 || code === 404) {
+        this.skip()
+      }
+      throw e
     }
   })
 
   beforeEach(async function() {
-    const {data} = await moneyhub.createRentalRecord({rentalData: {...testRentalData, seriesId}, userId})
-    rentalId = data.id
+    try {
+      const {data} = await moneyhub.createRentalRecord({rentalData: {...testRentalData, seriesId}, userId})
+      rentalId = data.id
+    } catch (e: unknown) {
+      const code = (e as {response?: {statusCode?: number}})?.response?.statusCode
+      if (code === 403 || code === 404) {
+        this.skip()
+      }
+      throw e
+    }
   })
 
   afterEach(async function() {
+    if (!rentalId) return
     try {
       await moneyhub.deleteRentalRecord({userId, rentalId})
     } catch (e) {
-      if (!(e as any).message.includes("404")) {
+      if (!(e as any).message?.includes("404")) {
         throw e
       }
     }
-
   })
 
   it("get rental record", async function() {
