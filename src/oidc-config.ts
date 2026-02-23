@@ -14,7 +14,9 @@ const discoveryUrl = (identityServiceUrl: string): string =>
 
 export interface GetOpenIdConfigParams {
   identityServiceUrl: string
-  enableGatewayUrlRewriting: boolean
+
+  /** When set, discovery endpoint URLs are rewritten to this base. */
+  gatewayIdentityServiceUrl?: string
   openIdConfigCacheTtlMs: number
   request: Request
 }
@@ -23,11 +25,11 @@ export interface GetOpenIdConfigParams {
  * Creates a getOpenIdConfig function that fetches the OIDC discovery document with optional
  * URL rewriting for gateway use. Uses @isaacs/ttlcache for TTL-based caching when openIdConfigCacheTtlMs > 0.
  *
- * @param {GetOpenIdConfigParams} params - Configuration: identityServiceUrl, enableGatewayUrlRewriting, openIdConfigCacheTtlMs, and the request function used to fetch the discovery document
- * @returns {function(): Promise<Record<string, unknown>>} A function that returns a promise of the discovery document (with URLs rewritten when gateway rewriting is enabled)
+ * @param {GetOpenIdConfigParams} params - Configuration: identityServiceUrl, optional gatewayIdentityServiceUrl, openIdConfigCacheTtlMs, and the request function used to fetch the discovery document
+ * @returns {function(): Promise<Record<string, unknown>>} A function that returns a promise of the discovery document (with endpoint URLs rewritten to gatewayIdentityServiceUrl only when that option is set)
  */
 export function createGetOpenIdConfig(params: GetOpenIdConfigParams): () => Promise<Record<string, unknown>> {
-  const {identityServiceUrl, enableGatewayUrlRewriting, openIdConfigCacheTtlMs, request} = params
+  const {identityServiceUrl, gatewayIdentityServiceUrl, openIdConfigCacheTtlMs, request} = params
   const useCache = openIdConfigCacheTtlMs > 0
   const cache = useCache
     ? new TTLCache<string, Record<string, unknown>>({max: 1, ttl: openIdConfigCacheTtlMs})
@@ -40,9 +42,10 @@ export function createGetOpenIdConfig(params: GetOpenIdConfigParams): () => Prom
     }
 
     const raw = (await request(discoveryUrl(identityServiceUrl))) as Record<string, unknown>
+    const rewriteTarget = gatewayIdentityServiceUrl ?? identityServiceUrl
     const value =
-      enableGatewayUrlRewriting && raw?.issuer && typeof raw.issuer === "string"
-        ? rewriteDiscoveryDocForIdentityUrl(identityServiceUrl, raw)
+      gatewayIdentityServiceUrl && raw?.issuer && typeof raw.issuer === "string"
+        ? rewriteDiscoveryDocForIdentityUrl(rewriteTarget, raw)
         : raw
 
     if (useCache && cache) {

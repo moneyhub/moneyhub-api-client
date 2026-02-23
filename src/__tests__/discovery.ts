@@ -188,11 +188,10 @@ describe("discovery URL rewrite", function() {
       jwks_uri: canonical + "/.well-known/jwks.json",
     }
 
-    it("returns discovery unchanged when enableGatewayUrlRewriting is false", async function() {
+    it("returns discovery unchanged when identityServiceUrl base matches doc issuer (canonical)", async function() {
       const request: Request = async () => rawDoc as any
       const getOpenIdConfig = createGetOpenIdConfig({
-        identityServiceUrl: gatewayBase.replace("/oidc", ""),
-        enableGatewayUrlRewriting: false,
+        identityServiceUrl: canonical.replace("/oidc", ""),
         openIdConfigCacheTtlMs: 0,
         request,
       })
@@ -202,11 +201,12 @@ describe("discovery URL rewrite", function() {
       expect(result.token_endpoint).to.equal(canonical + "/token")
     })
 
-    it("returns rewritten discovery when enableGatewayUrlRewriting is true and applies TTL cache", async function() {
+    it("returns rewritten discovery when gatewayIdentityServiceUrl is set and applies TTL cache", async function() {
       const request: Request = async () => rawDoc as any
+      const gatewayIdentityBase = gatewayBase.replace("/oidc", "")
       const getOpenIdConfig = createGetOpenIdConfig({
-        identityServiceUrl: gatewayBase.replace("/oidc", ""),
-        enableGatewayUrlRewriting: true,
+        identityServiceUrl: gatewayIdentityBase,
+        gatewayIdentityServiceUrl: gatewayIdentityBase,
         openIdConfigCacheTtlMs: 3600000,
         request,
       })
@@ -221,15 +221,16 @@ describe("discovery URL rewrite", function() {
 
     it("getOpenIdConfig is delegated from unauthenticated", async function() {
       const request: Request = async () => rawDoc as any
+      const gatewayIdentityBase = gatewayBase.replace("/oidc", "")
       const getOpenIdConfig = createGetOpenIdConfig({
-        identityServiceUrl: gatewayBase.replace("/oidc", ""),
-        enableGatewayUrlRewriting: true,
+        identityServiceUrl: gatewayIdentityBase,
+        gatewayIdentityServiceUrl: gatewayIdentityBase,
         openIdConfigCacheTtlMs: 0,
         request,
       })
       const config = {
         resourceServerUrl: "https://gateway.example.com/v3",
-        identityServiceUrl: gatewayBase.replace("/oidc", ""),
+        identityServiceUrl: gatewayIdentityBase,
         getOpenIdConfig,
         client: {client_id: "test", client_secret: "secret"},
       } as any

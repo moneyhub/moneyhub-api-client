@@ -115,20 +115,29 @@ export type ApiClientConfigCredentials = ApiClientConfigCredentialsBasic | ApiCl
 
 export interface ApiClientConfig {
     resourceServerUrl: string
+
+    /** When set, requests use this URL and response links are rewritten to it. */
+    gatewayResourceServerUrl?: string
     caasResourceServerUrl?: string
+
+    /** When set, CaaS requests use this URL and response links are rewritten to it. */
+    gatewayCaasResourceServerUrl?: string
     osipResourceServerUrl?: string
+
+    /** When set, OSIP requests use this URL and response links are rewritten to it. */
+    gatewayOsipResourceServerUrl?: string
     identityServiceUrl: string
+
+    /** When set, discovery is fetched from this URL and endpoint URLs are rewritten to it. */
+    gatewayIdentityServiceUrl?: string
     accountConnectUrl?: string
+
+    /** When set, account-connect widget uses this URL. */
+    gatewayAccountConnectUrl?: string
     options?: {
       timeout?: number
       apiVersioning?: boolean
       agent?: Agents
-
-      /**
-       * When true, discovery and resource-server response URLs are rewritten to use the configured
-       * identityServiceUrl and resourceServerUrl (e.g. when behind a gateway). Default false.
-       */
-      enableGatewayUrlRewriting?: boolean
 
       /** TTL in ms for the OIDC discovery document cache. Default 3600000 (1 hour). */
       openIdConfigCacheTtlMs?: number

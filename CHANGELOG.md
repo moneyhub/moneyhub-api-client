@@ -3,13 +3,9 @@ Unreleased
 
 **Features**
 
-* **Gateway URL rewriting (opt-in)**: When using the client behind a gateway, set `options.enableGatewayUrlRewriting: true` and set `identityServiceUrl` and/or `resourceServerUrl` to your gateway base URL(s). The client will:
-  * Fetch the OpenID discovery document from your gateway and rewrite endpoint URLs (authorization, token, JWKS, etc.) to use your configured identity base, so all OIDC traffic goes through the gateway. The discovery `issuer` field is left unchanged so that JWT `iss` claim validation continues to work.
-  * Rewrite URLs in resource server response bodies (e.g. `links.self`, `links.next`, `links.prev`) so that any use of those links by your application also goes through your configured resource server base.
-  * When disabled (default), no URL rewriting is performed, keeping behaviour simple for most clients.
-* `getOpenIdConfig()` uses a TTL cache backed by `@isaacs/ttlcache` (no cache on config); when gateway rewriting is enabled it returns the rewritten discovery metadata so consumers see consistent gateway URLs.
-* Identity URLs are detected for versioning via the configured `identityServiceUrl` base (no hardcoded path prefix list); when provided, any request URL under that base does not have an API version segment added.
-* See the readme section "Using the client behind a gateway" for configuration, verification steps, and security/governance considerations.
+* **Gateway behaviour**: When `gatewayIdentityServiceUrl` is set, discovery is fetched from it and endpoint URLs in the document are rewritten to that base (discovery `issuer` is left unchanged for JWT validation). When `gatewayResourceServerUrl` (or `gatewayCaasResourceServerUrl` or `gatewayOsipResourceServerUrl`) is set, the client uses that URL for that API and rewrites response link URLs to it. When a gateway URL is not set for a resource, no rewriting occurs for that resource.
+* `getOpenIdConfig()` uses a TTL cache backed by `@isaacs/ttlcache` and returns discovery with endpoint URLs rewritten to `gatewayIdentityServiceUrl` only when that option is set.
+* Identity URLs are detected for versioning via the effective identity base (no hardcoded path prefix list); when provided, any request URL under that base does not have an API version segment added.
 
 6.91.0 / 2025-05-01
 ==================

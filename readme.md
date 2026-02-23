@@ -178,24 +178,25 @@ At least one of the following parameters needs to be passed in to any api call t
 
 ## Using the client behind a gateway
 
-When your application sits behind a gateway and all traffic to Moneyhub must go through that gateway, set `options.enableGatewayUrlRewriting: true` and set `identityServiceUrl` and/or `resourceServerUrl` in the config to your gateway base URL(s). Example:
+The client keeps the original resource URLs in config (`resourceServerUrl`, `identityServiceUrl`, `caasResourceServerUrl`, `osipResourceServerUrl`, `accountConnectUrl`). You can optionally set a **gateway URL** for each resource (`gatewayResourceServerUrl`, `gatewayIdentityServiceUrl`, `gatewayCaasResourceServerUrl`, `gatewayOsipResourceServerUrl`, `gatewayAccountConnectUrl`). **Only when a gateway URL is set** for a resource does the client use that URL for requests to that resource and rewrite responses to it. If you only route one resource through a gateway, set only that resource’s gateway URL; the others stay on the original URLs and no rewriting occurs for them. Example:
 
 ```javascript
 const moneyhub = await Moneyhub({
-  resourceServerUrl: "https://my-gateway.example.com/moneyhub/v3",
-  identityServiceUrl: "https://my-gateway.example.com/moneyhub/identity",
+  resourceServerUrl: "https://api.moneyhub.co.uk/v3",
+  identityServiceUrl: "https://identity.moneyhub.co.uk",
+  gatewayResourceServerUrl: "https://my-gateway.example.com/moneyhub/v3",
+  gatewayIdentityServiceUrl: "https://my-gateway.example.com/moneyhub/identity",
   options: {
-    enableGatewayUrlRewriting: true,
     openIdConfigCacheTtlMs: 3600000, // optional; default 1 hour
   },
   client: { /* ... */ },
 })
 ```
 
-With this enabled, the client will:
+Behaviour:
 
-- **Identity**: Fetch the OpenID discovery document from your gateway and rewrite any URLs in it to use your configured `identityServiceUrl`, so that authorization, token exchange, and JWKS requests all go through the gateway.
-- **Resource server**: Rewrite URLs in API response bodies (e.g. `links.self`, `links.next`, `links.prev`) so that any use of those links by your application also goes through your configured `resourceServerUrl`.
+- **Identity**: When `gatewayIdentityServiceUrl` is set, the client fetches the OpenID discovery document from that URL and rewrites endpoint URLs in the document to use it, so that authorization, token exchange, and JWKS requests go through the gateway. When it is not set, discovery is fetched from `identityServiceUrl` and no rewriting is applied.
+- **Resource server**: When `gatewayResourceServerUrl` (or `gatewayCaasResourceServerUrl` or `gatewayOsipResourceServerUrl`) is set, the client uses that URL for requests to that API and rewrites link URLs in responses (e.g. `links.self`, `links.next`, `links.prev`) to that base. When no gateway URL is set for that resource, the client uses the original URL and does not rewrite response links.
 
 **Verifying behaviour**: Run the unit tests for the rewrite logic with `npx mocha --require ts-node/register "src/__tests__/discovery.ts"`; run the integration tests for gateway rewriting with `npm run test -- -g "Gateway URL rewriting"` (or run the full test suite as described in [Running Tests](#running-tests)); in production, check your gateway access logs to confirm identity and API requests hit the gateway, or inspect `getOpenIdConfig()` and any `response.links` to see gateway URLs.
 
@@ -203,8 +204,8 @@ With this enabled, the client will:
 
 The following points are intended for security review (e.g. by banks or regulated entities).
 
-- **Rewrite target is always configured**  
-  URLs are rewritten only to the base URLs you supply in config (`identityServiceUrl`, `resourceServerUrl`). The client never uses a URL from a response or discovery document as the *target* of the rewrite. An attacker who could influence response content cannot cause the client to send traffic to an arbitrary or malicious host; the replacement is always your configured base.
+- **Rewrite target is always a configured gateway URL**  
+  URLs are rewritten only to the gateway base URLs you supply (`gatewayIdentityServiceUrl`, `gatewayResourceServerUrl`, etc.). The client never uses a URL from a response or discovery document as the *target* of the rewrite. An attacker who could influence response content cannot cause the client to send traffic to an arbitrary or malicious host.
 
 - **TLS and certificates**  
   The client validates TLS only to the configured base (the gateway). The gateway is responsible for TLS to the upstream identity and API services. No new certificate or trust store requirements are introduced by the library.
@@ -224,10 +225,10 @@ The following points are intended for security review (e.g. by banks or regulate
   The gateway feature alters outbound request behaviour (discovery used for the Issuer) and response bodies (resource server links). Release notes and CHANGELOG describe the change. Summary: enables gateway-only routing; no new external dependency; rewrite targets are config-only; considerations include issuer claim alignment and response body integrity as above.
 
 - **Audit and assurance**  
-  To demonstrate that all traffic to Moneyhub goes through your approved gateway, use the configured base URLs and the verification steps above (tests, gateway logs, inspection of `getOpenIdConfig()` and `response.links`). Internal or external audit can rely on config plus these verification steps.
+  To demonstrate that traffic to Moneyhub goes through your approved gateway, set the relevant gateway URLs and use the verification steps above (tests, gateway logs, inspection of `getOpenIdConfig()` and `response.links`). Internal or external audit can rely on config plus these verification steps.
 
 - **Third-party and supply chain**  
-  The client uses `@isaacs/ttlcache` for OIDC discovery caching when gateway rewriting is enabled. Rewrite targets are never taken from responses or discovery documents.
+  The client uses `@isaacs/ttlcache` for OIDC discovery caching. Rewrite targets are never taken from responses or discovery documents.
 
 - **Regulatory and outsourcing**  
   Use of a gateway is your architectural choice; this feature makes it possible for the client to honour that choice. Regulatory implications (e.g. outsourcing, record-keeping) remain with your use of the gateway and the Moneyhub service, not with the library change itself.
@@ -2384,7 +2385,7 @@ const availableConnections = await moneyhub.listPaymentsConnections();
 Returns the OpenID Connect discovery document (e.g. `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`). 
 
 > [!IMPORTANT]
-> When [gateway URL rewriting](#using-the-client-behind-a-gateway) is enabled, endpoint URLs in the document are rewritten to use your configured `identityServiceUrl`; the result is cached for `openIdConfigCacheTtlMs` (default 1 hour).
+> When `gatewayIdentityServiceUrl` is set, endpoint URLs in the discovery document are rewritten to that base; the result is cached for `openIdConfigCacheTtlMs` (default 1 hour). See [Using the client behind a gateway](#using-the-client-behind-a-gateway).
 
 ```javascript
 const openIdConfig = await moneyhub.getOpenIdConfig();

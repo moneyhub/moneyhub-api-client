@@ -10,8 +10,8 @@ import type {ApiClientConfig} from "./schema/config"
 const DEFAULT_TIMEOUT = 60000
 const DEFAULT_OIDC_CACHE_TTL_MS = 3600000 // 1 hour
 
-const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
-  const config = R.evolve(
+function buildConfig(apiClientConfig: ApiClientConfig) {
+  return R.evolve(
     {
       identityServiceUrl: (val: ApiClientConfig["identityServiceUrl"]) => val.replace("/oidc", ""),
       caasResourceServerUrl: (val: ApiClientConfig["resourceServerUrl"]) =>
@@ -22,85 +22,79 @@ const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
       caasResourceServerUrl: apiClientConfig.resourceServerUrl,
     },
   )
+}
 
-  const {
-    identityServiceUrl,
-    options = {},
-    client: {
-      client_id,
-      client_secret,
-      id_token_signed_response_alg,
-      request_object_signing_alg,
-      redirect_uri,
-      keys,
-      token_endpoint_auth_method,
-      mTLS,
-    },
-  } = config
+function effectiveUrls(config: ReturnType<typeof buildConfig>) {
+  return {
+    identity: config.gatewayIdentityServiceUrl ?? config.identityServiceUrl,
+    resource: config.gatewayResourceServerUrl ?? config.resourceServerUrl,
+    caas: config.gatewayCaasResourceServerUrl ?? config.caasResourceServerUrl,
+    osip: config.gatewayOsipResourceServerUrl ?? config.osipResourceServerUrl,
+    accountConnect: config.gatewayAccountConnectUrl ?? config.accountConnectUrl,
+  }
+}
 
-  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, agent, enableGatewayUrlRewriting = false, openIdConfigCacheTtlMs = DEFAULT_OIDC_CACHE_TTL_MS, retry = {}} = options
+const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
+  const config = buildConfig(apiClientConfig)
+  const urls = effectiveUrls(config)
+  const {options = {}, client: clientCreds} = config
+  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, agent, openIdConfigCacheTtlMs = DEFAULT_OIDC_CACHE_TTL_MS, retry = {}} = options
+  const {mTLS} = clientCreds
 
   custom.setHttpOptionsDefaults({
     timeout,
-    ...mTLS ? {
-      cert: mTLS.cert,
-      key: mTLS.key,
-    } : {},
+    ...mTLS ? {cert: mTLS.cert, key: mTLS.key} : {},
   })
 
-  const discoveryMetadata = enableGatewayUrlRewriting
-    ? await getDiscoveryWithGatewayUrl(identityServiceUrl, {
-      timeout,
-      agent: options.agent,
-      mTLS: mTLS ?? undefined,
-    })
-    : await getDiscovery(identityServiceUrl, {
-      timeout,
-      agent: options.agent,
-      mTLS: mTLS ?? undefined,
-    })
-  const moneyhubIssuer = new Issuer(discoveryMetadata as IssuerMetadata)
+  const discoveryOpts = {timeout, agent: options.agent, mTLS: mTLS ?? undefined}
+  const discoveryMetadata = config.gatewayIdentityServiceUrl
+    ? await getDiscoveryWithGatewayUrl(urls.identity, discoveryOpts)
+    : await getDiscovery(urls.identity, discoveryOpts)
 
+  const moneyhubIssuer = new Issuer(discoveryMetadata as IssuerMetadata)
   const client = new moneyhubIssuer.Client(
     {
-      client_id,
-      client_secret,
-      id_token_signed_response_alg,
-      redirect_uri,
-      token_endpoint_auth_method,
-      request_object_signing_alg,
+      ...R.pick(["client_id", "client_secret", "id_token_signed_response_alg", "redirect_uri", "token_endpoint_auth_method", "request_object_signing_alg"], clientCreds),
       tls_client_certificate_bound_access_tokens: mTLS?.tls_client_certificate_bound_access_tokens || false,
     },
-    {keys},
+    {keys: clientCreds.keys},
   )
-
   client[custom.clock_tolerance] = 10
 
   const requestFn = req({
     client,
     options: {timeout, apiVersioning, agent, mTLS, retry},
-    resourceServerUrl: config.resourceServerUrl,
-    identityServiceUrl,
-    enableGatewayUrlRewriting,
+    resourceServerUrl: urls.resource,
+    identityServiceUrl: urls.identity,
+    gatewayResourceServerUrl: config.gatewayResourceServerUrl,
+    gatewayCaasResourceServerUrl: config.gatewayCaasResourceServerUrl,
+    gatewayOsipResourceServerUrl: config.gatewayOsipResourceServerUrl,
   })
 
   const getOpenIdConfig = createGetOpenIdConfig({
-    identityServiceUrl,
-    enableGatewayUrlRewriting,
+    identityServiceUrl: urls.identity,
+    gatewayIdentityServiceUrl: config.gatewayIdentityServiceUrl,
     openIdConfigCacheTtlMs,
     request: requestFn,
   })
-  const configWithGetOpenIdConfig = {...config, getOpenIdConfig}
 
-  const moneyhub = {
-    ...getAuthUrlsFactory({client, config}),
-    ...getTokensFactory({client, config}),
-    ...requestsFactory({config: configWithGetOpenIdConfig, request: requestFn}),
-    keys: () => (keys && keys.length ? {keys} : null),
-    generators,
+  const configWithGetOpenIdConfig = {
+    ...config,
+    resourceServerUrl: urls.resource,
+    identityServiceUrl: urls.identity,
+    caasResourceServerUrl: urls.caas,
+    osipResourceServerUrl: urls.osip,
+    accountConnectUrl: urls.accountConnect,
+    getOpenIdConfig,
   }
 
-  return moneyhub
+  return {
+    ...getAuthUrlsFactory({client, config: configWithGetOpenIdConfig}),
+    ...getTokensFactory({client, config: configWithGetOpenIdConfig}),
+    ...requestsFactory({config: configWithGetOpenIdConfig, request: requestFn}),
+    keys: () => (clientCreds.keys?.length ? {keys: clientCreds.keys} : null),
+    generators,
+  }
 }
 
 export type MoneyhubInstance = Awaited<ReturnType<typeof _Moneyhub>>

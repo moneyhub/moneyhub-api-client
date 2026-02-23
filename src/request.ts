@@ -3,7 +3,7 @@ import {Client} from "openid-client"
 import qs from "query-string"
 import * as R from "ramda"
 
-import {rewriteResourceServerResponseUrls} from "./discovery"
+import {rewriteResourceServerResponseUrls, inferCanonicalBaseFromLinkUrl} from "./discovery"
 import type {ApiClientConfig, MutualTLSOptions} from "./schema/config"
 const DEFAULT_API_VERSION: Version = "v3"
 const DEFAULT_MAX_RETRY_AFTER = 5000
@@ -156,12 +156,15 @@ const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {})
   }
 }
 
+const normaliseBase = (url: string): string => url.replace(/\/$/, "")
+
 export default ({
   client,
   options: {timeout, apiVersioning, agent, mTLS, retry = {}},
-  resourceServerUrl,
   identityServiceUrl,
-  enableGatewayUrlRewriting = false,
+  gatewayResourceServerUrl,
+  gatewayCaasResourceServerUrl,
+  gatewayOsipResourceServerUrl,
 }: {
   client: Client
   options: {
@@ -173,7 +176,9 @@ export default ({
   }
   resourceServerUrl: string
   identityServiceUrl?: string
-  enableGatewayUrlRewriting?: boolean
+  gatewayResourceServerUrl?: string
+  gatewayCaasResourceServerUrl?: string
+  gatewayOsipResourceServerUrl?: string
 // eslint-disable-next-line max-statements, complexity
 }) => async <T>(
   url: string,
@@ -239,9 +244,16 @@ export default ({
 
   const body = await (req as any).json().catch(attachErrorDetails) as T
 
-  if (enableGatewayUrlRewriting && resourceServerUrl && formattedUrl.startsWith(resourceServerUrl)) {
-    return rewriteResourceServerResponseUrls(body, resourceServerUrl) as T
-  }
+  const requestBase = inferCanonicalBaseFromLinkUrl(formattedUrl)
+  if (!requestBase) return body
 
-  return body
+  const gatewayBases = [gatewayResourceServerUrl, gatewayCaasResourceServerUrl, gatewayOsipResourceServerUrl]
+    .filter((u): u is string => Boolean(u))
+    .map(normaliseBase)
+  if (gatewayBases.length === 0) return body
+
+  const normalisedRequestBase = normaliseBase(requestBase)
+  if (!gatewayBases.some((base) => normaliseBase(base) === normalisedRequestBase)) return body
+
+  return rewriteResourceServerResponseUrls(body, requestBase) as T
 }

@@ -30,24 +30,20 @@ describe("Gateway URL rewriting (integration)", function() {
 
     gatewayConfig = {
       ...this.config,
-      resourceServerUrl: `${gatewayBase}/moneyhub/resource-server/v3`,
-      identityServiceUrl: `${gatewayBase}/moneyhub/identity-service`,
-      options: {
-        ...(this.config.options || {}),
-        enableGatewayUrlRewriting: true,
-      },
+      resourceServerUrl: realResourceServerUrl,
+      identityServiceUrl: realIdentityServiceUrl,
+      gatewayResourceServerUrl: `${gatewayBase}/moneyhub/resource-server/v3`,
+      gatewayIdentityServiceUrl: `${gatewayBase}/moneyhub/identity-service`,
+      options: this.config.options || {},
     }
 
     moneyhub = await Moneyhub(gatewayConfig as any)
 
     const configNoRewrite = {
       ...this.config,
-      resourceServerUrl: `${gatewayBase}/moneyhub/resource-server/v3`,
-      identityServiceUrl: `${gatewayBase}/moneyhub/identity-service`,
-      options: {
-        ...(this.config.options || {}),
-        enableGatewayUrlRewriting: false,
-      },
+      resourceServerUrl: realResourceServerUrl,
+      identityServiceUrl: realIdentityServiceUrl,
+      options: this.config.options || {},
     }
     moneyhubNoRewrite = await Moneyhub(configNoRewrite as any)
   })
@@ -58,7 +54,7 @@ describe("Gateway URL rewriting (integration)", function() {
     }
   })
 
-  it("returns discovery with gateway URLs when enableGatewayUrlRewriting is true", async function() {
+  it("returns discovery with gateway URLs when identity is configured with gateway URL", async function() {
     const openIdConfig = (await moneyhub.getOpenIdConfig()) as Record<string, unknown>
 
     expect(openIdConfig.issuer).to.be.a("string")
@@ -102,20 +98,20 @@ describe("Gateway URL rewriting (integration)", function() {
     }
   })
 
-  it("returns discovery with canonical URLs when enableGatewayUrlRewriting is false", async function() {
+  it("returns discovery with canonical URLs when identity is configured with canonical URL", async function() {
     const openIdConfig = (await moneyhubNoRewrite.getOpenIdConfig()) as Record<string, unknown>
     const canonicalIdentityBase = realIdentityServiceUrl.replace(/\/$/, "")
     expect(String(openIdConfig.authorization_endpoint)).to.satisfy(
       (s: string) => s.startsWith(canonicalIdentityBase),
-      "authorization_endpoint should remain the canonical identity URL when rewrite is disabled",
+      "authorization_endpoint should use the configured (canonical) identity URL",
     )
     expect(String(openIdConfig.token_endpoint)).to.satisfy(
       (s: string) => s.startsWith(canonicalIdentityBase),
-      "token_endpoint should remain the canonical identity URL when rewrite is disabled",
+      "token_endpoint should use the configured (canonical) identity URL",
     )
   })
 
-  it("returns resource server links unchanged when enableGatewayUrlRewriting is false", async function() {
+  it("returns resource server links with canonical base when resource server is configured with canonical URL", async function() {
     const userId = this.config.testUserId as string
     const accounts = await moneyhubNoRewrite.getAccounts({userId})
     expect(accounts.data).to.be.an("array")
@@ -124,7 +120,7 @@ describe("Gateway URL rewriting (integration)", function() {
     const canonicalApiBase = realResourceServerUrl.replace(/\/$/, "")
     expect(selfLink as string).to.satisfy(
       (s: string) => s.startsWith(canonicalApiBase),
-      "links.self should remain the canonical API URL when rewrite is disabled",
+      "links.self should use the configured (canonical) resource server URL",
     )
   })
 })
