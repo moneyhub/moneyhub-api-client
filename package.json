@@ -1,11 +1,12 @@
 {
   "name": "@mft/moneyhub-api-client",
-  "version": "6.94.0",
+  "version": "6.95.0",
   "description": "Node.JS client for the Moneyhub API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
     "lint": "eslint src/ ",
+    "lint-fix": "eslint src/ --fix",
     "test": "mocha --require ts-node/register --config test/opts/integration.json",
     "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json || true",
     "prepare": "husky install",
@@ -31,6 +32,7 @@
     "node": ">= 12.0.0"
   },
   "dependencies": {
+    "@isaacs/ttlcache": "^2.1.4",
     "form-data": "^3.0.4",
     "got": "^11.8.5",
     "jose": "^5.2.3",

@@ -3,6 +3,7 @@ import {Client} from "openid-client"
 import qs from "query-string"
 import * as R from "ramda"
 
+import {rewriteResourceServerResponseUrls, inferCanonicalBaseFromLinkUrl} from "./discovery"
 import type {ApiClientConfig, MutualTLSOptions} from "./schema/config"
 const DEFAULT_API_VERSION: Version = "v3"
 const DEFAULT_MAX_RETRY_AFTER = 5000
@@ -58,8 +59,13 @@ type Version = "v2.0" | "v2" | "v3" | "v3.0"
 
 export type Request = <T>(url: string, opts?: RequestOptions) => Promise<T>
 
+/** Optional internal fields set by the client, not part of public ApiClientConfig */
+export interface RequestsParamsConfig extends ApiClientConfig {
+  getOpenIdConfig: () => Promise<Record<string, unknown>>
+}
+
 export interface RequestsParams {
-  config: ApiClientConfig
+  config: RequestsParamsConfig
   request: Request
 }
 
@@ -110,8 +116,28 @@ const attachErrorDetails = (err: unknown) => {
   throw err
 }
 
-export const addVersionToUrl = (url: string, apiVersioning: boolean, version: Version = DEFAULT_API_VERSION): string => {
-  if (!apiVersioning || url.includes("identity") || /\/v.+/g.test(url)) return url
+/**
+ * Returns true if the URL should not have a version segment added (identity service has no API versioning).
+ * When identityServiceUrl is provided (e.g. gateway or identity base), any URL under that base is left unchanged.
+ * @param {string} url - Request URL to check
+ * @param {string} [identityServiceUrl] - Optional identity service base URL
+ * @returns {boolean} True if the URL is an identity service URL and should not be versioned
+ */
+const isIdentityServiceUrl = (url: string, identityServiceUrl?: string): boolean => {
+  if (identityServiceUrl) {
+    const base = identityServiceUrl.replace(/\/$/, "")
+    return url === base || url.startsWith(base + "/")
+  }
+  return url.includes("identity")
+}
+
+export const addVersionToUrl = (
+  url: string,
+  apiVersioning: boolean,
+  version: Version = DEFAULT_API_VERSION,
+  identityServiceUrl?: string,
+): string => {
+  if (!apiVersioning || isIdentityServiceUrl(url, identityServiceUrl) || /\/v.+/g.test(url)) return url
   const urlWithVersion = R.pipe(
     R.split("/"), // split url [ "https:", "", "test.com", "path", "path2" ]
     R.insert(3, String(version)), // insert and stringify version after domain
@@ -130,9 +156,15 @@ const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {})
   }
 }
 
+const normaliseBase = (url: string): string => url.replace(/\/$/, "")
+
 export default ({
   client,
   options: {timeout, apiVersioning, agent, mTLS, retry = {}},
+  identityServiceUrl,
+  gatewayResourceServerUrl,
+  gatewayCaasResourceServerUrl,
+  gatewayOsipResourceServerUrl,
 }: {
   client: Client
   options: {
@@ -142,6 +174,10 @@ export default ({
     mTLS?: MutualTLSOptions
     retry?: RetryOptions
   }
+  identityServiceUrl?: string
+  gatewayResourceServerUrl?: string
+  gatewayCaasResourceServerUrl?: string
+  gatewayOsipResourceServerUrl?: string
 // eslint-disable-next-line max-statements, complexity
 }) => async <T>(
   url: string,
@@ -161,7 +197,7 @@ export default ({
     (gotOpts as Options).agent = agent
   }
 
-  const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version)
+  const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version, identityServiceUrl)
 
   if (opts.options?.token) {
     gotOpts.headers = R.assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
@@ -205,6 +241,24 @@ export default ({
       .catch(attachErrorDetails)
   }
 
-  return (req as any).json()
-    .catch(attachErrorDetails)
+  const body = await (req as any).json().catch(attachErrorDetails) as T
+
+  const gatewayBases = [gatewayResourceServerUrl, gatewayCaasResourceServerUrl, gatewayOsipResourceServerUrl]
+    .filter((u): u is string => Boolean(u))
+    .map(normaliseBase)
+  if (gatewayBases.length === 0) return body
+
+  const normalisedFormattedUrl = normaliseBase(formattedUrl)
+  const isGatewayRequest = gatewayBases.some(
+    (base) => normalisedFormattedUrl === base || normalisedFormattedUrl.startsWith(base + "/"),
+  )
+  if (!isGatewayRequest) return body
+
+  const requestBase = inferCanonicalBaseFromLinkUrl(formattedUrl)
+  if (!requestBase) return body
+
+  const links = (body as Record<string, unknown>)?.links as { self?: string } | undefined
+  if (!links || typeof links.self !== "string") return body
+
+  return rewriteResourceServerResponseUrls(body, requestBase) as T
 }

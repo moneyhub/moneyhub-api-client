@@ -1,5 +1,6 @@
 import {Amount} from "./amount"
 
+/* eslint-disable no-shadow -- enum declarations trigger no-shadow with TypeScript's dual type/value emit */
 export enum StatementType {
   AccountClosure = "AccountClosure",
   AccountOpening = "AccountOpening",

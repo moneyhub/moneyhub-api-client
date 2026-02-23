@@ -61,4 +61,14 @@ describe("addVersionToUrl", function() {
     const url = "127.0.0.1:12345"
     expect(addVersionToUrl(url, false)).to.eql(url)
   })
+
+  it("should not add a version to identity-service paths when identityServiceUrl is provided (gateway)", function() {
+    const identityServiceUrl = "https://my-gateway.example.com"
+    expect(addVersionToUrl(`${identityServiceUrl}/auth-requests`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/auth-requests`)
+    expect(addVersionToUrl(`${identityServiceUrl}/pay-links`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/pay-links`)
+    expect(addVersionToUrl(`${identityServiceUrl}/payees`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/payees`)
+    expect(addVersionToUrl(`${identityServiceUrl}/oidc/.well-known/openid-configuration`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/oidc/.well-known/openid-configuration`)
+    expect(addVersionToUrl(`${identityServiceUrl}/users`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/users`)
+    expect(addVersionToUrl(`${identityServiceUrl}/scim/users`, true, undefined, identityServiceUrl)).to.eql(`${identityServiceUrl}/scim/users`)
+  })
 })

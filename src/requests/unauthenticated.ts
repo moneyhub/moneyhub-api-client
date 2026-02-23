@@ -3,7 +3,7 @@ import {RequestsParams, ExtraOptions} from "../request"
 import {UnauthenticatedRequests} from "./types/unauthenticated"
 
 export default ({config, request}: RequestsParams): UnauthenticatedRequests => {
-  const {resourceServerUrl, identityServiceUrl} = config
+  const {resourceServerUrl, identityServiceUrl, getOpenIdConfig} = config
   return {
     getGlobalCounterparties: (params = {}, options?: ExtraOptions) =>
       request(`${resourceServerUrl}/global-counterparties`, {
@@ -20,7 +20,6 @@ export default ({config, request}: RequestsParams): UnauthenticatedRequests => {
       request(`${identityServiceUrl}/oidc/.well-known/payments-connections?${query && qs.stringify(query)}`),
     listBetaConnections: (query?: {clientId?: string}) =>
       request(`${identityServiceUrl}/oidc/.well-known/beta-connections?${query && qs.stringify(query)}`),
-    getOpenIdConfig: () =>
-      request(`${identityServiceUrl}/oidc/.well-known/openid-configuration`),
+    getOpenIdConfig: () => getOpenIdConfig(),
   }
 }

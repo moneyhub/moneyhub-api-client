@@ -36,7 +36,7 @@ The breaking changes when upgrading are outlined below:
 
 - Normalisation of all methods to use object destructuring to pass parameters. Please refer to the docs of each method when migrating to this version
 
-- Delete methods only return the status code when succesful
+- Delete methods only return the status code when successful
 
 - All methods to retrieve data return the body response as json, on previous versions some methods were returning the full response from the got library.
 
@@ -175,6 +175,63 @@ At least one of the following parameters needs to be passed in to any api call t
 - **userId**: Automatically requests a token for this userId with the correct scopes
 - **token**: The token will be added as bearer authorization header
 - **Authorization header**: The full authorisation header can be passed in
+
+## Using the client behind a gateway
+
+The client keeps the original resource URLs in config (`resourceServerUrl`, `identityServiceUrl`, `caasResourceServerUrl`, `osipResourceServerUrl`, `accountConnectUrl`). You can optionally set a **gateway URL** for each resource (`gatewayResourceServerUrl`, `gatewayIdentityServiceUrl`, `gatewayCaasResourceServerUrl`, `gatewayOsipResourceServerUrl`, `gatewayAccountConnectUrl`). **Only when a gateway URL is set** for a resource does the client use that URL for requests to that resource and rewrite responses to it. If you only route one resource through a gateway, set only that resource’s gateway URL; the others stay on the original URLs and no rewriting occurs for them. Example:
+
+```javascript
+const moneyhub = await Moneyhub({
+  resourceServerUrl: "https://api.moneyhub.co.uk/v3",
+  identityServiceUrl: "https://identity.moneyhub.co.uk",
+  gatewayResourceServerUrl: "https://my-gateway.example.com/moneyhub/v3",
+  gatewayIdentityServiceUrl: "https://my-gateway.example.com/moneyhub/identity",
+  options: {
+    openIdConfigCacheTtlMs: 3600000, // optional; default 1 hour
+  },
+  client: { /* ... */ },
+})
+```
+
+Behaviour:
+
+- **Identity**: When `gatewayIdentityServiceUrl` is set, the client fetches the OpenID discovery document from that URL and rewrites endpoint URLs in the document to use it, so that authorization, token exchange, and JWKS requests go through the gateway. When it is not set, discovery is fetched from `identityServiceUrl` and no rewriting is applied.
+- **Resource server**: When `gatewayResourceServerUrl` (or `gatewayCaasResourceServerUrl` or `gatewayOsipResourceServerUrl`) is set, the client uses that URL for requests to that API and rewrites link URLs in responses (e.g. `links.self`, `links.next`, `links.prev`) to that base. When no gateway URL is set for that resource, the client uses the original URL and does not rewrite response links.
+
+**Verifying behaviour**: Run the unit tests for the rewrite logic with `npx mocha --require ts-node/register "src/__tests__/discovery.ts"`; run the integration tests for gateway rewriting with `npm run test -- -g "Gateway URL rewriting"` (or run the full test suite as described in [Running Tests](#running-tests)); in production, check your gateway access logs to confirm identity and API requests hit the gateway, or inspect `getOpenIdConfig()` and any `response.links` to see gateway URLs.
+
+### Security considerations
+
+The following points are intended for security review (e.g. by banks or regulated entities).
+
+- **Rewrite target is always a configured gateway URL**  
+  URLs are rewritten only to the gateway base URLs you supply (`gatewayIdentityServiceUrl`, `gatewayResourceServerUrl`, etc.). The client never uses a URL from a response or discovery document as the *target* of the rewrite. An attacker who could influence response content cannot cause the client to send traffic to an arbitrary or malicious host.
+
+- **TLS and certificates**  
+  The client validates TLS only to the configured base (the gateway). The gateway is responsible for TLS to the upstream identity and API services. No new certificate or trust store requirements are introduced by the library.
+
+- **OIDC issuer claim and discovery `issuer`**  
+  ID tokens from the identity provider carry an `iss` (issuer) claim. Many OIDC clients validate that the token’s `iss` matches the Issuer’s `issuer` from discovery. When using a gateway, the implementation may leave the discovery `issuer` field unchanged so that token validation continues to expect the IdP’s canonical `iss`; or the identity service behind the gateway may be configured to issue tokens with `iss` equal to the gateway URL. See the release notes or implementation docs for the chosen behaviour so you can align with your IdP and validation policies.
+
+- **Response body integrity**  
+  The client modifies response bodies (e.g. `links`) for resource server responses. If you sign or checksum the *full* response body elsewhere, rewriting URL fields would invalidate that. Treat the client as the consumer of the API for integrity purposes, or apply signing after the client (e.g. at the gateway) so the signed payload is the rewritten one.
+
+- **Secrets**  
+  Client credentials, keys, and tokens are used as in the standard flow. No new storage, logging, or transmission of secrets is introduced by the gateway rewrite logic.
+
+### Governance considerations
+
+- **Change control and risk**  
+  The gateway feature alters outbound request behaviour (discovery used for the Issuer) and response bodies (resource server links). Release notes and CHANGELOG describe the change. Summary: enables gateway-only routing; no new external dependency; rewrite targets are config-only; considerations include issuer claim alignment and response body integrity as above.
+
+- **Audit and assurance**  
+  To demonstrate that traffic to Moneyhub goes through your approved gateway, set the relevant gateway URLs and use the verification steps above (tests, gateway logs, inspection of `getOpenIdConfig()` and `response.links`). Internal or external audit can rely on config plus these verification steps.
+
+- **Third-party and supply chain**  
+  The client uses `@isaacs/ttlcache` for OIDC discovery caching. Rewrite targets are never taken from responses or discovery documents.
+
+- **Regulatory and outsourcing**  
+  Use of a gateway is your architectural choice; this feature makes it possible for the client to honour that choice. Regulatory implications (e.g. outsourcing, record-keeping) remain with your use of the gateway and the Moneyhub service, not with the library change itself.
 
 ## API
 Once the api client has been initialised it provides a simple promise based interface with the following methods:
@@ -382,10 +439,10 @@ const defaultClaims = {
 #### `exchangeCodeForTokensLegacy`
 
 This is a legacy method to get tokens for a user.
-After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
+After a user has successfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this to retrieve access, refresh and id tokens for the user.
 
 ```javascript
-const tokens = await moneyhub.exchangeCodeForTokens({
+const tokens = await moneyhub.exchangeCodeForTokensLegacy({
   code: "the authorization code",
   nonce: "your nonce value", // optional
   state: "your state value", // optional
@@ -395,7 +452,7 @@ const tokens = await moneyhub.exchangeCodeForTokens({
 
 #### `exchangeCodeForTokens`
 
-After a user has succesfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this method to retrieve access, refresh and id tokens for the user.
+After a user has successfully authorised they will be redirected to your redirect_uri with an authorization code. You can use this method to retrieve access, refresh and id tokens for the user.
 
 The signature for this method changed in v3.
 The previous function is available at 'exchangeCodeForTokensLegacy'
@@ -549,7 +606,7 @@ const tokens = await moneyhub.createAuthRequest({
 
 #### `completeAuthRequest`
 
-Completes an auth request succesfully
+Completes an auth request successfully
 
 ```javascript
 const tokens = await moneyhub.completeAuthRequest({
@@ -2325,10 +2382,13 @@ const availableConnections = await moneyhub.listPaymentsConnections();
 
 #### `getOpenIdConfig`
 
-This method will resolve with our open id configuration.
+Returns the OpenID Connect discovery document (e.g. `issuer`, `authorization_endpoint`, `token_endpoint`, `jwks_uri`). 
+
+> [!IMPORTANT]
+> When `gatewayIdentityServiceUrl` is set, endpoint URLs in the discovery document are rewritten to that base; the result is cached for `openIdConfigCacheTtlMs` (default 1 hour). See [Using the client behind a gateway](#using-the-client-behind-a-gateway).
 
 ```javascript
-const availableConnections = await moneyhub.getOpenIdConfig();
+const openIdConfig = await moneyhub.getOpenIdConfig();
 ```
 
 ### Examples
@@ -2351,7 +2411,7 @@ The tests use root level Mocha hooks to set up and teardown test data. When addi
 
 ### Troubleshooting tests
 
-- If any errors occurr during test setup or teardown, this should appear as happening in the "before all" or "after all" hook in `"{root}"` with the error.
+- If any errors occur during test setup or teardown, this should appear as happening in the "before all" or "after all" hook in `"{root}"` with the error.
 - Errors in the `before all` hook can cause errors in the `after all` hook as it won't be able to find data to clear up.
 
 ## TypeScript
@@ -2367,4 +2427,4 @@ const getAccounts = ({userId}) => {
 }
 ```
 
-The default export is of the Moneyhub constructor that takes in an argument of the config. You can use `ApiClientConfig` to type that config. The client object that is returned from the constructor can then be used to make API calls. The methods are available with arguments and returns typed.
+The named export `Moneyhub` is the factory function that creates the client; it takes your config (typed with `ApiClientConfig`) and returns a promise of the client instance. The client object can then be used to make API calls, with methods, arguments and return types all typed.
