@@ -1,8 +1,8 @@
-/* eslint-disable max-nested-callbacks */
+
 import {expect} from "chai"
 import {Moneyhub, MoneyhubInstance} from ".."
 // Proxy server lives under test/ (outside rootDir); load at runtime to avoid TS resolution error.
-// eslint-disable-next-line @typescript-eslint/no-var-requires
+
 const {startProxyServer} = require("../../test/gateway-rewrite/proxy-server")
 
 describe("Gateway URL rewriting (integration)", function() {

@@ -220,7 +220,7 @@ describe("API client", function() {
       })
 
       // Skipped: v3 API may not be available in all environments
-      it.skip("gets global counterparties v3", async function() { // eslint-disable-line mocha/no-skipped-tests
+      it.skip("gets global counterparties v3", async function() {
         const counterparties = await moneyhub.getGlobalCounterparties({limit: 100}, {version: "v3"})
         expect(counterparties.data.length).to.be.equal(100)
         expect(counterparties.data[0].id).to.match(/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/)

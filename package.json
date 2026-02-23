@@ -33,7 +33,7 @@
   "repository": "moneyhub/moneyhub-api-client",
   "license": "ISC",
   "engines": {
-    "node": ">= 18.0.0"
+    "node": ">= 20.20.0"
   },
   "dependencies": {
     "@isaacs/ttlcache": "^2.1.4",

@@ -113,7 +113,7 @@ describe("Accounts", function() {
   })
 
   // Skipped: recurring transactions test requires specific data setup
-  it.skip("get recurring transactions", async function() { // eslint-disable-line mocha/no-skipped-tests
+  it.skip("get recurring transactions", async function() {
     const {data: recurring} = await moneyhub.getAccountRecurringTransactions({
       userId,
       accountId,

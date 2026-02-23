@@ -1,3 +1,22 @@
+# Node versions to run tests on (aligned with engines ">= 12.0.0" and common LTS)
+NODE_VERSIONS="20 22 24"
+
 npm run lint
 npm run build
-npm test
+
+# Load nvm when available so we can run tests on multiple Node versions
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+  for ver in $NODE_VERSIONS; do
+    if nvm run "$ver" npm test; then
+      echo "Tests passed on Node $ver"
+    else
+      echo "Tests failed on Node $ver"
+      exit 1
+    fi
+  done
+else
+  echo "nvm not found; running tests with current Node only"
+  npm test
+fi

@@ -90,7 +90,20 @@ export interface ExtraOptions {
   retry?: RetryOptions
 }
 
-
+export interface RequestFactoryParams {
+  client: Client
+  options: {
+    timeout?: number
+    apiVersioning: boolean
+    agent?: Agents
+    mTLS?: MutualTLSOptions
+    retry?: RetryOptions
+  }
+  identityServiceUrl?: string
+  gatewayResourceServerUrl?: string
+  gatewayCaasResourceServerUrl?: string
+  gatewayOsipResourceServerUrl?: string
+}
 
 const getResponseBody = (err: unknown) => {
   let body: {
@@ -170,33 +183,13 @@ const applyAgent = (gotOpts: OptionsOfJSONResponseBody, agent?: Agents) => {
 
 const normaliseBase = (url: string): string => url.replace(/\/$/, "")
 
-export default ({
-  client,
-  options: {timeout, apiVersioning, agent, mTLS, retry = {}},
-  identityServiceUrl,
-  gatewayResourceServerUrl,
-  gatewayCaasResourceServerUrl,
-  gatewayOsipResourceServerUrl,
-}: {
-  client: Client
-  options: {
-    timeout?: number
-    apiVersioning: boolean
-    agent?: Agents
-    mTLS?: MutualTLSOptions
-    retry?: RetryOptions
-  }
-  identityServiceUrl?: string
-  gatewayResourceServerUrl?: string
-  gatewayCaasResourceServerUrl?: string
-  gatewayOsipResourceServerUrl?: string
 // eslint-disable-next-line max-statements, complexity
-}) => async <T>(
+async function executeRequest<T>(
   url: string,
   opts: RequestOptions,
   params: RequestFactoryParams,
 ): Promise<T> {
-  const {client, options: {timeout, apiVersioning, agent, mTLS, retry = {}}} = params
+  const {client, options: {timeout, apiVersioning, agent, mTLS, retry = {}}, identityServiceUrl, gatewayResourceServerUrl, gatewayCaasResourceServerUrl, gatewayOsipResourceServerUrl} = params
   const retryOptions = getRetryOptions(retry, opts.options)
 
   const gotOpts: OptionsOfJSONResponseBody = {
@@ -207,9 +200,7 @@ export default ({
     retry: retryOptions,
   }
 
-  if (agent) {
-    (gotOpts as Options).agent = agent
-  }
+  applyAgent(gotOpts, agent)
 
   const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version, identityServiceUrl)
 
@@ -277,7 +268,6 @@ export default ({
   return rewriteResourceServerResponseUrls(body, requestBase) as T
 }
 
-export default (params: RequestFactoryParams): Request => async <T>(
-  url: string,
-  opts: RequestOptions = {},
-): Promise<T> => executeRequest<T>(url, opts, params)
+export default (params: RequestFactoryParams): Request =>
+  async <T>(url: string, opts: RequestOptions = {}): Promise<T> =>
+    executeRequest<T>(url, opts, params)
