@@ -7,15 +7,22 @@ const qs = require("querystring")
 const IDENTITY_PREFIX = "/moneyhub/identity-service"
 const API_PREFIX = "/moneyhub/resource-server"
 
+/** Match leading /v2, /v3, /v2.0, /v3.0 so we can strip it when forwarding to real API (avoids doubling when realResourceServerUrl already includes version). */
+const VERSION_PATH_SEGMENT = /^\/v\d+(?:\.\d+)?/
+
+/** True when the base URL already ends with a version segment (e.g. .../v3). */
+function baseHasVersionSegment(base) {
+  return /\/v\d+(?:\.\d+)?\/?$/.test(base.replace(/\/$/, ""))
+}
+
 /**
  * Creates an Express app that proxies gateway-style paths to real backend URLs.
- * Forwards the path after each prefix through unchanged (no v3 stripping or rewriting).
- * - /moneyhub/identity-service/* -> realIdentityServiceUrl + path after prefix
- * - /moneyhub/resource-server/* -> realResourceServerUrl + path after prefix (e.g. /v3/accounts)
+ * - /moneyhub/identity-service/* -> realIdentityServiceUrl + path after prefix (unchanged)
+ * - /moneyhub/resource-server/* -> realResourceServerUrl + path after prefix with leading version segment stripped (so realResourceServerUrl may include version, e.g. https://api.moneyhub.co.uk/v3)
  *
  * @param {object} options
  * @param {string} options.realIdentityServiceUrl - e.g. https://identity-dev.moneyhub.co.uk
- * @param {string} options.realResourceServerUrl - e.g. https://api-dev.moneyhub.co.uk
+ * @param {string} options.realResourceServerUrl - e.g. https://api-dev.moneyhub.co.uk or https://api-dev.moneyhub.co.uk/v3
  * @returns {express.Application}
  */
 function createProxyApp({realIdentityServiceUrl, realResourceServerUrl}) {
@@ -27,8 +34,15 @@ function createProxyApp({realIdentityServiceUrl, realResourceServerUrl}) {
   app.use(express.json({limit: "10mb"}))
   app.use(express.urlencoded({extended: true}))
 
+  /**
+   * @param {import("express").Request} req
+   * @param {import("express").Response} res
+   * @param {string} targetBase
+   * @param {string | ((req: import("express").Request) => string)} pathPrefix - string or function returning path (used so resource-server can strip /v3 from path to avoid doubling when targetBase already has version)
+   */
   const proxy = async (req, res, targetBase, pathPrefix = "") => {
-    const targetPath = (pathPrefix + req.path) || "/"
+    const pathPart = typeof pathPrefix === "function" ? pathPrefix(req) : (pathPrefix + req.path)
+    const targetPath = pathPart || "/"
     const targetUrl = `${targetBase}${targetPath}${req.url.slice(req.path.length) || ""}`
 
     const headers = {...req.headers}
@@ -68,7 +82,17 @@ function createProxyApp({realIdentityServiceUrl, realResourceServerUrl}) {
   })
 
   app.use(API_PREFIX, (req, res) => {
-    return proxy(req, res, apiBase, "")
+    // Path after mount: Express may give req.path relative to mount (/v3/accounts) or full path
+    // depending on version; derive the remainder after API_PREFIX so version stripping works.
+    const pathAfterPrefix = req.path.startsWith(API_PREFIX)
+      ? req.path.slice(API_PREFIX.length) || "/"
+      : req.path
+    // Only strip leading version segment when realResourceServerUrl already includes version (e.g. .../v3), to avoid doubling.
+    const pathToForward =
+      baseHasVersionSegment(apiBase)
+        ? (pathAfterPrefix.replace(VERSION_PATH_SEGMENT, "") || "/")
+        : pathAfterPrefix
+    return proxy(req, res, apiBase, () => pathToForward)
   })
 
   return app

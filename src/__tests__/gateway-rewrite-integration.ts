@@ -117,10 +117,11 @@ describe("Gateway URL rewriting (integration)", function() {
     expect(accounts.data).to.be.an("array")
     const selfLink = accounts.links?.self
     expect(selfLink).to.exist
-    const canonicalApiBase = realResourceServerUrl.replace(/\/$/, "")
-    expect(selfLink as string).to.satisfy(
-      (s: string) => s.startsWith(canonicalApiBase),
-      "links.self should use the configured (canonical) resource server URL",
+    const configuredOrigin = new URL(realResourceServerUrl.replace(/\/$/, "")).origin
+    const linkOrigin = new URL(selfLink as string).origin
+    expect(linkOrigin).to.equal(
+      configuredOrigin,
+      "links.self should use the same origin as the configured (canonical) resource server URL (API may return a different version segment e.g. /v2 vs /v3)",
     )
   })
 })
