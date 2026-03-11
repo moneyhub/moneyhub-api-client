@@ -3,7 +3,7 @@ const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
 const {Moneyhub} = require("../../src/index")
 const config = require("../config")
-const R = require("ramda")
+const {pluck} = require("ramda")
 const optionDefinitions = [
   {name: "userId", alias: "u", type: String},
   {name: "accountId", alias: "a", type: String},
@@ -111,7 +111,7 @@ const start = async () => {
       userId,
       accountId,
       params: {
-        ids: R.pluck("id", data)
+        ids: pluck("id", data)
       }
     })
     console.log("TRANSACTIONS -> ", JSON.stringify(trxs, null, 2))

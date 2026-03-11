@@ -1,4 +1,4 @@
-/* eslint-disable max-nested-callbacks */
+
 import {expect} from "chai"
 import {expectTypeOf} from "expect-type"
 
@@ -83,7 +83,7 @@ describe("Transactions", function() {
   })
 
   // Skipped: requires transaction with specific text to exist
-  it.skip("can get one transaction with text query param", async function() { // eslint-disable-line mocha/no-skipped-tests
+  it.skip("can get one transaction with text query param", async function() {
     const {data: transactions} = await moneyhub.getTransactions({
       userId,
       params: {text: "moneyhub best"},
