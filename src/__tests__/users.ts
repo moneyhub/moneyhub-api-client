@@ -12,6 +12,10 @@ describe("Users", function() {
     moneyhub = await Moneyhub(this.config)
   })
 
+  beforeEach(function() {
+    this.timeout(30000)
+  })
+
   it("can create a user", async function() {
     const user = await moneyhub.registerUser({clientUserId: "some-random-id"})
     userId = user.userId
