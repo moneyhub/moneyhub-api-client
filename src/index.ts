@@ -2,7 +2,7 @@ import {Issuer, custom, generators, type IssuerMetadata} from "openid-client"
 import getAuthUrlsFactory from "./get-auth-urls"
 import getTokensFactory from "./tokens"
 import requestsFactory from "./requests"
-import * as R from "ramda"
+import {evolve, pick} from "ramda"
 import req from "./request"
 import {getDiscovery, getDiscoveryWithGatewayUrl} from "./discovery"
 import {createGetOpenIdConfig} from "./oidc-config"
@@ -11,7 +11,7 @@ const DEFAULT_TIMEOUT = 60000
 const DEFAULT_OIDC_CACHE_TTL_MS = 3600000 // 1 hour
 
 function buildConfig(apiClientConfig: ApiClientConfig) {
-  return R.evolve(
+  return evolve(
     {
       identityServiceUrl: (val: ApiClientConfig["identityServiceUrl"]) => val.replace("/oidc", ""),
       gatewayIdentityServiceUrl: (val: ApiClientConfig["gatewayIdentityServiceUrl"]) =>
@@ -36,36 +36,46 @@ function effectiveUrls(config: ReturnType<typeof buildConfig>) {
   }
 }
 
-const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
-  const config = buildConfig(apiClientConfig)
-  const urls = effectiveUrls(config)
-  const {options = {}, client: clientCreds} = config
-  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, agent, openIdConfigCacheTtlMs = DEFAULT_OIDC_CACHE_TTL_MS, retry = {}} = options
+async function createOpenIdClient(
+  config: ReturnType<typeof buildConfig>,
+  urls: ReturnType<typeof effectiveUrls>,
+  clientCreds: ApiClientConfig["client"],
+  options: NonNullable<ApiClientConfig["options"]>,
+) {
+  const {timeout = DEFAULT_TIMEOUT} = options
   const {mTLS} = clientCreds
-
   custom.setHttpOptionsDefaults({
     timeout,
     ...mTLS ? {cert: mTLS.cert, key: mTLS.key} : {},
   })
-
   const discoveryOpts = {timeout, agent: options.agent, mTLS: mTLS ?? undefined}
   const discoveryMetadata = config.gatewayIdentityServiceUrl
     ? await getDiscoveryWithGatewayUrl(urls.identity, discoveryOpts)
     : await getDiscovery(urls.identity, discoveryOpts)
-
   const moneyhubIssuer = new Issuer(discoveryMetadata as IssuerMetadata)
   const client = new moneyhubIssuer.Client(
     {
-      ...R.pick(["client_id", "client_secret", "id_token_signed_response_alg", "redirect_uri", "token_endpoint_auth_method", "request_object_signing_alg"], clientCreds),
+      ...pick(["client_id", "client_secret", "id_token_signed_response_alg", "redirect_uri", "token_endpoint_auth_method", "request_object_signing_alg"], clientCreds),
       tls_client_certificate_bound_access_tokens: mTLS?.tls_client_certificate_bound_access_tokens || false,
     },
-    {keys: clientCreds.keys},
+    // Cast keys: openid-client bundles its own jose; our jose JWK[] is compatible at runtime
+    {keys: clientCreds.keys as any},
   )
   client[custom.clock_tolerance] = 10
+  return client
+}
+
+const _Moneyhub = async (apiClientConfig: ApiClientConfig) => {
+  const config = buildConfig(apiClientConfig)
+  const urls = effectiveUrls(config)
+  const {options = {}, client: clientCreds} = config
+  const {timeout = DEFAULT_TIMEOUT, apiVersioning = true, openIdConfigCacheTtlMs = DEFAULT_OIDC_CACHE_TTL_MS, retry = {}} = options
+
+  const client = await createOpenIdClient(config, urls, clientCreds, options)
 
   const requestFn = req({
     client,
-    options: {timeout, apiVersioning, agent, mTLS, retry},
+    options: {timeout, apiVersioning, agent: options.agent, mTLS: clientCreds.mTLS, retry},
     identityServiceUrl: urls.identity,
     gatewayResourceServerUrl: config.gatewayResourceServerUrl,
     gatewayCaasResourceServerUrl: config.gatewayCaasResourceServerUrl,

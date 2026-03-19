@@ -1,10 +1,32 @@
+# IDE and tooling
+.cursor
 .github
 .husky
+.vscode
+
+# Dev and config directories
 config
 examples
 resources
+
+# Source and tests (publish dist/ only; exclude compiled tests)
 src
 test
 __tests__
-.eslintrc.json
+dist/__tests__
+
+# Build and lint config
+eslint.config.js
 tsconfig.json
+
+# Build artefacts and caches
+coverage
+.dccache
+*.tsbuildinfo
+
+# Internal documentation
+ENDPOINT_COVERAGE.md
+
+# Local environment
+.env
+.env.*

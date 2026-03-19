@@ -1,6 +1,38 @@
-#!/bin/sh
-. "$(dirname "$0")/_/husky.sh"
+#!/usr/bin/env sh
+# Node versions to run tests on (aligned with engines ">= 20.20.0" and common LTS)
+NODE_VERSIONS="20 22 24"
 
 npm run lint
 npm run build
-npm test
+
+# Load nvm when available so we can run tests on multiple Node versions in parallel
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+  TMPD=$(mktemp -d)
+  trap 'rm -rf "$TMPD"' EXIT
+  PIDS=""
+  for ver in $NODE_VERSIONS; do
+    nvm exec "$ver" npm test > "$TMPD/$ver" 2>&1 &
+    PIDS="$PIDS $!"
+  done
+  FAIL=0
+  set -- $PIDS
+  for ver in $NODE_VERSIONS; do
+    r=0; wait "$1" || r=$?
+    if [ $r -ne 0 ]; then
+      FAIL=1
+      echo "Node $ver failed:"
+      cat "$TMPD/$ver" 2>/dev/null || true
+    fi
+    shift
+  done
+  if [ $FAIL -eq 0 ]; then
+    echo "Tests passed on Node $NODE_VERSIONS"
+  fi
+  [ $FAIL -eq 1 ] && exit 1
+  exit 0
+else
+  echo "nvm not found; running tests with current Node only"
+  npm test
+fi
