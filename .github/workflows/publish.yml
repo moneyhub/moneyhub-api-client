@@ -1,6 +1,7 @@
 # Publish to npm with provenance (verified checkmark + attestations).
 #
 # Prerequisites:
+# 0. Node 22.14.0+ and npm 11.5.1+ (required for OIDC trusted publishing; see steps below).
 # 1. On npmjs.com: Package → Settings → Trusted publishing → Add GitHub Actions
 #    - Workflow filename: publish.yml
 #    - Repository: owner/repo that matches this repo (case-sensitive)
@@ -23,6 +24,7 @@ on:
 permissions:
   contents: read
   id-token: write   # Required for npm trusted publishing (OIDC)
+  checks: write     # Required for moneyhub/run-and-report-tests (Check Runs API)
 
 jobs:
   publish:
@@ -39,8 +41,12 @@ jobs:
           quay-io-username: ${{ secrets.QUAY_IO_USERNAME }}
           quay-io-password: ${{ secrets.QUAY_IO_PASSWORD }}
           npm-token: ${{ secrets.NPM_TOKEN }}
-          # npm 9.5.0+ required for --provenance (Node 16 ships npm 8.x).
-          node-version: "20"
+          # Trusted publishing (OIDC) requires Node 22.14.0+ and npm 11.5.1+ per npm docs.
+          # npm-token is still used for registry auth during install (e.g. private scopes);
+          # use a read-only granular token where possible — publish uses OIDC when available.
+          node-version: "22.22"
+      - name: Ensure npm supports OIDC trusted publishing
+        run: npm install -g npm@^11.5.1
       - name: Run and Report Unit Tests
         uses: moneyhub/run-and-report-tests@v1
         with:
@@ -51,6 +57,7 @@ jobs:
           NODE_CONFIG: ${{ secrets.TEST_CONFIG }}
       - name: Publish to npm
         run: npm publish --provenance --access public
-        # No NODE_AUTH_TOKEN: trusted publishing uses OIDC.
-        # Provenance attestations are generated automatically when using
-        # trusted publishers (verified checkmark + npm audit signatures).
+        # Publish auth: npm 11.5.1+ exchanges GitHub's OIDC token (id-token: write) for a
+        # short-lived publish token when trusted publishing is configured. No NODE_AUTH_TOKEN
+        # is required for publish. Provenance is automatic for trusted publishing from GitHub
+        # Actions on public repos (verified checkmark + npm audit signatures).
