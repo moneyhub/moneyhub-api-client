@@ -8,7 +8,7 @@
     "lint": "eslint src/ ",
     "lint-fix": "eslint src/ --fix",
     "test": "mocha --require ts-node/register --config test/opts/integration.json",
-    "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json || true",
+    "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json",
     "prepare": "husky install",
     "prepublishOnly": "npm run build",
     "build": "tsc",
