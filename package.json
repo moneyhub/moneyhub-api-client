@@ -10,7 +10,7 @@
     "test": "mocha --require ts-node/register --config test/opts/integration.json",
     "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json",
     "prepare": "husky install",
-    "prepublishOnly": "npm run build",
+    "prepublishOnly": "node scripts/assert-github-actions-publish.js && npm run build",
     "build": "tsc",
     "create-jwks": "node examples/jwks/create-jwks.js",
     "ts-node": "ts-node",

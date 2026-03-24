@@ -9,6 +9,9 @@
 # 2. Optional: Create GitHub Environment "npm" (Settings → Environments) for approval gates.
 # 3. package.json "repository" must match the GitHub repo (case-sensitive).
 #
+# Pre-releases: mark the GitHub release as "Set as a pre-release" so the workflow
+# publishes with dist-tag `beta` (npm install @scope/pkg@beta). Stable releases use the default tag.
+#
 # After publish, consumers can verify attestations with:
 #   npm audit signatures
 name: Publish to npm
@@ -55,9 +58,13 @@ jobs:
           name: Integration
         env:
           NODE_CONFIG: ${{ secrets.TEST_CONFIG }}
-      - name: Publish to npm
+      # Publish auth: npm 11.5.1+ exchanges GitHub's OIDC token (id-token: write) for a
+      # short-lived publish token when trusted publishing is configured. No NODE_AUTH_TOKEN
+      # is required for publish. Provenance is automatic for trusted publishing from GitHub
+      # Actions on public repos (verified checkmark + npm audit signatures).
+      - name: Publish to npm (stable)
+        if: ${{ !github.event.release.prerelease }}
         run: npm publish --provenance --access public
-        # Publish auth: npm 11.5.1+ exchanges GitHub's OIDC token (id-token: write) for a
-        # short-lived publish token when trusted publishing is configured. No NODE_AUTH_TOKEN
-        # is required for publish. Provenance is automatic for trusted publishing from GitHub
-        # Actions on public repos (verified checkmark + npm audit signatures).
+      - name: Publish to npm (beta)
+        if: ${{ github.event.release.prerelease }}
+        run: npm publish --provenance --access public --tag beta
