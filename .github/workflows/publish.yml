@@ -38,26 +38,39 @@ jobs:
     # Optional: add `environment: npm` (or another single environment) for approval
     # gates — see header comments.
     steps:
-      - name: Checkout and Setup
-        uses: moneyhub/checkout-and-setup@v1
+      - name: Checkout repository
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          quay-io-username: ${{ secrets.QUAY_IO_USERNAME }}
-          quay-io-password: ${{ secrets.QUAY_IO_PASSWORD }}
-          npm-token: ${{ secrets.NPM_TOKEN }}
-          # Trusted publishing (OIDC) requires Node 22.14.0+ and npm 11.5.1+ per npm docs.
-          # npm-token is still used for registry auth during install (e.g. private scopes);
-          # use a read-only granular token where possible — publish uses OIDC when available.
+          persist-credentials: false
+
+      - name: Set up Node.js
+        uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
+        with:
+          registry-url: "https://registry.npmjs.org"
           node-version: "22.22"
+
       - name: Ensure npm supports OIDC trusted publishing
         run: npm install -g npm@^11.5.1
-      - name: Run and Report Unit Tests
-        uses: moneyhub/run-and-report-tests@v1
-        with:
-          test-script: test-ci
-          report-path: test-reports/report.xml
-          name: Integration
+
+      - name: Run Tests
+        shell: bash
+        run: npm run test-ci
         env:
           NODE_CONFIG: ${{ secrets.TEST_CONFIG }}
+
+      - name: Tests Report
+        if: success() || failure()
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: test-reports/report.xml
+          fail_on_failure: true
+          detailed_summary: true
+          check_name: Test Report
+          require_tests: true
+          require_passed_tests: false
+        env:
+          NODE_CONFIG: ${{ secrets.TEST_CONFIG }}
+
       # Publish auth: npm 11.5.1+ exchanges GitHub's OIDC token (id-token: write) for a
       # short-lived publish token when trusted publishing is configured. No NODE_AUTH_TOKEN
       # is required for publish. Provenance is automatic for trusted publishing from GitHub
