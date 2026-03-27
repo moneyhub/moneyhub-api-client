@@ -60,7 +60,7 @@ jobs:
 
       - name: Tests Report
         if: success() || failure()
-        uses: mikepenz/action-junit-report@v4
+        uses: mikepenz/action-junit-report@db71d41eb79864e25ab0337e395c352e84523afe # v4.3.1
         with:
           report_paths: test-reports/report.xml
           fail_on_failure: true
