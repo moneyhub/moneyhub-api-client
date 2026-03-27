@@ -32,7 +32,7 @@ permissions:
 jobs:
   publish:
     name: Test, Build and publish
-    runs-on: linux-x64-static-ip-2core-8gb
+    runs-on: ubuntu-latest
     # Single run per release: npm allows one publish per version. A matrix over
     # environments would run publish multiple times and the second job would fail.
     # Optional: add `environment: npm` (or another single environment) for approval
