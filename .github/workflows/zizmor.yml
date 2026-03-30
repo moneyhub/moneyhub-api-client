@@ -13,11 +13,9 @@ permissions: {}
 jobs:
   zizmor:
     name: Run zizmor 🌈
-    runs-on: ubuntu-latest
+    runs-on: linux-x64-static-ip-2core-8gb
     permissions:
-      security-events: write # Required for upload-sarif (used by zizmor-action) to upload SARIF files.
-      contents: read         # Only needed for private repos. Needed to clone the repo.
-      actions: read          # Only needed for private repos. Needed for upload-sarif to read workflow run info.
+      security-events: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -29,9 +27,6 @@ jobs:
 
       - name: Run zizmor 🌈
         shell: bash
-        # Run offline; actions repositories are already scanned, and external actions
-        #  are allowlisted. Not 100% sure how I feel about this.
-        # @see https://docs.zizmor.sh/troubleshooting/#cant-access-orgrepo-missing-or-you-have-no-access
         run: uvx zizmor --format=sarif . > results.sarif
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
