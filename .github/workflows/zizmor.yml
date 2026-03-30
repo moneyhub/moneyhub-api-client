@@ -13,7 +13,7 @@ permissions: {}
 jobs:
   zizmor:
     name: Run zizmor 🌈
-    runs-on: linux-x64-static-ip-2core-8gb
+    runs-on: ubuntu-latest
     permissions:
       security-events: write
     steps:
@@ -30,9 +30,3 @@ jobs:
         run: uvx zizmor --format=sarif . > results.sarif
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - uses: github/codeql-action/upload-sarif@38697555549f1db7851b81482ff19f1fa5c4fedc # v4
-        if: always()
-        with:
-          sarif_file: results.sarif
-          category: zizmor
