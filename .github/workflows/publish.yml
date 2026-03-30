@@ -42,6 +42,7 @@ jobs:
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
           persist-credentials: false
+          fetch-depth: 0
 
       - name: Set up Node.js
         uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4.4.0
@@ -51,6 +52,18 @@ jobs:
 
       - name: Ensure npm supports OIDC trusted publishing
         run: npm install -g npm@^11.5.1
+
+      - name: Install Dependencies
+        shell: bash
+        run: npm ci --ignore-scripts
+
+      - name: Audit npm signatures
+        shell: bash
+        run: npm audit signatures
+
+      - name: Run install scripts
+        shell: bash
+        run: npm rebuild && npm run prepare --if-present
 
       - name: Run Tests
         shell: bash

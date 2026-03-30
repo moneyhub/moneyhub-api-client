@@ -27,6 +27,6 @@ jobs:
 
       - name: Run zizmor 🌈
         shell: bash
-        run: uvx zizmor --format=sarif . > results.sarif
+        run: uvx zizmor .
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
