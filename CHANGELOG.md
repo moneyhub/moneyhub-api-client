@@ -1,3 +1,10 @@
+6.96.0 / 2026-04-07
+==========
+
+**Features**
+
+* Add `caasGetRegularTransactions` for CaaS `GET /accounts/{accountId}/regular-transactions`.
+
 6.95.0 / 2026-02-23
 ==========
 

@@ -27,6 +27,7 @@ import caasAccounts from "./caas/accounts"
 import caasCategories from "./caas/categories"
 import caasCounterparties from "./caas/counterparties"
 import caasGeotags from "./caas/geotags"
+import caasRegularTransactions from "./caas/regular-transactions"
 import caasTransactions from "./caas/transactions"
 import caasUsers from "./caas/users"
 import unauthenticated from "./unauthenticated"
@@ -64,6 +65,7 @@ export default ({config, request}: RequestsParams) => {
     ...caasCategories({config, request}),
     ...caasCounterparties({config, request}),
     ...caasGeotags({config, request}),
+    ...caasRegularTransactions({config, request}),
     ...caasTransactions({config, request}),
     ...caasUsers({config, request}),
     ...unauthenticated({config, request}),
