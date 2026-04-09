@@ -2324,6 +2324,16 @@ const result = await moneyhub.caasGetGeotags({
 }, options);
 ```
 
+#### `caasGetRegularTransactions`
+
+Get regular transaction series for an account from the CaaS API. This function uses the scope `caas:regular_transactions:read`.
+
+```javascript
+const result = await moneyhub.caasGetRegularTransactions({
+  accountId: "accountId",
+}, options);
+```
+
 #### `caasDeleteAccount`
 
 Delete an account via the CAAS endpoint. This function uses the scope `caas:users:delete`.
