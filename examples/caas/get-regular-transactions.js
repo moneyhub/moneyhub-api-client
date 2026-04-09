@@ -14,7 +14,7 @@ const usage = commandLineUsage(
   }
 )
 
-// example: node caas/get-regular-transactions.js -a accountId
+// example: ts-node caas/get-regular-transactions.js -a accountId
 
 console.log(usage)
 
