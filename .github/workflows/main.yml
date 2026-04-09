@@ -12,10 +12,10 @@ jobs:
     name: npm audit
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
       - name: install dependencies
         run: npm ci
-      - uses: oke-py/npm-audit-action@v2.3.0
+      - uses: oke-py/npm-audit-action@c2ee44bdb97ee28fe9f41d78779ee0127b687778 # v2.3.0
         with:
           audit_level: moderate
           production_flag: true
