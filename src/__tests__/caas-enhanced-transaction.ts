@@ -2,7 +2,7 @@
 import {expect} from "chai"
 
 import type {Request} from "../request"
-import caasTransactions from "../requests/caas/transactions"
+import caasTransactions from "../requests/caas/enhanced-transactions"
 
 describe("CAAS enhanced transaction request", function() {
   const caasResourceServerUrl = "https://api.test/caas/v1"

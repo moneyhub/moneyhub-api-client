@@ -1,5 +1,4 @@
 import {ApiResponse, ExtraOptions} from "../../../request"
-import type {CaasEnhancedTransaction, CaasIncludeFieldTiers} from "./enhanced-transactions"
 
 export interface CaasEnrichTransactionsResponse {
   data: CaasTransaction[]
@@ -253,18 +252,6 @@ export interface CaasTransactionsRequests {
     },
     options?: ExtraOptions,
   ) => Promise<ApiResponse<CaasTransaction[]>>
-  caasGetEnhancedTransaction: (
-    {
-      accountId,
-      transactionId,
-      includeFieldTiers,
-    }: {
-      accountId: string
-      transactionId: string
-      includeFieldTiers?: CaasIncludeFieldTiers
-    },
-    options?: ExtraOptions,
-  ) => Promise<ApiResponse<CaasEnhancedTransaction>>
   caasDeleteTransaction: (
     {
       accountId,
