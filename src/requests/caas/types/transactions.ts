@@ -71,19 +71,19 @@ export interface CaasEnhancedTransaction {
 }
 
 export interface CaasTransactionInput {
-  userId: string
+  userId?: string
   accountId: string
-  providerId: string
   transactionId: string
   accountType: string
-  txCode: string
   date: string
   status: string
   description: string
   amount: number
-  currency: string
-  merchantCategoryCode: string
-  cardPresent: boolean
+  currency?: string
+  txCode?: string
+  merchantCategoryCode?: string
+  cardPresent?: boolean
+  meta?: Record<string, any>
 }
 
 export interface CaasTransactionsRequests {
