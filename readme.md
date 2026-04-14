@@ -2274,9 +2274,11 @@ Optional query `includeFieldTiers` controls which field sets are returned (each 
 const result = await moneyhub.caasGetEnhancedTransaction({
   accountId: "accountId",
   transactionId: "transactionId",
-  includeFieldTiers: "search_pro", // optional; omit for basic
+  includeFieldTiers: "search_pro",
 }, options);
 ```
+
+The response follows the usual API envelope: the enhanced transaction is `result.data` (optional `links` / `meta` may also be present).
 
 #### `caasPatchTransaction`
 

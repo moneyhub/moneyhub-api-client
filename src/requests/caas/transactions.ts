@@ -1,10 +1,10 @@
 import {RequestsParams} from "../../request"
 import type {ApiResponse} from "../../request"
 import {
-    CaasEnrichTransactionsResponse,
-    CaasTransaction,
-    CaasTransactionsRequests,
-    CaasEnhancedTransaction
+  CaasEnrichTransactionsResponse,
+  CaasEnhancedTransaction,
+  CaasTransaction,
+  CaasTransactionsRequests,
 } from "./types/transactions"
 
 export default ({config, request}: RequestsParams): CaasTransactionsRequests => {
@@ -55,7 +55,7 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
       )
     },
     caasGetEnhancedTransaction: ({accountId, transactionId, includeFieldTiers}, options) => {
-      return request<CaasEnhancedTransaction>(
+      return request<ApiResponse<CaasEnhancedTransaction>>(
         `${caasResourceServerUrl}/accounts/${accountId}/transactions/${transactionId}/enhanced`,
         {
           cc: {

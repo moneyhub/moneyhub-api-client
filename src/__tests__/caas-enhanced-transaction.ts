@@ -12,9 +12,11 @@ describe("CAAS enhanced transaction request", function() {
     const request = (async (url: string, opts?: Record<string, unknown>) => {
       captured = {url, opts: opts || {}}
       return {
-        transactionId: "tx-1",
-        userId: "user-1",
-        accountId: "acc-1",
+        data: {
+          transactionId: "tx-1",
+          userId: "user-1",
+          accountId: "acc-1",
+        },
       }
     }) as Request
 
@@ -34,14 +36,14 @@ describe("CAAS enhanced transaction request", function() {
     )
     expect(captured?.opts.cc).to.deep.equal({scope: "caas:enhanced_transactions:read"})
     expect(captured?.opts.searchParams).to.deep.equal({includeFieldTiers: "search_pro"})
-    expect(result.transactionId).to.equal("tx-1")
+    expect(result.data.transactionId).to.equal("tx-1")
   })
 
   it("omits searchParams when includeFieldTiers is not set", async function() {
     let captured: Record<string, unknown> | undefined
     const request = (async (_url: string, opts?: Record<string, unknown>) => {
       captured = opts || {}
-      return {transactionId: "t", userId: "u", accountId: "a"}
+      return {data: {transactionId: "t", userId: "u", accountId: "a"}}
     }) as Request
 
     const api = caasTransactions({

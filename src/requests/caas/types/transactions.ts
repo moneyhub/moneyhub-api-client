@@ -118,7 +118,7 @@ export interface CaasTransactionsRequests {
     accountId: string
     transactionId: string
     includeFieldTiers?: CaasIncludeFieldTiers
-  }, options?: ExtraOptions) => Promise<CaasEnhancedTransaction>
+  }, options?: ExtraOptions) => Promise<ApiResponse<CaasEnhancedTransaction>>
   caasDeleteTransaction: ({
     accountId,
     transactionId,
