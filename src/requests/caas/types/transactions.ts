@@ -1,5 +1,12 @@
 import {ApiResponse, ExtraOptions} from "../../../request"
 
+export interface CaasEnrichTransactionsResponse {
+  data: CaasTransaction[]
+  meta: {
+    errorTransactionIds: string[]
+  }
+}
+
 export interface CaasTransactionInput {
   userId: string
   accountId: string
@@ -30,7 +37,7 @@ export interface CaasTransactionsRequests {
     transactions,
   }: {
     transactions: CaasTransactionInput[]
-  }, options?: ExtraOptions) => Promise<ApiResponse<CaasTransaction[]>>
+  }, options?: ExtraOptions) => Promise<CaasEnrichTransactionsResponse>
   caasGetTransactions: ({
     userId,
     accountId,
