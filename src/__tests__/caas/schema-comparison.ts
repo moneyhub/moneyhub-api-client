@@ -3,8 +3,6 @@ import path from "path"
 import {expect} from "chai"
 import {createGenerator} from "ts-json-schema-generator"
 
-// --- types ---
-
 type Schema = Record<string, any>
 
 interface TypeMismatch {
@@ -33,7 +31,21 @@ interface SchemaDiff {
   enumMismatches: EnumMismatch[]
 }
 
-// --- swagger schema resolution ---
+interface DiffArgs {
+  tsDefs: Schema
+  swaggerDefs: Schema
+  result: SchemaDiff
+}
+
+interface FieldDiffInput {
+  fieldPath: string
+  tsProp: Schema
+  swaggerProp: Schema
+  tsRequired: boolean
+  swaggerRequired: boolean
+}
+
+// -- Resolving $ref, allOf and array wrappers in swagger schemas -- //
 
 function resolveRef(ref: string, definitions: Schema): Schema {
   return definitions[ref.replace("#/definitions/", "")] ?? {}
@@ -61,6 +73,7 @@ function flattenAllOf(schema: Schema, definitions: Schema): Schema {
   return merged
 }
 
+// Recursively unwraps $ref, array items, and allOf until we have a plain object schema.
 function resolveToObject(schema: Schema, definitions: Schema): Schema {
   if (schema.$ref) return resolveToObject(resolveRef(schema.$ref, definitions), definitions)
   if (schema.type === "array" && schema.items) return resolveToObject(schema.items, definitions)
@@ -68,8 +81,10 @@ function resolveToObject(schema: Schema, definitions: Schema): Schema {
   return schema
 }
 
-// --- schema diffing ---
+// -- Comparing TS-generated and swagger schemas field by field -- //
 
+// Used for both TS and swagger schemas — both produce JSON Schema with the same
+// type conventions ($ref, "integer", nullable arrays), so one function handles both.
 function normaliseType(prop: Schema, definitions: Schema): string {
   if (prop.$ref) return resolveRef(prop.$ref, definitions).type ?? "object"
   if (prop.type === "integer") return "number"
@@ -93,20 +108,7 @@ function toEnumSet(schema: Schema): Set<string> {
   return new Set<string>((schema.enum ?? []).map(String))
 }
 
-interface DiffArgs {
-  tsDefs: Schema
-  swaggerDefs: Schema
-  result: SchemaDiff
-}
-
-interface FieldDiffInput {
-  fieldPath: string
-  tsProp: Schema
-  swaggerProp: Schema
-  tsRequired: boolean
-  swaggerRequired: boolean
-}
-
+// Compares a single field's type, required status, enum values, and recurses into nested objects.
 function diffSingleField(input: FieldDiffInput, args: DiffArgs): void {
   const {fieldPath, tsProp, swaggerProp, tsRequired, swaggerRequired} = input
   const {tsDefs, swaggerDefs, result} = args
@@ -139,6 +141,8 @@ function diffSingleField(input: FieldDiffInput, args: DiffArgs): void {
   }
 }
 
+// Iterates all fields across both schemas, recording missing fields and delegating
+// matching fields to diffSingleField for detailed comparison.
 function diffFields(tsSchema: Schema, swaggerSchema: Schema, prefix: string, args: DiffArgs): void {
   const tsProps = tsSchema.properties ?? {}
   const swaggerProps = swaggerSchema.properties ?? {}
@@ -172,7 +176,7 @@ function diffFields(tsSchema: Schema, swaggerSchema: Schema, prefix: string, arg
   }
 }
 
-// --- formatting ---
+// -- Diff formatting -- //
 
 function formatSection(title: string, items: string[]): string[] {
   if (!items.length) return []
@@ -207,7 +211,7 @@ function isDiffEmpty(diff: SchemaDiff): boolean {
     && diff.enumMismatches.length === 0
 }
 
-
+// -- TS type schema generation and comparison -- //
 
 function createTypeSchema(typeName: string, filePath: string): Schema {
   return createGenerator({
@@ -243,14 +247,27 @@ function compareSchemas({tsSchema, swaggerSchema, swaggerDefinitions}: CompareSc
   return args.result
 }
 
+// -- Public API --
+//
+// Usage:
+//   assertTypeMatchesSwagger({
+//     tsType: "CaasTransactionInput",
+//     tsFile: "../../requests/caas/types/transactions.ts",
+//     swaggerDefName: "TransactionPost",
+//     spec,
+//   })
+//
+// Generates a JSON Schema from a TypeScript type at test time, then structurally
+// compares it against a swagger definition — checking for missing fields, type
+// mismatches, required/optional differences, and enum value alignment.
+// Fails the test with a human-readable diff if anything is out of sync.
+
 interface AssertTypeInput {
   tsType: string
   tsFile: string
   swaggerDefName: string
   spec: Schema
 }
-
-// --- public API ---
 
 export function assertTypeMatchesSwagger({tsType, tsFile, swaggerDefName, spec}: AssertTypeInput): void {
   const resolvedPath = path.resolve(__dirname, tsFile)
