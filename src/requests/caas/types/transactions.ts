@@ -310,33 +310,33 @@ export interface CaasTransactionInsights {
 
 export interface CaasCounterparty {
   l3CounterpartyId: string
-  l3CounterpartyName: string
-  parentId: string | null
-  parentName: string | null
-  fullCompanyName: string
-  logoUrl: string
-  website: string
-  registeredLocation: string
-  l3CounterpartyCategory: string
-  l2CategoryName: string
+  l3CounterpartyName?: string
+  parentId?: string | null
+  parentName?: string | null
+  fullCompanyName?: string
+  logoUrl?: string
+  website?: string
+  registeredLocation?: string
+  l3CounterpartyCategory?: string
+  l2CategoryName?: string
   l4LoanType?: CaasL4LoanType
 }
 
 export interface CaasGeotag {
   geotagId: string
-  counterpartyName: string
-  counterpartyLabel: string
-  houseNumber: string
-  street: string
-  neighbourhood: string
-  locality: string
-  city: string
-  county: string
-  region: string
-  postcode: string
-  latitude: number
-  longitude: number
-  l3CounterpartyCategory: string
-  postcodeEstimated: boolean
-  postcodeErrorKm: number
+  counterpartyName?: string
+  counterpartyLabel?: string
+  houseNumber?: string
+  street?: string
+  neighbourhood?: string
+  locality?: string
+  city?: string
+  county?: string
+  region?: string
+  postcode?: string
+  latitude?: number
+  longitude?: number
+  l3CounterpartyCategory?: string
+  postcodeEstimated?: boolean
+  postcodeErrorKm?: number
 }

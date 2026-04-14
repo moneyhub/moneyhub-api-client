@@ -1,5 +1,4 @@
 /* eslint-disable max-nested-callbacks */
-import path from "path"
 import {expect} from "chai"
 
 import {Moneyhub, MoneyhubInstance} from "../.."
@@ -10,11 +9,11 @@ import {
   fetchSwaggerSpec,
   createRequestValidator,
   createResponseValidator,
-  formatErrors,
+  assertMatchesSwagger,
 } from "./swagger"
 import {assertTypeMatchesSwagger} from "./schema-comparison"
 
-const TYPES_FILE = path.resolve(__dirname, "../../requests/caas/types/transactions.ts")
+const TYPES_FILE = "../../requests/caas/types/transactions.ts"
 
 describe.only("POST /transactions/enrich", function() {
   let moneyhub: MoneyhubInstance
@@ -22,22 +21,8 @@ describe.only("POST /transactions/enrich", function() {
   let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
   before(async function() {
-    if (!this.config.caas) {
-      throw new Error(
-        "Missing \"caas\" config block. Expected structure:\n"
-        + JSON.stringify({
-          caas: {
-            swaggerUrl: "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
-            userId: "user-id-12345678",
-            accountId: "account-id-12345678",
-          },
-        }, null, 2)
-        + "\n Caas config must be added to the top level of your client config object",
-      )
-    }
-
     moneyhub = await Moneyhub(this.config)
-    const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+    const spec = await fetchSwaggerSpec(this.config.caas?.swaggerUrl)
     const reqValidator = createRequestValidator(spec, "/transactions/enrich", "post")
     const resValidator = createResponseValidator(spec, "/transactions/enrich", "post", "201")
     if (!reqValidator || !resValidator) throw new Error("Swagger schema missing for POST /transactions/enrich")
@@ -88,21 +73,11 @@ describe.only("POST /transactions/enrich", function() {
     })
 
     it("request payload matches swagger TransactionPost schema", function() {
-      expect(validateRequest).to.not.be.null
-      const valid = validateRequest(transactionsPayload)
-      expect(
-        valid,
-        `Request body does not match swagger schema (TypeScript types may be out of sync):\n${formatErrors(validateRequest, transactionsPayload)}`,
-      ).to.be.true
+      assertMatchesSwagger(validateRequest, transactionsPayload, "Request body")
     })
 
     it("response matches swagger 201 schema", function() {
-      expect(validateResponse).to.not.be.null
-      const valid = validateResponse(response)
-      expect(
-        valid,
-        `Response does not match swagger schema (TypeScript types may be out of sync):\n${formatErrors(validateResponse, response)}`,
-      ).to.be.true
+      assertMatchesSwagger(validateResponse, response, "Response")
     })
 
     it("response contains enriched transactions", function() {
@@ -129,11 +104,11 @@ describe.only("POST /transactions/enrich", function() {
     })
 
     it("CaasTransactionInput matches swagger TransactionPost definition", function() {
-      assertTypeMatchesSwagger("CaasTransactionInput", TYPES_FILE, "TransactionPost", spec)
+      assertTypeMatchesSwagger({tsType: "CaasTransactionInput", tsFile: TYPES_FILE, swaggerDefName: "TransactionPost", spec})
     })
 
     it("CaasTransaction matches swagger EnrichedTransaction definition", function() {
-      assertTypeMatchesSwagger("CaasTransaction", TYPES_FILE, "EnrichedTransaction", spec)
+      assertTypeMatchesSwagger({tsType: "CaasTransaction", tsFile: TYPES_FILE, swaggerDefName: "EnrichedTransaction", spec})
     })
   })
 })

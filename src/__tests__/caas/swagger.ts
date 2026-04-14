@@ -74,7 +74,21 @@ function getResponseSchema(spec: Schema, endpoint: string, method: string, statu
   return operation.responses?.[statusCode]?.schema
 }
 
-export async function fetchSwaggerSpec(url: string): Promise<Schema> {
+export async function fetchSwaggerSpec(url: string | undefined): Promise<Schema> {
+  if (!url) {
+    throw new Error(
+      "Missing \"caas\" config block. Expected structure:\n"
+      + JSON.stringify({
+        caas: {
+          swaggerUrl: "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
+          userId: "user-id-12345678",
+          accountId: "account-id-12345678",
+        },
+      }, null, 2)
+      + "\nCaas config must be added to the top level of your client config object",
+    )
+  }
+
   const cached = specCache.get(url)
   if (cached) return cached
   const {body} = await got(url, {responseType: "json"})
@@ -93,13 +107,13 @@ export function createResponseValidator(spec: Schema, endpoint: string, method: 
   return schema ? compileSchema(schema, spec) : null
 }
 
-function resolvePathValue(data: unknown, instancePath: string): unknown {
-  if (!instancePath) return data
-  const segments = instancePath.split("/").filter(Boolean)
+function getValueAtPath(data: unknown, jsonPath: string): unknown {
+  if (!jsonPath) return data
+
   let current: unknown = data
-  for (const seg of segments) {
+  for (const segment of jsonPath.split("/").filter(Boolean)) {
     if (current == null || typeof current !== "object") return undefined
-    current = (current as Schema)[seg]
+    current = (current as Schema)[segment]
   }
   return current
 }
@@ -108,29 +122,51 @@ function describeValue(value: unknown): string {
   if (value === undefined) return "undefined"
   if (value === null) return "null"
   if (Array.isArray(value)) return `array (length ${value.length})`
-  if (typeof value === "string") return `string ("${value.length > 50 ? value.slice(0, 50) + "..." : value}")`
+  if (typeof value === "string") {
+    const truncated = value.length > 50 ? value.slice(0, 50) + "..." : value
+    return `string ("${truncated}")`
+  }
   return `${typeof value} (${String(value)})`
 }
 
-export function formatErrors(validate: ValidateFunction, data?: unknown): string {
+function getErrorPath(error: Schema): string {
+  const missingProp = error.params?.missingProperty as string | undefined
+  if (missingProp) return `${error.instancePath || ""}/${missingProp}`
+  return error.instancePath || ""
+}
+
+function formatSingleError(error: Schema, data?: unknown): string {
+  const errorPath = getErrorPath(error)
+  const location = errorPath ? `at "${errorPath}"` : "at root"
+
+  let line = `- ${location}: swagger states: ${error.message}`
+  if (data !== undefined) {
+    line += `, received ${describeValue(getValueAtPath(data, errorPath))}`
+  }
+  return line
+}
+
+function truncatePreview(data: unknown): string {
+  const json = JSON.stringify(data, null, 2)
+  return json.length > 500 ? json.slice(0, 500) + "\n..." : json
+}
+
+export function assertMatchesSwagger(validate: ValidateFunction, data: unknown, label: string): void {
+  const valid = validate(data)
+  if (!valid) {
+    throw new Error(
+      `${label} does not match swagger schema (TypeScript types may be out of sync):\n${formatErrors(validate, data)}`,
+    )
+  }
+}
+
+function formatErrors(validate: ValidateFunction, data?: unknown): string {
   if (!validate.errors?.length) return "No errors"
 
-  const lines = validate.errors.map((e) => {
-    const missingProp = (e.params as Schema)?.missingProperty as string | undefined
-    const fullPath = missingProp
-      ? `${e.instancePath || ""}/${missingProp}`
-      : e.instancePath || ""
-    const location = fullPath ? `at "${fullPath}"` : "at root"
-    const received = data !== undefined
-      ? `, received ${describeValue(resolvePathValue(data, fullPath))}`
-      : ""
-    return `- ${location}: swagger states: ${e.message}${received}`
-  })
+  const lines = validate.errors.map((e) => formatSingleError(e, data))
 
   if (data !== undefined) {
-    const preview = JSON.stringify(data, null, 2)
-    const truncated = preview.length > 500 ? preview.slice(0, 500) + "\n..." : preview
-    lines.push("", "Received:", truncated)
+    lines.push("", "Received:", truncatePreview(data))
   }
 
   return lines.join("\n")

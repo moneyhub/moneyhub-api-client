@@ -1,6 +1,9 @@
+/* eslint-disable max-statements */
 import path from "path"
 import {expect} from "chai"
 import {createGenerator} from "ts-json-schema-generator"
+
+// --- types ---
 
 type Schema = Record<string, any>
 
@@ -22,7 +25,7 @@ interface EnumMismatch {
   missingFromSwagger: string[]
 }
 
-export interface SchemaDiff {
+interface SchemaDiff {
   missingFromTs: string[]
   missingFromSwagger: string[]
   typeMismatches: TypeMismatch[]
@@ -30,120 +33,10 @@ export interface SchemaDiff {
   enumMismatches: EnumMismatch[]
 }
 
-export function createTypeSchema(typeName: string, filePath: string): Schema {
-  const schema = createGenerator({
-    path: filePath,
-    tsconfig: path.resolve(__dirname, "../../../tsconfig.json"),
-    type: typeName,
-    topRef: false,
-    skipTypeCheck: true,
-  }).createSchema(typeName)
-  return schema as Schema
-}
-
-export function compareSchemas(
-  tsSchema: Schema,
-  swaggerSchema: Schema,
-  swaggerDefinitions: Schema,
-): SchemaDiff {
-  const swaggerFlat = resolveToObjectSchema(swaggerSchema, swaggerDefinitions)
-
-  const ctx: DiffContext = {
-    tsDefs: tsSchema.definitions ?? {},
-    swaggerDefs: swaggerDefinitions,
-    diff: {
-      missingFromTs: [],
-      missingFromSwagger: [],
-      typeMismatches: [],
-      requiredMismatches: [],
-      enumMismatches: [],
-    },
-  }
-
-  collectDiffs(tsSchema, swaggerFlat, "", ctx)
-  return ctx.diff
-}
-
-export function assertTypeMatchesSwagger(tsType: string, tsFile: string, swaggerDefName: string, spec: Schema): void {
-  const tsSchema = createTypeSchema(tsType, tsFile)
-  const swaggerDef = spec.definitions?.[swaggerDefName]
-  expect(swaggerDef, `${swaggerDefName} not found in swagger definitions`).to.exist
-  const diff = compareSchemas(tsSchema, swaggerDef, spec.definitions ?? {})
-  if (!isDiffEmpty(diff)) {
-    expect.fail(`${tsType} does not match swagger ${swaggerDefName}:\n${formatSchemaDiff(diff)}`)
-  }
-}
-
-export function isDiffEmpty(diff: SchemaDiff): boolean {
-  return diff.missingFromTs.length === 0
-    && diff.missingFromSwagger.length === 0
-    && diff.typeMismatches.length === 0
-    && diff.requiredMismatches.length === 0
-    && diff.enumMismatches.length === 0
-}
-
-export function formatSchemaDiff(diff: SchemaDiff): string {
-  const lines = [
-    ...formatSection(
-      "Fields in swagger but missing from TypeScript type:",
-      diff.missingFromTs,
-    ),
-    ...formatSection(
-      "Fields in TypeScript type but missing from swagger:",
-      diff.missingFromSwagger,
-    ),
-    ...formatSection(
-      "Type mismatches:",
-      diff.typeMismatches.map(
-        (m) =>
-          `${m.field}: TS has "${m.tsType}", swagger has "${m.swaggerType}"`,
-      ),
-    ),
-    ...formatSection(
-      "Required/optional mismatches:",
-      diff.requiredMismatches.map(
-        (m) =>
-          `${m.field}: TS has ${m.tsRequired ? "required" : "optional"}, swagger has ${m.swaggerRequired ? "required" : "optional"}`,
-      ),
-    ),
-    ...formatSection(
-      "Enum mismatches:",
-      diff.enumMismatches.map(formatEnumMismatch),
-    ),
-  ]
-  return lines.join("\n")
-}
-
-// --- internal helpers ---
-
-function formatSection(title: string, items: string[]): string[] {
-  if (!items.length) return []
-  return [title, ...items.map((i) => `  - ${i}`)]
-}
-
-function formatEnumMismatch(m: EnumMismatch): string {
-  const parts = [`${m.field}:`]
-  if (m.missingFromTs.length)
-    parts.push(`TS missing [${m.missingFromTs.join(", ")}]`)
-  if (m.missingFromSwagger.length)
-    parts.push(`swagger missing [${m.missingFromSwagger.join(", ")}]`)
-  return parts.join(" ")
-}
+// --- swagger schema resolution ---
 
 function resolveRef(ref: string, definitions: Schema): Schema {
   return definitions[ref.replace("#/definitions/", "")] ?? {}
-}
-
-function resolveToObjectSchema(schema: Schema, definitions: Schema): Schema {
-  if (schema.$ref)
-    return resolveToObjectSchema(
-      resolveRef(schema.$ref, definitions),
-      definitions,
-    )
-  if (schema.type === "array" && schema.items)
-    return resolveToObjectSchema(schema.items, definitions)
-  if (schema.allOf) return flattenAllOf(schema, definitions)
-  return schema
 }
 
 function flattenAllOf(schema: Schema, definitions: Schema): Schema {
@@ -168,11 +61,17 @@ function flattenAllOf(schema: Schema, definitions: Schema): Schema {
   return merged
 }
 
+function resolveToObject(schema: Schema, definitions: Schema): Schema {
+  if (schema.$ref) return resolveToObject(resolveRef(schema.$ref, definitions), definitions)
+  if (schema.type === "array" && schema.items) return resolveToObject(schema.items, definitions)
+  if (schema.allOf) return flattenAllOf(schema, definitions)
+  return schema
+}
+
+// --- schema diffing ---
+
 function normaliseType(prop: Schema, definitions: Schema): string {
-  if (prop.$ref) {
-    const resolved = resolveRef(prop.$ref, definitions)
-    return resolved.type ?? "object"
-  }
+  if (prop.$ref) return resolveRef(prop.$ref, definitions).type ?? "object"
   if (prop.type === "integer") return "number"
   if (Array.isArray(prop.type)) {
     const types = prop.type.filter((t: string) => t !== "null")
@@ -183,93 +82,184 @@ function normaliseType(prop: Schema, definitions: Schema): string {
 
 function resolveProp(prop: Schema, definitions: Schema): Schema {
   if (prop.$ref) return resolveRef(prop.$ref, definitions)
-  return resolveToObjectSchema(prop, definitions)
+  return resolveToObject(prop, definitions)
 }
 
-interface DiffContext {
-  tsDefs: Schema
-  swaggerDefs: Schema
-  diff: SchemaDiff
-}
-
-function isObjectType(schema: Schema): boolean {
+function isObject(schema: Schema): boolean {
   return schema.type === "object" || Boolean(schema.properties)
 }
 
-function checkTypeMismatch(fullName: string, tsProp: Schema, swaggerProp: Schema, ctx: DiffContext): void {
-  const tsType = normaliseType(tsProp, ctx.tsDefs)
-  const swaggerType = normaliseType(swaggerProp, ctx.swaggerDefs)
-  if (tsType !== swaggerType) {
-    ctx.diff.typeMismatches.push({field: fullName, tsType, swaggerType})
-  }
+function toEnumSet(schema: Schema): Set<string> {
+  return new Set<string>((schema.enum ?? []).map(String))
 }
 
-function checkRequiredMismatch(fullName: string, tsRequired: boolean, swaggerRequired: boolean, ctx: DiffContext): void {
-  if (tsRequired !== swaggerRequired) {
-    ctx.diff.requiredMismatches.push({field: fullName, tsRequired, swaggerRequired})
-  }
+interface DiffArgs {
+  tsDefs: Schema
+  swaggerDefs: Schema
+  result: SchemaDiff
 }
 
-function checkEnumMismatch(fullName: string, tsResolved: Schema, swaggerResolved: Schema, ctx: DiffContext): void {
-  const tsEnum = new Set<string>((tsResolved.enum ?? []).map(String))
-  const swaggerEnum = new Set<string>((swaggerResolved.enum ?? []).map(String))
-  if (tsEnum.size === 0 && swaggerEnum.size === 0) return
-
-  const missingFromTs = [...swaggerEnum].filter((v) => !tsEnum.has(v))
-  const missingFromSwagger = [...tsEnum].filter((v) => !swaggerEnum.has(v))
-  if (missingFromTs.length || missingFromSwagger.length) {
-    ctx.diff.enumMismatches.push({field: fullName, missingFromTs, missingFromSwagger})
-  }
-}
-
-interface FieldPair {
-  field: string
-  fullName: string
+interface FieldDiffInput {
+  fieldPath: string
   tsProp: Schema
   swaggerProp: Schema
   tsRequired: boolean
   swaggerRequired: boolean
 }
 
-function compareField(pair: FieldPair, ctx: DiffContext): void {
-  checkTypeMismatch(pair.fullName, pair.tsProp, pair.swaggerProp, ctx)
-  checkRequiredMismatch(pair.fullName, pair.tsRequired, pair.swaggerRequired, ctx)
+function diffSingleField(input: FieldDiffInput, args: DiffArgs): void {
+  const {fieldPath, tsProp, swaggerProp, tsRequired, swaggerRequired} = input
+  const {tsDefs, swaggerDefs, result} = args
 
-  const tsResolved = resolveProp(pair.tsProp, ctx.tsDefs)
-  const swaggerResolved = resolveProp(pair.swaggerProp, ctx.swaggerDefs)
+  const tsType = normaliseType(tsProp, tsDefs)
+  const swaggerType = normaliseType(swaggerProp, swaggerDefs)
+  if (tsType !== swaggerType) {
+    result.typeMismatches.push({field: fieldPath, tsType, swaggerType})
+  }
 
-  checkEnumMismatch(pair.fullName, tsResolved, swaggerResolved, ctx)
+  if (tsRequired !== swaggerRequired) {
+    result.requiredMismatches.push({field: fieldPath, tsRequired, swaggerRequired})
+  }
 
-  if (isObjectType(tsResolved) && isObjectType(swaggerResolved)) {
-    collectDiffs(tsResolved, swaggerResolved, pair.fullName, ctx)
+  const tsResolved = resolveProp(tsProp, tsDefs)
+  const swaggerResolved = resolveProp(swaggerProp, swaggerDefs)
+
+  const tsEnums = toEnumSet(tsResolved)
+  const swaggerEnums = toEnumSet(swaggerResolved)
+  if (tsEnums.size > 0 || swaggerEnums.size > 0) {
+    const missingFromTs = [...swaggerEnums].filter((v) => !tsEnums.has(v))
+    const missingFromSwagger = [...tsEnums].filter((v) => !swaggerEnums.has(v))
+    if (missingFromTs.length || missingFromSwagger.length) {
+      result.enumMismatches.push({field: fieldPath, missingFromTs, missingFromSwagger})
+    }
+  }
+
+  if (isObject(tsResolved) && isObject(swaggerResolved)) {
+    diffFields(tsResolved, swaggerResolved, fieldPath, args) // eslint-disable-line no-use-before-define
   }
 }
 
-function collectDiffs(tsSchema: Schema, swaggerSchema: Schema, prefix: string, ctx: DiffContext): void {
+function diffFields(tsSchema: Schema, swaggerSchema: Schema, prefix: string, args: DiffArgs): void {
   const tsProps = tsSchema.properties ?? {}
   const swaggerProps = swaggerSchema.properties ?? {}
-  const tsReq = new Set<string>(tsSchema.required ?? [])
-  const swaggerReq = new Set<string>(swaggerSchema.required ?? [])
-  const allFields = new Set([...Object.keys(tsProps), ...Object.keys(swaggerProps)])
+  const tsRequired = new Set<string>(tsSchema.required ?? [])
+  const swaggerRequired = new Set<string>(swaggerSchema.required ?? [])
+
+  const allFields = new Set([
+    ...Object.keys(tsProps),
+    ...Object.keys(swaggerProps),
+  ])
 
   for (const field of allFields) {
-    const fullName = prefix ? `${prefix}.${field}` : field
+    const fieldPath = prefix ? `${prefix}.${field}` : field
 
     if (!(field in tsProps)) {
-      ctx.diff.missingFromTs.push(fullName)
+      args.result.missingFromTs.push(fieldPath)
       continue
     }
     if (!(field in swaggerProps)) {
-      ctx.diff.missingFromSwagger.push(fullName)
+      args.result.missingFromSwagger.push(fieldPath)
       continue
     }
 
-    compareField({
-      field, fullName,
+    diffSingleField({
+      fieldPath,
       tsProp: tsProps[field],
       swaggerProp: swaggerProps[field],
-      tsRequired: tsReq.has(field),
-      swaggerRequired: swaggerReq.has(field),
-    }, ctx)
+      tsRequired: tsRequired.has(field),
+      swaggerRequired: swaggerRequired.has(field),
+    }, args)
+  }
+}
+
+// --- formatting ---
+
+function formatSection(title: string, items: string[]): string[] {
+  if (!items.length) return []
+  return [title, ...items.map((i) => `  - ${i}`)]
+}
+
+function formatSchemaDiff(diff: SchemaDiff): string {
+  const lines = [
+    ...formatSection("Fields in swagger but missing from TypeScript type:", diff.missingFromTs),
+    ...formatSection("Fields in TypeScript type but missing from swagger:", diff.missingFromSwagger),
+    ...formatSection("Type mismatches:",
+      diff.typeMismatches.map((m) => `${m.field}: TS has "${m.tsType}", swagger has "${m.swaggerType}"`)),
+    ...formatSection("Required/optional mismatches:",
+      diff.requiredMismatches.map((m) =>
+        `${m.field}: TS has ${m.tsRequired ? "required" : "optional"}, swagger has ${m.swaggerRequired ? "required" : "optional"}`)),
+    ...formatSection("Enum mismatches:",
+      diff.enumMismatches.map((m) => {
+        const parts = [`${m.field}:`]
+        if (m.missingFromTs.length) parts.push(`TS missing [${m.missingFromTs.join(", ")}]`)
+        if (m.missingFromSwagger.length) parts.push(`swagger missing [${m.missingFromSwagger.join(", ")}]`)
+        return parts.join(" ")
+      })),
+  ]
+  return lines.join("\n")
+}
+
+function isDiffEmpty(diff: SchemaDiff): boolean {
+  return diff.missingFromTs.length === 0
+    && diff.missingFromSwagger.length === 0
+    && diff.typeMismatches.length === 0
+    && diff.requiredMismatches.length === 0
+    && diff.enumMismatches.length === 0
+}
+
+
+
+function createTypeSchema(typeName: string, filePath: string): Schema {
+  return createGenerator({
+    path: filePath,
+    tsconfig: path.resolve(__dirname, "../../../tsconfig.json"),
+    type: typeName,
+    topRef: false,
+    skipTypeCheck: true,
+  }).createSchema(typeName) as Schema
+}
+
+interface CompareSchemasInput {
+  tsSchema: Schema
+  swaggerSchema: Schema
+  swaggerDefinitions: Schema
+}
+
+function compareSchemas({tsSchema, swaggerSchema, swaggerDefinitions}: CompareSchemasInput): SchemaDiff {
+  const args: DiffArgs = {
+    tsDefs: tsSchema.definitions ?? {},
+    swaggerDefs: swaggerDefinitions,
+    result: {
+      missingFromTs: [],
+      missingFromSwagger: [],
+      typeMismatches: [],
+      requiredMismatches: [],
+      enumMismatches: [],
+    },
+  }
+
+  const swaggerFlat = resolveToObject(swaggerSchema, swaggerDefinitions)
+  diffFields(tsSchema, swaggerFlat, "", args)
+  return args.result
+}
+
+interface AssertTypeInput {
+  tsType: string
+  tsFile: string
+  swaggerDefName: string
+  spec: Schema
+}
+
+// --- public API ---
+
+export function assertTypeMatchesSwagger({tsType, tsFile, swaggerDefName, spec}: AssertTypeInput): void {
+  const resolvedPath = path.resolve(__dirname, tsFile)
+  const tsSchema = createTypeSchema(tsType, resolvedPath)
+  const swaggerDef = spec.definitions?.[swaggerDefName]
+  expect(swaggerDef, `${swaggerDefName} not found in swagger definitions`).to.exist
+
+  const diff = compareSchemas({tsSchema, swaggerSchema: swaggerDef, swaggerDefinitions: spec.definitions ?? {}})
+  if (!isDiffEmpty(diff)) {
+    expect.fail(`${tsType} does not match swagger ${swaggerDefName}:\n${formatSchemaDiff(diff)}`)
   }
 }
