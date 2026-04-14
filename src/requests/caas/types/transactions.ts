@@ -61,7 +61,7 @@ export type CaasL1CategoryType =
   | "transfer"
   | "deferred"
   | "mixed"
-  | "uncategorise"
+  | "uncategorize"
 
 export type CaasL2CategoryId =
   | "1"
@@ -178,7 +178,7 @@ export type CaasL2CategoryName =
   | "credit"
   | "securities"
   | "other-income"
-  | "paycheques"
+  | "paychecks"
   | "investment"
   | "retirement"
   | "interest"
@@ -195,7 +195,7 @@ export type CaasL2CategoryName =
   | "deposits"
   | "sales"
   | "rewards"
-  | "uncategorised"
+  | "uncategorized"
 
 export type CaasL4LoanType =
   | "Unsecured"

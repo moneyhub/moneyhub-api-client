@@ -7,7 +7,13 @@ type Schema = Record<string, any>
 
 const specCache = new Map<string, Schema>()
 
-// Strips `additionalProperties: false` (incompatible with allOf in Swagger 2.0)
+// -- Ajv instance creation and schema compilation -- //
+
+function createAjv() {
+  return addFormats(new Ajv({strict: false, allErrors: true}))
+}
+
+// Recursively strips `additionalProperties: false` (incompatible with allOf in Swagger 2.0)
 // and converts `x-nullable: true` to a union type so Ajv accepts null values.
 function preprocessSchema(obj: unknown): unknown {
   if (obj == null) return obj
@@ -31,9 +37,17 @@ function preprocessSchema(obj: unknown): unknown {
   return obj
 }
 
-function createAjv() {
-  return addFormats(new Ajv({strict: false, allErrors: true}))
+function compileSchema(rawSchema: unknown, spec: Schema): ValidateFunction {
+  const definitions: Schema = {}
+  for (const [key, val] of Object.entries(spec.definitions ?? {})) {
+    definitions[key] = preprocessSchema(val)
+  }
+  return createAjv().compile({
+    definitions,
+    allOf: [preprocessSchema(rawSchema)],
+  })
 }
+
 
 function getOperation(spec: Schema, endpoint: string, method: string): Schema {
   const operation = spec.paths?.[endpoint]?.[method]
@@ -47,17 +61,6 @@ function resolveParamRef(spec: Schema, param: Schema): Schema {
     return spec.parameters?.[key] ?? param
   }
   return param
-}
-
-function compileSchema(rawSchema: unknown, spec: Schema): ValidateFunction {
-  const definitions: Schema = {}
-  for (const [key, val] of Object.entries(spec.definitions ?? {})) {
-    definitions[key] = preprocessSchema(val)
-  }
-  return createAjv().compile({
-    definitions,
-    allOf: [preprocessSchema(rawSchema)],
-  })
 }
 
 function getBodySchema(spec: Schema, endpoint: string, method: string): Schema | undefined {
@@ -74,38 +77,7 @@ function getResponseSchema(spec: Schema, endpoint: string, method: string, statu
   return operation.responses?.[statusCode]?.schema
 }
 
-export async function fetchSwaggerSpec(url: string | undefined): Promise<Schema> {
-  if (!url) {
-    throw new Error(
-      "Missing \"caas\" config block. Expected structure:\n"
-      + JSON.stringify({
-        caas: {
-          swaggerUrl: "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
-          userId: "user-id-12345678",
-          accountId: "account-id-12345678",
-        },
-      }, null, 2)
-      + "\nCaas config must be added to the top level of your client config object",
-    )
-  }
-
-  const cached = specCache.get(url)
-  if (cached) return cached
-  const {body} = await got(url, {responseType: "json"})
-  const spec = body as Schema
-  specCache.set(url, spec)
-  return spec
-}
-
-export function createRequestValidator(spec: Schema, endpoint: string, method: string): ValidateFunction | null {
-  const schema = getBodySchema(spec, endpoint, method)
-  return schema ? compileSchema(schema, spec) : null
-}
-
-export function createResponseValidator(spec: Schema, endpoint: string, method: string, statusCode: string): ValidateFunction | null {
-  const schema = getResponseSchema(spec, endpoint, method, statusCode)
-  return schema ? compileSchema(schema, spec) : null
-}
+// -- Error formatting -- //
 
 function getValueAtPath(data: unknown, jsonPath: string): unknown {
   if (!jsonPath) return data
@@ -151,15 +123,6 @@ function truncatePreview(data: unknown): string {
   return json.length > 500 ? json.slice(0, 500) + "\n..." : json
 }
 
-export function assertMatchesSwagger(validate: ValidateFunction, data: unknown, label: string): void {
-  const valid = validate(data)
-  if (!valid) {
-    throw new Error(
-      `${label} does not match swagger schema (TypeScript types may be out of sync):\n${formatErrors(validate, data)}`,
-    )
-  }
-}
-
 function formatErrors(validate: ValidateFunction, data?: unknown): string {
   if (!validate.errors?.length) return "No errors"
 
@@ -171,3 +134,57 @@ function formatErrors(validate: ValidateFunction, data?: unknown): string {
 
   return lines.join("\n")
 }
+
+// -- Public API --
+//
+// Usage:
+//   const spec = await fetchSwaggerSpec(config.caas?.swaggerUrl)
+//   const validate = createRequestValidator(spec, "/transactions/enrich", "post")
+//   assertMatchesSwagger(validate, requestPayload, "Request body")
+//
+// 1. fetchSwaggerSpec    - fetches and caches the swagger JSON (throws if URL is missing)
+// 2. createRequest/ResponseValidator - compiles an Ajv validator for a given endpoint
+// 3. assertMatchesSwagger - validates data against the compiled schema, throws on mismatch
+
+export async function fetchSwaggerSpec(url: string | undefined): Promise<Schema> {
+  if (!url) {
+    throw new Error(
+      "Missing \"caas\" config block. Expected structure:\n"
+      + JSON.stringify({
+        caas: {
+          swaggerUrl: "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
+          userId: "user-id-12345678",
+          accountId: "account-id-12345678",
+        },
+      }, null, 2)
+      + "\nCaas config must be added to the top level of your client config object",
+    )
+  }
+
+  const cached = specCache.get(url)
+  if (cached) return cached
+  const {body} = await got(url, {responseType: "json"})
+  const spec = body as Schema
+  specCache.set(url, spec)
+  return spec
+}
+
+export function createRequestValidator(spec: Schema, endpoint: string, method: string): ValidateFunction | null {
+  const schema = getBodySchema(spec, endpoint, method)
+  return schema ? compileSchema(schema, spec) : null
+}
+
+export function createResponseValidator(spec: Schema, endpoint: string, method: string, statusCode: string): ValidateFunction | null {
+  const schema = getResponseSchema(spec, endpoint, method, statusCode)
+  return schema ? compileSchema(schema, spec) : null
+}
+
+export function assertMatchesSwagger(validate: ValidateFunction, data: unknown, label: string): void {
+  const valid = validate(data)
+  if (!valid) {
+    throw new Error(
+      `${label} does not match swagger schema (TypeScript types may be out of sync):\n${formatErrors(validate, data)}`,
+    )
+  }
+}
+
