@@ -1,6 +1,6 @@
 import {RequestsParams} from "../../request"
 import type {ApiResponse} from "../../request"
-import {CaasTransaction, CaasTransactionsRequests} from "./types/transactions"
+import {CaasEnrichTransactionsResponse, CaasTransaction, CaasTransactionsRequests} from "./types/transactions"
 
 export default ({config, request}: RequestsParams): CaasTransactionsRequests => {
   const {caasResourceServerUrl} = config
@@ -23,14 +23,14 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
     },
     caasEnrichTransactions: ({transactions}, options) => {
 
-      return request<ApiResponse<CaasTransaction[]>>(
+      return request<CaasEnrichTransactionsResponse>(
         `${caasResourceServerUrl}/transactions/enrich`,
         {
           method: "POST",
           cc: {
             scope: "caas:transactions:write",
           },
-          body: {transactions},
+          body: transactions,
 
           options,
         },
