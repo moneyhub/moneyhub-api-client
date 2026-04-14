@@ -1,12 +1,9 @@
 /* eslint-disable max-nested-callbacks */
+import path from "path"
 import {expect} from "chai"
-import {expectTypeOf} from "expect-type"
 
 import {Moneyhub, MoneyhubInstance} from "../.."
-import type {
-  CaasTransactionInput,
-  CaasTransaction,
-} from "../../requests/caas/types/transactions"
+import type {CaasTransactionInput} from "../../requests/caas/types/transactions"
 import type {CaasTestConfig} from "./types"
 
 import {
@@ -15,8 +12,11 @@ import {
   createResponseValidator,
   formatErrors,
 } from "./swagger"
+import {assertTypeMatchesSwagger} from "./schema-comparison"
 
-describe("POST /transactions/enrich", function() {
+const TYPES_FILE = path.resolve(__dirname, "../../requests/caas/types/transactions.ts")
+
+describe.only("POST /transactions/enrich", function() {
   let moneyhub: MoneyhubInstance
   let validateRequest: NonNullable<ReturnType<typeof createRequestValidator>>
   let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
@@ -119,8 +119,21 @@ describe("POST /transactions/enrich", function() {
       expect(first.mhInsights).to.have.property("l1CategoryGroupName")
     })
 
-    it("response type matches hand-written CaasTransaction interface", function() {
-      expectTypeOf<CaasTransaction[]>(response.data)
+  })
+
+  describe("TypeScript types match swagger definitions", function() {
+    let spec: Awaited<ReturnType<typeof fetchSwaggerSpec>>
+
+    before(async function() {
+      spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+    })
+
+    it("CaasTransactionInput matches swagger TransactionPost definition", function() {
+      assertTypeMatchesSwagger("CaasTransactionInput", TYPES_FILE, "TransactionPost", spec)
+    })
+
+    it("CaasTransaction matches swagger EnrichedTransaction definition", function() {
+      assertTypeMatchesSwagger("CaasTransaction", TYPES_FILE, "EnrichedTransaction", spec)
     })
   })
 })

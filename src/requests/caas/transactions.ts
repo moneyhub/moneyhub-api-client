@@ -2,10 +2,10 @@ import {RequestsParams} from "../../request"
 import type {ApiResponse} from "../../request"
 import {
   CaasEnrichTransactionsResponse,
-  CaasEnhancedTransaction,
   CaasTransaction,
   CaasTransactionsRequests,
 } from "./types/transactions"
+import type {CaasEnhancedTransaction} from "./types/enhanced-transactions"
 
 export default ({config, request}: RequestsParams): CaasTransactionsRequests => {
   const {caasResourceServerUrl} = config

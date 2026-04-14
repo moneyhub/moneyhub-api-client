@@ -35,9 +35,9 @@ function createAjv() {
   return addFormats(new Ajv({strict: false, allErrors: true}))
 }
 
-function getOperation(spec: Schema, path: string, method: string): Schema {
-  const operation = spec.paths?.[path]?.[method]
-  if (!operation) throw new Error(`No operation found for ${method.toUpperCase()} ${path}`)
+function getOperation(spec: Schema, endpoint: string, method: string): Schema {
+  const operation = spec.paths?.[endpoint]?.[method]
+  if (!operation) throw new Error(`No operation found for ${method.toUpperCase()} ${endpoint}`)
   return operation
 }
 
@@ -60,8 +60,8 @@ function compileSchema(rawSchema: unknown, spec: Schema): ValidateFunction {
   })
 }
 
-function getBodySchema(spec: Schema, path: string, method: string): Schema | undefined {
-  const operation = getOperation(spec, path, method)
+function getBodySchema(spec: Schema, endpoint: string, method: string): Schema | undefined {
+  const operation = getOperation(spec, endpoint, method)
   const params: Schema[] = (operation.parameters ?? []).map(
     (p: Schema) => resolveParamRef(spec, p),
   )
@@ -69,8 +69,8 @@ function getBodySchema(spec: Schema, path: string, method: string): Schema | und
   return bodyParam?.schema
 }
 
-function getResponseSchema(spec: Schema, path: string, method: string, statusCode: string): Schema | undefined {
-  const operation = getOperation(spec, path, method)
+function getResponseSchema(spec: Schema, endpoint: string, method: string, statusCode: string): Schema | undefined {
+  const operation = getOperation(spec, endpoint, method)
   return operation.responses?.[statusCode]?.schema
 }
 
@@ -83,13 +83,13 @@ export async function fetchSwaggerSpec(url: string): Promise<Schema> {
   return spec
 }
 
-export function createRequestValidator(spec: Schema, path: string, method: string): ValidateFunction | null {
-  const schema = getBodySchema(spec, path, method)
+export function createRequestValidator(spec: Schema, endpoint: string, method: string): ValidateFunction | null {
+  const schema = getBodySchema(spec, endpoint, method)
   return schema ? compileSchema(schema, spec) : null
 }
 
-export function createResponseValidator(spec: Schema, path: string, method: string, statusCode: string): ValidateFunction | null {
-  const schema = getResponseSchema(spec, path, method, statusCode)
+export function createResponseValidator(spec: Schema, endpoint: string, method: string, statusCode: string): ValidateFunction | null {
+  const schema = getResponseSchema(spec, endpoint, method, statusCode)
   return schema ? compileSchema(schema, spec) : null
 }
 
