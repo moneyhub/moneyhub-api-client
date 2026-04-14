@@ -40,6 +40,9 @@
     "query-string": "^7.1.1",
     "ramda": "^0.27.2"
   },
+  "overrides": {
+    "serialize-javascript": "^7.0.5"
+  },
   "devDependencies": {
     "@mft/eslint-config-momentumft": "^8.0.0",
     "@types/chai": "^4.3.1",
