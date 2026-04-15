@@ -11,9 +11,9 @@ import {
   createResponseValidator,
   assertMatchesSwagger,
 } from "./swagger"
-import {assertTypeMatchesSwagger} from "./schema-comparison"
+import {assertTypeMatchesSwagger} from "./typescript-validator"
 
-const TYPES_FILE = "../../requests/caas/types/transactions.ts"
+const TYPES_FILE = "../../../requests/caas/types/transactions.ts"
 
 describe.only("POST /transactions/enrich", function() {
   let moneyhub: MoneyhubInstance
@@ -104,11 +104,11 @@ describe.only("POST /transactions/enrich", function() {
     })
 
     it("CaasTransactionInput matches swagger TransactionPost definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasTransactionInput", tsFile: TYPES_FILE, swaggerDefName: "TransactionPost", spec})
+      assertTypeMatchesSwagger({tsType: "CaasTransactionInput", tsFile: TYPES_FILE, swaggerDefinitionName: "TransactionPost", spec})
     })
 
     it("CaasTransaction matches swagger EnrichedTransaction definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasTransaction", tsFile: TYPES_FILE, swaggerDefName: "EnrichedTransaction", spec})
+      assertTypeMatchesSwagger({tsType: "CaasTransaction", tsFile: TYPES_FILE, swaggerDefinitionName: "EnrichedTransaction", spec})
     })
   })
 })

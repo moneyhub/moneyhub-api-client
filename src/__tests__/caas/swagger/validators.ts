@@ -1,11 +1,8 @@
 import Ajv from "ajv"
 import type {ValidateFunction} from "ajv"
 import addFormats from "ajv-formats"
-import got from "got"
 
 type Schema = Record<string, any>
-
-const specCache = new Map<string, Schema>()
 
 // -- Ajv instance creation and schema compilation -- //
 
@@ -151,46 +148,7 @@ function formatErrors(validate: ValidateFunction, data?: unknown): string {
   return lines.join("\n")
 }
 
-// -- Public API --
-//
-// Usage:
-//   const spec = await fetchSwaggerSpec(config.caas?.swaggerUrl)
-//   const validate = createRequestValidator(spec, "/transactions/enrich", "post")
-//   assertMatchesSwagger(validate, requestPayload, "Request body")
-//
-// 1. fetchSwaggerSpec    - fetches and caches the swagger JSON (throws if URL is missing)
-// 2. createRequest/ResponseValidator - compiles an Ajv validator for a given endpoint
-// 3. assertMatchesSwagger - validates data against the compiled schema, throws on mismatch
-
-export async function fetchSwaggerSpec(
-  url: string | undefined,
-): Promise<Schema> {
-  if (!url) {
-    throw new Error(
-      "Missing \"caas\" config block. Expected structure:\n" +
-        JSON.stringify(
-          {
-            caas: {
-              swaggerUrl:
-                "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
-              userId: "user-id-12345678",
-              accountId: "account-id-12345678",
-            },
-          },
-          null,
-          2,
-        ) +
-        "\nCaas config must be added to the top level of your client config object",
-    )
-  }
-
-  const cached = specCache.get(url)
-  if (cached) return cached
-  const {body} = await got(url, {responseType: "json"})
-  const spec = body as Schema
-  specCache.set(url, spec)
-  return spec
-}
+// -- Public API -- //
 
 export function createRequestValidator(
   spec: Schema,
