@@ -15,7 +15,7 @@ import {assertTypeMatchesSwagger} from "./typescript-validator"
 
 const TYPES_FILE = "../../../requests/caas/types/transactions.ts"
 
-describe.only("POST /transactions/enrich", function() {
+describe("POST /transactions/enrich", function() {
   let moneyhub: MoneyhubInstance
   let validateRequest: NonNullable<ReturnType<typeof createRequestValidator>>
   let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
