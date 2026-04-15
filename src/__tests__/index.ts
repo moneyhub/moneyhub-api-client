@@ -85,6 +85,7 @@ describe("API client", function() {
         "caasGetCounterparties",
         "caasGetGeotags",
         "caasGetRegularTransactions",
+        "caasGetEnhancedTransaction",
         "caasGetTransactions",
         "caasPatchTransaction",
         "updateTransaction",

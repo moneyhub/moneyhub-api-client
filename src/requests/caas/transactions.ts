@@ -1,6 +1,11 @@
 import {RequestsParams} from "../../request"
 import type {ApiResponse} from "../../request"
-import {CaasEnrichTransactionsResponse, CaasTransaction, CaasTransactionsRequests} from "./types/transactions"
+import {
+  CaasEnrichTransactionsResponse,
+  CaasEnhancedTransaction,
+  CaasTransaction,
+  CaasTransactionsRequests,
+} from "./types/transactions"
 
 export default ({config, request}: RequestsParams): CaasTransactionsRequests => {
   const {caasResourceServerUrl} = config
@@ -44,6 +49,19 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
             scope: "caas:transactions:read",
           },
           searchParams: {accountId, userId, limit},
+
+          options,
+        },
+      )
+    },
+    caasGetEnhancedTransaction: ({accountId, transactionId, includeFieldTiers}, options) => {
+      return request<ApiResponse<CaasEnhancedTransaction>>(
+        `${caasResourceServerUrl}/accounts/${accountId}/transactions/${transactionId}/enhanced`,
+        {
+          cc: {
+            scope: "caas:enhanced_transactions:read",
+          },
+          searchParams: includeFieldTiers ? {includeFieldTiers} : undefined,
 
           options,
         },

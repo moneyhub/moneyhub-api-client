@@ -2264,6 +2264,22 @@ const result = await moneyhub.caasGetTransactions({
 }, options);
 ```
 
+#### `caasGetEnhancedTransaction`
+
+Retrieves Google Places–backed enhanced location and merchant data for a single CAAS transaction. Uses scope `caas:enhanced_transactions:read`. This is a premium endpoint and incurs a cost per request. Responses must not be cached or persisted when the data is sourced from Google (see API documentation).
+
+Optional query `includeFieldTiers` controls which field sets are returned (each tier is cumulative). Allowed values: `basic` (default), `search_pro`, `search_enterprise`, `search_enterprise_plus`.
+
+```javascript
+const result = await moneyhub.caasGetEnhancedTransaction({
+  accountId: "accountId",
+  transactionId: "transactionId",
+  includeFieldTiers: "search_pro",
+}, options);
+```
+
+The response follows the usual API envelope: the enhanced transaction is `result.data` (optional `links` / `meta` may also be present).
+
 #### `caasPatchTransaction`
 
 Update a transaction category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`.
