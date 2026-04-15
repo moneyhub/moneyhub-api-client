@@ -311,8 +311,8 @@ export interface CaasCounterparty {
 
 export interface CaasGeotag {
   geotagId: string
-  counterpartyName?: string
-  counterpartyLabel?: string
+  counterpartyName: string
+  counterpartyLabel: string
   houseNumber?: string
   street?: string
   neighbourhood?: string
@@ -321,9 +321,9 @@ export interface CaasGeotag {
   county?: string
   region?: string
   postcode?: string
-  latitude?: number
-  longitude?: number
+  latitude: number
+  longitude: number
   l3CounterpartyCategory?: string
-  postcodeEstimated?: boolean
+  postcodeEstimated: boolean
   postcodeErrorKm?: number
 }

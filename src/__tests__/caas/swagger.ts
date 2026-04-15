@@ -18,23 +18,28 @@ function createAjv() {
 function preprocessSchema(obj: unknown): unknown {
   if (obj == null) return obj
   if (Array.isArray(obj)) return obj.map(preprocessSchema)
-  if (typeof obj === "object") {
-    const result: Schema = {}
-    for (const [key, val] of Object.entries(obj as Schema)) {
-      if (key === "additionalProperties" && val === false) continue
-      result[key] = preprocessSchema(val)
+  if (typeof obj !== "object") return obj
+
+  const result = Object.entries(obj)
+    .filter(([key, value]) => {
+      if (key === "additionalProperties" && value === false) return false
+      return true
+    })
+    .reduce<Schema>((acc, [key, value]) => {
+      acc[key] = preprocessSchema(value)
+      return acc
+    }, {})
+
+  if (result["x-nullable"] === true) {
+    if (typeof result.type === "string") {
+      result.type = [result.type, "null"]
     }
-    if (result["x-nullable"] === true) {
-      if (typeof result.type === "string") {
-        result.type = [result.type, "null"]
-      }
-      if (Array.isArray(result.enum)) {
-        result.enum = [...result.enum, null]
-      }
+    if (Array.isArray(result.enum)) {
+      result.enum = [...result.enum, null]
     }
-    return result
   }
-  return obj
+
+  return result
 }
 
 function compileSchema(rawSchema: unknown, spec: Schema): ValidateFunction {
@@ -48,10 +53,12 @@ function compileSchema(rawSchema: unknown, spec: Schema): ValidateFunction {
   })
 }
 
-
 function getOperation(spec: Schema, endpoint: string, method: string): Schema {
   const operation = spec.paths?.[endpoint]?.[method]
-  if (!operation) throw new Error(`No operation found for ${method.toUpperCase()} ${endpoint}`)
+  if (!operation)
+    throw new Error(
+      `No operation found for ${method.toUpperCase()} ${endpoint}`,
+    )
   return operation
 }
 
@@ -63,16 +70,25 @@ function resolveParamRef(spec: Schema, param: Schema): Schema {
   return param
 }
 
-function getBodySchema(spec: Schema, endpoint: string, method: string): Schema | undefined {
+function getBodySchema(
+  spec: Schema,
+  endpoint: string,
+  method: string,
+): Schema | undefined {
   const operation = getOperation(spec, endpoint, method)
-  const params: Schema[] = (operation.parameters ?? []).map(
-    (p: Schema) => resolveParamRef(spec, p),
+  const params: Schema[] = (operation.parameters ?? []).map((p: Schema) =>
+    resolveParamRef(spec, p),
   )
   const bodyParam = params.find((p) => p.in === "body")
   return bodyParam?.schema
 }
 
-function getResponseSchema(spec: Schema, endpoint: string, method: string, statusCode: string): Schema | undefined {
+function getResponseSchema(
+  spec: Schema,
+  endpoint: string,
+  method: string,
+  statusCode: string,
+): Schema | undefined {
   const operation = getOperation(spec, endpoint, method)
   return operation.responses?.[statusCode]?.schema
 }
@@ -146,18 +162,25 @@ function formatErrors(validate: ValidateFunction, data?: unknown): string {
 // 2. createRequest/ResponseValidator - compiles an Ajv validator for a given endpoint
 // 3. assertMatchesSwagger - validates data against the compiled schema, throws on mismatch
 
-export async function fetchSwaggerSpec(url: string | undefined): Promise<Schema> {
+export async function fetchSwaggerSpec(
+  url: string | undefined,
+): Promise<Schema> {
   if (!url) {
     throw new Error(
-      "Missing \"caas\" config block. Expected structure:\n"
-      + JSON.stringify({
-        caas: {
-          swaggerUrl: "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
-          userId: "user-id-12345678",
-          accountId: "account-id-12345678",
-        },
-      }, null, 2)
-      + "\nCaas config must be added to the top level of your client config object",
+      "Missing \"caas\" config block. Expected structure:\n" +
+        JSON.stringify(
+          {
+            caas: {
+              swaggerUrl:
+                "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
+              userId: "user-id-12345678",
+              accountId: "account-id-12345678",
+            },
+          },
+          null,
+          2,
+        ) +
+        "\nCaas config must be added to the top level of your client config object",
     )
   }
 
@@ -169,17 +192,30 @@ export async function fetchSwaggerSpec(url: string | undefined): Promise<Schema>
   return spec
 }
 
-export function createRequestValidator(spec: Schema, endpoint: string, method: string): ValidateFunction | null {
+export function createRequestValidator(
+  spec: Schema,
+  endpoint: string,
+  method: string,
+): ValidateFunction | null {
   const schema = getBodySchema(spec, endpoint, method)
   return schema ? compileSchema(schema, spec) : null
 }
 
-export function createResponseValidator(spec: Schema, endpoint: string, method: string, statusCode: string): ValidateFunction | null {
+export function createResponseValidator(
+  spec: Schema,
+  endpoint: string,
+  method: string,
+  statusCode: string,
+): ValidateFunction | null {
   const schema = getResponseSchema(spec, endpoint, method, statusCode)
   return schema ? compileSchema(schema, spec) : null
 }
 
-export function assertMatchesSwagger(validate: ValidateFunction, data: unknown, label: string): void {
+export function assertMatchesSwagger(
+  validate: ValidateFunction,
+  data: unknown,
+  label: string,
+): void {
   const valid = validate(data)
   if (!valid) {
     throw new Error(
@@ -187,4 +223,3 @@ export function assertMatchesSwagger(validate: ValidateFunction, data: unknown, 
     )
   }
 }
-
