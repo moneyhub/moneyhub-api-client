@@ -313,14 +313,14 @@ export interface CaasGeotag {
   geotagId: string
   counterpartyName: string
   counterpartyLabel: string
-  houseNumber?: string
-  street?: string
-  neighbourhood?: string
-  locality?: string
-  city?: string
-  county?: string
-  region?: string
-  postcode?: string
+  houseNumber: string | null
+  street: string | null
+  neighbourhood: string | null
+  locality: string | null
+  city: string | null
+  county: string | null
+  region: string | null
+  postcode: string | null
   latitude: number
   longitude: number
   l3CounterpartyCategory?: string
