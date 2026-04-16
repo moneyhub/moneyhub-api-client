@@ -24,7 +24,7 @@ function isMatchedField(field: FieldPair): field is MatchedField {
 
 export function normaliseType(prop: Schema, definitions: Schema): string {
   if (prop.$ref) {
-    return resolveRef(prop.$ref, definitions).type ?? "object"
+    return normaliseType(resolveRef(prop.$ref, definitions), definitions)
   }
 
   if (prop.type === "integer") {
