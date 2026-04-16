@@ -9,6 +9,8 @@
     "lint-fix": "eslint src/ --fix",
     "test": "mocha --require ts-node/register --config test/opts/integration.json",
     "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json",
+    "test-caas": "mocha --require ts-node/register --config test/opts/integration-caas.json",
+    "test-caas-ci": "mocha --require ts-node/register --config test/opts/integration-caas-ci.json",
     "prepare": "husky install",
     "prepublishOnly": "node scripts/assert-github-actions-publish.js && npm run build",
     "build": "tsc",

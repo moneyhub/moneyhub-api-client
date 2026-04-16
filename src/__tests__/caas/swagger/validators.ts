@@ -4,12 +4,6 @@ import addFormats from "ajv-formats"
 
 type Schema = Record<string, any>
 
-// -- Ajv instance creation and schema compilation -- //
-
-function createAjv() {
-  return addFormats(new Ajv({strict: false, allErrors: true}))
-}
-
 // Recursively strips `additionalProperties: false` (incompatible with allOf in Swagger 2.0)
 // and converts `x-nullable: true` to a union type so Ajv accepts null values.
 function preprocessSchema(obj: unknown): unknown {
@@ -40,11 +34,11 @@ function preprocessSchema(obj: unknown): unknown {
 }
 
 function compileSchema(rawSchema: unknown, spec: Schema): ValidateFunction {
-  const definitions: Schema = {}
-  for (const [key, val] of Object.entries(spec.definitions ?? {})) {
-    definitions[key] = preprocessSchema(val)
-  }
-  return createAjv().compile({
+  const definitions = Object.fromEntries(
+    Object.entries(spec.definitions ?? {}).map(([key, val]) => [key, preprocessSchema(val)]),
+  )
+
+  return addFormats(new Ajv({strict: false, allErrors: true})).compile({
     definitions,
     allOf: [preprocessSchema(rawSchema)],
   })

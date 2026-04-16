@@ -17,47 +17,44 @@ const TYPES_FILE = "../../../requests/caas/types/transactions.ts"
 
 describe("POST /transactions/enrich", function() {
   let moneyhub: MoneyhubInstance
-  let validateRequest: NonNullable<ReturnType<typeof createRequestValidator>>
-  let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
   before(async function() {
     moneyhub = await Moneyhub(this.config)
-    const spec = await fetchSwaggerSpec(this.config.caas?.swaggerUrl)
-    const reqValidator = createRequestValidator(spec, "/transactions/enrich", "post")
-    const resValidator = createResponseValidator(spec, "/transactions/enrich", "post", "201")
-    if (!reqValidator || !resValidator) throw new Error("Swagger schema missing for POST /transactions/enrich")
-    validateRequest = reqValidator
-    validateResponse = resValidator
   })
 
   describe("enriches transactions and validates against swagger schema", function() {
     let response: Awaited<ReturnType<typeof moneyhub.caasEnrichTransactions>>
     let transactionsPayload: CaasTransactionInput[]
+    let validateRequest: NonNullable<ReturnType<typeof createRequestValidator>>
+    let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      const {caas} = this.config as CaasTestConfig
-      if (!caas?.accountId) {
-        throw new Error(
-          "Missing caas.accountId in config. This test requires a valid accountId.",
-        )
+      if (this.skipTestsRequiringUserId || this.skipTestsRequiringAccountId || this.skipSwaggerTests) {
+        this.skip()
       }
+
+      const {caas} = this.config as CaasTestConfig
+      const userId = caas?.userId as string
+      const accountId = caas?.accountId as string
 
       transactionsPayload = [
         {
-          userId: caas.userId,
-          accountId: caas.accountId,
+          userId,
+          accountId,
           transactionId: "08820421-8472-4254-8608-f0d59e3b0a87",
           accountType: "cash",
           txCode: "DEB",
           date: new Date().toISOString(),
           status: "posted",
-          description: "Tesco Stores 1234",
+          description: "Tesco Stores 1234 Bristol",
           amount: -45.5,
           currency: "GBP",
+          cardPresent: true,
+          merchantCategoryCode: "5411",
         },
         {
-          userId: caas.userId,
-          accountId: caas.accountId,
+          userId,
+          accountId,
           transactionId: "3c4e27be-17dd-45e2-9b1e-041623daf104",
           accountType: "cash",
           txCode: "DD",
@@ -66,10 +63,20 @@ describe("POST /transactions/enrich", function() {
           description: "Netflix",
           amount: -15.99,
           currency: "GBP",
+          meta: {
+            "hello": "world",
+          },
         },
       ]
 
       response = await moneyhub.caasEnrichTransactions({transactions: transactionsPayload})
+
+      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const reqValidator = createRequestValidator(spec, "/transactions/enrich", "post")
+      const resValidator = createResponseValidator(spec, "/transactions/enrich", "post", "201")
+      if (!reqValidator || !resValidator) throw new Error("Swagger schema missing for POST /transactions/enrich")
+      validateRequest = reqValidator
+      validateResponse = resValidator
     })
 
     it("request payload matches swagger TransactionPost schema", function() {
@@ -94,12 +101,30 @@ describe("POST /transactions/enrich", function() {
       expect(first.mhInsights).to.have.property("l1CategoryGroupName")
     })
 
+    it("card-present transaction receives geotags", function() {
+      const first = response.data[0]
+
+      expect(first.mhInsights).to.have.property("geotags")
+      expect(first.mhInsights.geotags).to.be.an("array").with.lengthOf(3)
+
+      console.log({geotags: first.mhInsights.geotags})
+    })
+
+    it("meta is returned intact on enriched transaction", function() {
+      const second = response.data[1]
+
+      expect(second).to.have.property("meta")
+      expect(second.meta).to.deep.equal({hello: "world"})
+    })
   })
 
   describe("TypeScript types match swagger definitions", function() {
     let spec: Awaited<ReturnType<typeof fetchSwaggerSpec>>
 
     before(async function() {
+      if (this.skipSwaggerTests) {
+        this.skip()
+      }
       spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
     })
 
