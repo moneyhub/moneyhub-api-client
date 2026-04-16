@@ -323,7 +323,7 @@ export interface CaasGeotag {
   postcode: string | null
   latitude: number
   longitude: number
-  l3CounterpartyCategory?: string
+  l3CounterpartyCategory: string | null
   postcodeEstimated: boolean
-  postcodeErrorKm?: number
+  postcodeErrorKm: number | null
 }
