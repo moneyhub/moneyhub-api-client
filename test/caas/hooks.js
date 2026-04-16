@@ -1,6 +1,5 @@
 const config = require("config")
 const {Moneyhub} = require("../../src/index")
-const {account} = require("../test-data")
 
 const setupMoneyhubClient = async (config) => Moneyhub(config)
 
