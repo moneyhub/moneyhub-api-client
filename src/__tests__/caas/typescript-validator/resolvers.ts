@@ -60,13 +60,3 @@ export function resolveToObject(schema: Schema, definitions: Schema): Schema {
 
   return schema
 }
-
-export function resolveProp(prop: Schema, definitions: Schema): Schema {
-  if (prop.$ref) {
-    return resolveRef(prop.$ref, definitions)
-  }
-
-  return resolveToObject(prop, definitions)
-}
-
-

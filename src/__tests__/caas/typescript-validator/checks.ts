@@ -1,4 +1,4 @@
-import {resolveProp, resolveRef, resolveToObject} from "./resolvers"
+import {resolveRef, resolveToObject} from "./resolvers"
 import type {Schema} from "./resolvers"
 
 // -- Types -- //
@@ -91,8 +91,8 @@ function nestedPairs(
   pair: MatchedField,
   definitions: SchemaDefinitions,
 ): FieldPair[] {
-  const tsResolved = resolveProp(pair.tsProp, definitions.ts)
-  const swaggerResolved = resolveProp(pair.swaggerProp, definitions.swagger)
+  const tsResolved = resolveToObject(pair.tsProp, definitions.ts)
+  const swaggerResolved = resolveToObject(pair.swaggerProp, definitions.swagger)
 
   if (!isObject(tsResolved) || !isObject(swaggerResolved)) return []
 
@@ -255,8 +255,8 @@ function checkEnums(
   return fields.flatMap(({fieldPath, tsProp, swaggerProp}) =>
     enumErrorsForField(
       fieldPath,
-      toEnumSet(resolveProp(tsProp, definitions.ts)),
-      toEnumSet(resolveProp(swaggerProp, definitions.swagger)),
+      toEnumSet(resolveToObject(tsProp, definitions.ts)),
+      toEnumSet(resolveToObject(swaggerProp, definitions.swagger)),
     ),
   )
 }

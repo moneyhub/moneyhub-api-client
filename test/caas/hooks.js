@@ -40,7 +40,7 @@ exports.mochaHooks = async () => {
       this.config = config
       this.skipSwaggerTests = !swaggerUrl
       this.skipTestsRequiringUserId = !userId
-      this.skipTestsRequiringAccountId = !account
+      this.skipTestsRequiringAccountId = !accountId
     },
 
     async afterAll() {
