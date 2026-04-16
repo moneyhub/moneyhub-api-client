@@ -106,8 +106,6 @@ describe("POST /transactions/enrich", function() {
 
       expect(first.mhInsights).to.have.property("geotags")
       expect(first.mhInsights.geotags).to.be.an("array").with.lengthOf(3)
-
-      console.log({geotags: first.mhInsights.geotags})
     })
 
     it("meta is returned intact on enriched transaction", function() {
