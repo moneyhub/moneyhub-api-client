@@ -27,6 +27,10 @@ export function normaliseType(prop: Schema, definitions: Schema): string {
     return normaliseType(resolveRef(prop.$ref, definitions), definitions)
   }
 
+  if (prop.allOf || prop.properties) {
+    return "object"
+  }
+
   if (prop.type === "integer") {
     return "number"
   }
