@@ -4,6 +4,7 @@ import {createGenerator} from "ts-json-schema-generator"
 
 import type {Schema} from "./resolvers"
 import {findSchemaErrors} from "./checks"
+import {preprocessSchema} from "../swagger"
 
 function createTypeSchema(typeName: string, filePath: string): Schema {
   return createGenerator({
@@ -25,13 +26,17 @@ interface AssertTypeInput {
 export function assertTypeMatchesSwagger({tsType, tsFile, swaggerDefinitionName, spec}: AssertTypeInput): void {
   const resolvedPath = path.resolve(__dirname, tsFile)
   const tsSchema = createTypeSchema(tsType, resolvedPath)
-  const swaggerDef = spec.definitions?.[swaggerDefinitionName]
-  expect(swaggerDef, `${swaggerDefinitionName} not found in swagger definitions`).to.exist
+  const rawDef = spec.definitions?.[swaggerDefinitionName]
+  expect(rawDef, `${swaggerDefinitionName} not found in swagger definitions`).to.exist
+
+  const swaggerDefinitions = Object.fromEntries(
+    Object.entries(spec.definitions ?? {}).map(([key, val]) => [key, preprocessSchema(val)]),
+  ) as Schema
 
   const errors = findSchemaErrors({
     tsSchema,
-    swaggerSchema: swaggerDef,
-    swaggerDefinitions: spec.definitions ?? {},
+    swaggerSchema: preprocessSchema(rawDef) as Schema,
+    swaggerDefinitions,
   })
 
   if (errors.length) {

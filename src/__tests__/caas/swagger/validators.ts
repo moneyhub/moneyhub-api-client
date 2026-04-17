@@ -6,7 +6,7 @@ type Schema = Record<string, any>
 
 // Recursively strips `additionalProperties: false` (incompatible with allOf in Swagger 2.0)
 // and converts `x-nullable: true` to a union type so Ajv accepts null values.
-function preprocessSchema(obj: unknown): unknown {
+export function preprocessSchema(obj: unknown): unknown {
   if (obj == null) return obj
   if (Array.isArray(obj)) return obj.map(preprocessSchema)
   if (typeof obj !== "object") return obj

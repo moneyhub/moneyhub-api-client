@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import {resolveRef, resolveToObject} from "./resolvers"
 import type {Schema} from "./resolvers"
 
@@ -31,15 +32,21 @@ export function normaliseType(prop: Schema, definitions: Schema): string {
     return "object"
   }
 
+  // ts-json-schema-generator uses anyOf/oneOf for union types (e.g. string | null).
+  // Null is preserved so nullable mismatches (e.g. TS string vs swagger string | null) are caught.
+  if (prop.anyOf || prop.oneOf) {
+    return (prop.anyOf ?? prop.oneOf)
+      .map((v: Schema) => normaliseType(v, definitions))
+      .join(" | ")
+  }
+
   if (prop.type === "integer") {
     return "number"
   }
 
+  // Swagger x-nullable: true is preprocessed into type: ["string", "null"] before comparison.
   if (Array.isArray(prop.type)) {
-    const nonNullTypes = prop.type.filter((type: string) => type !== "null")
-    return nonNullTypes.length === 1
-      ? nonNullTypes[0]
-      : nonNullTypes.join(" | ")
+    return prop.type.map((t: string) => (t === "integer" ? "number" : t)).join(" | ")
   }
 
   return prop.type ?? "unknown"

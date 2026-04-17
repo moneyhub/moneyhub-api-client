@@ -58,5 +58,10 @@ export function resolveToObject(schema: Schema, definitions: Schema): Schema {
     return flattenAllOf(schema, definitions)
   }
 
+  if (schema.anyOf || schema.oneOf) {
+    const variants: Schema[] = (schema.anyOf ?? schema.oneOf).filter((v: Schema) => v.type !== "null")
+    if (variants.length === 1) return resolveToObject(variants[0], definitions)
+  }
+
   return schema
 }
