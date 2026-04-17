@@ -9,6 +9,8 @@
     "lint-fix": "eslint src/ --fix",
     "test": "mocha --require ts-node/register --config test/opts/integration.json",
     "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json",
+    "test-caas": "mocha --require ts-node/register --config test/opts/integration-caas.json",
+    "test-caas-ci": "mocha --require ts-node/register --config test/opts/integration-caas-ci.json",
     "prepare": "husky install",
     "prepublishOnly": "node scripts/assert-github-actions-publish.js && npm run build",
     "build": "tsc",
@@ -50,6 +52,8 @@
     "@types/ramda": "^0.28.13",
     "@typescript-eslint/eslint-plugin": "^5.30.7",
     "@typescript-eslint/parser": "^5.30.7",
+    "ajv": "^8.18.0",
+    "ajv-formats": "^3.0.1",
     "body-parser": "^1.19.2",
     "chai": "^4.3.6",
     "command-line-args": "^5.2.1",
@@ -62,6 +66,7 @@
     "mocha": "^10.0.0",
     "mocha-junit-reporter": "^2.0.2",
     "snyk": "^1.1041.0",
+    "ts-json-schema-generator": "^2.9.0",
     "ts-node": "^10.8.0",
     "typescript": "^4.7.2"
   }

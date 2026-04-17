@@ -1,0 +1,12 @@
+{
+    "reporter": "mocha-junit-reporter",
+    "reporter-options": "mochaFile=test-reports/report.xml",
+    "ui": "bdd",
+    "timeout": "15s",
+    "check-leaks": false,
+    "recursive": true,
+    "colors": true,
+    "exit": true,
+    "spec": ["src/**/__tests__/caas/*.ts"],
+    "require": ["test/caas/hooks.js"]
+  }
