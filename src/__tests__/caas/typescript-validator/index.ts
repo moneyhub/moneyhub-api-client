@@ -1,3 +1,4 @@
+import fs from "fs"
 import path from "path"
 import {expect} from "chai"
 import {createGenerator} from "ts-json-schema-generator"
@@ -25,6 +26,11 @@ interface AssertTypeInput {
 
 export function assertTypeMatchesSwagger({tsType, tsFile, swaggerDefinitionName, spec}: AssertTypeInput): void {
   const resolvedPath = path.resolve(__dirname, tsFile)
+
+  if (!fs.existsSync(resolvedPath)) {
+    expect.fail(`tsFile not found: ${resolvedPath} (resolved from "${tsFile}")`)
+  }
+
   const tsSchema = createTypeSchema(tsType, resolvedPath)
   const rawDef = spec.definitions?.[swaggerDefinitionName]
   expect(rawDef, `${swaggerDefinitionName} not found in swagger definitions`).to.exist

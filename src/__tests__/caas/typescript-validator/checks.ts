@@ -23,6 +23,12 @@ function isMatchedField(field: FieldPair): field is MatchedField {
   return field.tsProp !== undefined && field.swaggerProp !== undefined
 }
 
+// Union variants are sorted so that order in source (e.g. "null | string" vs
+// "string | null") does not produce spurious mismatches during comparison.
+function joinUnion(variants: string[]): string {
+  return [...variants].sort().join(" | ")
+}
+
 export function normaliseType(prop: Schema, definitions: Schema): string {
   if (prop.$ref) {
     return normaliseType(resolveRef(prop.$ref, definitions), definitions)
@@ -30,16 +36,16 @@ export function normaliseType(prop: Schema, definitions: Schema): string {
 
   if (prop.allOf || prop.properties) {
     return Array.isArray(prop.type) && prop.type.includes("null")
-      ? "object | null"
+      ? joinUnion(["object", "null"])
       : "object"
   }
 
   // ts-json-schema-generator uses anyOf/oneOf for union types (e.g. string | null).
   // Null is preserved so nullable mismatches (e.g. TS string vs swagger string | null) are caught.
   if (prop.anyOf || prop.oneOf) {
-    return (prop.anyOf ?? prop.oneOf)
-      .map((v: Schema) => normaliseType(v, definitions))
-      .join(" | ")
+    return joinUnion(
+      (prop.anyOf ?? prop.oneOf).map((v: Schema) => normaliseType(v, definitions)),
+    )
   }
 
   if (prop.type === "integer") {
@@ -48,7 +54,7 @@ export function normaliseType(prop: Schema, definitions: Schema): string {
 
   // Swagger x-nullable: true is preprocessed into type: ["string", "null"] before comparison.
   if (Array.isArray(prop.type)) {
-    return prop.type.map((t: string) => (t === "integer" ? "number" : t)).join(" | ")
+    return joinUnion(prop.type.map((t: string) => (t === "integer" ? "number" : t)))
   }
 
   return prop.type ?? "unknown"
@@ -63,6 +69,7 @@ interface CollectInput {
   swaggerRequired: Set<string>
   definitions: SchemaDefinitions
   prefix?: string
+  visited?: Set<string>
 }
 
 function isObject(schema: Schema): boolean {
@@ -100,10 +107,22 @@ function propsFromSchema(schema: Schema): {
   }
 }
 
+function refKey(pair: MatchedField): string | null {
+  const tsRef = pair.tsProp.$ref
+  const swaggerRef = pair.swaggerProp.$ref
+  return tsRef || swaggerRef ? `${tsRef ?? ""}|${swaggerRef ?? ""}` : null
+}
+
 function nestedPairs(
   pair: MatchedField,
   definitions: SchemaDefinitions,
+  visited: Set<string>,
 ): FieldPair[] {
+  const key = refKey(pair)
+  if (key !== null && visited.has(key)) return []
+
+  const nextVisited = key !== null ? new Set([...visited, key]) : visited
+
   const tsResolved = resolveToObject(pair.tsProp, definitions.ts)
   const swaggerResolved = resolveToObject(pair.swaggerProp, definitions.swagger)
 
@@ -119,6 +138,7 @@ function nestedPairs(
     swaggerRequired: swagger.required,
     definitions,
     prefix: pair.fieldPath,
+    visited: nextVisited,
   })
 }
 
@@ -144,6 +164,7 @@ function collectFieldPairs(input: CollectInput): FieldPair[] {
     swaggerRequired,
     definitions,
     prefix = "",
+    visited = new Set<string>(),
   } = input
   const allFields = [
     ...new Set([...Object.keys(tsProps), ...Object.keys(swaggerProps)]),
@@ -162,7 +183,7 @@ function collectFieldPairs(input: CollectInput): FieldPair[] {
 
   const nested = pairs
     .filter(isMatchedField)
-    .flatMap((pair) => nestedPairs(pair, definitions))
+    .flatMap((pair) => nestedPairs(pair, definitions, visited))
 
   return [...pairs, ...nested]
 }
@@ -295,7 +316,7 @@ export function findSchemaErrors({
   swaggerDefinitions,
 }: FindErrorsInput): string[] {
   const definitions: SchemaDefinitions = {
-    ts: tsSchema.definitions,
+    ts: tsSchema.definitions ?? {},
     swagger: swaggerDefinitions,
   }
 

@@ -45,6 +45,13 @@ export function flattenAllOf(schema: Schema, definitions: Schema): Schema {
   return deduplicateRequired(withOwnProps)
 }
 
+function isNullVariant(variant: Schema, definitions: Schema): boolean {
+  if (variant.type === "null") return true
+  if (Array.isArray(variant.type) && variant.type.every((t: string) => t === "null")) return true
+  if (variant.$ref) return isNullVariant(resolveRef(variant.$ref, definitions), definitions)
+  return false
+}
+
 export function resolveToObject(schema: Schema, definitions: Schema): Schema {
   if (schema.$ref) {
     return resolveToObject(resolveRef(schema.$ref, definitions), definitions)
@@ -59,7 +66,8 @@ export function resolveToObject(schema: Schema, definitions: Schema): Schema {
   }
 
   if (schema.anyOf || schema.oneOf) {
-    const variants: Schema[] = (schema.anyOf ?? schema.oneOf).filter((v: Schema) => v.type !== "null")
+    const variants: Schema[] = (schema.anyOf ?? schema.oneOf)
+      .filter((v: Schema) => !isNullVariant(v, definitions))
     if (variants.length === 1) return resolveToObject(variants[0], definitions)
   }
 

@@ -22,15 +22,31 @@ export function preprocessSchema(obj: unknown): unknown {
     }, {})
 
   if (result["x-nullable"] === true) {
-    if (typeof result.type === "string") {
-      result.type = [result.type, "null"]
-    }
-    if (Array.isArray(result.enum)) {
-      result.enum = [...result.enum, null]
-    }
+    return makeNullable(result)
   }
 
   return result
+}
+
+function makeNullable(schema: Schema): Schema {
+  const rest = {...schema}
+  delete rest["x-nullable"]
+
+  const withEnum = Array.isArray(rest.enum) && !rest.enum.includes(null)
+    ? {...rest, enum: [...rest.enum, null]}
+    : rest
+
+  if (typeof withEnum.type === "string") {
+    return {...withEnum, type: [withEnum.type, "null"]}
+  }
+
+  if (Array.isArray(withEnum.type)) {
+    return withEnum.type.includes("null")
+      ? withEnum
+      : {...withEnum, type: [...withEnum.type, "null"]}
+  }
+
+  return {anyOf: [withEnum, {type: "null"}]}
 }
 
 function compileSchema(rawSchema: unknown, spec: Schema): ValidateFunction {
@@ -103,9 +119,12 @@ function describeValue(value: unknown): string {
   if (Array.isArray(value)) return `array (length ${value.length})`
   if (typeof value === "string") {
     const truncated = value.length > 50 ? value.slice(0, 50) + "..." : value
-    return `string ("${truncated}")`
+    return `"${truncated}"`
   }
-  return `${typeof value} (${String(value)})`
+  if (typeof value === "number" || typeof value === "boolean") {
+    return String(value)
+  }
+  return `${typeof value}`
 }
 
 function getErrorPath(error: Schema): string {

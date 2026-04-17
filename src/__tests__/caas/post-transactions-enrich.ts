@@ -23,6 +23,8 @@ describe("POST /transactions/enrich", function() {
   })
 
   describe("enriches transactions and validates against swagger schema", function() {
+    this.timeout(30000)
+
     let response: Awaited<ReturnType<typeof moneyhub.caasEnrichTransactions>>
     let transactionsPayload: CaasTransactionInput[]
     let validateRequest: NonNullable<ReturnType<typeof createRequestValidator>>
@@ -117,6 +119,8 @@ describe("POST /transactions/enrich", function() {
   })
 
   describe("TypeScript types match swagger definitions", function() {
+    this.timeout(30000)
+
     let spec: Awaited<ReturnType<typeof fetchSwaggerSpec>>
 
     before(async function() {

@@ -202,7 +202,6 @@ export type CaasL4LoanType =
   | "Buy Now Pay Later"
   | "High Cost Short Term Credit"
   | "Debt Collection Agency/Debt Management Plan"
-  | null
 
 export interface CaasTransactionInput {
   userId?: string
@@ -307,7 +306,7 @@ export interface CaasCounterparty {
   registeredLocation?: string | null
   l3CounterpartyCategory?: string
   l2CategoryName?: string
-  l4LoanType?: CaasL4LoanType
+  l4LoanType?: CaasL4LoanType | null
 }
 
 export interface CaasGeotag {
