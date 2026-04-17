@@ -29,7 +29,9 @@ export function normaliseType(prop: Schema, definitions: Schema): string {
   }
 
   if (prop.allOf || prop.properties) {
-    return "object"
+    return Array.isArray(prop.type) && prop.type.includes("null")
+      ? "object | null"
+      : "object"
   }
 
   // ts-json-schema-generator uses anyOf/oneOf for union types (e.g. string | null).
@@ -200,8 +202,15 @@ function extraEnumValuesError(fieldPath: string, values: string[]): string {
 
 // -- Checks -- //
 
+// Null is stripped because nullability is already reported by checkTypes.
+// Without this, swagger enums with x-nullable: true would include "null" as a
+// literal enum value and produce false-positive mismatches.
 function toEnumSet(schema: Schema): Set<string> {
-  return new Set<string>((schema.enum ?? []).map(String))
+  return new Set<string>(
+    (schema.enum ?? [])
+      .filter((value: unknown) => value !== null)
+      .map(String),
+  )
 }
 
 function checkMissingFields(fields: FieldPair[]): string[] {

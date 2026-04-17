@@ -288,7 +288,7 @@ export interface CaasTransactionInsights {
   l1CategoryType?: CaasL1CategoryType
   l2CategoryId: CaasL2CategoryId
   l2CategoryName?: CaasL2CategoryName
-  l3Counterparty?: CaasCounterparty
+  l3Counterparty?: CaasCounterparty | null
   geotags?: CaasGeotag[]
   cardPresent: boolean | null
   timestampCreated: string
