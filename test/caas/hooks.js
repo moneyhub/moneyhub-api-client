@@ -1,5 +1,7 @@
 const config = require("config")
 const {Moneyhub} = require("../../src/index")
+const {setupTestData} = require("./setup-test-data")
+const {teardownTestData} = require("./teardown-test-data")
 
 const setupMoneyhubClient = async (config) => Moneyhub(config)
 
@@ -32,18 +34,23 @@ exports.mochaHooks = async () => {
     )
   }
 
-  // eslint-disable-next-line no-unused-vars
   const moneyhub = await setupMoneyhubClient(config)
   return {
     async beforeAll() {
+      const {transactionIds, geotagIds, counterpartyIds} = await setupTestData(config, moneyhub)
+
       this.config = config
       this.skipSwaggerTests = !swaggerUrl
       this.skipTestsRequiringUserId = !userId
       this.skipTestsRequiringAccountId = !accountId
+      this.transactionIds = transactionIds
+      this.geotagIds = geotagIds
+      this.counterpartyIds = counterpartyIds
     },
 
+
     async afterAll() {
-      // TODO: Add teardown method
+      await teardownTestData(config, moneyhub)
     }
   }
 }
