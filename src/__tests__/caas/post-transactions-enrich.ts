@@ -3,8 +3,6 @@ import {expect} from "chai"
 
 import {Moneyhub, MoneyhubInstance} from "../.."
 import type {CaasTransactionInput} from "../../requests/caas/types/transactions"
-import type {CaasTestConfig} from "./types"
-
 import {
   fetchSwaggerSpec,
   createRequestValidator,
@@ -35,9 +33,7 @@ describe("POST /transactions/enrich", function() {
         this.skip()
       }
 
-      const {caas} = this.config as CaasTestConfig
-      const userId = caas?.userId as string
-      const accountId = caas?.accountId as string
+      const {caas: {userId, accountId}} = this.config
 
       transactionsPayload = [
         {

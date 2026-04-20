@@ -60,7 +60,7 @@ export interface CaasTransactionsRequests {
       l2CategoryId: string
     },
     options?: ExtraOptions,
-  ) => Promise<ApiResponse<CaasTransaction[]>>
+  ) => Promise<ApiResponse<CaasTransaction>>
   caasEnrichTransactions: (
     {
       transactions,
@@ -94,19 +94,19 @@ export interface CaasTransactionsRequests {
 }
 
 export interface CaasTransaction {
-  userId?: string
+  userId: string | null
   accountId: string
   transactionId: string
   accountType: CaasAccountType
-  txCode?: string
+  txCode: string | null
   date: string
   status: CaasTransactionStatus
   description: string
   amount: number
   currency: string
-  merchantCategoryCode?: string
-  cardPresent?: boolean
-  meta?: Record<string, any>
+  merchantCategoryCode: string | null
+  cardPresent: boolean | null
+  meta: Record<string, any> | null
   mhInsights: CaasTransactionInsights
 }
 

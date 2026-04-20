@@ -18,7 +18,6 @@ const transactions = [
     status: "posted",
     description: "Currys PC World 1234",
     amount: -15.99,
-    currency: "GBP",
   },
 ]
 

@@ -12,7 +12,7 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
   return {
     caasPatchTransaction: ({accountId, transactionId, l2CategoryId}, options) => {
 
-      return request<ApiResponse<CaasTransaction[]>>(
+      return request<ApiResponse<CaasTransaction>>(
         `${caasResourceServerUrl}/accounts/${accountId}/transactions/${transactionId}`,
         {
           method: "PATCH",
