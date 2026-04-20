@@ -28,6 +28,7 @@ export type CaasTransactionStatus = "pending" | "posted"
 export type CaasL4LoanType =
   | "Unsecured"
   | "Secured"
+  | "Secured Vehicle"
   | "Buy Now Pay Later"
   | "High Cost Short Term Credit"
   | "Debt Collection Agency/Debt Management Plan"
