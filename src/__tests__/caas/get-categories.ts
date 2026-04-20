@@ -82,7 +82,7 @@ describe("GET /categories", function() {
     })
 
     it("CaasCategory matches swagger Category definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasCategory", tsFile: TYPES_FILE, swaggerDefinitionName: "Category", spec})
+      assertTypeMatchesSwagger({tsType: "CaasCategory", tsFile: TYPES_FILE, swaggerDefinitionName: "CategoryResponse", spec})
     })
   })
 })

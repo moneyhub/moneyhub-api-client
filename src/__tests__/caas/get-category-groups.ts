@@ -81,7 +81,7 @@ describe("GET /category-groups", function() {
     })
 
     it("CaasCategoryGroup matches swagger CategoryGroup definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasCategoryGroup", tsFile: TYPES_FILE, swaggerDefinitionName: "CategoryGroup", spec})
+      assertTypeMatchesSwagger({tsType: "CaasCategoryGroup", tsFile: TYPES_FILE, swaggerDefinitionName: "CategoryGroupResponse", spec})
     })
   })
 })

@@ -133,7 +133,7 @@ export type CaasL2CategoryName =
   | "eating-out"
   | "travel"
   | "service"
-  | "atm"
+  | "ATM"
   | "cheques"
   | "hobbies"
   | "other-bills"
