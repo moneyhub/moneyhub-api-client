@@ -11,6 +11,7 @@ export interface CaasEnrichTransactionsResponse {
   data: CaasTransaction[]
   meta: {
     errorTransactionIds: string[]
+    correlationId: string
   }
 }
 
