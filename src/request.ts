@@ -50,8 +50,8 @@ interface RequestOptions extends Pick<Options, "method" | "headers" | "searchPar
 }
 
 interface Links {
-  next?: string | null
-  prev?: string | null
+  next?: string
+  prev?: string
   self: string
 }
 

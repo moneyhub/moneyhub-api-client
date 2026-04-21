@@ -11,27 +11,46 @@ function printWarning(message) {
   console.warn(`\n${border}\n* ${message}\n${border}\n`)
 }
 
-exports.mochaHooks = async () => {
-  const {caas: {userId, accountId, swaggerUrl} = {}} = config
-
+function buildConfigWarnings({userId, accountId, swaggerUrl, regularTransactionsAccount, shouldTestEnhancedTransactions}) {
   const missing = [
     !userId && "userId",
     !accountId && "accountId",
     !swaggerUrl && "swaggerUrl",
+    !regularTransactionsAccount && "regularTransactionsAccount",
+    !shouldTestEnhancedTransactions && "shouldTestEnhancedTransactions",
   ].filter(Boolean)
 
-  if (missing.length) {
-    printWarning(
-      `MISSING CAAS CONFIG: ${missing.join(", ")} — some tests will be skipped\n\n` +
-      "Expected config structure:\n" +
-      JSON.stringify({
-        caas: {
-          swaggerUrl: "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
-          userId: "user-id-12345678",
-          accountId: "account-id-12345678",
-        },
-      }, null, 2),
-    )
+  if (!missing.length) return []
+
+  return [
+    `MISSING CAAS CONFIG: ${missing.join(", ")} — some tests were skipped\n\n` +
+    "Expected config structure:\n" +
+    JSON.stringify({
+      caas: {
+        swaggerUrl: "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
+        userId: "user-id-12345678",
+        accountId: "account-id-12345678",
+        regularTransactionsAccount: "account-id-with-regular-transactions",
+        shouldTestEnhancedTransactions: false,
+      },
+    }, null, 2),
+  ]
+}
+
+exports.mochaHooks = async () => {
+  const {
+    caas: {
+      userId,
+      accountId,
+      swaggerUrl,
+      regularTransactionsAccount,
+      shouldTestEnhancedTransactions = false,
+    } = {},
+  } = config
+  const warnings = buildConfigWarnings({userId, accountId, swaggerUrl, regularTransactionsAccount, shouldTestEnhancedTransactions})
+
+  if (warnings.length) {
+    process.once("exit", () => warnings.forEach(printWarning))
   }
 
   const moneyhub = await setupMoneyhubClient(config)
@@ -43,6 +62,8 @@ exports.mochaHooks = async () => {
       this.skipSwaggerTests = !swaggerUrl
       this.skipTestsRequiringUserId = !userId
       this.skipTestsRequiringAccountId = !accountId
+      this.skipTestsRequiringRegularTransactionsAccount = !regularTransactionsAccount
+      this.skipTestsRequiringEnhancedTransactions = !shouldTestEnhancedTransactions
       this.transactionIds = transactionIds
       this.geotagIds = geotagIds
       this.counterpartyIds = counterpartyIds
