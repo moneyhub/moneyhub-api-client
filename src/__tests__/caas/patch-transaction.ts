@@ -27,7 +27,7 @@ describe("PATCH /accounts/{accountId}/transactions/{transactionId}", function() 
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringAccountId || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
         this.skip()
       }
 

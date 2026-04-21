@@ -17,7 +17,7 @@ function buildConfigWarnings({userId, accountId, swaggerUrl, regularTransactions
     !accountId && "accountId",
     !swaggerUrl && "swaggerUrl",
     !regularTransactionsAccount && "regularTransactionsAccount",
-    !shouldTestEnhancedTransactions && "shouldTestEnhancedTransactions",
+    shouldTestEnhancedTransactions === undefined && "shouldTestEnhancedTransactions",
   ].filter(Boolean)
 
   if (!missing.length) return []
@@ -44,7 +44,7 @@ exports.mochaHooks = async () => {
       accountId,
       swaggerUrl,
       regularTransactionsAccount,
-      shouldTestEnhancedTransactions = false,
+      shouldTestEnhancedTransactions,
     } = {},
   } = config
   const warnings = buildConfigWarnings({userId, accountId, swaggerUrl, regularTransactionsAccount, shouldTestEnhancedTransactions})
@@ -60,8 +60,7 @@ exports.mochaHooks = async () => {
 
       this.config = config
       this.skipSwaggerTests = !swaggerUrl
-      this.skipTestsRequiringUserId = !userId
-      this.skipTestsRequiringAccountId = !accountId
+      this.skipTestsRequiringCaasIds = !userId || !accountId
       this.skipTestsRequiringRegularTransactionsAccount = !regularTransactionsAccount
       this.skipTestsRequiringEnhancedTransactions = !shouldTestEnhancedTransactions
       this.transactionIds = transactionIds

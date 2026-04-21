@@ -29,7 +29,7 @@ describe("POST /transactions/enrich", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringUserId || this.skipTestsRequiringAccountId || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
         this.skip()
       }
 

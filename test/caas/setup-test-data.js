@@ -3,6 +3,10 @@ const {transactions} = require("./test-data")
 exports.setupTestData = async function(config, moneyhub) {
   const {caas: {userId, accountId} = {}} = config
 
+  if (!userId || !accountId) {
+    return {transactionIds: [], counterpartyIds: [], geotagIds: []}
+  }
+
   const transactionsWithUserAndAccountIds = transactions.map((trx) => ({...trx, userId, accountId}))
 
   const {data} = await moneyhub.caasEnrichTransactions({transactions: transactionsWithUserAndAccountIds})

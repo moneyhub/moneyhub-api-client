@@ -43,7 +43,7 @@ describe("GET /accounts/{accountId}/transactions/{transactionId}/enhanced", func
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringEnhancedTransactions || this.skipTestsRequiringAccountId) {
+      if (this.skipTestsRequiringEnhancedTransactions || this.skipTestsRequiringCaasIds) {
         this.skip()
       }
 
