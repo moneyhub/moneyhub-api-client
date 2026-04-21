@@ -5,5 +5,5 @@ export interface CaasUsersRequests {
     userId,
   }: {
     userId: string
-  }, options?: ExtraOptions) => Promise<void>
+  }, options?: ExtraOptions) => Promise<number>
 }

@@ -5,5 +5,5 @@ export interface CaasAccountsRequests {
     accountId,
   }: {
     accountId: string
-  }, options?: ExtraOptions) => Promise<void>
+  }, options?: ExtraOptions) => Promise<number>
 }

@@ -91,7 +91,7 @@ export interface CaasTransactionsRequests {
       transactionId: string
     },
     options?: ExtraOptions,
-  ) => Promise<void>
+  ) => Promise<number>
 }
 
 export interface CaasTransaction {

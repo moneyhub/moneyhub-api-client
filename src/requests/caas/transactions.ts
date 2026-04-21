@@ -54,13 +54,14 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
       )
     },
     caasDeleteTransaction: ({accountId, transactionId}, options) => {
-      return request<void>(
+      return request<number>(
         `${caasResourceServerUrl}/accounts/${accountId}/transactions/${transactionId}`,
         {
           method: "DELETE",
           cc: {
             scope: "caas:transactions:delete",
           },
+          returnStatus: true,
 
           options,
         },

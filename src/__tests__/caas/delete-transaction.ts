@@ -3,7 +3,10 @@ import {expect} from "chai"
 
 import {Moneyhub, MoneyhubInstance} from "../.."
 import type {CaasTransactionInput} from "../../requests/caas/types/transactions"
-const UNIQUE_TRANSACTION_ID = "de1e7e00-0001-4000-8000-000000000001"
+
+const UNIQUE_USER_ID = "de1e7e00-0001-4000-8000-000000000001"
+const UNIQUE_ACCOUNT_ID = "de1e7e00-0001-4000-8000-000000000002"
+const UNIQUE_TRANSACTION_ID = "de1e7e00-0001-4000-8000-000000000003"
 
 describe("DELETE /accounts/{accountId}/transactions/{transactionId}", function() {
   let moneyhub: MoneyhubInstance
@@ -15,18 +18,13 @@ describe("DELETE /accounts/{accountId}/transactions/{transactionId}", function()
   describe("enriches a unique transaction and then deletes it", function() {
     this.timeout(30000)
 
+    let deleteStatus: number
     let postDeleteList: Awaited<ReturnType<typeof moneyhub.caasGetTransactions>>
 
     before(async function() {
-      if (this.skipTestsRequiringUserId || this.skipTestsRequiringAccountId) {
-        this.skip()
-      }
-
-      const {caas: {userId, accountId}} = this.config
-
       const uniqueTransaction: CaasTransactionInput = {
-        userId,
-        accountId,
+        userId: UNIQUE_USER_ID,
+        accountId: UNIQUE_ACCOUNT_ID,
         transactionId: UNIQUE_TRANSACTION_ID,
         accountType: "cash",
         txCode: "DEB",
@@ -39,12 +37,20 @@ describe("DELETE /accounts/{accountId}/transactions/{transactionId}", function()
 
       await moneyhub.caasEnrichTransactions({transactions: [uniqueTransaction]})
 
-      await moneyhub.caasDeleteTransaction({
-        accountId,
+      deleteStatus = await moneyhub.caasDeleteTransaction({
+        accountId: UNIQUE_ACCOUNT_ID,
         transactionId: UNIQUE_TRANSACTION_ID,
       })
 
-      postDeleteList = await moneyhub.caasGetTransactions({userId, accountId, limit: 1000})
+      postDeleteList = await moneyhub.caasGetTransactions({
+        userId: UNIQUE_USER_ID,
+        accountId: UNIQUE_ACCOUNT_ID,
+        limit: 1000,
+      })
+    })
+
+    it("responds with 204 No Content", function() {
+      expect(deleteStatus).to.equal(204)
     })
 
     it("the deleted transactionId no longer appears in GET /transactions", function() {
