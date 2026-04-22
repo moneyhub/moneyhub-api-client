@@ -142,19 +142,19 @@ export interface CaasCounterparty {
 
 export interface CaasGeotag {
   geotagId: string
-  counterpartyName: string
-  counterpartyLabel: string
-  houseNumber: string | null
-  street: string | null
-  neighbourhood: string | null
-  locality: string | null
-  city: string | null
-  county: string | null
-  region: string | null
-  postcode: string | null
-  latitude: number
-  longitude: number
-  l3CounterpartyCategory: string | null
+  counterpartyName?: string | null
+  counterpartyLabel?: string | null
+  houseNumber?: string | null
+  street?: string | null
+  neighbourhood?: string | null
+  locality?: string | null
+  city?: string | null
+  county?: string | null
+  region?: string | null
+  postcode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  l3CounterpartyCategory?: string | null
   postcodeEstimated: boolean
-  postcodeErrorKm: number | null
+  postcodeErrorKm?: number | null
 }
