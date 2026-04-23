@@ -6,13 +6,14 @@ export default ({config, request}: RequestsParams): CaasAccountsRequests => {
 
   return {
     caasDeleteAccount: ({accountId}, options) => {
-      return request<void>(
+      return request<number>(
         `${caasResourceServerUrl}/accounts/${accountId}`,
         {
           method: "DELETE",
           cc: {
             scope: "caas:users:delete",
           },
+          returnStatus: true,
 
           options,
         },

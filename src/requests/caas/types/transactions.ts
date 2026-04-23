@@ -11,6 +11,7 @@ export interface CaasEnrichTransactionsResponse {
   data: CaasTransaction[]
   meta: {
     errorTransactionIds: string[]
+    correlationId: string
   }
 }
 
@@ -28,6 +29,7 @@ export type CaasTransactionStatus = "pending" | "posted"
 export type CaasL4LoanType =
   | "Unsecured"
   | "Secured"
+  | "Secured Vehicle"
   | "Buy Now Pay Later"
   | "High Cost Short Term Credit"
   | "Debt Collection Agency/Debt Management Plan"
@@ -60,7 +62,7 @@ export interface CaasTransactionsRequests {
       l2CategoryId: string
     },
     options?: ExtraOptions,
-  ) => Promise<ApiResponse<CaasTransaction[]>>
+  ) => Promise<ApiResponse<CaasTransaction>>
   caasEnrichTransactions: (
     {
       transactions,
@@ -90,23 +92,23 @@ export interface CaasTransactionsRequests {
       transactionId: string
     },
     options?: ExtraOptions,
-  ) => Promise<void>
+  ) => Promise<number>
 }
 
 export interface CaasTransaction {
-  userId?: string
+  userId: string | null
   accountId: string
   transactionId: string
   accountType: CaasAccountType
-  txCode?: string
+  txCode: string | null
   date: string
   status: CaasTransactionStatus
   description: string
   amount: number
   currency: string
-  merchantCategoryCode?: string
-  cardPresent?: boolean
-  meta?: Record<string, any>
+  merchantCategoryCode: string | null
+  cardPresent: boolean | null
+  meta: Record<string, any> | null
   mhInsights: CaasTransactionInsights
 }
 
@@ -140,19 +142,19 @@ export interface CaasCounterparty {
 
 export interface CaasGeotag {
   geotagId: string
-  counterpartyName: string
-  counterpartyLabel: string
-  houseNumber: string | null
-  street: string | null
-  neighbourhood: string | null
-  locality: string | null
-  city: string | null
-  county: string | null
-  region: string | null
-  postcode: string | null
-  latitude: number
-  longitude: number
-  l3CounterpartyCategory: string | null
+  counterpartyName?: string | null
+  counterpartyLabel?: string | null
+  houseNumber?: string | null
+  street?: string | null
+  neighbourhood?: string | null
+  locality?: string | null
+  city?: string | null
+  county?: string | null
+  region?: string | null
+  postcode?: string | null
+  latitude?: number | null
+  longitude?: number | null
+  l3CounterpartyCategory?: string | null
   postcodeEstimated: boolean
-  postcodeErrorKm: number | null
+  postcodeErrorKm?: number | null
 }

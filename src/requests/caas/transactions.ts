@@ -12,7 +12,7 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
   return {
     caasPatchTransaction: ({accountId, transactionId, l2CategoryId}, options) => {
 
-      return request<ApiResponse<CaasTransaction[]>>(
+      return request<ApiResponse<CaasTransaction>>(
         `${caasResourceServerUrl}/accounts/${accountId}/transactions/${transactionId}`,
         {
           method: "PATCH",
@@ -54,13 +54,14 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
       )
     },
     caasDeleteTransaction: ({accountId, transactionId}, options) => {
-      return request<void>(
+      return request<number>(
         `${caasResourceServerUrl}/accounts/${accountId}/transactions/${transactionId}`,
         {
           method: "DELETE",
           cc: {
             scope: "caas:transactions:delete",
           },
+          returnStatus: true,
 
           options,
         },
