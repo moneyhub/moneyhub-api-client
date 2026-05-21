@@ -50,16 +50,20 @@ export interface CaasTransactionInput {
   meta?: Record<string, any>
 }
 
+export type CaasRecategorisationType = "single" | "future"
+
 export interface CaasTransactionsRequests {
   caasPatchTransaction: (
     {
       accountId,
       transactionId,
-      l2CategoryId,
+      userCategoryId,
+      recategorisationType,
     }: {
       accountId: string
       transactionId: string
-      l2CategoryId: string
+      userCategoryId: string
+      recategorisationType?: CaasRecategorisationType
     },
     options?: ExtraOptions,
   ) => Promise<ApiResponse<CaasTransaction>>
@@ -120,6 +124,7 @@ export interface CaasTransactionInsights {
   l2CategoryName?: CaasL2CategoryName
   l3Counterparty?: CaasCounterparty | null
   geotags?: CaasGeotag[]
+  userCategoryId?: string | null
   cardPresent: boolean | null
   timestampCreated: string
   timestampIngress: string
@@ -142,8 +147,8 @@ export interface CaasCounterparty {
 
 export interface CaasGeotag {
   geotagId: string
-  counterpartyName?: string | null
-  counterpartyLabel?: string | null
+  counterpartyName: string | null
+  counterpartyLabel: string | null
   houseNumber?: string | null
   street?: string | null
   neighbourhood?: string | null
@@ -152,8 +157,8 @@ export interface CaasGeotag {
   county?: string | null
   region?: string | null
   postcode?: string | null
-  latitude?: number | null
-  longitude?: number | null
+  latitude: number | null
+  longitude: number | null
   l3CounterpartyCategory?: string | null
   postcodeEstimated: boolean
   postcodeErrorKm?: number | null
