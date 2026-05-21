@@ -9,7 +9,7 @@ import {
   assertMatchesSwagger,
 } from "./swagger"
 
-const NEW_L2_CATEGORY_ID = "22"
+const USER_CATEGORY_ID = "22"
 
 describe("PATCH /accounts/{accountId}/transactions/{transactionId}", function() {
   let moneyhub: MoneyhubInstance
@@ -22,7 +22,7 @@ describe("PATCH /accounts/{accountId}/transactions/{transactionId}", function() 
     this.timeout(30000)
 
     let response: Awaited<ReturnType<typeof moneyhub.caasPatchTransaction>>
-    let patchPayload: {l2CategoryId: string}
+    let patchPayload: {userCategoryId: string}
     let validateRequest: NonNullable<ReturnType<typeof createRequestValidator>>
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
@@ -34,7 +34,7 @@ describe("PATCH /accounts/{accountId}/transactions/{transactionId}", function() 
       const {caas: {accountId}} = this.config
       const transactionId = this.transactionIds[0]
 
-      patchPayload = {l2CategoryId: NEW_L2_CATEGORY_ID}
+      patchPayload = {userCategoryId: USER_CATEGORY_ID}
 
       response = await moneyhub.caasPatchTransaction({
         accountId,
@@ -66,8 +66,8 @@ describe("PATCH /accounts/{accountId}/transactions/{transactionId}", function() 
       expect(response.data.accountId).to.equal(accountId)
     })
 
-    it("patched transaction has the new l2CategoryId", function() {
-      expect(response.data.mhInsights.l2CategoryId).to.equal(NEW_L2_CATEGORY_ID)
+    it("patched transaction has the new userCategoryId", function() {
+      expect(response.data.mhInsights.userCategoryId).to.equal(USER_CATEGORY_ID)
     })
   })
 })

@@ -10,7 +10,7 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
   const {caasResourceServerUrl} = config
 
   return {
-    caasPatchTransaction: ({accountId, transactionId, l2CategoryId}, options) => {
+    caasPatchTransaction: ({accountId, transactionId, userCategoryId, recategorisationType = "single"}, options) => {
 
       return request<ApiResponse<CaasTransaction>>(
         `${caasResourceServerUrl}/accounts/${accountId}/transactions/${transactionId}`,
@@ -19,7 +19,8 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
           cc: {
             scope: "caas:transactions:write",
           },
-          body: {l2CategoryId},
+          body: {userCategoryId},
+          searchParams: {recategorisationType},
 
           options,
         },
