@@ -35,7 +35,7 @@ export type CaasL4LoanType =
   | "Debt Collection Agency/Debt Management Plan"
 
 export interface CaasTransactionInput {
-  userId?: string
+  userId?: string | null
   accountId: string
   transactionId: string
   accountType: CaasAccountType
@@ -44,10 +44,10 @@ export interface CaasTransactionInput {
   description: string
   amount: number
   currency?: string
-  txCode?: string
-  merchantCategoryCode?: string
-  cardPresent?: boolean
-  meta?: Record<string, any>
+  txCode?: string | null
+  merchantCategoryCode?: string | null
+  cardPresent?: boolean | null
+  meta?: Record<string, any> | null
 }
 
 export type CaasRecategorisationType = "single" | "future"
