@@ -2303,6 +2303,36 @@ await moneyhub.caasDeleteTransaction({
 }, options);
 ```
 
+#### `caasPutTransactionSplits`
+
+Create or replace all splits for a transaction. Requires between 2 and 10 splits; split amounts must sum to the parent transaction `amount`. Uses scope `caas:transaction_splits:write`. Returns the upserted splits under `data`.
+
+```javascript
+const result = await moneyhub.caasPutTransactionSplits({
+  accountId: "accountId",
+  transactionId: "transactionId",
+  splits: [
+    {amount: -40, userCategoryId: "22", description: "Food"},
+    {amount: -20, userCategoryId: "44", description: "Gift"},
+  ],
+}, options);
+```
+
+Example script: `node examples/caas/put-transaction-splits.js -a accountId -t transactionId` (optional `-s` path to a JSON splits array).
+
+#### `caasDeleteTransactionSplits`
+
+Remove all splits from a transaction. Uses scope `caas:transaction_splits:delete`. Resolves with HTTP status `204`.
+
+```javascript
+const status = await moneyhub.caasDeleteTransactionSplits({
+  accountId: "accountId",
+  transactionId: "transactionId",
+}, options);
+```
+
+Example script: `node examples/caas/delete-transaction-splits.js -a accountId -t transactionId`.
+
 #### `caasGetCategories`
 
 Get all available CAAS categories. This function uses the scope `caas:categories:read`.
