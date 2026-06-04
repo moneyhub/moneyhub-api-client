@@ -2318,7 +2318,7 @@ const result = await moneyhub.caasPutTransactionSplits({
 }, options);
 ```
 
-Example script: `node examples/caas/put-transaction-splits.js -a accountId -t transactionId` (optional `-s` path to a JSON splits array).
+Example script: `npm run ts-node -- examples/caas/put-transaction-splits.js -a accTestQA123 -t testQA123 -d '[{"amount":4,"userCategoryId":"2d6078a1-06db-4c9c-b559-f36cec9e4fc1","description":"Food"},{"amount":6,"userCategoryId":"22","description":"Gift"}]'` (split amounts must sum to the parent transaction amount).
 
 #### `caasDeleteTransactionSplits`
 
