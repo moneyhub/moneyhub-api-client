@@ -30,6 +30,7 @@ import caasGeotags from "./caas/geotags"
 import caasRegularTransactions from "./caas/regular-transactions"
 import caasEnhancedTransactions from "./caas/enhanced-transactions"
 import caasTransactions from "./caas/transactions"
+import caasTransactionSplits from "./caas/transaction-splits"
 import caasUsers from "./caas/users"
 import unauthenticated from "./unauthenticated"
 import usersAndConnections from "./users-and-connections"
@@ -69,6 +70,7 @@ export default ({config, request}: RequestsParams) => {
     ...caasRegularTransactions({config, request}),
     ...caasEnhancedTransactions({config, request}),
     ...caasTransactions({config, request}),
+    ...caasTransactionSplits({config, request}),
     ...caasUsers({config, request}),
     ...unauthenticated({config, request}),
     ...usersAndConnections({config, request}),
