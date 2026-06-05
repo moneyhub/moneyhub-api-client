@@ -6,6 +6,7 @@ import type {
   CaasL2CategoryId,
   CaasL2CategoryName,
 } from "./categories"
+import type {CaasTransactionSplit} from "./transaction-splits"
 
 export interface CaasEnrichTransactionsResponse {
   data: CaasTransaction[]
@@ -48,6 +49,7 @@ export interface CaasTransactionInput {
   merchantCategoryCode?: string | null
   cardPresent?: boolean | null
   meta?: Record<string, any> | null
+  splits?: CaasTransactionSplit[]
 }
 
 export type CaasRecategorisationType = "single" | "future"
@@ -113,6 +115,7 @@ export interface CaasTransaction {
   merchantCategoryCode: string | null
   cardPresent: boolean | null
   meta: Record<string, any> | null
+  splits?: CaasTransactionSplit[]
   mhInsights: CaasTransactionInsights
 }
 
