@@ -2254,7 +2254,7 @@ const result = await moneyhub.caasEnrichTransactions({
 
 #### `caasGetTransactions`
 
-Get transactions from the CAAS API with optional filtering by user and limit. This function uses the scope `caas:transactions:read`.
+Get transactions from the CAAS API with optional filtering by user and limit. This function uses the scopes `caas:transactions:read caas:transaction_splits:read`. The `splits` array is included for any split transaction when the client is registered for the `caas:transaction_splits:read` scope.
 
 ```javascript
 const result = await moneyhub.caasGetTransactions({

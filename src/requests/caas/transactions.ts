@@ -46,7 +46,7 @@ export default ({config, request}: RequestsParams): CaasTransactionsRequests => 
         `${caasResourceServerUrl}/transactions`,
         {
           cc: {
-            scope: "caas:transactions:read",
+            scope: "caas:transactions:read caas:transaction_splits:read",
           },
           searchParams: {accountId, userId, limit},
 
