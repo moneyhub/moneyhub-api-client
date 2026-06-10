@@ -1,8 +1,8 @@
 const fs = require("fs")
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
-const {Moneyhub} = require("../../src/index")
-const config = require("../config")
+const {Moneyhub} = require("../../../src/index")
+const config = require("../../config")
 
 const defaultSplits = [
   {amount: -40, userCategoryId: "22", description: "Food"},
@@ -34,7 +34,7 @@ const usage = commandLineUsage(
 )
 
 // PUT /caas/v1/accounts/{accountId}/transactions/{transactionId}/splits
-// example: npm run ts-node -- examples/caas/put-transaction-splits.js -a accTestQA123 -t testQA123 -d '[{"amount":4,"userCategoryId":"2d6078a1-06db-4c9c-b559-f36cec9e4fc1","description":"Food"},{"amount":6,"userCategoryId":"22","description":"Gift"}]'
+// example: npm run ts-node -- examples/caas/transactions/put-transaction-splits.js -a accTestQA123 -t testQA123 -d '[{"amount":4,"userCategoryId":"2d6078a1-06db-4c9c-b559-f36cec9e4fc1","description":"Food"},{"amount":6,"userCategoryId":"22","description":"Gift"}]'
 
 console.log(usage)
 

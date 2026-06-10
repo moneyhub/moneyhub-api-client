@@ -1,10 +1,11 @@
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
-const {Moneyhub} = require("../../src/index")
-const config = require("../config")
+const {Moneyhub} = require("../../../src/index")
+const config = require("../../config")
 
 const optionDefinitions = [
   {name: "accountId", alias: "a", type: String, description: "required - Account ID"},
+  {name: "transactionId", alias: "t", type: String, description: "required - Transaction ID to delete"},
 ]
 
 const usage = commandLineUsage(
@@ -14,7 +15,7 @@ const usage = commandLineUsage(
   }
 )
 
-// example: ts-node caas/get-regular-transactions.js -a accountId
+// example: node caas/transactions/delete-transaction.js -a accountId -t transactionId
 
 console.log(usage)
 
@@ -23,12 +24,11 @@ const options = commandLineArgs(optionDefinitions)
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
-    const result = await moneyhub.caasGetRegularTransactions({
+    await moneyhub.caasDeleteTransaction({
       accountId: options.accountId,
+      transactionId: options.transactionId,
     })
-
-    console.log("Regular transactions:")
-    console.log(JSON.stringify(result, null, 2))
+    console.log(`Transaction ${options.transactionId} deleted successfully`)
   } catch (e) {
     console.log(e)
     console.error(e.response && e.response.body)

@@ -5,7 +5,7 @@ const transactions = [
     txCode: "DEB",
     date: new Date().toISOString(),
     status: "posted",
-    description: "Aldi Bristol",
+    description: "Tesco Milton Keynes",
     amount: -45.5,
     currency: "GBP",
     cardPresent: true,

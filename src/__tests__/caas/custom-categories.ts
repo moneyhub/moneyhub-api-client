@@ -1,0 +1,183 @@
+/* eslint-disable max-nested-callbacks */
+import {expect} from "chai"
+import {randomUUID} from "crypto"
+
+import {Moneyhub, MoneyhubInstance} from "../.."
+import {
+  fetchSwaggerSpec,
+  createRequestValidator,
+  createResponseValidator,
+  assertMatchesSwagger,
+} from "./swagger"
+
+const LIST_PATH = "/users/{userId}/custom-categories"
+const DELETE_PATH = "/users/{userId}/custom-categories/{categoryId}"
+
+const uniqueName = () => `test-cat-${randomUUID()}`
+
+describe("/users/{userId}/custom-categories", function() {
+  let moneyhub: MoneyhubInstance
+
+  before(async function() {
+    moneyhub = await Moneyhub(this.config)
+  })
+
+  describe("POST /users/{userId}/custom-categories", function() {
+    this.timeout(30000)
+
+    let response: Awaited<ReturnType<typeof moneyhub.caasCreateCustomCategory>>
+    let requestBody: {customCategoryName: string}
+    let validateRequest: NonNullable<ReturnType<typeof createRequestValidator>>
+    let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
+
+    before(async function() {
+      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+        this.skip()
+      }
+
+      const {caas: {userId}} = this.config
+
+      requestBody = {customCategoryName: uniqueName()}
+
+      response = await moneyhub.caasCreateCustomCategory({
+        userId,
+        customCategoryName: requestBody.customCategoryName,
+      })
+
+      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const reqValidator = createRequestValidator(spec, LIST_PATH, "post")
+      const resValidator = createResponseValidator(spec, LIST_PATH, "post", "201")
+      if (!reqValidator || !resValidator) {
+        throw new Error(`Swagger schema missing for POST ${LIST_PATH}`)
+      }
+      validateRequest = reqValidator
+      validateResponse = resValidator
+    })
+
+    after(async function() {
+      if (this.skipTestsRequiringCaasIds || !response) {
+        return
+      }
+
+      const {caas: {userId}} = this.config
+      await moneyhub.caasDeleteCustomCategory({
+        userId,
+        categoryId: response.data.customCategoryId,
+      })
+    })
+
+    it("request payload matches swagger CustomCategoryPost schema", function() {
+      assertMatchesSwagger(validateRequest, requestBody, "Request body")
+    })
+
+    it("response matches swagger 201 schema", function() {
+      assertMatchesSwagger(validateResponse, response, "Response")
+    })
+
+    it("response contains the created custom category", function() {
+      expect(response.data).to.have.property("customCategoryId")
+      expect(response.data).to.have.property("customCategoryName", requestBody.customCategoryName)
+    })
+  })
+
+  describe("GET /users/{userId}/custom-categories", function() {
+    this.timeout(30000)
+
+    let response: Awaited<ReturnType<typeof moneyhub.caasGetCustomCategories>>
+    let createdCategoryId: string
+    let createdName: string
+    let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
+
+    before(async function() {
+      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+        this.skip()
+      }
+
+      const {caas: {userId}} = this.config
+
+      createdName = uniqueName()
+      const created = await moneyhub.caasCreateCustomCategory({userId, customCategoryName: createdName})
+      createdCategoryId = created.data.customCategoryId
+
+      response = await moneyhub.caasGetCustomCategories({userId})
+
+      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const resValidator = createResponseValidator(spec, LIST_PATH, "get", "200")
+      if (!resValidator) {
+        throw new Error(`Swagger schema missing for GET ${LIST_PATH}`)
+      }
+      validateResponse = resValidator
+    })
+
+    after(async function() {
+      if (this.skipTestsRequiringCaasIds || !createdCategoryId) {
+        return
+      }
+
+      const {caas: {userId}} = this.config
+      await moneyhub.caasDeleteCustomCategory({userId, categoryId: createdCategoryId})
+    })
+
+    it("response matches swagger 200 schema", function() {
+      assertMatchesSwagger(validateResponse, response, "Response")
+    })
+
+    it("returns the created custom category in the list", function() {
+      const match = response.data.find((c) => c.customCategoryId === createdCategoryId)
+      expect(match).to.not.equal(undefined)
+      expect(match).to.have.property("customCategoryName", createdName)
+    })
+  })
+
+  describe("DELETE /users/{userId}/custom-categories/{categoryId}", function() {
+    this.timeout(30000)
+
+    let deleteStatus: number
+    let notFoundError: unknown
+
+    before(async function() {
+      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+        this.skip()
+      }
+
+      const {caas: {userId}} = this.config
+
+      const created = await moneyhub.caasCreateCustomCategory({userId, customCategoryName: uniqueName()})
+      const {customCategoryId} = created.data
+
+      deleteStatus = await moneyhub.caasDeleteCustomCategory({userId, categoryId: customCategoryId})
+
+      try {
+        await moneyhub.caasDeleteCustomCategory({userId, categoryId: customCategoryId})
+      } catch (err) {
+        notFoundError = err
+      }
+    })
+
+    it("responds with 204 No Content", function() {
+      expect(deleteStatus).to.equal(204)
+    })
+
+    it("deleting the same category again responds with 404", function() {
+      expect(notFoundError).to.be.an("Error")
+      expect((notFoundError as Error).message).to.include("404")
+    })
+  })
+
+  describe("validates DELETE path exists in swagger", function() {
+    this.timeout(30000)
+
+    before(function() {
+      if (this.skipSwaggerTests) {
+        this.skip()
+      }
+    })
+
+    it("has a 204 response defined for DELETE", async function() {
+      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const path = spec.paths?.[DELETE_PATH]
+      expect(path, `Swagger missing path ${DELETE_PATH}`).to.not.equal(undefined)
+      expect(path.delete?.responses).to.have.property("204")
+    })
+  })
+})
