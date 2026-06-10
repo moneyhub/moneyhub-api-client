@@ -2252,6 +2252,8 @@ const result = await moneyhub.caasEnrichTransactions({
 }, options);
 ```
 
+Example script: `node examples/caas/transactions/enrich-transactions.js` (uses a built-in example transaction).
+
 #### `caasGetTransactions`
 
 Get transactions from the CAAS API with optional filtering by user and limit. This function uses the scopes `caas:transactions:read caas:transaction_splits:read`. The `splits` array is included for any split transaction when the client is registered for the `caas:transaction_splits:read` scope.
@@ -2263,6 +2265,8 @@ const result = await moneyhub.caasGetTransactions({
   limit: 50, // optional
 }, options);
 ```
+
+Example script: `node examples/caas/transactions/get-transactions.js -a accountId -u userId -l 50`.
 
 #### `caasGetEnhancedTransaction`
 
@@ -2280,17 +2284,22 @@ const result = await moneyhub.caasGetEnhancedTransaction({
 
 The response follows the usual API envelope: the enhanced transaction is `result.data` (optional `links` / `meta` may also be present).
 
+Example script: `node examples/caas/transactions/get-enhanced-transaction.js -a accountId -t transactionId -i search_pro`.
+
 #### `caasPatchTransaction`
 
-Update a transaction category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`.
+Update a transaction's user-defined category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`. The optional `recategorisationType` query parameter (`single` or `future`, defaulting to `single`) controls whether the change applies to this transaction only or to all future matching transactions.
 
 ```javascript
 const result = await moneyhub.caasPatchTransaction({
   accountId: "accountId",
   transactionId: "transactionId",
-  l2CategoryId: "21",
+  userCategoryId: "21",
+  recategorisationType: "single",
 }, options);
 ```
+
+Example script: `node examples/caas/transactions/patch-transaction.js -a accountId -t transactionId -c 21 -r single`.
 
 #### `caasDeleteTransaction`
 
@@ -2302,6 +2311,8 @@ await moneyhub.caasDeleteTransaction({
   transactionId: "transactionId",
 }, options);
 ```
+
+Example script: `node examples/caas/transactions/delete-transaction.js -a accountId -t transactionId`.
 
 #### `caasPutTransactionSplits`
 
@@ -2318,7 +2329,7 @@ const result = await moneyhub.caasPutTransactionSplits({
 }, options);
 ```
 
-Example script: `npm run ts-node -- examples/caas/put-transaction-splits.js -a accTestQA123 -t testQA123 -d '[{"amount":4,"userCategoryId":"2d6078a1-06db-4c9c-b559-f36cec9e4fc1","description":"Food"},{"amount":6,"userCategoryId":"22","description":"Gift"}]'` (split amounts must sum to the parent transaction amount).
+Example script: `npm run ts-node -- examples/caas/transactions/put-transaction-splits.js -a accTestQA123 -t testQA123 -d '[{"amount":4,"userCategoryId":"2d6078a1-06db-4c9c-b559-f36cec9e4fc1","description":"Food"},{"amount":6,"userCategoryId":"22","description":"Gift"}]'` (split amounts must sum to the parent transaction amount).
 
 #### `caasDeleteTransactionSplits`
 
@@ -2331,7 +2342,7 @@ const status = await moneyhub.caasDeleteTransactionSplits({
 }, options);
 ```
 
-Example script: `node examples/caas/delete-transaction-splits.js -a accountId -t transactionId`.
+Example script: `node examples/caas/transactions/delete-transaction-splits.js -a accountId -t transactionId`.
 
 #### `caasGetCategories`
 
@@ -2341,6 +2352,8 @@ Get all available CAAS categories. This function uses the scope `caas:categories
 const result = await moneyhub.caasGetCategories(options);
 ```
 
+Example script: `node examples/caas/categories/get-categories.js`.
+
 #### `caasGetCategoryGroups`
 
 Get all available CAAS category groups. This function uses the scope `caas:categories:read`.
@@ -2348,6 +2361,46 @@ Get all available CAAS category groups. This function uses the scope `caas:categ
 ```javascript
 const result = await moneyhub.caasGetCategoryGroups(options);
 ```
+
+Example script: `node examples/caas/categories/get-category-groups.js`.
+
+#### `caasGetCustomCategories`
+
+Get all custom categories created by a user. This function uses the scope `caas:categories:read` and returns the custom categories under `data`.
+
+```javascript
+const result = await moneyhub.caasGetCustomCategories({
+  userId: "userId",
+}, options);
+```
+
+Example script: `node examples/caas/custom-categories/get-custom-categories.js -u userId`.
+
+#### `caasCreateCustomCategory`
+
+Create a custom category for a user. This function uses the scope `caas:categories:write` and returns the created custom category under `data`. The returned `customCategoryId` can be used as the `userCategoryId` when updating a transaction via `caasPatchTransaction`. Returns a 409 if a custom category with the same name already exists for the user.
+
+```javascript
+const result = await moneyhub.caasCreateCustomCategory({
+  userId: "userId",
+  customCategoryName: "Coffee",
+}, options);
+```
+
+Example script: `node examples/caas/custom-categories/create-custom-category.js -u userId -n "Coffee"`.
+
+#### `caasDeleteCustomCategory`
+
+Delete a custom category for a user. This function uses the scope `caas:categories:delete`. `categoryId` must be a valid UUID. Resolves with the HTTP status code (`204` on success).
+
+```javascript
+await moneyhub.caasDeleteCustomCategory({
+  userId: "userId",
+  categoryId: "categoryId",
+}, options);
+```
+
+Example script: `node examples/caas/custom-categories/delete-custom-category.js -u userId -c categoryId`.
 
 #### `caasGetCounterparties`
 
@@ -2360,6 +2413,8 @@ const result = await moneyhub.caasGetCounterparties({
 }, options);
 ```
 
+Example script: `node examples/caas/counterparties/get-counterparties.js -l 50 -o 0`.
+
 #### `caasGetGeotags`
 
 Get geotag information for specific geotag IDs. This function uses the scope `caas:transactions:read`.
@@ -2369,6 +2424,8 @@ const result = await moneyhub.caasGetGeotags({
   geotagIds: ["geotag-id-1", "geotag-id-2"],
 }, options);
 ```
+
+Example script: `node examples/caas/geotags/get-geotags.js -g geotag-id-1 -g geotag-id-2`.
 
 #### `caasGetRegularTransactions`
 
@@ -2380,6 +2437,8 @@ const result = await moneyhub.caasGetRegularTransactions({
 }, options);
 ```
 
+Example script: `node examples/caas/transactions/get-regular-transactions.js -a accountId`.
+
 #### `caasDeleteAccount`
 
 Delete an account via the CAAS endpoint. This function uses the scope `caas:users:delete`.
@@ -2390,6 +2449,8 @@ await moneyhub.caasDeleteAccount({
 }, options);
 ```
 
+Example script: `node examples/caas/accounts/delete-account.js -a accountId`.
+
 #### `caasDeleteUser`
 
 Delete a user via the CAAS endpoint. This function uses the scope `caas:users:delete`.
@@ -2399,6 +2460,8 @@ await moneyhub.caasDeleteUser({
   userId: "userId",
 }, options);
 ```
+
+Example script: `node examples/caas/users/delete-user.js -u userId`.
 
 ### Financial Connections
 

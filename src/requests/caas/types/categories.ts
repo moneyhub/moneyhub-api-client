@@ -191,7 +191,40 @@ export interface CaasCategoryGroup {
   l1CategoryType: CaasL1CategoryType
 }
 
+export interface CaasCustomCategory {
+  customCategoryId: string
+  customCategoryName: string
+}
+
 export interface CaasCategoriesRequests {
   caasGetCategories: (options?: ExtraOptions) => Promise<ApiResponse<CaasCategory[]>>
   caasGetCategoryGroups: (options?: ExtraOptions) => Promise<ApiResponse<CaasCategoryGroup[]>>
+  caasGetCustomCategories: (
+    {
+      userId,
+    }: {
+      userId: string
+    },
+    options?: ExtraOptions,
+  ) => Promise<ApiResponse<CaasCustomCategory[]>>
+  caasCreateCustomCategory: (
+    {
+      userId,
+      customCategoryName,
+    }: {
+      userId: string
+      customCategoryName: string
+    },
+    options?: ExtraOptions,
+  ) => Promise<ApiResponse<CaasCustomCategory>>
+  caasDeleteCustomCategory: (
+    {
+      userId,
+      categoryId,
+    }: {
+      userId: string
+      categoryId: string
+    },
+    options?: ExtraOptions,
+  ) => Promise<number>
 }

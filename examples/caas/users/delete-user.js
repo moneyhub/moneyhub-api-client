@@ -1,10 +1,10 @@
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
-const {Moneyhub} = require("../../src/index")
-const config = require("../config")
+const {Moneyhub} = require("../../../src/index")
+const config = require("../../config")
 
 const optionDefinitions = [
-  {name: "geotagIds", alias: "g", type: String, multiple: true, description: "required - Geotag IDs (can specify multiple)"},
+  {name: "userId", alias: "u", type: String, description: "required - User ID to delete"},
 ]
 
 const usage = commandLineUsage(
@@ -14,7 +14,7 @@ const usage = commandLineUsage(
   }
 )
 
-// example: node caas/get-geotags.js -g geotag-id-1 -g geotag-id-2
+// example: node caas/users/delete-user.js -u 0a1327eb-26b9-4abc-b932-ff61cb27b227
 
 console.log(usage)
 
@@ -23,12 +23,10 @@ const options = commandLineArgs(optionDefinitions)
 const start = async () => {
   try {
     const moneyhub = await Moneyhub(config)
-    const result = await moneyhub.caasGetGeotags({
-      geotagIds: options.geotagIds || [],
+    await moneyhub.caasDeleteUser({
+      userId: options.userId,
     })
-    
-    console.log("Geotags:")
-    console.log(JSON.stringify(result, null, 2))
+    console.log(`User ${options.userId} deleted successfully`)
   } catch (e) {
     console.log(e)
     console.error(e.response && e.response.body)

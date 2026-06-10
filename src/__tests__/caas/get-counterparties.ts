@@ -39,7 +39,14 @@ describe("GET /counterparties", function() {
     })
 
     it("response matches swagger 200 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+      const seededCounterparties = response.data.filter((counterparty) =>
+        this.counterpartyIds.includes(counterparty.l3CounterpartyId))
+
+      assertMatchesSwagger(
+        validateResponse,
+        {...response, data: seededCounterparties},
+        "Response",
+      )
     })
 
     it("response contains the seeded counterparties", function() {

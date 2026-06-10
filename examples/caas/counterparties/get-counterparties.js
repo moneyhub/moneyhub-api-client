@@ -1,7 +1,7 @@
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
-const {Moneyhub} = require("../../src/index")
-const config = require("../config")
+const {Moneyhub} = require("../../../src/index")
+const config = require("../../config")
 
 const optionDefinitions = [
   {name: "limit", alias: "l", type: Number, description: "optional - Limit number of results"},
@@ -15,7 +15,7 @@ const usage = commandLineUsage(
   }
 )
 
-// example: node caas/get-counterparties.js -l 50 -o 0
+// example: node caas/counterparties/get-counterparties.js -l 50 -o 0
 
 console.log(usage)
 
