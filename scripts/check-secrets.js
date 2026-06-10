@@ -1,5 +1,7 @@
 #!/usr/bin/env node
-const {execSync} = require("child_process")
+const {execFileSync} = require("child_process")
+
+const git = args => execFileSync("git", args, {encoding: "utf8"})
 
 const blockedPaths = [
   "examples/config.js",
@@ -21,14 +23,11 @@ const secretPatterns = [
 ]
 
 const getStagedFiles = () => {
-  const output = execSync(
-    "git diff --cached --name-only --diff-filter=ACM --no-renames",
-    {encoding: "utf8"}
-  )
+  const output = git(["diff", "--cached", "--name-only", "--diff-filter=ACM", "--no-renames"])
   return output.split("\n").map(line => line.trim()).filter(Boolean)
 }
 
-const getStagedContent = file => execSync(`git show :"${file}"`, {encoding: "utf8"})
+const getStagedContent = file => git(["show", `:${file}`])
 
 const scanFile = file => {
   const findings = []
