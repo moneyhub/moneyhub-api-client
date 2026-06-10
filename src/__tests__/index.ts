@@ -99,6 +99,7 @@ describe("API client", function() {
         "splitTransaction",
         "getTransactionSplits",
         "patchTransactionSplit",
+        "postLlmGatewaySavingsGoals",
         "deleteTransactionSplits",
         "getGlobalCounterparties",
         "getJWTBearerToken",
