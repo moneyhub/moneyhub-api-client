@@ -22,19 +22,13 @@ const secretPatterns = [
 
 const getStagedFiles = () => {
   const output = execSync(
-    "git diff --cached --name-only --diff-filter=ACM",
+    "git diff --cached --name-only --diff-filter=ACM --no-renames",
     {encoding: "utf8"}
   )
   return output.split("\n").map(line => line.trim()).filter(Boolean)
 }
 
-const getStagedContent = file => {
-  try {
-    return execSync(`git show :"${file}"`, {encoding: "utf8"})
-  } catch (err) {
-    return ""
-  }
-}
+const getStagedContent = file => execSync(`git show :"${file}"`, {encoding: "utf8"})
 
 const scanFile = file => {
   const findings = []
@@ -42,7 +36,13 @@ const scanFile = file => {
     findings.push(`${file}: file is blocked from being committed (use examples/config.example.js as a template and keep secrets in the git-ignored examples/config.js)`)
     return findings
   }
-  const content = getStagedContent(file)
+  let content
+  try {
+    content = getStagedContent(file)
+  } catch (err) {
+    findings.push(`${file}: unable to read staged content, cannot verify it is secret-free (${err.message})`)
+    return findings
+  }
   secretPatterns.forEach(({name, regex}) => {
     if (regex.test(content)) {
       findings.push(`${file}: matched "${name}"`)
