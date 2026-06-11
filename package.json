@@ -7,6 +7,7 @@
   "scripts": {
     "lint": "eslint src/ ",
     "lint-fix": "eslint src/ --fix",
+    "check-secrets": "node scripts/check-secrets.js",
     "test": "mocha --require ts-node/register --config test/opts/integration.json",
     "test-ci": "mocha --require ts-node/register --config test/opts/integration-ci.json",
     "test-caas": "mocha --require ts-node/register --config test/opts/integration-caas.json",
