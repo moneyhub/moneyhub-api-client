@@ -2,6 +2,8 @@
 import {resolveRef, resolveToObject} from "./resolvers"
 import type {Schema} from "./resolvers"
 
+// -- Types -- //
+
 interface SchemaDefinitions {
   ts: Schema
   openApi: Schema
@@ -21,6 +23,8 @@ function isMatchedField(field: FieldPair): field is MatchedField {
   return field.tsProp !== undefined && field.openApiProp !== undefined
 }
 
+// Union variants are sorted so that order in source (e.g. "null | string" vs
+// "string | null") does not produce spurious mismatches during comparison.
 function joinUnion(variants: string[]): string {
   return [...variants].sort().join(" | ")
 }
@@ -36,6 +40,8 @@ export function normaliseType(prop: Schema, definitions: Schema): string {
       : "object"
   }
 
+  // ts-json-schema-generator uses anyOf/oneOf for union types (e.g. string | null).
+  // Null is preserved so nullable mismatches (e.g. TS string vs OpenAPI string | null) are caught.
   if (prop.anyOf || prop.oneOf) {
     return joinUnion(
       (prop.anyOf ?? prop.oneOf).map((v: Schema) => normaliseType(v, definitions)),
@@ -46,12 +52,15 @@ export function normaliseType(prop: Schema, definitions: Schema): string {
     return "number"
   }
 
+  // OpenAPI nullable / x-nullable is preprocessed into type: ["string", "null"] before comparison.
   if (Array.isArray(prop.type)) {
     return joinUnion(prop.type.map((t: string) => (t === "integer" ? "number" : t)))
   }
 
   return prop.type ?? "unknown"
 }
+
+// -- Collecting field pairs -- //
 
 interface CollectInput {
   tsProps: Schema
@@ -133,6 +142,20 @@ function nestedPairs(
   })
 }
 
+// FieldPairs are the main objects built for comparison. Each one pairs up a
+// field from the TS schema with the same field from the OpenAPI schema.
+//
+// For nested objects, fieldPath uses dot-separated notation built up through
+// recursion. Given an OpenAPI schema like:
+//
+//   { properties: { mhInsights: { properties: { l2CategoryId: { type: "string" } } } } }
+//
+// collectFieldPairs produces pairs with fieldPaths "mhInsights" and
+// "mhInsights.l2CategoryId". These are then passed to each checker, which
+// produces error messages like:
+//
+//   mhInsights.l2CategoryId: should be type "string", got "number"
+//
 function collectFieldPairs(input: CollectInput): FieldPair[] {
   const {
     tsProps,
@@ -165,6 +188,8 @@ function collectFieldPairs(input: CollectInput): FieldPair[] {
   return [...pairs, ...nested]
 }
 
+// -- Error formatting -- //
+
 function missingFieldError(fieldPath: string): string {
   return `${fieldPath}: missing from TS type, expected by OpenAPI`
 }
@@ -196,6 +221,11 @@ function extraEnumValuesError(fieldPath: string, values: string[]): string {
   return `${fieldPath}: unexpected enum values [${values.join(", ")}]`
 }
 
+// -- Checks -- //
+
+// Null is stripped because nullability is already reported by checkTypes.
+// Without this, OpenAPI enums with nullable: true would include "null" as a
+// literal enum value and produce false-positive mismatches.
 function toEnumSet(schema: Schema): Set<string> {
   return new Set<string>(
     (schema.enum ?? [])
@@ -271,6 +301,8 @@ function checkEnums(
     ),
   )
 }
+
+// -- Orchestrator -- //
 
 interface FindErrorsInput {
   tsSchema: Schema

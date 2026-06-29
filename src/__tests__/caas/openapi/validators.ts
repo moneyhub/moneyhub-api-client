@@ -27,6 +27,8 @@ function normalizeComponentRefs(obj: unknown): unknown {
   }, {})
 }
 
+// Recursively strips `additionalProperties: false` (incompatible with allOf in OpenAPI 3)
+// and converts `nullable` / `x-nullable: true` to a union type so Ajv accepts null values.
 export function preprocessSchema(obj: unknown): unknown {
   if (obj == null) return obj
   if (Array.isArray(obj)) return obj.map(preprocessSchema)
