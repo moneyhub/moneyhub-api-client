@@ -1,4 +1,4 @@
-export {fetchOpenApiSpec} from "./fetch"
+export {fetchOpenApiSpec, setSkipOpenApiTests} from "./fetch"
 export {
   createRequestValidator,
   createResponseValidator,

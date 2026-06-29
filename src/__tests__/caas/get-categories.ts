@@ -26,7 +26,6 @@ describe("GET /categories", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-
       response = await moneyhub.caasGetCategories()
 
       const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)

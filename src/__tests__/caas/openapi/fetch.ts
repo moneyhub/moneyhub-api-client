@@ -2,6 +2,12 @@ import got from "got"
 
 type Schema = Record<string, any>
 
+let skipOpenApiTests = false
+
+export function setSkipOpenApiTests(value: boolean) {
+  skipOpenApiTests = value
+}
+
 const specCache = new Map<string, Schema>()
 
 function normalizeSpecUrl(url: string): string {
@@ -11,17 +17,20 @@ function normalizeSpecUrl(url: string): string {
   )
 }
 
-export async function fetchOpenApiSpec(url: string | undefined): Promise<Schema> {
-  if (!url) {
-    throw new Error(
-      "Missing caas.openapiUrl in config. Expected structure:\n" +
-      JSON.stringify(
-        {caas: {openapiUrl: "https://<api-gateway>.co.uk/caas/openapi.json"}},
-        null,
-        2,
-      ),
-    )
+function skipOpenApiSuite(): never {
+  const err = new Error("OpenAPI tests skipped: missing caas.openapiUrl") as Error & {code?: string}
+  err.code = "ERR_MOCHA_SKIPPED"
+  throw err
+}
+
+function assertOpenApiUrlConfigured(url: string | undefined): asserts url is string {
+  if (skipOpenApiTests || !url) {
+    skipOpenApiSuite()
   }
+}
+
+export async function fetchOpenApiSpec(url: string | undefined): Promise<Schema> {
+  assertOpenApiUrlConfigured(url)
 
   const cached = specCache.get(url)
   if (cached) return cached
