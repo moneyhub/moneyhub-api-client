@@ -102,7 +102,8 @@ describe("OpenAPI spec validators", function() {
     const validate = createResponseValidator(oas3Spec, "/counterparties", "get", "200")
 
     expect(validate).to.exist
-    assertMatchesOpenApi(validate!, {
+    if (!validate) throw new Error("expected response validator")
+    assertMatchesOpenApi(validate, {
       data: [{l3CounterpartyId: "abc", l3CounterpartyName: null}],
     }, "Response")
   })
@@ -122,9 +123,12 @@ describe("OpenAPI spec validators", function() {
 
     expect(validateRequest).to.exist
     expect(validateResponse).to.exist
+    if (!validateRequest || !validateResponse) {
+      throw new Error("expected request and response validators")
+    }
 
-    assertMatchesOpenApi(validateRequest!, {customCategoryName: "groceries"}, "Request body")
-    assertMatchesOpenApi(validateResponse!, {data: {customCategoryId: "cat-1"}}, "Response")
+    assertMatchesOpenApi(validateRequest, {customCategoryName: "groceries"}, "Request body")
+    assertMatchesOpenApi(validateResponse, {data: {customCategoryId: "cat-1"}}, "Response")
   })
 
   it("ignores multipleOf constraints that fail on floating point coordinates", function() {
@@ -171,7 +175,9 @@ describe("OpenAPI spec validators", function() {
 
     const validate = createResponseValidator(spec, "/geotags", "get", "200")
 
-    assertMatchesOpenApi(validate!, {
+    expect(validate).to.exist
+    if (!validate) throw new Error("expected response validator")
+    assertMatchesOpenApi(validate, {
       data: [{latitude: 51.438276, longitude: -0.809316}],
     }, "Response")
   })
