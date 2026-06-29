@@ -1,6 +1,10 @@
 export type Schema = Record<string, any>
 
 export function resolveRef(ref: string, definitions: Schema): Schema {
+  if (ref.startsWith("#/components/schemas/")) {
+    return definitions[ref.replace("#/components/schemas/", "")] ?? {}
+  }
+
   return definitions[ref.replace("#/definitions/", "")] ?? {}
 }
 

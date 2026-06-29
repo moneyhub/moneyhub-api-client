@@ -23,6 +23,9 @@ export interface CaasRegularTransactionLine {
   categoryId: string
   description: string
   cleanedDescription: string
+  txCode?: string | null
+  cardPresent?: boolean | null
+  analysisCategory?: string | null
 }
 
 export interface CaasRegularTransaction {

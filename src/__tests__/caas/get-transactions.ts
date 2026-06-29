@@ -3,10 +3,10 @@ import {expect} from "chai"
 
 import {Moneyhub, MoneyhubInstance} from "../.."
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
+  assertMatchesOpenApi,
+} from "./openapi"
 
 describe("GET /transactions", function() {
   let moneyhub: MoneyhubInstance
@@ -15,14 +15,14 @@ describe("GET /transactions", function() {
     moneyhub = await Moneyhub(this.config)
   })
 
-  describe("fetches transactions and validates against swagger schema", function() {
+  describe("fetches transactions and validates against OpenAPI schema", function() {
     this.timeout(30000)
 
     let response: Awaited<ReturnType<typeof moneyhub.caasGetTransactions>>
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds) {
         this.skip()
       }
 
@@ -30,14 +30,14 @@ describe("GET /transactions", function() {
 
       response = await moneyhub.caasGetTransactions({userId, accountId})
 
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const resValidator = createResponseValidator(spec, "/transactions", "get", "200")
-      if (!resValidator) throw new Error("Swagger schema missing for GET /transactions")
+      if (!resValidator) throw new Error("OpenAPI schema missing for GET /transactions")
       validateResponse = resValidator
     })
 
-    it("response matches swagger 200 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 200 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("response contains the seeded transactions", function() {

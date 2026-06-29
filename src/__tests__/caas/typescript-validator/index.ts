@@ -5,7 +5,7 @@ import {createGenerator} from "ts-json-schema-generator"
 
 import type {Schema} from "./resolvers"
 import {findSchemaErrors} from "./checks"
-import {preprocessSchema} from "../swagger"
+import {getSchemaDefinitions, preprocessSchema} from "../openapi"
 
 function createTypeSchema(typeName: string, filePath: string): Schema {
   return createGenerator({
@@ -20,11 +20,11 @@ function createTypeSchema(typeName: string, filePath: string): Schema {
 interface AssertTypeInput {
   tsType: string
   tsFile: string
-  swaggerDefinitionName: string
+  openApiSchemaName: string
   spec: Schema
 }
 
-export function assertTypeMatchesSwagger({tsType, tsFile, swaggerDefinitionName, spec}: AssertTypeInput): void {
+export function assertTypeMatchesOpenApi({tsType, tsFile, openApiSchemaName, spec}: AssertTypeInput): void {
   const resolvedPath = path.resolve(__dirname, tsFile)
 
   if (!fs.existsSync(resolvedPath)) {
@@ -32,20 +32,21 @@ export function assertTypeMatchesSwagger({tsType, tsFile, swaggerDefinitionName,
   }
 
   const tsSchema = createTypeSchema(tsType, resolvedPath)
-  const rawDef = spec.definitions?.[swaggerDefinitionName]
-  expect(rawDef, `${swaggerDefinitionName} not found in swagger definitions`).to.exist
+  const schemaDefinitions = getSchemaDefinitions(spec)
+  const rawDef = schemaDefinitions[openApiSchemaName]
+  expect(rawDef, `${openApiSchemaName} not found in OpenAPI schemas`).to.exist
 
-  const swaggerDefinitions = Object.fromEntries(
-    Object.entries(spec.definitions ?? {}).map(([key, val]) => [key, preprocessSchema(val)]),
+  const openApiDefinitions = Object.fromEntries(
+    Object.entries(schemaDefinitions).map(([key, val]) => [key, preprocessSchema(val)]),
   ) as Schema
 
   const errors = findSchemaErrors({
     tsSchema,
-    swaggerSchema: preprocessSchema(rawDef) as Schema,
-    swaggerDefinitions,
+    openApiSchema: preprocessSchema(rawDef) as Schema,
+    openApiDefinitions,
   })
 
   if (errors.length) {
-    expect.fail(`${tsType} does not match swagger ${swaggerDefinitionName}:\n${errors.join("\n")}`)
+    expect.fail(`${tsType} does not match OpenAPI ${openApiSchemaName}:\n${errors.join("\n")}`)
   }
 }

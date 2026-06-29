@@ -3,11 +3,11 @@ import {expect} from "chai"
 
 import {Moneyhub, MoneyhubInstance} from "../.."
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createRequestValidator,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
+  assertMatchesOpenApi,
+} from "./openapi"
 
 const USER_CATEGORY_ID = "22"
 
@@ -18,7 +18,7 @@ describe("PATCH /accounts/{accountId}/transactions/{transactionId}", function() 
     moneyhub = await Moneyhub(this.config)
   })
 
-  describe("patches a transaction and validates against swagger schema", function() {
+  describe("patches a transaction and validates against OpenAPI schema", function() {
     this.timeout(30000)
 
     let response: Awaited<ReturnType<typeof moneyhub.caasPatchTransaction>>
@@ -27,7 +27,7 @@ describe("PATCH /accounts/{accountId}/transactions/{transactionId}", function() 
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds) {
         this.skip()
       }
 
@@ -42,20 +42,20 @@ describe("PATCH /accounts/{accountId}/transactions/{transactionId}", function() 
         ...patchPayload,
       })
 
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const reqValidator = createRequestValidator(spec, "/accounts/{accountId}/transactions/{transactionId}", "patch")
       const resValidator = createResponseValidator(spec, "/accounts/{accountId}/transactions/{transactionId}", "patch", "200")
-      if (!reqValidator || !resValidator) throw new Error("Swagger schema missing for PATCH /accounts/{accountId}/transactions/{transactionId}")
+      if (!reqValidator || !resValidator) throw new Error("OpenAPI schema missing for PATCH /accounts/{accountId}/transactions/{transactionId}")
       validateRequest = reqValidator
       validateResponse = resValidator
     })
 
-    it("request payload matches swagger TransactionPatch schema", function() {
-      assertMatchesSwagger(validateRequest, patchPayload, "Request body")
+    it("request payload matches OpenAPI TransactionPatch schema", function() {
+      assertMatchesOpenApi(validateRequest, patchPayload, "Request body")
     })
 
-    it("response matches swagger 200 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 200 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("response contains the patched transaction", function() {

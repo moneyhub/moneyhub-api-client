@@ -4,11 +4,11 @@ import {expect} from "chai"
 import {Moneyhub, MoneyhubInstance} from "../.."
 
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
-import {assertTypeMatchesSwagger} from "./typescript-validator"
+  assertMatchesOpenApi,
+} from "./openapi"
+import {assertTypeMatchesOpenApi} from "./typescript-validator"
 
 const TYPES_FILE = "../../../requests/caas/types/transactions.ts"
 
@@ -19,30 +19,30 @@ describe("GET /counterparties", function() {
     moneyhub = await Moneyhub(this.config)
   })
 
-  describe("fetches counterparties and validates against swagger schema", function() {
+  describe("fetches counterparties and validates against OpenAPI schema", function() {
     this.timeout(30000)
 
     let response: Awaited<ReturnType<typeof moneyhub.caasGetCounterparties>>
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds) {
         this.skip()
       }
 
       response = await moneyhub.caasGetCounterparties({limit: 1000})
 
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const resValidator = createResponseValidator(spec, "/counterparties", "get", "200")
-      if (!resValidator) throw new Error("Swagger schema missing for GET /counterparties")
+      if (!resValidator) throw new Error("OpenAPI schema missing for GET /counterparties")
       validateResponse = resValidator
     })
 
-    it("response matches swagger 200 schema", function() {
+    it("response matches OpenAPI 200 schema", function() {
       const seededCounterparties = response.data.filter((counterparty) =>
         this.counterpartyIds.includes(counterparty.l3CounterpartyId))
 
-      assertMatchesSwagger(
+      assertMatchesOpenApi(
         validateResponse,
         {...response, data: seededCounterparties},
         "Response",
@@ -64,20 +64,17 @@ describe("GET /counterparties", function() {
     })
   })
 
-  describe("TypeScript types match swagger definitions", function() {
+  describe("TypeScript types match OpenAPI schemas", function() {
     this.timeout(30000)
 
-    let spec: Awaited<ReturnType<typeof fetchSwaggerSpec>>
+    let spec: Awaited<ReturnType<typeof fetchOpenApiSpec>>
 
     before(async function() {
-      if (this.skipSwaggerTests) {
-        this.skip()
-      }
-      spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
     })
 
-    it("CaasCounterparty matches swagger Counterparty definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasCounterparty", tsFile: TYPES_FILE, swaggerDefinitionName: "Counterparty", spec})
+    it("CaasCounterparty matches OpenAPI Counterparty definition", function() {
+      assertTypeMatchesOpenApi({tsType: "CaasCounterparty", tsFile: TYPES_FILE, openApiSchemaName: "Counterparty", spec})
     })
   })
 })
