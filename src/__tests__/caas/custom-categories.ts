@@ -31,7 +31,7 @@ describe("/users/{userId}/custom-categories", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
@@ -89,7 +89,7 @@ describe("/users/{userId}/custom-categories", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
@@ -136,7 +136,7 @@ describe("/users/{userId}/custom-categories", function() {
     let notFoundError: unknown
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
@@ -166,6 +166,12 @@ describe("/users/{userId}/custom-categories", function() {
 
   describe("validates DELETE path exists in OpenAPI", function() {
     this.timeout(30000)
+
+    before(function() {
+      if (this.skipOpenApiTests) {
+        this.skip()
+      }
+    })
 
     it("has a 204 response defined for DELETE", async function() {
       const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)

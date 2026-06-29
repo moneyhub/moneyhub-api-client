@@ -18,6 +18,10 @@ describe("GET /accounts/{accountId}/transactions/{transactionId}/enhanced", func
   let spec: Awaited<ReturnType<typeof fetchOpenApiSpec>>
 
   before(async function() {
+    if (this.skipOpenApiTests) {
+      this.skip()
+    }
+
     spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
     moneyhub = await Moneyhub(this.config)
   })

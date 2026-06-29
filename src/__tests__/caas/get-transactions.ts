@@ -22,7 +22,7 @@ describe("GET /transactions", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 

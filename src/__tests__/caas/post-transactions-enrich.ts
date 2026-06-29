@@ -29,7 +29,7 @@ describe("POST /transactions/enrich", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
@@ -120,6 +120,10 @@ describe("POST /transactions/enrich", function() {
     let spec: Awaited<ReturnType<typeof fetchOpenApiSpec>>
 
     before(async function() {
+      if (this.skipOpenApiTests) {
+        this.skip()
+      }
+
       spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
     })
 

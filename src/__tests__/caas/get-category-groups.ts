@@ -26,6 +26,10 @@ describe("GET /category-groups", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
+      if (this.skipOpenApiTests) {
+        this.skip()
+      }
+
       response = await moneyhub.caasGetCategoryGroups()
 
       const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
@@ -70,6 +74,10 @@ describe("GET /category-groups", function() {
     let spec: Awaited<ReturnType<typeof fetchOpenApiSpec>>
 
     before(async function() {
+      if (this.skipOpenApiTests) {
+        this.skip()
+      }
+
       spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
     })
 

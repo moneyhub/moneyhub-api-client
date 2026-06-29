@@ -1,6 +1,5 @@
 const config = require("config")
 const {Moneyhub} = require("../../src/index")
-const {setSkipOpenApiTests} = require("../../src/__tests__/caas/openapi")
 const {setupTestData} = require("./setup-test-data")
 const {teardownTestData} = require("./teardown-test-data")
 
@@ -43,14 +42,14 @@ exports.mochaHooks = async () => {
     caas: {
       userId,
       accountId,
-      openapiUrl,
+      openapiUrl: configuredOpenapiUrl,
+      swaggerUrl,
       regularTransactionsAccount,
       shouldTestEnhancedTransactions,
     } = {},
   } = config
+  const openapiUrl = configuredOpenapiUrl || swaggerUrl
   const warnings = buildConfigWarnings({userId, accountId, openapiUrl, regularTransactionsAccount, shouldTestEnhancedTransactions})
-
-  setSkipOpenApiTests(!openapiUrl)
 
   if (warnings.length) {
     process.once("exit", () => warnings.forEach(printWarning))
@@ -62,6 +61,10 @@ exports.mochaHooks = async () => {
       const {transactionIds, geotagIds, counterpartyIds} = await setupTestData(config, moneyhub)
 
       this.config = config
+      if (config.caas) {
+        config.caas.openapiUrl = openapiUrl
+      }
+      this.skipOpenApiTests = !openapiUrl
       this.skipTestsRequiringCaasIds = !userId || !accountId
       this.skipTestsRequiringRegularTransactionsAccount = !regularTransactionsAccount
       this.skipTestsRequiringEnhancedTransactions = !shouldTestEnhancedTransactions
