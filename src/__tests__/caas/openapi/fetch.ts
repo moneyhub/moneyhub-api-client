@@ -11,42 +11,15 @@ function normalizeSpecUrl(url: string): string {
   )
 }
 
-export function getCaasBaseUrl(apiConfig: Record<string, any>): string | undefined {
-  if (apiConfig.gatewayCaasResourceServerUrl) {
-    return apiConfig.gatewayCaasResourceServerUrl
-  }
-
-  if (apiConfig.resourceServerUrl) {
-    return `${apiConfig.resourceServerUrl.replace(/\/v\d+(\.\d+)?\b/, "")}/caas/v1`
-  }
-
-  return undefined
-}
-
-export function deriveOpenApiUrl(caasBaseUrl: string): string {
-  const url = new URL(caasBaseUrl)
-  url.pathname = `${url.pathname.replace(/\/v\d+\/?$/, "").replace(/\/$/, "")}/openapi.json`
-  return url.toString()
-}
-
-export function resolveOpenApiUrl(apiConfig: Record<string, any>): string | undefined {
-  if (apiConfig.caas?.openapiUrl) {
-    return apiConfig.caas.openapiUrl
-  }
-
-  const caasBaseUrl = getCaasBaseUrl(apiConfig)
-  if (!caasBaseUrl) {
-    return undefined
-  }
-
-  return deriveOpenApiUrl(caasBaseUrl)
-}
-
 export async function fetchOpenApiSpec(url: string | undefined): Promise<Schema> {
   if (!url) {
     throw new Error(
-      "Could not resolve caas.openapiUrl. Set caas.openapiUrl explicitly or provide " +
-      "gatewayCaasResourceServerUrl or resourceServerUrl in config.",
+      "Missing caas.openapiUrl in config. Expected structure:\n" +
+      JSON.stringify(
+        {caas: {openapiUrl: "https://<api-gateway>.co.uk/caas/openapi.json"}},
+        null,
+        2,
+      ),
     )
   }
 

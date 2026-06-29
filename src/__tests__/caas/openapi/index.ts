@@ -1,4 +1,4 @@
-export {fetchOpenApiSpec, deriveOpenApiUrl, getCaasBaseUrl, resolveOpenApiUrl} from "./fetch"
+export {fetchOpenApiSpec} from "./fetch"
 export {
   createRequestValidator,
   createResponseValidator,

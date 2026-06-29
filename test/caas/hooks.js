@@ -2,7 +2,6 @@ const config = require("config")
 const {Moneyhub} = require("../../src/index")
 const {setupTestData} = require("./setup-test-data")
 const {teardownTestData} = require("./teardown-test-data")
-const {resolveOpenApiUrl} = require("./resolve-openapi-url")
 
 const setupMoneyhubClient = async (clientConfig) => Moneyhub(clientConfig)
 
@@ -12,10 +11,11 @@ function printWarning(message) {
   console.warn(`\n${border}\n* ${message}\n${border}\n`)
 }
 
-function buildConfigWarnings({userId, accountId, regularTransactionsAccount, shouldTestEnhancedTransactions}) {
+function buildConfigWarnings({userId, accountId, openapiUrl, regularTransactionsAccount, shouldTestEnhancedTransactions}) {
   const missing = [
     !userId && "userId",
     !accountId && "accountId",
+    !openapiUrl && "openapiUrl",
     !regularTransactionsAccount && "regularTransactionsAccount",
     shouldTestEnhancedTransactions === undefined && "shouldTestEnhancedTransactions",
   ].filter(Boolean)
@@ -27,6 +27,7 @@ function buildConfigWarnings({userId, accountId, regularTransactionsAccount, sho
     "Expected config structure:\n" +
     JSON.stringify({
       caas: {
+        openapiUrl: "https://<api-gateway>.co.uk/caas/openapi.json",
         userId: "user-id-12345678",
         accountId: "account-id-12345678",
         regularTransactionsAccount: "account-id-with-regular-transactions",
@@ -41,12 +42,12 @@ exports.mochaHooks = async () => {
     caas: {
       userId,
       accountId,
+      openapiUrl,
       regularTransactionsAccount,
       shouldTestEnhancedTransactions,
     } = {},
   } = config
-  const openapiUrl = resolveOpenApiUrl(config)
-  const warnings = buildConfigWarnings({userId, accountId, regularTransactionsAccount, shouldTestEnhancedTransactions})
+  const warnings = buildConfigWarnings({userId, accountId, openapiUrl, regularTransactionsAccount, shouldTestEnhancedTransactions})
 
   if (warnings.length) {
     process.once("exit", () => warnings.forEach(printWarning))
@@ -57,13 +58,7 @@ exports.mochaHooks = async () => {
     async beforeAll() {
       const {transactionIds, geotagIds, counterpartyIds} = await setupTestData(config, moneyhub)
 
-      this.config = {
-        ...config,
-        caas: {
-          ...config.caas,
-          openapiUrl,
-        },
-      }
+      this.config = config
       this.skipTestsRequiringCaasIds = !userId || !accountId
       this.skipTestsRequiringRegularTransactionsAccount = !regularTransactionsAccount
       this.skipTestsRequiringEnhancedTransactions = !shouldTestEnhancedTransactions

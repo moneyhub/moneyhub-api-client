@@ -114,6 +114,8 @@ function getResponseSchema(
   return operation.responses?.[statusCode]?.content?.["application/json"]?.schema
 }
 
+// -- Error formatting -- //
+
 function getValueAtPath(data: unknown, jsonPath: string): unknown {
   if (!jsonPath) return data
 
@@ -172,6 +174,8 @@ function formatErrors(validate: ValidateFunction, data?: unknown): string {
 
   return lines.join("\n")
 }
+
+// -- Public API -- //
 
 export function createRequestValidator(
   spec: Schema,
