@@ -3,10 +3,6 @@ function getCaasBaseUrl(apiConfig) {
     return apiConfig.gatewayCaasResourceServerUrl
   }
 
-  if (apiConfig.caasResourceServerUrl) {
-    return apiConfig.caasResourceServerUrl
-  }
-
   if (apiConfig.resourceServerUrl) {
     return `${apiConfig.resourceServerUrl.replace(/\/v\d+(\.\d+)?\b/, "")}/caas/v1`
   }

@@ -16,10 +16,6 @@ export function getCaasBaseUrl(apiConfig: Record<string, any>): string | undefin
     return apiConfig.gatewayCaasResourceServerUrl
   }
 
-  if (apiConfig.caasResourceServerUrl) {
-    return apiConfig.caasResourceServerUrl
-  }
-
   if (apiConfig.resourceServerUrl) {
     return `${apiConfig.resourceServerUrl.replace(/\/v\d+(\.\d+)?\b/, "")}/caas/v1`
   }
@@ -50,7 +46,7 @@ export async function fetchOpenApiSpec(url: string | undefined): Promise<Schema>
   if (!url) {
     throw new Error(
       "Could not resolve caas.openapiUrl. Set caas.openapiUrl explicitly or provide " +
-      "gatewayCaasResourceServerUrl, caasResourceServerUrl, or resourceServerUrl in config.",
+      "gatewayCaasResourceServerUrl or resourceServerUrl in config.",
     )
   }
 

@@ -15,6 +15,13 @@ describe("resolveOpenApiUrl", function() {
     })).to.equal("https://api-dev.moneyhub.co.uk/caas/openapi.json")
   })
 
+  it("ignores caasResourceServerUrl and matches client buildConfig", function() {
+    expect(resolveOpenApiUrl({
+      resourceServerUrl: "https://api-dev.moneyhub.co.uk/v2",
+      caasResourceServerUrl: "https://wrong-host.example/caas/v1",
+    })).to.equal("https://api-dev.moneyhub.co.uk/caas/openapi.json")
+  })
+
   it("prefers an explicit caas.openapiUrl override", function() {
     expect(resolveOpenApiUrl({
       gatewayCaasResourceServerUrl: "https://api-dev.moneyhub.co.uk/caas/v1",
