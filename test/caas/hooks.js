@@ -3,7 +3,7 @@ const {Moneyhub} = require("../../src/index")
 const {setupTestData} = require("./setup-test-data")
 const {teardownTestData} = require("./teardown-test-data")
 
-const setupMoneyhubClient = async (config) => Moneyhub(config)
+const setupMoneyhubClient = async (clientConfig) => Moneyhub(clientConfig)
 
 function printWarning(message) {
   const firstLine = message.split("\n")[0]
@@ -11,11 +11,11 @@ function printWarning(message) {
   console.warn(`\n${border}\n* ${message}\n${border}\n`)
 }
 
-function buildConfigWarnings({userId, accountId, swaggerUrl, regularTransactionsAccount, shouldTestEnhancedTransactions}) {
+function buildConfigWarnings({userId, accountId, openapiUrl, regularTransactionsAccount, shouldTestEnhancedTransactions}) {
   const missing = [
     !userId && "userId",
     !accountId && "accountId",
-    !swaggerUrl && "swaggerUrl",
+    !openapiUrl && "openapiUrl",
     !regularTransactionsAccount && "regularTransactionsAccount",
     shouldTestEnhancedTransactions === undefined && "shouldTestEnhancedTransactions",
   ].filter(Boolean)
@@ -27,7 +27,7 @@ function buildConfigWarnings({userId, accountId, swaggerUrl, regularTransactions
     "Expected config structure:\n" +
     JSON.stringify({
       caas: {
-        swaggerUrl: "https://<api-gateway>.co.uk/caas/swagger-enrichment-engine.json",
+        openapiUrl: "https://<api-gateway>.co.uk/caas/openapi.json",
         userId: "user-id-12345678",
         accountId: "account-id-12345678",
         regularTransactionsAccount: "account-id-with-regular-transactions",
@@ -42,12 +42,14 @@ exports.mochaHooks = async () => {
     caas: {
       userId,
       accountId,
+      openapiUrl: configuredOpenapiUrl,
       swaggerUrl,
       regularTransactionsAccount,
       shouldTestEnhancedTransactions,
     } = {},
   } = config
-  const warnings = buildConfigWarnings({userId, accountId, swaggerUrl, regularTransactionsAccount, shouldTestEnhancedTransactions})
+  const openapiUrl = configuredOpenapiUrl || swaggerUrl
+  const warnings = buildConfigWarnings({userId, accountId, openapiUrl, regularTransactionsAccount, shouldTestEnhancedTransactions})
 
   if (warnings.length) {
     process.once("exit", () => warnings.forEach(printWarning))
@@ -59,7 +61,10 @@ exports.mochaHooks = async () => {
       const {transactionIds, geotagIds, counterpartyIds} = await setupTestData(config, moneyhub)
 
       this.config = config
-      this.skipSwaggerTests = !swaggerUrl
+      if (config.caas) {
+        config.caas.openapiUrl = openapiUrl
+      }
+      this.skipOpenApiTests = !openapiUrl
       this.skipTestsRequiringCaasIds = !userId || !accountId
       this.skipTestsRequiringRegularTransactionsAccount = !regularTransactionsAccount
       this.skipTestsRequiringEnhancedTransactions = !shouldTestEnhancedTransactions

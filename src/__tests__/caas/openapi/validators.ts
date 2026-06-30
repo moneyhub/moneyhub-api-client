@@ -4,8 +4,31 @@ import addFormats from "ajv-formats"
 
 type Schema = Record<string, any>
 
-// Recursively strips `additionalProperties: false` (incompatible with allOf in Swagger 2.0)
-// and converts `x-nullable: true` to a union type so Ajv accepts null values.
+const COMPONENTS_SCHEMA_PREFIX = "#/components/schemas/"
+const DEFINITIONS_PREFIX = "#/definitions/"
+
+export function getSchemaDefinitions(spec: Schema): Schema {
+  return spec.components?.schemas ?? {}
+}
+
+function normalizeComponentRefs(obj: unknown): unknown {
+  if (obj == null) return obj
+  if (Array.isArray(obj)) return obj.map(normalizeComponentRefs)
+  if (typeof obj !== "object") return obj
+
+  return Object.entries(obj).reduce<Schema>((acc, [key, value]) => {
+    if (key === "$ref" && typeof value === "string" && value.startsWith(COMPONENTS_SCHEMA_PREFIX)) {
+      acc[key] = `${DEFINITIONS_PREFIX}${value.slice(COMPONENTS_SCHEMA_PREFIX.length)}`
+      return acc
+    }
+
+    acc[key] = normalizeComponentRefs(value)
+    return acc
+  }, {})
+}
+
+// Recursively strips `additionalProperties: false` (incompatible with allOf in OpenAPI 3)
+// and converts `nullable` / `x-nullable: true` to a union type so Ajv accepts null values.
 export function preprocessSchema(obj: unknown): unknown {
   if (obj == null) return obj
   if (Array.isArray(obj)) return obj.map(preprocessSchema)
@@ -14,6 +37,7 @@ export function preprocessSchema(obj: unknown): unknown {
   const result = Object.entries(obj)
     .filter(([key, value]) => {
       if (key === "additionalProperties" && value === false) return false
+      if (key === "multipleOf") return false
       return true
     })
     .reduce<Schema>((acc, [key, value]) => {
@@ -21,7 +45,7 @@ export function preprocessSchema(obj: unknown): unknown {
       return acc
     }, {})
 
-  if (result["x-nullable"] === true) {
+  if (result["x-nullable"] === true || result.nullable === true) {
     return makeNullable(result)
   }
 
@@ -31,6 +55,7 @@ export function preprocessSchema(obj: unknown): unknown {
 function makeNullable(schema: Schema): Schema {
   const rest = {...schema}
   delete rest["x-nullable"]
+  delete rest.nullable
 
   const withEnum = Array.isArray(rest.enum) && !rest.enum.includes(null)
     ? {...rest, enum: [...rest.enum, null]}
@@ -51,12 +76,15 @@ function makeNullable(schema: Schema): Schema {
 
 function compileSchema(rawSchema: unknown, spec: Schema): ValidateFunction {
   const definitions = Object.fromEntries(
-    Object.entries(spec.definitions ?? {}).map(([key, val]) => [key, preprocessSchema(val)]),
+    Object.entries(getSchemaDefinitions(spec)).map(([key, val]) => [
+      key,
+      normalizeComponentRefs(preprocessSchema(val)),
+    ]),
   )
 
   return addFormats(new Ajv({strict: false, allErrors: true})).compile({
     definitions,
-    allOf: [preprocessSchema(rawSchema)],
+    allOf: [normalizeComponentRefs(preprocessSchema(rawSchema))],
   })
 }
 
@@ -69,25 +97,13 @@ function getOperation(spec: Schema, endpoint: string, method: string): Schema {
   return operation
 }
 
-function resolveParamRef(spec: Schema, param: Schema): Schema {
-  if (param.$ref) {
-    const key = param.$ref.replace("#/parameters/", "")
-    return spec.parameters?.[key] ?? param
-  }
-  return param
-}
-
 function getBodySchema(
   spec: Schema,
   endpoint: string,
   method: string,
 ): Schema | undefined {
   const operation = getOperation(spec, endpoint, method)
-  const params: Schema[] = (operation.parameters ?? []).map((p: Schema) =>
-    resolveParamRef(spec, p),
-  )
-  const bodyParam = params.find((p) => p.in === "body")
-  return bodyParam?.schema
+  return operation.requestBody?.content?.["application/json"]?.schema
 }
 
 function getResponseSchema(
@@ -97,7 +113,7 @@ function getResponseSchema(
   statusCode: string,
 ): Schema | undefined {
   const operation = getOperation(spec, endpoint, method)
-  return operation.responses?.[statusCode]?.schema
+  return operation.responses?.[statusCode]?.content?.["application/json"]?.schema
 }
 
 // -- Error formatting -- //
@@ -137,7 +153,7 @@ function formatSingleError(error: Schema, data?: unknown): string {
   const errorPath = getErrorPath(error)
   const location = errorPath ? `at "${errorPath}"` : "at root"
 
-  let line = `- ${location}: swagger states: ${error.message}`
+  let line = `- ${location}: OpenAPI states: ${error.message}`
   if (data !== undefined) {
     line += `, received ${describeValue(getValueAtPath(data, errorPath))}`
   }
@@ -182,7 +198,7 @@ export function createResponseValidator(
   return schema ? compileSchema(schema, spec) : null
 }
 
-export function assertMatchesSwagger(
+export function assertMatchesOpenApi(
   validate: ValidateFunction,
   data: unknown,
   label: string,
@@ -190,7 +206,7 @@ export function assertMatchesSwagger(
   const valid = validate(data)
   if (!valid) {
     throw new Error(
-      `${label} does not match swagger schema (TypeScript types may be out of sync):\n${formatErrors(validate, data)}`,
+      `${label} does not match OpenAPI schema (TypeScript types may be out of sync):\n${formatErrors(validate, data)}`,
     )
   }
 }

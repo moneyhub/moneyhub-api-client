@@ -4,11 +4,11 @@ import {expect} from "chai"
 import {Moneyhub, MoneyhubInstance} from "../.."
 import type {CaasTransactionSplitBody} from "../../requests/caas/types/transaction-splits"
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createRequestValidator,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
+  assertMatchesOpenApi,
+} from "./openapi"
 
 const SPLITS_PATH = "/accounts/{accountId}/transactions/{transactionId}/splits"
 
@@ -19,7 +19,7 @@ describe("PUT /accounts/{accountId}/transactions/{transactionId}/splits", functi
     moneyhub = await Moneyhub(this.config)
   })
 
-  describe("upserts splits and validates against swagger schema", function() {
+  describe("upserts splits and validates against OpenAPI schema", function() {
     this.timeout(30000)
 
     let response: Awaited<ReturnType<typeof moneyhub.caasPutTransactionSplits>>
@@ -28,7 +28,7 @@ describe("PUT /accounts/{accountId}/transactions/{transactionId}/splits", functi
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
@@ -48,11 +48,11 @@ describe("PUT /accounts/{accountId}/transactions/{transactionId}/splits", functi
         splits: requestBody.data,
       })
 
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const reqValidator = createRequestValidator(spec, SPLITS_PATH, "put")
       const resValidator = createResponseValidator(spec, SPLITS_PATH, "put", "200")
       if (!reqValidator || !resValidator) {
-        throw new Error(`Swagger schema missing for PUT ${SPLITS_PATH}`)
+        throw new Error(`OpenAPI schema missing for PUT ${SPLITS_PATH}`)
       }
       validateRequest = reqValidator
       validateResponse = resValidator
@@ -69,12 +69,12 @@ describe("PUT /accounts/{accountId}/transactions/{transactionId}/splits", functi
       await moneyhub.caasDeleteTransactionSplits({accountId, transactionId})
     })
 
-    it("request payload matches swagger TransactionSplitPut schema", function() {
-      assertMatchesSwagger(validateRequest, requestBody, "Request body")
+    it("request payload matches OpenAPI TransactionSplitPut schema", function() {
+      assertMatchesOpenApi(validateRequest, requestBody, "Request body")
     })
 
-    it("response matches swagger 200 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 200 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("response contains the upserted splits", function() {

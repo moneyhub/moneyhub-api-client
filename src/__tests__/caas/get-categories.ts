@@ -4,11 +4,11 @@ import {expect} from "chai"
 import {Moneyhub, MoneyhubInstance} from "../.."
 
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
-import {assertTypeMatchesSwagger} from "./typescript-validator"
+  assertMatchesOpenApi,
+} from "./openapi"
+import {assertTypeMatchesOpenApi} from "./typescript-validator"
 
 const TYPES_FILE = "../../../requests/caas/types/categories.ts"
 
@@ -19,27 +19,27 @@ describe("GET /categories", function() {
     moneyhub = await Moneyhub(this.config)
   })
 
-  describe("fetches categories and validates against swagger schema", function() {
+  describe("fetches categories and validates against OpenAPI schema", function() {
     this.timeout(30000)
 
     let response: Awaited<ReturnType<typeof moneyhub.caasGetCategories>>
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipSwaggerTests) {
+      if (this.skipOpenApiTests) {
         this.skip()
       }
 
       response = await moneyhub.caasGetCategories()
 
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const resValidator = createResponseValidator(spec, "/categories", "get", "200")
-      if (!resValidator) throw new Error("Swagger schema missing for GET /categories")
+      if (!resValidator) throw new Error("OpenAPI schema missing for GET /categories")
       validateResponse = resValidator
     })
 
-    it("response matches swagger 200 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 200 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("response contains at least the known catalogue of categories", function() {
@@ -69,20 +69,21 @@ describe("GET /categories", function() {
     })
   })
 
-  describe("TypeScript types match swagger definitions", function() {
+  describe("TypeScript types match OpenAPI schemas", function() {
     this.timeout(30000)
 
-    let spec: Awaited<ReturnType<typeof fetchSwaggerSpec>>
+    let spec: Awaited<ReturnType<typeof fetchOpenApiSpec>>
 
     before(async function() {
-      if (this.skipSwaggerTests) {
+      if (this.skipOpenApiTests) {
         this.skip()
       }
-      spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+
+      spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
     })
 
-    it("CaasCategory matches swagger Category definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasCategory", tsFile: TYPES_FILE, swaggerDefinitionName: "CategoryResponse", spec})
+    it("CaasCategory matches OpenAPI Category definition", function() {
+      assertTypeMatchesOpenApi({tsType: "CaasCategory", tsFile: TYPES_FILE, openApiSchemaName: "CategoryResponse", spec})
     })
   })
 })

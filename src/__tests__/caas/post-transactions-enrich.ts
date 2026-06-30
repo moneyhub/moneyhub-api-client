@@ -4,12 +4,12 @@ import {expect} from "chai"
 import {Moneyhub, MoneyhubInstance} from "../.."
 import type {CaasTransactionInput} from "../../requests/caas/types/transactions"
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createRequestValidator,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
-import {assertTypeMatchesSwagger} from "./typescript-validator"
+  assertMatchesOpenApi,
+} from "./openapi"
+import {assertTypeMatchesOpenApi} from "./typescript-validator"
 
 const TYPES_FILE = "../../../requests/caas/types/transactions.ts"
 
@@ -20,7 +20,7 @@ describe("POST /transactions/enrich", function() {
     moneyhub = await Moneyhub(this.config)
   })
 
-  describe("enriches transactions and validates against swagger schema", function() {
+  describe("enriches transactions and validates against OpenAPI schema", function() {
     this.timeout(30000)
 
     let response: Awaited<ReturnType<typeof moneyhub.caasEnrichTransactions>>
@@ -29,7 +29,7 @@ describe("POST /transactions/enrich", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
@@ -69,20 +69,20 @@ describe("POST /transactions/enrich", function() {
 
       response = await moneyhub.caasEnrichTransactions({transactions: transactionsPayload})
 
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const reqValidator = createRequestValidator(spec, "/transactions/enrich", "post")
       const resValidator = createResponseValidator(spec, "/transactions/enrich", "post", "201")
-      if (!reqValidator || !resValidator) throw new Error("Swagger schema missing for POST /transactions/enrich")
+      if (!reqValidator || !resValidator) throw new Error("OpenAPI schema missing for POST /transactions/enrich")
       validateRequest = reqValidator
       validateResponse = resValidator
     })
 
-    it("request payload matches swagger TransactionPost schema", function() {
-      assertMatchesSwagger(validateRequest, transactionsPayload, "Request body")
+    it("request payload matches OpenAPI TransactionPost schema", function() {
+      assertMatchesOpenApi(validateRequest, transactionsPayload, "Request body")
     })
 
-    it("response matches swagger 201 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 201 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("response contains enriched transactions", function() {
@@ -114,24 +114,25 @@ describe("POST /transactions/enrich", function() {
     })
   })
 
-  describe("TypeScript types match swagger definitions", function() {
+  describe("TypeScript types match OpenAPI schemas", function() {
     this.timeout(30000)
 
-    let spec: Awaited<ReturnType<typeof fetchSwaggerSpec>>
+    let spec: Awaited<ReturnType<typeof fetchOpenApiSpec>>
 
     before(async function() {
-      if (this.skipSwaggerTests) {
+      if (this.skipOpenApiTests) {
         this.skip()
       }
-      spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+
+      spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
     })
 
-    it("CaasTransactionInput matches swagger TransactionPost definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasTransactionInput", tsFile: TYPES_FILE, swaggerDefinitionName: "TransactionPost", spec})
+    it("CaasTransactionInput matches OpenAPI TransactionPost definition", function() {
+      assertTypeMatchesOpenApi({tsType: "CaasTransactionInput", tsFile: TYPES_FILE, openApiSchemaName: "TransactionPost", spec})
     })
 
-    it("CaasTransaction matches swagger EnrichedTransaction definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasTransaction", tsFile: TYPES_FILE, swaggerDefinitionName: "EnrichedTransaction", spec})
+    it("CaasTransaction matches OpenAPI EnrichedTransaction definition", function() {
+      assertTypeMatchesOpenApi({tsType: "CaasTransaction", tsFile: TYPES_FILE, openApiSchemaName: "EnrichedTransaction", spec})
     })
   })
 })

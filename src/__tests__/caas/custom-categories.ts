@@ -4,11 +4,11 @@ import {randomUUID} from "crypto"
 
 import {Moneyhub, MoneyhubInstance} from "../.."
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createRequestValidator,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
+  assertMatchesOpenApi,
+} from "./openapi"
 
 const LIST_PATH = "/users/{userId}/custom-categories"
 const DELETE_PATH = "/users/{userId}/custom-categories/{categoryId}"
@@ -31,7 +31,7 @@ describe("/users/{userId}/custom-categories", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
@@ -44,11 +44,11 @@ describe("/users/{userId}/custom-categories", function() {
         customCategoryName: requestBody.customCategoryName,
       })
 
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const reqValidator = createRequestValidator(spec, LIST_PATH, "post")
       const resValidator = createResponseValidator(spec, LIST_PATH, "post", "201")
       if (!reqValidator || !resValidator) {
-        throw new Error(`Swagger schema missing for POST ${LIST_PATH}`)
+        throw new Error(`OpenAPI schema missing for POST ${LIST_PATH}`)
       }
       validateRequest = reqValidator
       validateResponse = resValidator
@@ -66,12 +66,12 @@ describe("/users/{userId}/custom-categories", function() {
       })
     })
 
-    it("request payload matches swagger CustomCategoryPost schema", function() {
-      assertMatchesSwagger(validateRequest, requestBody, "Request body")
+    it("request payload matches OpenAPI CustomCategoryPost schema", function() {
+      assertMatchesOpenApi(validateRequest, requestBody, "Request body")
     })
 
-    it("response matches swagger 201 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 201 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("response contains the created custom category", function() {
@@ -89,7 +89,7 @@ describe("/users/{userId}/custom-categories", function() {
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
@@ -101,10 +101,10 @@ describe("/users/{userId}/custom-categories", function() {
 
       response = await moneyhub.caasGetCustomCategories({userId})
 
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const resValidator = createResponseValidator(spec, LIST_PATH, "get", "200")
       if (!resValidator) {
-        throw new Error(`Swagger schema missing for GET ${LIST_PATH}`)
+        throw new Error(`OpenAPI schema missing for GET ${LIST_PATH}`)
       }
       validateResponse = resValidator
     })
@@ -118,8 +118,8 @@ describe("/users/{userId}/custom-categories", function() {
       await moneyhub.caasDeleteCustomCategory({userId, categoryId: createdCategoryId})
     })
 
-    it("response matches swagger 200 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 200 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("returns the created custom category in the list", function() {
@@ -136,7 +136,7 @@ describe("/users/{userId}/custom-categories", function() {
     let notFoundError: unknown
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
@@ -164,19 +164,19 @@ describe("/users/{userId}/custom-categories", function() {
     })
   })
 
-  describe("validates DELETE path exists in swagger", function() {
+  describe("validates DELETE path exists in OpenAPI", function() {
     this.timeout(30000)
 
     before(function() {
-      if (this.skipSwaggerTests) {
+      if (this.skipOpenApiTests) {
         this.skip()
       }
     })
 
     it("has a 204 response defined for DELETE", async function() {
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const path = spec.paths?.[DELETE_PATH]
-      expect(path, `Swagger missing path ${DELETE_PATH}`).to.not.equal(undefined)
+      expect(path, `OpenAPI missing path ${DELETE_PATH}`).to.not.equal(undefined)
       expect(path.delete?.responses).to.have.property("204")
     })
   })

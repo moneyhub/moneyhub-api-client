@@ -3,11 +3,11 @@ import {expect} from "chai"
 
 import {Moneyhub, MoneyhubInstance} from "../.."
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
-import {assertTypeMatchesSwagger} from "./typescript-validator"
+  assertMatchesOpenApi,
+} from "./openapi"
+import {assertTypeMatchesOpenApi} from "./typescript-validator"
 
 const TYPES_FILE = "../../../requests/caas/types/regular-transactions.ts"
 
@@ -15,30 +15,31 @@ describe("GET /accounts/{accountId}/regular-transactions", function() {
   this.timeout(30000)
 
   let moneyhub: MoneyhubInstance
-  let spec: Awaited<ReturnType<typeof fetchSwaggerSpec>>
+  let spec: Awaited<ReturnType<typeof fetchOpenApiSpec>>
 
   before(async function() {
-    if (this.skipSwaggerTests) {
+    if (this.skipOpenApiTests) {
       this.skip()
     }
-    spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+
+    spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
     moneyhub = await Moneyhub(this.config)
   })
 
-  describe("swagger schema", function() {
+  describe("OpenAPI schema", function() {
     it("has a compilable 200 response schema", function() {
       const validateResponse = createResponseValidator(spec, "/accounts/{accountId}/regular-transactions", "get", "200")
-      expect(validateResponse, "Swagger schema missing for GET /accounts/{accountId}/regular-transactions").to.exist
+      expect(validateResponse, "OpenAPI schema missing for GET /accounts/{accountId}/regular-transactions").to.exist
     })
   })
 
-  describe("TypeScript types match swagger definitions", function() {
-    it("CaasRegularTransaction matches swagger RegularTransaction definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasRegularTransaction", tsFile: TYPES_FILE, swaggerDefinitionName: "RegularTransaction", spec})
+  describe("TypeScript types match OpenAPI schemas", function() {
+    it("CaasRegularTransaction matches OpenAPI RegularTransaction definition", function() {
+      assertTypeMatchesOpenApi({tsType: "CaasRegularTransaction", tsFile: TYPES_FILE, openApiSchemaName: "RegularTransaction", spec})
     })
   })
 
-  describe("fetches regular transactions and validates against swagger schema", function() {
+  describe("fetches regular transactions and validates against OpenAPI schema", function() {
     let response: Awaited<ReturnType<typeof moneyhub.caasGetRegularTransactions>>
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
@@ -51,12 +52,12 @@ describe("GET /accounts/{accountId}/regular-transactions", function() {
       response = await moneyhub.caasGetRegularTransactions({accountId: regularTransactionsAccount})
 
       const resValidator = createResponseValidator(spec, "/accounts/{accountId}/regular-transactions", "get", "200")
-      if (!resValidator) throw new Error("Swagger schema missing for GET /accounts/{accountId}/regular-transactions")
+      if (!resValidator) throw new Error("OpenAPI schema missing for GET /accounts/{accountId}/regular-transactions")
       validateResponse = resValidator
     })
 
-    it("response matches swagger 200 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 200 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("every returned regular transaction belongs to the requested account", function() {

@@ -3,11 +3,11 @@ import {expect} from "chai"
 
 import {Moneyhub, MoneyhubInstance} from "../.."
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
-import {assertTypeMatchesSwagger} from "./typescript-validator"
+  assertMatchesOpenApi,
+} from "./openapi"
+import {assertTypeMatchesOpenApi} from "./typescript-validator"
 
 const TYPES_FILE = "../../../requests/caas/types/enhanced-transactions.ts"
 
@@ -15,30 +15,31 @@ describe("GET /accounts/{accountId}/transactions/{transactionId}/enhanced", func
   this.timeout(30000)
 
   let moneyhub: MoneyhubInstance
-  let spec: Awaited<ReturnType<typeof fetchSwaggerSpec>>
+  let spec: Awaited<ReturnType<typeof fetchOpenApiSpec>>
 
   before(async function() {
-    if (this.skipSwaggerTests) {
+    if (this.skipOpenApiTests) {
       this.skip()
     }
-    spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+
+    spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
     moneyhub = await Moneyhub(this.config)
   })
 
-  describe("swagger schema", function() {
+  describe("OpenAPI schema", function() {
     it("has a compilable 200 response schema", function() {
       const validateResponse = createResponseValidator(spec, "/accounts/{accountId}/transactions/{transactionId}/enhanced", "get", "200")
-      expect(validateResponse, "Swagger schema missing for GET /accounts/{accountId}/transactions/{transactionId}/enhanced").to.exist
+      expect(validateResponse, "OpenAPI schema missing for GET /accounts/{accountId}/transactions/{transactionId}/enhanced").to.exist
     })
   })
 
-  describe("TypeScript types match swagger definitions", function() {
-    it("CaasEnhancedTransaction matches swagger EnhancedLocationData definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasEnhancedTransaction", tsFile: TYPES_FILE, swaggerDefinitionName: "EnhancedLocationData", spec})
+  describe("TypeScript types match OpenAPI schemas", function() {
+    it("CaasEnhancedTransaction matches OpenAPI EnhancedLocationData definition", function() {
+      assertTypeMatchesOpenApi({tsType: "CaasEnhancedTransaction", tsFile: TYPES_FILE, openApiSchemaName: "EnhancedLocationData", spec})
     })
   })
 
-  describe("fetches an enhanced transaction and validates against swagger schema", function() {
+  describe("fetches an enhanced transaction and validates against OpenAPI schema", function() {
     let response: Awaited<ReturnType<typeof moneyhub.caasGetEnhancedTransaction>>
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
@@ -53,12 +54,12 @@ describe("GET /accounts/{accountId}/transactions/{transactionId}/enhanced", func
       response = await moneyhub.caasGetEnhancedTransaction({accountId, transactionId})
 
       const resValidator = createResponseValidator(spec, "/accounts/{accountId}/transactions/{transactionId}/enhanced", "get", "200")
-      if (!resValidator) throw new Error("Swagger schema missing for GET /accounts/{accountId}/transactions/{transactionId}/enhanced")
+      if (!resValidator) throw new Error("OpenAPI schema missing for GET /accounts/{accountId}/transactions/{transactionId}/enhanced")
       validateResponse = resValidator
     })
 
-    it("response matches swagger 200 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 200 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("response is for the requested transaction", function() {

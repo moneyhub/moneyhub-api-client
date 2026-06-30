@@ -4,11 +4,11 @@ import {expect} from "chai"
 import {Moneyhub, MoneyhubInstance} from "../.."
 
 import {
-  fetchSwaggerSpec,
+  fetchOpenApiSpec,
   createResponseValidator,
-  assertMatchesSwagger,
-} from "./swagger"
-import {assertTypeMatchesSwagger} from "./typescript-validator"
+  assertMatchesOpenApi,
+} from "./openapi"
+import {assertTypeMatchesOpenApi} from "./typescript-validator"
 
 const TYPES_FILE = "../../../requests/caas/types/transactions.ts"
 
@@ -19,27 +19,27 @@ describe("GET /geotags", function() {
     moneyhub = await Moneyhub(this.config)
   })
 
-  describe("fetches geotags and validates against swagger schema", function() {
+  describe("fetches geotags and validates against OpenAPI schema", function() {
     this.timeout(30000)
 
     let response: Awaited<ReturnType<typeof moneyhub.caasGetGeotags>>
     let validateResponse: NonNullable<ReturnType<typeof createResponseValidator>>
 
     before(async function() {
-      if (this.skipTestsRequiringCaasIds || this.skipSwaggerTests) {
+      if (this.skipTestsRequiringCaasIds || this.skipOpenApiTests) {
         this.skip()
       }
 
       response = await moneyhub.caasGetGeotags({geotagIds: this.geotagIds})
 
-      const spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+      const spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
       const resValidator = createResponseValidator(spec, "/geotags", "get", "200")
-      if (!resValidator) throw new Error("Swagger schema missing for GET /geotags")
+      if (!resValidator) throw new Error("OpenAPI schema missing for GET /geotags")
       validateResponse = resValidator
     })
 
-    it("response matches swagger 200 schema", function() {
-      assertMatchesSwagger(validateResponse, response, "Response")
+    it("response matches OpenAPI 200 schema", function() {
+      assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
     it("response contains the requested geotags", function() {
@@ -61,20 +61,21 @@ describe("GET /geotags", function() {
     })
   })
 
-  describe("TypeScript types match swagger definitions", function() {
+  describe("TypeScript types match OpenAPI schemas", function() {
     this.timeout(30000)
 
-    let spec: Awaited<ReturnType<typeof fetchSwaggerSpec>>
+    let spec: Awaited<ReturnType<typeof fetchOpenApiSpec>>
 
     before(async function() {
-      if (this.skipSwaggerTests) {
+      if (this.skipOpenApiTests) {
         this.skip()
       }
-      spec = await fetchSwaggerSpec(this.config.caas.swaggerUrl)
+
+      spec = await fetchOpenApiSpec(this.config.caas.openapiUrl)
     })
 
-    it("CaasGeotag matches swagger Geotag definition", function() {
-      assertTypeMatchesSwagger({tsType: "CaasGeotag", tsFile: TYPES_FILE, swaggerDefinitionName: "Geotag", spec})
+    it("CaasGeotag matches OpenAPI Geotag definition", function() {
+      assertTypeMatchesOpenApi({tsType: "CaasGeotag", tsFile: TYPES_FILE, openApiSchemaName: "Geotag", spec})
     })
   })
 })
