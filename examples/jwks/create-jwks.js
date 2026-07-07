@@ -1,6 +1,7 @@
 // 1st step is to create jwks with - node examples/jwks/create-jwks.js --alg RS256 --key-use sig --key-size 2048
 // paste public keys in admin portal (under the client) and private keys in the api client configuration - moneyhub-api-client/examples/config.js
 // node examples/token/get-client-credential-token.js -s "scim_user:read”
+// npx ts-node examples/token/get-client-credential-token.js -u {userId of user} -s widget_authentication
 
 const commandLineArgs = require("command-line-args")
 const commandLineUsage = require("command-line-usage")
