@@ -1,33 +1,20 @@
-// const config = {
-//   resourceServerUrl: "https://api.moneyhub.co.uk/v3",
-//   identityServiceUrl: "https://identity.moneyhub.co.uk",
-//   accountConnectUrl: "https://bank-chooser.moneyhub.co.uk/account-connect.js",
-//   client: {
-//     client_id: "your client id",
-//     client_secret: "your client secret",
-//     token_endpoint_auth_method: "client_secret_basic",
-//     id_token_signed_response_alg: "RS256",
-//     request_object_signing_alg: "none",
-//     redirect_uri: "https://your-redirect-uri",
-//     response_type: "code",
-//     keys: [
+// Local dev only: the mh-environment nginx proxy uses a self-signed cert.
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0";
 
-//       /* your jwks */
-//     ],
-//   },
-// }
+const { Moneyhub } = require("../../src/index");
 
-const localConfgFromCursor /* config */ = {
+const config2 = {
   resourceServerUrl: "https://apigateway.dev.127.0.0.1.nip.io/v3",
   identityServiceUrl: "https://identity.dev.127.0.0.1.nip.io",
-  accountConnectUrl: "https://bank-chooser.moneyhub.co.uk/account-connect.js",
   client: {
-    client_id: "e4212dea-8f31-4fad-8a28-e020edb4de87",
-    client_secret: "bc5d69c5-928b-4c74-bb96-cc5d6a9e51dc",
+    client_id: "0a875ff0-b480-435f-ace9-a34a28da19fa",
+    client_secret: "9041953d-19ae-412a-bcc9-c963d32b6312",
     token_endpoint_auth_method: "client_secret_basic",
     id_token_signed_response_alg: "RS256",
-    request_object_signing_alg: "none",
-    redirect_uri: "http://127.0.0.1.nip.io:8082",
+    request_object_signing_alg: "HS256",
+    // Non-redirecting URI: identity 404s this path, so the browser stays put
+    // with ?code=...&state=foo visible in the address bar (no admin-portal/Auth0).
+    redirect_uri: "https://identity.dev.127.0.0.1.nip.io/dev-callback",
     response_type: "code",
     keys: [],
   },
@@ -42,7 +29,7 @@ const config = {
     client_secret: "c9e40d98-d6f3-4815-9ebd-0b64ec55c33f",
     token_endpoint_auth_method: "private_key_jwt",
     id_token_signed_response_alg: "RS256",
-    request_object_signing_alg: "none",
+    request_object_signing_alg: "RS256",
     redirect_uri: "https://invite.moneyhub.co.uk/api/callback",
     response_type: "code id_token",
     keys: [
@@ -64,4 +51,45 @@ const config = {
   },
 };
 
-module.exports = config;
+const start = async () => {
+  try {
+    const moneyhub = await Moneyhub(config);
+    const url = await moneyhub.getRecurringPaymentAuthorizeUrl({
+      bankId: "ec6c9a9d1c152056ea6a018b37a56daf",
+      payee: {
+        name: "James Allen",
+        accountNumber: "03711345",
+        sortCode: "040004",
+      },
+      reference: "CVRP test",
+      maximumIndividualAmount: 1000,
+      currency: "GBP",
+      periodicLimits: [
+        {
+          amount: 5000,
+          currency: "GBP",
+          periodType: "Month",
+          periodAlignment: "Consent",
+        },
+      ],
+      // Commercial VRP. identity accepts this via additionalRecurringPaymentTypes;
+      // the mock-bank oauth-provider instance maps cvrp -> providerCvrpType and
+      // replaces Risk with providerCvrpRiskOverride.
+      type: "cvrp",
+      context: "PartyToParty",
+      state: "foo",
+      nonce: "bar",
+    });
+    console.log("CONSENT URL:\n" + url);
+  } catch (e) {
+    console.error("statusCode:", e.response && e.response.statusCode);
+    const body = e.response && e.response.body;
+    console.error(
+      "body:",
+      typeof body === "string" ? body : JSON.stringify(body, null, 2),
+    );
+    if (!e.response) console.error("raw:", e.message || e);
+  }
+};
+
+start();
