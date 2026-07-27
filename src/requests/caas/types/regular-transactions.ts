@@ -25,7 +25,7 @@ export interface CaasRegularTransactionLine {
   cleanedDescription: string
   txCode?: string | null
   cardPresent?: boolean | null
-  analysisCategory?: string | null
+  l3CounterpartyCategory?: string | null
 }
 
 export interface CaasRegularTransaction {
@@ -37,8 +37,6 @@ export interface CaasRegularTransaction {
   frequency: CaasRegularTransactionFrequency
   description: string
   cleanedDescription: string
-  matchMethod: string
-  stitched: boolean
   numTxMatchedInSeries: number
   gapLengthInFreqUnits: number
   dateAnomaliesCount: number
@@ -47,16 +45,14 @@ export interface CaasRegularTransaction {
   predictedDate: string
   predictedDateEarliest?: string | null
   predictedDateLatest?: string | null
-  predictedDateMethod: string
   predictedTxLateOrNotDetected?: boolean | null
   predictedAmount: number | null
   predictedAmountLower?: number | null
   predictedAmountUpper?: number | null
-  predictedAmountMethod: string
   currency?: string | null
   counterpartyId?: string | null
-  predictedCategoryId: string
-  analysisCategory?: string | null
+  l3CounterpartyCategory?: string | null
+  predictedCategoryId: string | null
   transactions: CaasRegularTransactionLine[]
 }
 

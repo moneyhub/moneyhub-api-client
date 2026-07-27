@@ -85,6 +85,15 @@ describe("POST /transactions/enrich", function() {
       assertMatchesOpenApi(validateResponse, response, "Response")
     })
 
+    it("response meta uses TransactionsEnrichResponseMeta shape", function() {
+      expect(response.meta).to.exist
+      expect(response.meta).to.have.property("correlationId").that.is.a("string")
+
+      if (response.meta.errorTransactionIds !== undefined) {
+        expect(response.meta.errorTransactionIds).to.be.an("array")
+      }
+    })
+
     it("response contains enriched transactions", function() {
       expect(response.data).to.be.an("array").with.length.above(0)
     })

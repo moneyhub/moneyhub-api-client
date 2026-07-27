@@ -320,8 +320,9 @@ export function findSchemaErrors({
     openApi: openApiDefinitions,
   }
 
+  const resolvedTs = resolveToObject(tsSchema, definitions.ts)
   const resolvedOpenApi = resolveToObject(openApiSchema, openApiDefinitions)
-  const ts = propsFromSchema(tsSchema)
+  const ts = propsFromSchema(resolvedTs)
   const openApi = propsFromSchema(resolvedOpenApi)
 
   const allFields = collectFieldPairs({

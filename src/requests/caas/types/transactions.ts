@@ -6,14 +6,12 @@ import type {
   CaasL2CategoryId,
   CaasL2CategoryName,
 } from "./categories"
+import type {CaasTransactionsEnrichResponseMeta} from "./response-meta"
 import type {CaasTransactionSplit} from "./transaction-splits"
 
 export interface CaasEnrichTransactionsResponse {
   data: CaasTransaction[]
-  meta: {
-    errorTransactionIds: string[]
-    correlationId: string
-  }
+  meta: CaasTransactionsEnrichResponseMeta
 }
 
 export type CaasAccountType =

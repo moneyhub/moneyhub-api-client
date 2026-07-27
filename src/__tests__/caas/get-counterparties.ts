@@ -49,6 +49,12 @@ describe("GET /counterparties", function() {
       )
     })
 
+    it("response meta uses standard ResponseMeta shape", function() {
+      expect(response.meta).to.exist
+      expect(response.meta).to.have.property("correlationId").that.is.a("string")
+      expect(response.meta).not.to.have.property("errorTransactionIds")
+    })
+
     it("response contains the seeded counterparties", function() {
       const returnedIds = response.data.map((c) => c.l3CounterpartyId)
 
