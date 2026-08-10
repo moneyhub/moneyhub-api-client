@@ -66,6 +66,17 @@ export default ({
         options,
       }),
 
+    postAccountBalance: async ({userId, accountId, balance}, options) =>
+      request(`${resourceServerUrl}/accounts/${accountId}/balances`, {
+        method: "POST",
+        cc: {
+          scope: "accounts:read accounts:write:all",
+          sub: userId,
+        },
+        options,
+        body: balance,
+      }),
+
     getAccountWithDetails: async ({userId, accountId}, options) =>
       request(`${resourceServerUrl}/accounts/${accountId}`, {
         cc: {
