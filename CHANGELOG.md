@@ -1,9 +1,34 @@
+7.0.0 / 2026-08-14
+==========
+
+Major release: raises the Node.js engine to the current Active/LTS lines and upgrades tooling while remaining CommonJS.
+
+**Breaking Changes**
+
+* Node.js 18 is no longer supported; requires Node.js >= 20.20.0. (Node 12, 14, and 16 were already unsupported from 6.0.0.)
+* Validation errors that previously threw a generic `"Missing parameters"` (often after a `console.error`) now throw more specific messages (e.g. `"Missing parameters: State is required"`). Callers that matched on the exact old string should update.
+* Per-request retry options use nullish coalescing (`??`) instead of `||`, so falsy values such as `limit: 0` are respected rather than falling back to defaults.
+* TypeScript is upgraded to v6 with `module` / `moduleResolution: Node16` (runtime output remains CommonJS). Downstream TypeScript consumers may need matching resolution settings when consuming the shipped `.d.ts` files.
+
+**Dependency upgrades**
+
+* Remains CommonJS: **jose** stays on v5 (`^5.10.0`), **query-string** on v7, **got** on v11, **openid-client** on v5 (later majors are ESM-only).
+* **TypeScript** upgraded to v6; **ESLint** upgraded to v9 (flat config).
+* **form-data** ^3.0.5 → ^4.0.5; **ramda** ^0.27.2 → ^0.32.0 (named imports).
+* Dev dependencies: **@mft/eslint-config-momentumft**, mocha, husky 9, express 5, and related tooling updated.
+
+**Tooling and development**
+
+* Added `.nvmrc` (Node 20).
+* Husky 9 hooks (no `_/husky.sh` wrapper).
+
 6.100.1 / 2026-08-18
 ==========
 
 **Bug Fixes**
 
 * Correct documentation and packaging hygiene ahead of 7.x: publish readme wording, endpoint coverage method names and test scripts, readme API examples, prerequisites URL, missing method docs (`accVerification`, `getPayee`, `getConsentHistory`, `confirmFundsForRecurringPayment`), CHANGELOG 6.99.0 phantom entry, package author typo, and `.npmignore` exclusions for `dist/__tests__` and env files.
+
 
 6.100.0 / 2026-08-14
 ==========

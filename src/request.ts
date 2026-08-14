@@ -1,7 +1,7 @@
 import got, {Options, Headers, OptionsOfJSONResponseBody, Method, Agents} from "got"
 import {Client} from "openid-client"
 import qs from "query-string"
-import * as R from "ramda"
+import {reject, isNil, pathOr, pipe, split, insert, join, assoc, mergeDeepRight} from "ramda"
 
 import {rewriteResourceServerResponseUrls, inferCanonicalBaseFromLinkUrl} from "./discovery"
 import type {ApiClientConfig, MutualTLSOptions} from "./schema/config"
@@ -90,7 +90,20 @@ export interface ExtraOptions {
   retry?: RetryOptions
 }
 
-
+export interface RequestFactoryParams {
+  client: Client
+  options: {
+    timeout?: number
+    apiVersioning: boolean
+    agent?: Agents
+    mTLS?: MutualTLSOptions
+    retry?: RetryOptions
+  }
+  identityServiceUrl?: string
+  gatewayResourceServerUrl?: string
+  gatewayCaasResourceServerUrl?: string
+  gatewayOsipResourceServerUrl?: string
+}
 
 const getResponseBody = (err: unknown) => {
   let body: {
@@ -99,7 +112,7 @@ const getResponseBody = (err: unknown) => {
     details?: string
   } = {}
   try {
-    const {code, message, details} = JSON.parse(R.pathOr("{}", ["response", "body"], err))
+    const {code, message, details} = JSON.parse(pathOr("{}", ["response", "body"], err))
     body = {code, message, details: typeof details === "object" ? JSON.stringify(details) : details}
   } catch (e) {
     body = {}
@@ -138,73 +151,65 @@ export const addVersionToUrl = (
   identityServiceUrl?: string,
 ): string => {
   if (!apiVersioning || isIdentityServiceUrl(url, identityServiceUrl) || /\/v.+/g.test(url)) return url
-  const urlWithVersion = R.pipe(
-    R.split("/"), // split url [ "https:", "", "test.com", "path", "path2" ]
-    R.insert(3, String(version)), // insert and stringify version after domain
-    R.join("/"), // join url back together with slash
+  const urlWithVersion = pipe(
+    split("/"), // split url [ "https:", "", "test.com", "path", "path2" ]
+    insert(3, String(version)), // insert and stringify version after domain
+    join("/"), // join url back together with slash
   )(url)
 
   return urlWithVersion
 }
 
-const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {}) => {
-  return {
-    limit: requestOptions.retry?.limit || retry.limit || DEFAULT_RETRY_LIMIT,
-    methods: requestOptions.retry?.methods || retry.methods || DEFAULT_RETRY_METHODS,
-    statusCodes: requestOptions.retry?.statusCodes || retry.statusCodes || DEFAULT_RETRY_STATUS_CODES,
-    maxRetryAfter: requestOptions.retry?.maxRetryAfter || retry.maxRetryAfter || DEFAULT_MAX_RETRY_AFTER,
+const pickRetryValue = <K extends keyof RetryOptions>(
+  requestOptions: ExtraOptions,
+  retry: RetryOptions,
+  key: K,
+  defaultValue: NonNullable<RetryOptions[K]>,
+): NonNullable<RetryOptions[K]> =>
+  (requestOptions.retry?.[key] ?? retry[key] ?? defaultValue) as NonNullable<RetryOptions[K]>
+
+const getRetryOptions = (retry: RetryOptions, requestOptions: ExtraOptions = {}) => ({
+  limit: pickRetryValue(requestOptions, retry, "limit", DEFAULT_RETRY_LIMIT),
+  methods: pickRetryValue(requestOptions, retry, "methods", DEFAULT_RETRY_METHODS),
+  statusCodes: pickRetryValue(requestOptions, retry, "statusCodes", DEFAULT_RETRY_STATUS_CODES),
+  maxRetryAfter: pickRetryValue(requestOptions, retry, "maxRetryAfter", DEFAULT_MAX_RETRY_AFTER),
+})
+
+const applyAgent = (gotOpts: OptionsOfJSONResponseBody, agent?: Agents) => {
+  if (agent) {
+    (gotOpts as Options).agent = agent
   }
 }
 
 const normaliseBase = (url: string): string => url.replace(/\/$/, "")
 
-export default ({
-  client,
-  options: {timeout, apiVersioning, agent, mTLS, retry = {}},
-  identityServiceUrl,
-  gatewayResourceServerUrl,
-  gatewayCaasResourceServerUrl,
-  gatewayOsipResourceServerUrl,
-}: {
-  client: Client
-  options: {
-    timeout?: number
-    apiVersioning: boolean
-    agent?: Agents
-    mTLS?: MutualTLSOptions
-    retry?: RetryOptions
-  }
-  identityServiceUrl?: string
-  gatewayResourceServerUrl?: string
-  gatewayCaasResourceServerUrl?: string
-  gatewayOsipResourceServerUrl?: string
 // eslint-disable-next-line max-statements, complexity
-}) => async <T>(
+async function executeRequest<T>(
   url: string,
-  opts: RequestOptions = {},
-): Promise<T> => {
+  opts: RequestOptions,
+  params: RequestFactoryParams,
+): Promise<T> {
+  const {client, options: {timeout, apiVersioning, agent, mTLS, retry = {}}, identityServiceUrl, gatewayResourceServerUrl, gatewayCaasResourceServerUrl, gatewayOsipResourceServerUrl} = params
   const retryOptions = getRetryOptions(retry, opts.options)
 
   const gotOpts: OptionsOfJSONResponseBody = {
     method: opts.method || "GET",
     headers: opts.headers || {},
-    searchParams: opts.searchParams ? qs.stringify(R.reject(R.isNil)(opts.searchParams)) : undefined,
+    searchParams: opts.searchParams ? qs.stringify(reject(isNil)(opts.searchParams)) : undefined,
     timeout,
     retry: retryOptions,
   }
 
-  if (agent) {
-    (gotOpts as Options).agent = agent
-  }
+  applyAgent(gotOpts, agent)
 
   const formattedUrl = addVersionToUrl(url, apiVersioning, opts.options?.version, identityServiceUrl)
 
   if (opts.options?.token) {
-    gotOpts.headers = R.assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
+    gotOpts.headers = assoc("Authorization", `Bearer ${opts.options.token}`, gotOpts.headers)
   }
 
   if (opts.options?.headers) {
-    gotOpts.headers = R.mergeDeepRight(gotOpts.headers || {}, opts.options.headers) as Headers
+    gotOpts.headers = mergeDeepRight(gotOpts.headers || {}, opts.options.headers) as Headers
   }
 
   if (!gotOpts.headers?.Authorization && opts.cc) {
@@ -213,7 +218,7 @@ export default ({
       scope: opts.cc.scope,
       sub: opts.cc.sub,
     })
-    gotOpts.headers = R.assoc("Authorization", `Bearer ${access_token}`, gotOpts.headers)
+    gotOpts.headers = assoc("Authorization", `Bearer ${access_token}`, gotOpts.headers)
   }
 
   if (opts.body) {
@@ -262,3 +267,7 @@ export default ({
 
   return rewriteResourceServerResponseUrls(body, requestBase) as T
 }
+
+export default (params: RequestFactoryParams): Request =>
+  async <T>(url: string, opts: RequestOptions = {}): Promise<T> =>
+    executeRequest<T>(url, opts, params)

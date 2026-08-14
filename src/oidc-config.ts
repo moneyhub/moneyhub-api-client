@@ -12,6 +12,15 @@ const OIDC_CACHE_KEY = "oidc"
 const discoveryUrl = (identityServiceUrl: string): string =>
   identityServiceUrl.replace(/\/oidc\/?$/, "") + "/oidc/.well-known/openid-configuration"
 
+function rewriteDiscoveryIfGateway(
+  raw: Record<string, unknown>,
+  gatewayIdentityServiceUrl: string | undefined,
+  identityServiceUrl: string,
+): Record<string, unknown> {
+  if (!gatewayIdentityServiceUrl || !raw?.issuer || typeof raw.issuer !== "string") return raw
+  return rewriteDiscoveryDocForIdentityUrl(gatewayIdentityServiceUrl ?? identityServiceUrl, raw)
+}
+
 export interface GetOpenIdConfigParams {
   identityServiceUrl: string
 
@@ -24,7 +33,6 @@ export interface GetOpenIdConfigParams {
 /**
  * Creates a getOpenIdConfig function that fetches the OIDC discovery document with optional
  * URL rewriting for gateway use. Uses @isaacs/ttlcache for TTL-based caching when openIdConfigCacheTtlMs > 0.
- *
  * @param {GetOpenIdConfigParams} params - Configuration: identityServiceUrl, optional gatewayIdentityServiceUrl, openIdConfigCacheTtlMs, and the request function used to fetch the discovery document
  * @returns {function(): Promise<Record<string, unknown>>} A function that returns a promise of the discovery document (with endpoint URLs rewritten to gatewayIdentityServiceUrl only when that option is set)
  */
@@ -42,11 +50,7 @@ export function createGetOpenIdConfig(params: GetOpenIdConfigParams): () => Prom
     }
 
     const raw = (await request(discoveryUrl(identityServiceUrl))) as Record<string, unknown>
-    const rewriteTarget = gatewayIdentityServiceUrl ?? identityServiceUrl
-    const value =
-      gatewayIdentityServiceUrl && raw?.issuer && typeof raw.issuer === "string"
-        ? rewriteDiscoveryDocForIdentityUrl(rewriteTarget, raw)
-        : raw
+    const value = rewriteDiscoveryIfGateway(raw, gatewayIdentityServiceUrl, identityServiceUrl)
 
     if (useCache && cache) {
       cache.set(OIDC_CACHE_KEY, value)

@@ -61,6 +61,15 @@ const Moneyhub = require("@mft/moneyhub-api-client")
 const {Moneyhub} = require("@mft/moneyhub-api-client")
 ```
 
+## Upgrading from 6.x
+
+Version **7.0.0** is a major release. Highlights:
+
+- **Node.js**: 18 is no longer supported; you need **Node.js >= 20.20.0**. (Node 12, 14, and 16 were already unsupported from 6.0.0; 6.100.0 aligned `engines.node` to `>= 18.0.0`.) Ensure your runtime and CI use Node 20.20 or later.
+- **Behaviour**: more specific validation error messages; retry option `0` values are no longer treated as missing.
+- **TypeScript**: shipped declarations use Node16 module resolution; update consumer `tsconfig` if type-checking breaks.
+- **Dependencies**: tooling upgrades while remaining CommonJS (jose v5, query-string v7, got v11, openid-client v5). See [CHANGELOG](CHANGELOG.md) for the full list.
+
 ## Changelog
 
 [Learn about the latest improvements and breaking changes](CHANGELOG.md).
@@ -77,7 +86,7 @@ To bypass the check in a **documented emergency** only, you can run `npm publish
 
 To use this API client you will need:
 
-- Node.js >= 18.0.0
+- Node.js >= 20.20.0
 - A `client_id`, `client_secret` and `redirect_uri` of a registered API client
 - The url of the Moneyhub identity service for the environment you are connecting to (https://identity.moneyhub.co.uk)
 - The url for the API gateway for the environment that you are connecting to (https://api.moneyhub.co.uk/v3)

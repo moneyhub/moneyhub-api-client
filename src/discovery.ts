@@ -50,10 +50,10 @@ export function rewriteUrlsInObject<T>(
  * Rewrites URL fields in an OIDC discovery document so that endpoint URLs use the
  * target base. Leaves the discovery "issuer" field unchanged so that JWT iss claim
  * validation continues to work when the IdP still issues tokens with the canonical issuer.
- * @param {Object} doc - OIDC discovery document
+ * @param {object} doc - OIDC discovery document
  * @param {string} canonicalBase - Base URL to replace
  * @param {string} targetBase - Base URL to use instead
- * @returns {Object} Discovery document with endpoint URLs rewritten
+ * @returns {object} Discovery document with endpoint URLs rewritten
  */
 export function rewriteDiscoveryUrls(
   doc: Record<string, unknown>,

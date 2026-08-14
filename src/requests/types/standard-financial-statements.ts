@@ -10,13 +10,13 @@ export interface StandardFinancialStatementsRequests {
 
   /** List standard financial statement reports for a user. Scope: `standard_financial_statement:read`. */
   getStandardFinancialStatements: (
-    {userId, params}: {userId: string, params?: StandardFinancialStatementsSearchParams},
+    {userId, params}: {userId: string; params?: StandardFinancialStatementsSearchParams},
     options?: ExtraOptions,
   ) => Promise<ApiResponse<StandardFinancialStatementsMetadata[]>>
 
   /** Get a single standard financial statement by report id. Scope: `standard_financial_statement:read`. */
   getStandardFinancialStatement: (
-    {userId, reportId}: {userId: string, reportId: string},
+    {userId, reportId}: {userId: string; reportId: string},
     options?: ExtraOptions,
   ) => Promise<ApiResponse<StandardFinancialStatement>>
 }
