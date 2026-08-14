@@ -20,7 +20,7 @@ Major release: raises the Node.js engine to the current Active/LTS lines and upg
 **Tooling and development**
 
 * Added `.nvmrc` (Node 20).
-* Husky 9 hooks (no `_/husky.sh` wrapper).
+* Husky 9 hooks (no `_/husky.sh` wrapper); pre-push still runs lint, build, tests, and CaaS.
 
 6.100.1 / 2026-08-18
 ==========
