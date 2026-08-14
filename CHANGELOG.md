@@ -5,7 +5,7 @@
 
 * Split test scripts into `test:unit` and `test:integration`; `test` runs both. Added `test:coverage` / `test:integration:coverage` with c8.
 * Integration mocha configs exclude `*.unit.ts` so unit suites are not re-run under live API hooks.
-* Husky pre-commit runs unit tests; pre-push runs serial multi-version unit smoke tests (Node 20/22/24/26 when installed via nvm), then integration once; CaaS tests only when `RUN_CAAS_TESTS=1`.
+* Husky pre-commit runs unit tests; pre-push runs serial multi-version unit smoke tests (Node 20/22/24/26 when installed via nvm), then integration once, then CaaS.
 * Expanded unit coverage (discovery, auth URLs, request, tokens, requests modules) and additional integration coverage for existing endpoints.
 * `.gitignore` / `.npmignore` updates for coverage and publish layout.
 

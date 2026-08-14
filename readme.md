@@ -2613,7 +2613,7 @@ We have a couple of examples under the `/examples` folder that can be helpful to
 - `npm run test:unit` — fast unit tests (no live API config required).
 - `npm run test:integration` — integration tests (requires local config; see Notion below).
 - `npm test` — unit then integration.
-- `npm run test-caas` — CaaS integration tests. Pre-push runs these only when `RUN_CAAS_TESTS=1`.
+- `npm run test-caas` — CaaS integration tests (also run by pre-push after unit/integration).
 
 Automated integration tests (with secrets and environment config) run in the private synced repository, not via public GitHub Actions on this repo.
 
