@@ -1,70 +1,119 @@
-# Publish to npm with provenance (verified checkmark + attestations).
+# Publish to npm via GitHub Actions OIDC (trusted publishing + provenance).
 #
-# Prerequisites:
-# 0. Node 22.14.0+ and npm 11.5.1+ (required for OIDC trusted publishing; see steps below).
-# 1. On npmjs.com: Package → Settings → Trusted publishing → Add GitHub Actions
-#    - Workflow filename: publish.yml
-#    - Repository: owner/repo that matches this repo (case-sensitive)
-#    - Environment name: leave blank, or use "npm" if you use the environment below
-# 2. Optional: Create GitHub Environment "npm" (Settings → Environments) for approval gates.
-# 3. package.json "repository" must match the GitHub repo (case-sensitive).
+# Pre-releases publish with dist-tag `beta`; stable releases use the default tag.
 #
-# Pre-releases: mark the GitHub release as "Set as a pre-release" so the workflow
-# publishes with dist-tag `beta` (npm install @scope/pkg@beta). Stable releases use the default tag.
+# Only moneyhub/moneyhub-api-client may publish (synced private mirrors skip this workflow).
 #
-# After publish, consumers can verify attestations with:
-#   npm audit signatures
+# Tests run on the static-IP runner (API allowlists). Publish must use a
+# GitHub-hosted runner — npm provenance does not support self-hosted runners.
 name: Publish to npm
 
 on:
   release:
     types: [published]
-  # Alternative: publish on version tags (e.g. git tag v6.96.0)
-  # push:
-  #   tags:
-  #     - 'v*'
 
-permissions:
-  contents: read
-  id-token: write   # Required for npm trusted publishing (OIDC)
-  checks: write     # Required for moneyhub/run-and-report-tests (Check Runs API)
+concurrency:
+  group: npm-publish-${{ github.event.release.tag_name }}
+  cancel-in-progress: false
 
 jobs:
-  publish:
-    name: Test, Build and publish
-    runs-on: linux-x64-static-ip-2core-8gb
-    # Single run per release: npm allows one publish per version. A matrix over
-    # environments would run publish multiple times and the second job would fail.
-    # Optional: add `environment: npm` (or another single environment) for approval
-    # gates — see header comments.
+  should-publish:
+    name: Preflight
+    if: ${{ github.repository == 'moneyhub/moneyhub-api-client' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      skip: ${{ steps.published.outputs.skip }}
     steps:
-      - name: Checkout and Setup
-        uses: moneyhub/checkout-and-setup@v1
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
-          quay-io-username: ${{ secrets.QUAY_IO_USERNAME }}
-          quay-io-password: ${{ secrets.QUAY_IO_PASSWORD }}
-          npm-token: ${{ secrets.NPM_TOKEN }}
-          # Trusted publishing (OIDC) requires Node 22.14.0+ and npm 11.5.1+ per npm docs.
-          # npm-token is still used for registry auth during install (e.g. private scopes);
-          # use a read-only granular token where possible — publish uses OIDC when available.
-          node-version: "22.22"
-      - name: Ensure npm supports OIDC trusted publishing
-        run: npm install -g npm@^11.5.1
+          node-version: "24.19.0"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Check release tag matches package.json version
+        run: |
+          TAG="${{ github.event.release.tag_name }}"
+          VERSION="$(node -p "require('./package.json').version")"
+          if [ "${TAG}" != "${VERSION}" ] && [ "${TAG}" != "v${VERSION}" ]; then
+            echo "Release tag '${TAG}' does not match package.json version '${VERSION}' (expected '${VERSION}' or 'v${VERSION}')."
+            exit 1
+          fi
+          echo "Release tag '${TAG}' matches package.json version '${VERSION}'."
+      - name: Check if version already published
+        id: published
+        run: |
+          NAME="$(node -p "require('./package.json').name")"
+          VERSION="$(node -p "require('./package.json').version")"
+          if npm view "${NAME}@${VERSION}" version >/dev/null 2>&1; then
+            echo "Already published: ${NAME}@${VERSION}"
+            echo "skip=true" >> "${GITHUB_OUTPUT}"
+          else
+            echo "Not published yet: ${NAME}@${VERSION}"
+            echo "skip=false" >> "${GITHUB_OUTPUT}"
+          fi
+
+  test:
+    name: Integration tests
+    needs: should-publish
+    if: ${{ github.repository == 'moneyhub/moneyhub-api-client' && needs.should-publish.outputs.skip != 'true' }}
+    runs-on: linux-x64-static-ip-2core-8gb
+    permissions:
+      contents: read
+      checks: write # moneyhub/run-and-report-tests (Check Runs API)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24.19.0"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Install dependencies without scripts
+        run: npm ci --ignore-scripts
+      - name: Verify npm signatures
+        run: npm audit signatures
+      - name: Rebuild native modules and run prepare
+        run: npm rebuild && npm run prepare --if-present
       - name: Run and Report Unit Tests
-        uses: moneyhub/run-and-report-tests@v1
+        uses: moneyhub/run-and-report-tests@667f7c926eea73ac99e8e3e9f02fa7e58dc5ee89 # v1
         with:
           test-script: test-ci
           report-path: test-reports/report.xml
           name: Integration
         env:
           NODE_CONFIG: ${{ secrets.TEST_CONFIG }}
-      # Publish auth: npm 11.5.1+ exchanges GitHub's OIDC token (id-token: write) for a
-      # short-lived publish token when trusted publishing is configured. No NODE_AUTH_TOKEN
-      # is required for publish. Provenance is automatic for trusted publishing from GitHub
-      # Actions on public repos (verified checkmark + npm audit signatures).
+
+  publish:
+    name: Build and publish
+    needs: [should-publish, test]
+    if: ${{ github.repository == 'moneyhub/moneyhub-api-client' && needs.should-publish.outputs.skip != 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # npm trusted publishing (OIDC)
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Setup Node
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: "24.19.0"
+          registry-url: https://registry.npmjs.org
+          package-manager-cache: false
+      - name: Install dependencies without scripts
+        run: npm ci --ignore-scripts
+      - name: Verify npm signatures
+        run: npm audit signatures
+      - name: Rebuild native modules and run prepare
+        run: npm rebuild && npm run prepare --if-present
       - name: Publish to npm (stable)
         if: ${{ !github.event.release.prerelease }}
-        run: npm publish --provenance --access public
+        run: npm publish --access public
       - name: Publish to npm (beta)
         if: ${{ github.event.release.prerelease }}
-        run: npm publish --provenance --access public --tag beta
+        run: npm publish --access public --tag beta
