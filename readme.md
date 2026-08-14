@@ -2610,7 +2610,14 @@ We have a couple of examples under the `/examples` folder that can be helpful to
 
 ### Running Tests
 
-Instructions on how to run the integration tests for the API client can be found [here](https://www.notion.so/moneyhub/Moneyhub-API-Client-Tests-Config-0bef6e3cb922425b88f0268c1a999917)
+- `npm run test:unit` — fast unit tests (no live API config required).
+- `npm run test:integration` — integration tests (requires local config; see Notion below).
+- `npm test` — unit then integration.
+- `npm run test-caas` — CaaS integration tests. Pre-push runs these only when `RUN_CAAS_TESTS=1`.
+
+Automated integration tests (with secrets and environment config) run in the private synced repository, not via public GitHub Actions on this repo.
+
+Instructions on how to configure integration tests for the API client can be found [here](https://www.notion.so/moneyhub/Moneyhub-API-Client-Tests-Config-0bef6e3cb922425b88f0268c1a999917)
 
 ### Adding Tests
 

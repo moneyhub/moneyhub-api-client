@@ -6,5 +6,6 @@
     "colors": true,
     "exit": true,
     "spec": ["src/**/__tests__/*.ts"],
+    "ignore": ["**/*.unit.ts"],
     "require": ["test/hooks.js"]
   }
