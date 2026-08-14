@@ -26,6 +26,9 @@ This is an Node.JS client for the [Moneyhub API](https://docs.moneyhubenterprise
 - Get a tax return for a subset of transactions
 - Get the regular transactions on an account
 - Get beneficiaries
+- Create reseller check requests and get consent history
+- Standard financial statements
+- Legacy bank connections listing
 - CAAS (Categorisation as a Service) API for advanced transaction enrichment and categorisation
 
 Currently this library supports `client_secret_basic`, `client_secret_jwt` and `private_key_jwt` authentication.
@@ -74,6 +77,7 @@ To bypass the check in a **documented emergency** only, you can run `npm publish
 
 To use this API client you will need:
 
+- Node.js >= 18.0.0
 - A `client_id`, `client_secret` and `redirect_uri` of a registered API client
 - The url of the Moneyhub identity service for the environment you are connecting to (https://identity.moneyhub.co.uk)
 - The url for the API gateway for the environment that you are connecting to (https://api.moneyhub.co.uk/v2.0)
@@ -1001,6 +1005,28 @@ Get the statements with detail for an account. This function uses the scope `sta
 const statements = await moneyhub.getAccountStatementsWithDetail({
   userId: "userId",
   accountId: "accountId",
+}, options);
+```
+
+#### `getStandardFinancialStatements`
+
+List standard financial statement reports for a user (Money Advice Service schema metadata). Uses the scope `standard_financial_statement:read`.
+
+```javascript
+const statements = await moneyhub.getStandardFinancialStatements({
+  userId: "userId",
+  params: {limit: 10, offset: 0},
+}, options);
+```
+
+#### `getStandardFinancialStatement`
+
+Get a single standard financial statement report by id. Uses the scope `standard_financial_statement:read`.
+
+```javascript
+const statement = await moneyhub.getStandardFinancialStatement({
+  userId: "userId",
+  reportId: "reportId",
 }, options);
 ```
 
@@ -2479,6 +2505,14 @@ This method will resolve with a list of all the API connections that a user can 
 
 ```javascript
 const availableConnections = await moneyhub.listAPIConnections();
+```
+
+#### `listLegacyConnections`
+
+This method will resolve with a list of legacy connections from Identity (`.well-known/legacy-connections`).
+
+```javascript
+const availableConnections = await moneyhub.listLegacyConnections();
 ```
 
 #### `listTestConnections`

@@ -10,6 +10,9 @@ export interface UnauthenticatedRequests {
 
   listConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
   listAPIConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
+
+  /** Identity `.well-known/legacy-connections` */
+  listLegacyConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
   listTestConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
   listBetaConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
   listPaymentsConnections: (query?: {clientId?: string}) => Promise<WellKnownConnection[]>
