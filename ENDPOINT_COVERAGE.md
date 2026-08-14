@@ -18,9 +18,9 @@ This document maps API definitions (Swagger and router definitions) to the money
 | Path / area | Client method(s) | Module | Notes |
 |-------------|------------------|--------|--------|
 | GET /accounts | getAccounts, getAccountsWithDetails | accounts | |
-| GET /accounts-list | getAccountsList, getAccountsListWithDetails | accounts | **v2 only** – not in v3 Swagger |
+| GET /accounts-list | getAccountsList, getAccountsListWithDetails | accounts | **v2 only – no endpoint in v3** |
 | GET/POST/PATCH/DELETE /accounts, /accounts/{id}, /balances | getAccount, getAccountWithDetails, getAccountBalances, createAccount, updateAccount, deleteAccount, addAccountBalance | accounts | |
-| Holdings, counterparties, recurring-transactions, standing-orders, statements | getAccountHoldings, getAccountHoldingsWithMatches, getAccountHolding, getAccountCounterparties, getAccountRecurringTransactions, getAccountStandingOrders, getAccountStandingOrdersWithDetail, getAccountStatements, getAccountStatementsWithDetail | accounts | **v2 only:** /accounts-list, /accounts/{id}/counterparties, /accounts/{id}/recurring-transactions (no v3 path) |
+| Holdings, counterparties, recurring-transactions, standing-orders, statements | getAccountHoldings, getAccountHoldingsWithMatches, getAccountHolding, getAccountCounterparties, getAccountRecurringTransactions, getAccountStandingOrders, getAccountStandingOrdersWithDetail, getAccountStatements, getAccountStatementsWithDetail | accounts | **v2 only:** /accounts-list, /accounts/{id}/counterparties, /accounts/{id}/recurring-transactions (not in v3 API) |
 | Affordability | (affordability module) | affordability | |
 | Beneficiaries | getBeneficiary, getBeneficiaryWithDetail, getBeneficiaries, getBeneficiariesWithDetail | beneficiaries | |
 | GET /global-counterparties | getGlobalCounterparties | unauthenticated | |
@@ -51,10 +51,10 @@ This document maps API definitions (Swagger and router definitions) to the money
 | Payees, pay-links, payments | addPayee, getPayees, getPayee, getPayment, getPayments, getPaymentFromIDToken, addPayLink, getPayLink, getPayLinks | payees, pay-links, payments | |
 | Standing orders, recurring payments | getStandingOrder, getStandingOrders, getRecurringPayments, getRecurringPayment, makeRecurringPayment, revokeRecurringPayment, confirmFundsForRecurringPayment | standing-orders, recurring-payments | |
 | Reseller-check, consent-history | createResellerCheckRequest, getConsentHistory | reseller-check, consent-history | |
-| **Pay-file** | — | — | **Client missing** |
-| **Pay-file-consent** | — | — | **Client missing** |
-| **GET /bank-icons/{bankRef}** | — | — | **Client missing** |
-| **GET /consents/{authRequestId}** | — | — | **Client missing** |
+| **Pay-file** | — | — | **No function available in this version of the client.** |
+| **Pay-file-consent** | — | — | **No function available in this version of the client.** |
+| **GET /bank-icons/{bankRef}** | — | — | **No function available in this version of the client.** |
+| **GET /consents/{authRequestId}** | — | — | **No function available in this version of the client.** |
 
 ## 4. CaaS (Enrichment API) – client mapping
 
@@ -69,9 +69,9 @@ This document maps API definitions (Swagger and router definitions) to the money
 | GET /geotags | caasGetGeotags | caas/geotags | |
 | GET/PATCH/DELETE /accounts/{accountId}/transactions/{transactionId} | caasGetTransactions, caasPatchTransaction, caasDeleteTransaction | caas/transactions | |
 | POST /transactions/enrich | caasEnrichTransactions | caas/transactions | |
-| **Custom categories** (users/{userId}/custom-categories) | — | — | **Client missing** |
-| **Account regular-transactions** | — | — | **Client missing** |
-| **Transaction enhanced, splits** | — | — | **Client missing** |
+| Custom categories (users/{userId}/custom-categories) | caasGetCustomCategories, caasCreateCustomCategory, caasDeleteCustomCategory | caas/categories | |
+| GET /accounts/{accountId}/regular-transactions | caasGetRegularTransactions | caas/regular-transactions | |
+| GET …/transactions/{transactionId}/enhanced; PUT/DELETE …/splits | caasGetEnhancedTransaction, caasPutTransactionSplits, caasDeleteTransactionSplits | caas/enhanced-transactions, caas/transaction-splits | |
 
 ## 5. OSIP – client mapping
 
