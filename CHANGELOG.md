@@ -8,11 +8,10 @@ This major release updates the Node.js requirement and upgrades dependencies for
 * Node.js 12, 14, 16, and 18 are no longer supported; requires Node.js >= 20.20.0.
 
 **Dependency upgrades**
-
-* **jose** upgraded to v6 (from v5).
-* **TypeScript** upgraded to v5.
+* **TypeScript** upgraded to v6.
 * **ESLint** upgraded to v9 (flat config).
-* **form-data** ^3.0.4 → ^4.0.5, **query-string** ^7.1.1 → ^9.3.1, **ramda** ^0.27.2 → ^0.32.0.
+* **form-data** ^3.0.4 → ^4.0.5
+* **ramda** ^0.27.2 → ^0.32.0.
 * Dev dependencies: **@mft/eslint-config-momentumft**, **@types/chai**, **@types/mocha**, and related tooling updated.
 
 **Tooling and development**

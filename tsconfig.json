@@ -2,16 +2,16 @@
   "compilerOptions": {
     "allowJs": true,
     "sourceMap": true,
-    "module": "commonjs",
+    "module": "Node16",
     "target": "es2019",
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "outDir": "./dist",
     "rootDir": "./src",
-    "baseUrl": "./",
     "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
+    "types": ["node", "mocha", "chai"],
     "lib": [
       "dom",
       "dom.iterable",
@@ -28,8 +28,8 @@
   ],
   "ts-node": {
     "compilerOptions": {
-      "module": "commonjs",
-      "moduleResolution": "node"
+      "module": "Node16",
+      "moduleResolution": "Node16"
     }
   }
 }

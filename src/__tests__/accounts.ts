@@ -1,7 +1,7 @@
 
 import {expect} from "chai"
 import {expectTypeOf} from "expect-type"
-import {AccountBalancePost, AccountPatch} from "src/schema/account"
+import {AccountBalancePost, AccountPatch} from "../schema/account"
 
 import {Moneyhub, MoneyhubInstance, Accounts, Counterparties, Holdings, Transactions} from ".."
 

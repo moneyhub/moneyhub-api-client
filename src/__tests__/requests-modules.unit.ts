@@ -684,10 +684,10 @@ describe("requests modules (unit)", function() {
       it("caasPatchTransaction uses PATCH and body", async function() {
         const capture: any = {}
         const api = caasTransactionsFactory({config, request: createMockRequest(capture)})
-        await api.caasPatchTransaction({accountId: "a1", transactionId: "tx1", l2CategoryId: "cat1"})
+        await api.caasPatchTransaction({accountId: "a1", transactionId: "tx1", userCategoryId: "cat1"})
         expect(capture.url).to.include("/accounts/a1/transactions/tx1")
         expect(capture.opts.method).to.equal("PATCH")
-        expect(capture.opts.body).to.eql({l2CategoryId: "cat1"})
+        expect(capture.opts.body).to.eql({userCategoryId: "cat1"})
       })
 
       it("caasEnrichTransactions uses POST and enrich path", async function() {
@@ -703,7 +703,7 @@ describe("requests modules (unit)", function() {
         const api = caasTransactionsFactory({config, request: createMockRequest(capture)})
         await api.caasGetTransactions({userId: "u1", accountId: "a1", limit: 10})
         expect(capture.url).to.equal(`${caasResourceServerUrl}/transactions`)
-        expect(capture.opts.cc.scope).to.equal("caas:transactions:read")
+        expect(capture.opts.cc.scope).to.equal("caas:transactions:read caas:transaction_splits:read")
         expect(capture.opts.searchParams).to.deep.include({accountId: "a1", userId: "u1", limit: 10})
       })
 

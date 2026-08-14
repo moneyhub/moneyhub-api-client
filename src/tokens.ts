@@ -2,7 +2,7 @@ import type {Client, TokenSet} from "openid-client"
 import {reject, isNil} from "ramda"
 import {SignJWT, base64url, importJWK} from "jose"
 import type {ApiClientConfig} from "./schema/config"
-import type {CryptoKey, JWK, KeyObject} from "jose"
+import type {KeyLike, JWK} from "jose"
 import {randomBytes} from "crypto"
 import exchangeCodeForTokensFactory from "./exchange-code-for-token"
 
@@ -23,7 +23,7 @@ const createSignedJWT = async ({
     audience: string
     issuer: string
     sub: string
-    privateKey: CryptoKey | KeyObject | JWK | Uint8Array
+    privateKey: KeyLike | JWK | Uint8Array
     expirationTime: string | undefined
   }) =>
   new SignJWT({})
