@@ -4,7 +4,8 @@
 #
 # Only moneyhub/moneyhub-api-client may publish (synced private mirrors skip this workflow).
 #
-# Tests run on the static-IP runner (API allowlists). Publish must use a
+# Live integration / CaaS tests are not run here: they need allowlisted egress IPs and
+# private secrets, and run in the private synced repo instead. Publish uses a
 # GitHub-hosted runner — npm provenance does not support self-hosted runners.
 name: Publish to npm
 
@@ -56,14 +57,13 @@ jobs:
             echo "skip=false" >> "${GITHUB_OUTPUT}"
           fi
 
-  test:
-    name: Integration tests
+  verify:
+    name: Lint and build
     needs: should-publish
     if: ${{ github.repository == 'moneyhub/moneyhub-api-client' && needs.should-publish.outputs.skip != 'true' }}
-    runs-on: linux-x64-static-ip-2core-8gb
+    runs-on: ubuntu-latest
     permissions:
       contents: read
-      checks: write # moneyhub/run-and-report-tests (Check Runs API)
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -79,18 +79,14 @@ jobs:
         run: npm audit signatures
       - name: Rebuild native modules and run prepare
         run: npm rebuild && npm run prepare --if-present
-      - name: Run and Report Unit Tests
-        uses: moneyhub/run-and-report-tests@667f7c926eea73ac99e8e3e9f02fa7e58dc5ee89 # v1
-        with:
-          test-script: test-ci
-          report-path: test-reports/report.xml
-          name: Integration
-        env:
-          NODE_CONFIG: ${{ secrets.TEST_CONFIG }}
+      - name: Lint
+        run: npm run lint
+      - name: Build
+        run: npm run build
 
   publish:
     name: Build and publish
-    needs: [should-publish, test]
+    needs: [should-publish, verify]
     if: ${{ github.repository == 'moneyhub/moneyhub-api-client' && needs.should-publish.outputs.skip != 'true' }}
     runs-on: ubuntu-latest
     permissions:

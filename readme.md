@@ -67,7 +67,7 @@ const {Moneyhub} = require("@mft/moneyhub-api-client")
 
 ## Publishing (maintainers)
 
-Official releases are published to npm by **GitHub Actions** when a [GitHub Release](https://github.com/moneyhub/moneyhub-api-client/releases) is published (see `.github/workflows/publish.yml`). Do not rely on publishing from a developer machine.
+Official releases are published to npm by **GitHub Actions** when a [GitHub Release](https://github.com/moneyhub/moneyhub-api-client/releases) is published (see `.github/workflows/publish.yml`). The publish workflow runs lint and build on GitHub-hosted runners; live integration tests run in the private synced repository (allowlisted IPs / secrets). Do not rely on publishing from a developer machine.
 
 The `prepublishOnly` lifecycle script runs **`scripts/assert-github-actions-publish.js`** before the build. It exits with an error unless `GITHUB_ACTIONS` is set (as it is in GitHub Actions), so a normal local `npm publish` is blocked. That reduces accidental publishes; it is **not** a security boundary on its own—npm access control and trusted publishing still matter.
 
