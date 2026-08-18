@@ -1,7 +1,7 @@
-/* eslint-disable max-nested-callbacks */
+
 import {expect} from "chai"
 import {expectTypeOf} from "expect-type"
-import {OsipAccount, OsipHolding, OsipTransaction} from "src/schema/osip"
+import {OsipAccount, OsipHolding, OsipTransaction} from "../schema/osip"
 
 import {Moneyhub, MoneyhubInstance} from ".."
 

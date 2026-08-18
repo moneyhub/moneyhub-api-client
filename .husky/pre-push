@@ -1,7 +1,44 @@
 #!/usr/bin/env sh
 set -e
 
+# Node versions for local unit-smoke (aligned with engines ">= 20.20.0")
+NODE_VERSIONS="20 22 24 26"
+
 npm run lint
 npm run build
-npm test
+
+# Multi-version: unit tests only, serially (avoids parallel live-API races)
+export NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
+if [ -s "$NVM_DIR/nvm.sh" ]; then
+  . "$NVM_DIR/nvm.sh"
+
+  AVAILABLE=""
+  for ver in $NODE_VERSIONS; do
+    if nvm which "$ver" >/dev/null 2>&1; then
+      AVAILABLE="$AVAILABLE $ver"
+    else
+      echo "Skipping Node $ver (not installed)"
+    fi
+  done
+  AVAILABLE=$(echo "$AVAILABLE" | sed 's/^ *//')
+
+  if [ -z "$AVAILABLE" ]; then
+    echo "None of Node $NODE_VERSIONS installed; running unit tests with current Node only"
+    npm run test:unit
+  else
+    for ver in $AVAILABLE; do
+      echo "Running unit tests on Node $ver"
+      nvm exec "$ver" npm run test:unit
+    done
+    echo "Unit tests passed on Node $AVAILABLE"
+  fi
+else
+  echo "nvm not found; running unit tests with current Node only"
+  npm run test:unit
+fi
+
+# Integration once on the current Node (needs local API config)
+npm run test:integration
+
+# CaaS after the nvm loop (must not exit early — see PR #140 Bugbot fix)
 npm run test-caas

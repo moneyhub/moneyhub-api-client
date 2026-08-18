@@ -1,4 +1,4 @@
-/* eslint-disable max-nested-callbacks */
+
 import {expect} from "chai"
 
 import {Accounts, Moneyhub, MoneyhubInstance} from ".."

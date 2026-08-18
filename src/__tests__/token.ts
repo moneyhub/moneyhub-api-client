@@ -1,4 +1,4 @@
-/* eslint-disable max-nested-callbacks */
+
 import {expect} from "chai"
 import {expectTypeOf} from "expect-type"
 import type {TokenSet} from "openid-client"
@@ -10,7 +10,7 @@ const nonce = "sample-nonce"
 const code = "X3MNigTlftG~AKzSQfmVmfvVWrq"
 
 // Skipped: requires OAuth code exchange setup
-describe.skip("Exchange Code For Token", function() { // eslint-disable-line mocha/no-skipped-tests
+describe.skip("Exchange Code For Token", function() {
   let moneyhub: MoneyhubInstance
 
   before(async function() {
