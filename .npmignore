@@ -6,5 +6,9 @@ resources
 src
 test
 __tests__
+dist/__tests__
+.env
+.env.*
+ENDPOINT_COVERAGE.md
 .eslintrc.json
 tsconfig.json

@@ -1,3 +1,10 @@
+6.100.1 / 2026-08-18
+==========
+
+**Bug Fixes**
+
+* Correct documentation and packaging hygiene ahead of 7.x: publish readme wording, endpoint coverage method names and test scripts, readme API examples, prerequisites URL, missing method docs (`accVerification`, `getPayee`, `getConsentHistory`, `confirmFundsForRecurringPayment`), CHANGELOG 6.99.0 phantom entry, package author typo, and `.npmignore` exclusions for `dist/__tests__` and env files.
+
 6.100.0 / 2026-08-14
 ==========
 
@@ -19,7 +26,6 @@
 **Features**
 
 * Add CaaS custom category methods: `caasGetCustomCategories`, `caasCreateCustomCategory`, `caasDeleteCustomCategory`.
-* Add `postLlmGatewaySavingsGoals` for `POST /llm-gateway/savings-goals` (scope `llm_gateway_savings_goals:write`).
 
 6.98.0 / 2026-06-09
 ==========

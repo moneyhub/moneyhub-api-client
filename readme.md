@@ -67,7 +67,7 @@ const {Moneyhub} = require("@mft/moneyhub-api-client")
 
 ## Publishing (maintainers)
 
-Official releases are published to npm by **GitHub Actions** when a [GitHub Release](https://github.com/moneyhub/moneyhub-api-client/releases) is published (see `.github/workflows/publish.yml`). The publish workflow runs lint and build on GitHub-hosted runners; live integration tests run in the private synced repository (allowlisted IPs / secrets). Do not rely on publishing from a developer machine.
+Official releases are published to npm by **GitHub Actions** when a [GitHub Release](https://github.com/moneyhub/moneyhub-api-client/releases) is published (see `.github/workflows/publish.yml`). The publish workflow runs lint and build on GitHub-hosted runners. Live integration tests are not part of publish; they run in the private synced repository (allowlisted IPs / secrets). Do not rely on publishing from a developer machine.
 
 The `prepublishOnly` lifecycle script runs **`scripts/assert-github-actions-publish.js`** before the build. It exits with an error unless `GITHUB_ACTIONS` is set (as it is in GitHub Actions), so a normal local `npm publish` is blocked. That reduces accidental publishes; it is **not** a security boundary on its own—npm access control and trusted publishing still matter.
 
@@ -80,7 +80,7 @@ To use this API client you will need:
 - Node.js >= 18.0.0
 - A `client_id`, `client_secret` and `redirect_uri` of a registered API client
 - The url of the Moneyhub identity service for the environment you are connecting to (https://identity.moneyhub.co.uk)
-- The url for the API gateway for the environment that you are connecting to (https://api.moneyhub.co.uk/v2.0)
+- The url for the API gateway for the environment that you are connecting to (https://api.moneyhub.co.uk/v3)
 
 ## To install
 
@@ -261,6 +261,8 @@ The `expirationDateTime` and `transactionFromDateTime` options can be set accord
 
 Set `enableAsync` to true if you wish to make an AIS connection that won't wait for accounts and transactions to be fetched.
 
+Set `accVerification` to true to add the `mh:account_verification` claim. This is independent of `enableAsync`.
+
 **Note:** all methods generate an authorise URL using the Pushed Authorisation Request (PAR) method, see [here](https://docs.moneyhubenterprise.com/docs/pushed-authorisation-requests-par) for more details.
 
 #### `getAuthorizeUrl`
@@ -284,6 +286,7 @@ const url = await moneyhub.getAuthorizeUrl({
   expirationDateTime: "2022-09-01T00:00:00.000Z", // optional
   transactionFromDateTime: "2020-09-01T00:00:00.000Z", // optional,
   enableAsync: false, // optional
+  accVerification: false, // optional - adds mh:account_verification independently of enableAsync
 });
 
 // Default claims if none are provided
@@ -403,24 +406,6 @@ const defaultClaims = {
 
 #### `getRefreshAuthorizeUrlForCreatedUser`
 
-#### `getAuthorizeUrlLegacy`
-
-This method returns an authorize url for your API client using the legacy method (where a request object is generated and passed in as the `request` query parameter). You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`. It has the same method signature as `getAuthorizeUrl`
-
-```javascript
-const url = await moneyhub.getAuthorizeUrlLegacy({
-  scope: "openid bank-id-scope other-data-scopes",
-  state: " your state value", // optional
-  nonce: "your nonce value", //optional
-  claims: claimsObject, // optional
-  permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth URL
-  permissionsAction: "replace" // optional - replace default consent permissions. Defaults to "add"
-  expirationDateTime: "2022-09-01T00:00:00.000Z", // optional
-  transactionFromDateTime: "2020-09-01T00:00:00.000Z", // optional,
-  enableAsync: false, // optional
-});
-```
-
 This is a helper function that returns an authorize url for a specific user to refresh an existing connection. This function uses the scope `openid refresh`. (Only relevant for legacy connections)
 
 ```javascript
@@ -446,6 +431,24 @@ const defaultClaims = {
     },
   },
 };
+```
+
+#### `getAuthorizeUrlLegacy`
+
+This method returns an authorize url for your API client using the legacy method (where a request object is generated and passed in as the `request` query parameter). You can redirect a user to this url, after which they will be redirected back to your `redirect_uri`. It has the same method signature as `getAuthorizeUrl`
+
+```javascript
+const url = await moneyhub.getAuthorizeUrlLegacy({
+  scope: "openid bank-id-scope other-data-scopes",
+  state: " your state value", // optional
+  nonce: "your nonce value", //optional
+  claims: claimsObject, // optional
+  permissions: ["ReadBeneficiariesDetail"], // optional - set of extra permissions to set for auth URL
+  permissionsAction: "replace" // optional - replace default consent permissions. Defaults to "add"
+  expirationDateTime: "2022-09-01T00:00:00.000Z", // optional
+  transactionFromDateTime: "2020-09-01T00:00:00.000Z", // optional,
+  enableAsync: false, // optional
+});
 ```
 
 #### `exchangeCodeForTokensLegacy`
@@ -854,7 +857,7 @@ Similar to getAccounts method, however this method does not return `transactionD
 
 ```javascript
 const queryParams = { limit: 10, offset: 5 , showTransacionData: false, showPerformanceScore: true};
-const accounts = await moneyhub.getAccounts({
+const accounts = await moneyhub.getAccountsList({
   userId: "userId",
   params: queryParams,
 }, options);
@@ -866,7 +869,7 @@ Similar to getAccountsWithDetails method, however this method does not return `t
 
 ```javascript
 const queryParams = { limit: 10, offset: 5 };
-const accounts = await moneyhub.getAccountsWithDetails({
+const accounts = await moneyhub.getAccountsListWithDetails({
   userId: "userId",
   params: queryParams,
 }, options);
@@ -1379,11 +1382,9 @@ const accounts = await moneyhub.getOsipAccounts({
 Get an account for a user. This function uses the scope `osip:read`.
 
 ```javascript
-const queryParams = { limit: 10, offset: 5 };
-const accounts = await moneyhub.getOsipAccounts({
+const account = await moneyhub.getOsipAccount({
   userId: "userId",
   accountId: "accountId",
-  params: queryParams,
 });
 ```
 
@@ -1393,7 +1394,7 @@ Get account holdings for an account. This function uses the scope `osip:read`.
 
 ```javascript
 const queryParams = { limit: 10, offset: 5 };
-const accounts = await moneyhub.getOsipAccounts({
+const holdings = await moneyhub.getOsipAccountHoldings({
   userId: "userId",
   accountId: "accountId",
   params: queryParams,
@@ -1406,7 +1407,7 @@ Get account transactions. This function uses the scope `osip:read`.
 
 ```javascript
 const queryParams = { limit: 10, offset: 5 };
-const accounts = await moneyhub.getOsipAccounts({
+const transactions = await moneyhub.getOsipAccountTransactions({
   userId: "userId",
   accountId: "accountId",
   params: queryParams,
@@ -1754,6 +1755,18 @@ const payees = await moneyhub.getPayees({
 });
 ```
 
+#### `getPayee`
+
+Get a single registered payee by id. This function uses the scope `payee:read`.
+
+```javascript
+const payee = await moneyhub.getPayee({
+  id: "payee-id",
+});
+```
+
+Example script: `node examples/payments/get-payee.js -i payee-id`.
+
 #### `getPayments`
 
 This method returns a list of initiated payments. This function uses the scope `payment:read`
@@ -2021,7 +2034,7 @@ const recurringPayment = await moneyhub.getRecurringPayment({
 This method creates a payment using the recurring payment consent. This function uses the scope `recurring_payment:create`
 
 ```javascript
-const recurringPayments = await moneyhub.getRecurringPayments({
+const recurringPayment = await moneyhub.makeRecurringPayment({
   recurringPaymentId: "Id of the recurring payment consent",
   payment: {
     payeeId: "payee-id", // optional
@@ -2041,6 +2054,22 @@ const revokedRecurringPayment = await moneyhub.revokeRecurringPayment({
   recurringPaymentId: "Id of the recurring payment consent",
 });
 ```
+
+#### `confirmFundsForRecurringPayment`
+
+Confirm that funds are available for a payment under an existing recurring payment consent. This function uses the scope `recurring_payment:funds_confirmation`.
+
+```javascript
+const fundsConfirmation = await moneyhub.confirmFundsForRecurringPayment({
+  recurringPaymentId: "Id of the recurring payment consent",
+  fundsConfirmation: {
+    amount: "10.00",
+    currency: "GBP",
+  },
+});
+```
+
+Example script: `node examples/recurring-payments/confirm-funds.js -i recurring-payment-id -a 10.00`.
 
 #### `getRegularTransactions`
 
@@ -2246,6 +2275,20 @@ const resellerCheck = await moneyhub.createResellerCheckRequest({
   email: "email@email.com"
 }, options);
 ```
+
+#### `getConsentHistory`
+
+Get consent history for the API client, optionally filtered by user. This function uses the scope `consent_history:read`.
+
+```javascript
+const consentHistory = await moneyhub.getConsentHistory({
+  limit: 10, // optional
+  offset: 0, // optional
+  userId: "user-id", // optional
+});
+```
+
+Example script: `node examples/consent-history/get-history.js -u user-id`.
 
 ### CAAS API
 

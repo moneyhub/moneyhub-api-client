@@ -25,13 +25,13 @@ This document maps API definitions (Swagger and router definitions) to the money
 | Beneficiaries | getBeneficiary, getBeneficiaryWithDetail, getBeneficiaries, getBeneficiariesWithDetail | beneficiaries | |
 | GET /global-counterparties | getGlobalCounterparties | unauthenticated | |
 | Transactions, files, splits | getTransactions, getTransaction, getUnenrichedTransactions, getUnenrichedTransaction, addTransaction, addTransactions, getTransactionFiles, getTransactionFile, addFileToTransaction, deleteTransactionFile, getTransactionSplits, splitTransaction, patchTransactionSplit, deleteTransactionSplits | transactions, transaction-files, transaction-splits | |
-| Categories, category-groups | getCategories, getCategory, getCategoryGroups, getStandardCategories, getStandardCategoryGroups, createCustomCategory, updateCategory, deleteCategory | categories | |
-| Categorise, regular-transactions | categoriseTransactions, getRegularTransactions, addRegularTransaction, updateRegularTransaction, deleteRegularTransaction, detectRegularTransactions | categorise-transactions, regular-transactions | |
+| Categories, category-groups | getCategories, getCategory, getCategoryGroups, getStandardCategories, getStandardCategoryGroups, createCustomCategory | categories | |
+| Categorise, regular-transactions | categoriseTransactions, getRegularTransactions, detectRegularTransactions | categorise-transactions, regular-transactions | |
 | Rental records | (rental-records module) | rental-records | |
-| Spending analysis, spending/savings goals | getSpendingAnalysis, getSpendingGoals, getSpendingGoal, addSpendingGoal, updateSpendingGoal, deleteSpendingGoal, getSavingsGoals, getSavingsGoal, addSavingsGoal, updateSavingsGoal, deleteSavingsGoal | spending-analysis, spending-goals, savings-goals | |
+| Spending analysis, spending/savings goals | getSpendingAnalysis, getSpendingGoals, getSpendingGoal, createSpendingGoal, updateSpendingGoal, deleteSpendingGoal, getSavingsGoals, getSavingsGoal, createSavingsGoal, updateSavingsGoal, deleteSavingsGoal | spending-analysis, spending-goals, savings-goals | |
 | GET /standard-financial-statements, GET /standard-financial-statements/{reportId} | getStandardFinancialStatements, getStandardFinancialStatement | standard-financial-statements | |
 | Sync, projects, tax | syncUserConnection, getProjects, getProject, addProject, updateProject, deleteProject, getTaxReturn | sync, projects, tax | |
-| Notification thresholds | getNotificationThresholds, addNotificationThreshold, getNotificationThreshold, updateNotificationThreshold, deleteNotificationThreshold | notification-thresholds | |
+| Notification thresholds | getNotificationThresholds, addNotificationThreshold, updateNotificationThreshold, deleteNotificationThreshold | notification-thresholds | |
 
 ## 3. Identity – client mapping
 
@@ -47,7 +47,7 @@ This document maps API definitions (Swagger and router definitions) to the money
 | GET .well-known/beta-connections | listBetaConnections | unauthenticated | |
 | GET .well-known/openid-configuration | getOpenIdConfig | unauthenticated | |
 | Auth-requests, OIDC | createAuthRequest, getAuthRequest, getAllAuthRequests, completeAuthRequest, getAuthUrls, token helpers | auth-requests, get-auth-urls, tokens | |
-| Users, connections, syncs, SCIM | getUser, getUsers, registerUser, deleteUser, getUserConnections, deleteUserConnection, updateUserConnection, getConnectionSyncs, getUserSyncs, getSync, getSCIMUser, registerSCIMUser, searchSCIMUsers | users-and-connections | |
+| Users, connections, syncs, SCIM | getUser, getUsers, registerUser, deleteUser, getUserConnections, deleteUserConnection, updateUserConnection, getConnectionSyncs, getUserSyncs, getSync, getSCIMUser, registerSCIMUser | users-and-connections | |
 | Payees, pay-links, payments | addPayee, getPayees, getPayee, getPayment, getPayments, getPaymentFromIDToken, addPayLink, getPayLink, getPayLinks | payees, pay-links, payments | |
 | Standing orders, recurring payments | getStandingOrder, getStandingOrders, getRecurringPayments, getRecurringPayment, makeRecurringPayment, revokeRecurringPayment, confirmFundsForRecurringPayment | standing-orders, recurring-payments | |
 | Reseller-check, consent-history | createResellerCheckRequest, getConsentHistory | reseller-check, consent-history | |
@@ -97,9 +97,9 @@ All require `osip:read` scope. Client fully covers these routes.
 | OSIP | osip.ts |
 | Standard financial statements | standard-financial-statements.ts |
 
-**Running tests and coverage**
+**Running tests**
 
-- **Default config for Moneyhub developers**: see [Moneyhub API Client Integration Tests](https://app.notion.com/p/moneyhub/Moneyhub-API-Client-Integration-Tests-0bef6e3cb922425b88f0268c1a999917) for how to obtain and place the default `config` used by integration (and CaaS) tests.
-- **Unit only** (no API config): `npm run test:coverage` — runs `*.unit.ts`, enforces 90% coverage.
-- **Full suite** (unit + integration, requires config): `npm run test:integration:coverage` — runs all tests with hooks, enforces 90% line/function/branch/statement coverage.
-- Integration tests live in `src/__tests__/*.ts` (non-`.unit.ts`); hooks in `test/hooks.js` provide `this.config` (e.g. `testUserId`, `testAccountId`).
+- **Default config for Moneyhub developers**: see [Moneyhub API Client Tests Config](https://www.notion.so/moneyhub/Moneyhub-API-Client-Tests-Config-0bef6e3cb922425b88f0268c1a999917) for how to obtain and place the default `config` used by integration (and CaaS) tests.
+- **Integration suite** (requires local config): `npm test` or `npm run test-ci`.
+- **CaaS suite** (requires CaaS config): `npm run test-caas` or `npm run test-caas-ci`.
+- Integration tests live in `src/__tests__/**/*.ts`; hooks in `test/hooks.js` provide `this.config` (e.g. `testUserId`, `testAccountId`).

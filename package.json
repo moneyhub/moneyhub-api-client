@@ -1,6 +1,6 @@
 {
   "name": "@mft/moneyhub-api-client",
-  "version": "6.100.0",
+  "version": "6.100.1",
   "description": "Node.JS client for the Moneyhub API",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -27,7 +27,7 @@
     "api",
     "openid"
   ],
-  "author": "Moneyub Financial Technology",
+  "author": "Moneyhub Financial Technology",
   "homepage": "https://github.com/moneyhub/moneyhub-api-client",
   "repository": "moneyhub/moneyhub-api-client",
   "license": "ISC",
