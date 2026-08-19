@@ -109,17 +109,17 @@ describe("POST /transactions/enrich", function() {
     })
 
     it("card-present transaction receives geotags", function() {
-      const first = response.data[0]
+      const geoTrx = response.data.find(trx => trx.cardPresent === true)
 
-      expect(first.mhInsights).to.have.property("geotags")
-      expect(first.mhInsights.geotags).to.be.an("array").with.lengthOf(3)
+      expect(geoTrx?.mhInsights).to.have.property("geotags")
+      expect(geoTrx?.mhInsights.geotags).to.be.an("array").with.lengthOf(3)
     })
 
     it("meta is returned intact on enriched transaction", function() {
-      const second = response.data[1]
+      const metaTrx = response.data.find(trx => !!trx.meta)
 
-      expect(second).to.have.property("meta")
-      expect(second.meta).to.deep.equal({hello: "world"})
+      expect(metaTrx).to.have.property("meta")
+      expect(metaTrx?.meta).to.deep.equal({hello: "world"})
     })
   })
 
