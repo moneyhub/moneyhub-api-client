@@ -33,7 +33,7 @@ describe("PUT /accounts/{accountId}/transactions/{transactionId}/splits", functi
       }
 
       const {caas: {accountId}} = this.config
-      const transactionId = this.transactionIds[0]
+      const transactionId = "08820421-8472-4254-8608-f0d59e3b0a99"
 
       requestBody = {
         data: [
@@ -64,7 +64,7 @@ describe("PUT /accounts/{accountId}/transactions/{transactionId}/splits", functi
       }
 
       const {caas: {accountId}} = this.config
-      const transactionId = this.transactionIds[0]
+      const transactionId = "08820421-8472-4254-8608-f0d59e3b0a99"
 
       await moneyhub.caasDeleteTransactionSplits({accountId, transactionId})
     })
