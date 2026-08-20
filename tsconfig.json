@@ -2,22 +2,36 @@
   "compilerOptions": {
     "allowJs": true,
     "sourceMap": true,
-    "module": "commonjs",
+    "module": "Node16",
     "target": "es2019",
-    "moduleResolution": "node",
+    "moduleResolution": "Node16",
     "outDir": "./dist",
     "rootDir": "./src",
     "baseUrl": "./",
+    "ignoreDeprecations": "6.0",
     "skipLibCheck": true,
     "declaration": true,
     "declarationMap": true,
     "esModuleInterop": true,
-    "lib": ["dom", "dom.iterable", "esnext"],
+    "types": ["node", "mocha", "chai"],
+    "lib": [
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*.ts"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "ts-node": {
+    "compilerOptions": {
+      "module": "Node16",
+      "moduleResolution": "Node16"
+    }
+  }
 }
