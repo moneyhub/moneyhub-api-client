@@ -156,6 +156,7 @@ describe("API client", function() {
         "updateSavingsGoal",
         "deleteSavingsGoal",
         "getAuthorizeUrl",
+        "getAuthorizeUrlUsingPKCE",
         "getAuthorizeUrlLegacy",
         "getAuthorizeUrlFromRequestUri",
         "requestObject",

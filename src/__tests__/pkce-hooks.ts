@@ -38,12 +38,12 @@ const createMockAuthClient = () => {
 }
 
 describe("PKCE hooks", function() {
-  describe("getAuthorizeUrl", function() {
+  describe("getAuthorizeUrlUsingPKCE", function() {
     it("omits pkce params when pkce is not provided", async function() {
       const {client, authParams} = createMockAuthClient()
-      const {getAuthorizeUrl} = getAuthUrlsFactory({client: client as any, config: baseConfig})
+      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
 
-      const url = await getAuthorizeUrl({
+      const url = await getAuthorizeUrlUsingPKCE({
         state: "sample-state",
         scope: "openid",
       })
@@ -54,9 +54,9 @@ describe("PKCE hooks", function() {
 
     it("does not generate pkce when pkce.generate is omitted", async function() {
       const {client, authParams} = createMockAuthClient()
-      const {getAuthorizeUrl} = getAuthUrlsFactory({client: client as any, config: baseConfig})
+      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
 
-      await getAuthorizeUrl({
+      await getAuthorizeUrlUsingPKCE({
         state: "sample-state",
         scope: "openid",
         pkce: {},
@@ -67,10 +67,10 @@ describe("PKCE hooks", function() {
 
     it("stores verifier and includes code_challenge when pkce.generate is true", async function() {
       const {client, authParams} = createMockAuthClient()
-      const {getAuthorizeUrl} = getAuthUrlsFactory({client: client as any, config: baseConfig})
+      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
       const stored: {state?: string, codeVerifier?: string} = {}
 
-      await getAuthorizeUrl({
+      await getAuthorizeUrlUsingPKCE({
         state: "sample-state",
         scope: "openid",
         pkce: {
@@ -92,10 +92,10 @@ describe("PKCE hooks", function() {
 
     it("throws when pkce.generate and codeChallenge are both provided", async function() {
       const {client} = createMockAuthClient()
-      const {getAuthorizeUrl} = getAuthUrlsFactory({client: client as any, config: baseConfig})
+      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
 
       try {
-        await getAuthorizeUrl({
+        await getAuthorizeUrlUsingPKCE({
           state: "sample-state",
           scope: "openid",
           codeChallenge: "challenge",
@@ -112,10 +112,10 @@ describe("PKCE hooks", function() {
 
     it("throws when pkce.generate is true without storeVerifier", async function() {
       const {client} = createMockAuthClient()
-      const {getAuthorizeUrl} = getAuthUrlsFactory({client: client as any, config: baseConfig})
+      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
 
       try {
-        await getAuthorizeUrl({
+        await getAuthorizeUrlUsingPKCE({
           state: "sample-state",
           scope: "openid",
           pkce: {generate: true},
@@ -128,10 +128,10 @@ describe("PKCE hooks", function() {
 
     it("throws when pkce.generate is true without state", async function() {
       const {client} = createMockAuthClient()
-      const {getAuthorizeUrl} = getAuthUrlsFactory({client: client as any, config: baseConfig})
+      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
 
       try {
-        await getAuthorizeUrl({
+        await getAuthorizeUrlUsingPKCE({
           scope: "openid",
           pkce: {
             generate: true,

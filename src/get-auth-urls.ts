@@ -133,7 +133,83 @@ export default ({
     return url
   }
 
-  const getAuthorizeUrl = async ({
+  const getAuthorizeUrl = ({
+    state,
+    scope,
+    nonce,
+    claims = {},
+    permissions,
+    permissionsAction,
+    enableAsync,
+    accVerification,
+    expirationDateTime,
+    transactionFromDateTime,
+    codeChallenge,
+  }: {
+    state?: string
+    scope: string
+    nonce?: string
+    claims?: any
+    permissions?: string[]
+    permissionsAction?: PermissionsAction
+    enableAsync?: boolean
+    accVerification?: boolean
+    expirationDateTime?: string
+    transactionFromDateTime?: string
+    codeChallenge?: string
+  }): Promise<string> => {
+    const pkceParams = codeChallenge ? {
+      code_challenge: codeChallenge,
+      code_challenge_method: "S256",
+    } : undefined
+
+    const defaultClaims = {
+      id_token: {
+        sub: {
+          essential: true,
+        },
+        "mh:con_id": {
+          essential: true,
+        },
+        ...(expirationDateTime || transactionFromDateTime) && {
+          "mh:consent": {
+            "essential": true,
+            "value": {
+              ...expirationDateTime && {expirationDateTime},
+              ...transactionFromDateTime && {transactionFromDateTime},
+            },
+          },
+        },
+        ...enableAsync && {
+          "mh:sync": {
+            "essential": true,
+            "value": {"enableAsync": true},
+          },
+        },
+        ...accVerification && {
+          "mh:account_verification": {
+            "essential": true,
+            "value": {"accVerification": true},
+          },
+        },
+      },
+    }
+
+    const _claims = R.compose(
+      setPermissionsToClaims(permissions, permissionsAction),
+      R.mergeDeepRight(defaultClaims),
+    )(claims)
+
+    return getAuthorizationUrlFromParams({
+      scope,
+      claims: _claims,
+      nonce,
+      state,
+      pkceParams,
+    })
+  }
+
+  const getAuthorizeUrlUsingPKCE = async ({
     state,
     scope,
     nonce,
@@ -304,6 +380,7 @@ export default ({
 
   return {
     getAuthorizeUrl,
+    getAuthorizeUrlUsingPKCE,
     getAuthorizeUrlLegacy,
     getAuthorizeUrlFromRequestUri,
     requestObject: getRequestObject,
