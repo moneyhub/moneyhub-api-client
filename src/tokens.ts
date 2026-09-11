@@ -70,6 +70,8 @@ This function now requires an object with the following properties:
       "code_verifier" // required for PKCE
   }
 }
+
+For server-side PKCE verifier retrieval, use exchangeCodeForTokensUsingPKCE instead.
 `
 
 export default ({
@@ -84,7 +86,10 @@ export default ({
     client: {redirect_uri, request_object_signing_alg, keys, client_id},
   } = config
 
-  const exchangeCodeForTokens = exchangeCodeForTokensFactory({
+  const {
+    exchangeCodeForTokens,
+    exchangeCodeForTokensUsingPKCE,
+  } = exchangeCodeForTokensFactory({
     client,
     redirectUri: redirect_uri,
   })
@@ -125,12 +130,22 @@ export default ({
       return (client as any).authorizationCallback(redirect_uri, requestObj, verify)
     },
 
-    exchangeCodeForTokens: ({paramsFromCallback, localParams}: Parameters<typeof exchangeCodeForTokens>[0]) => {
+    exchangeCodeForTokens: (options: Parameters<typeof exchangeCodeForTokens>[0]) => {
+      const {paramsFromCallback, localParams} = options
       if (!paramsFromCallback || !localParams) {
         console.error(exchangeCodeForTokensErrorMessage)
         throw new Error("Missing parameters")
       }
       return exchangeCodeForTokens({paramsFromCallback, localParams})
+    },
+
+    exchangeCodeForTokensUsingPKCE: (options: Parameters<typeof exchangeCodeForTokensUsingPKCE>[0]) => {
+      const {paramsFromCallback, localParams} = options
+      if (!paramsFromCallback || !localParams) {
+        console.error(exchangeCodeForTokensErrorMessage)
+        throw new Error("Missing parameters")
+      }
+      return exchangeCodeForTokensUsingPKCE(options)
     },
 
     refreshTokens: ({refreshToken}: {refreshToken: string | TokenSet}) => client.refresh(refreshToken),

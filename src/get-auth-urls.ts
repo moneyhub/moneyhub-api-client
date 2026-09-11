@@ -1,18 +1,69 @@
 import got from "got"
 import type {Client} from "openid-client"
+import {generators} from "openid-client"
 import * as R from "ramda"
 
 import type {ApiClientConfig} from "./schema/config"
-import {PayerType, PaymentActorType} from "./schema/payment"
+import type {PkceAuthoriseOptions} from "./pkce"
+import type {PayerType, PaymentActorType} from "./schema/payment"
 import {StandingOrderFrequency} from "./schema/standing-order"
 import {RequestPayee, RequestPayer} from "./schema/payee"
 import {PermissionsAction} from "./requests/types/auth-requests"
 
 const filterUndefined = R.reject(R.isNil)
+
+export interface GetAuthorizeUrlOptions {
+  state?: string
+  scope: string
+  nonce?: string
+  claims?: any
+  permissions?: string[]
+  permissionsAction?: PermissionsAction
+  enableAsync?: boolean
+  accVerification?: boolean
+  expirationDateTime?: string
+  transactionFromDateTime?: string
+  codeChallenge?: string
+}
+
+export interface GetAuthorizeUrlUsingPKCEOptions extends GetAuthorizeUrlOptions {
+  pkce?: PkceAuthoriseOptions
+}
+
 type PkceParams = {
   code_challenge: string
   code_challenge_method: string
 }
+
+const resolveAuthoriseCodeChallenge = async ({
+  state,
+  codeChallenge,
+  pkce,
+}: {
+  state?: string
+  codeChallenge?: string
+  pkce?: PkceAuthoriseOptions
+}) => {
+  if (!pkce?.generate) {
+    return codeChallenge
+  }
+
+  if (codeChallenge) {
+    throw new Error("Provide either pkce.generate or codeChallenge, not both")
+  }
+  if (!pkce.storeVerifier) {
+    throw new Error("pkce.storeVerifier is required when pkce.generate is true")
+  }
+  if (!state) {
+    throw new Error("state is required when pkce.generate is true")
+  }
+
+  const codeVerifier = generators.codeVerifier()
+  const resolvedCodeChallenge = generators.codeChallenge(codeVerifier)
+  await pkce.storeVerifier({state, codeVerifier})
+  return resolvedCodeChallenge
+}
+
 export default ({
   client,
   config,
@@ -113,20 +164,7 @@ export default ({
     expirationDateTime,
     transactionFromDateTime,
     codeChallenge,
-  }: {
-    state?: string
-    scope: string
-    nonce?: string
-    claims?: any
-    permissions?: string[]
-    permissionsAction?: PermissionsAction
-    enableAsync?: boolean
-    accVerification?: boolean
-    expirationDateTime?: string
-    transactionFromDateTime?: string
-    codeChallenge?: string
-  }): Promise<string> => {
-
+  }: GetAuthorizeUrlOptions): Promise<string> => {
     const pkceParams = codeChallenge ? {
       code_challenge: codeChallenge,
       code_challenge_method: "S256",
@@ -176,6 +214,19 @@ export default ({
       state,
       pkceParams,
     })
+  }
+
+  const getAuthorizeUrlUsingPKCE = async ({
+    pkce,
+    ...options
+  }: GetAuthorizeUrlUsingPKCEOptions): Promise<string> => {
+    const codeChallenge = await resolveAuthoriseCodeChallenge({
+      state: options.state,
+      codeChallenge: options.codeChallenge,
+      pkce,
+    })
+
+    return getAuthorizeUrl({...options, codeChallenge})
   }
 
   const getAuthorizeUrlLegacy = ({
@@ -269,6 +320,7 @@ export default ({
 
   return {
     getAuthorizeUrl,
+    getAuthorizeUrlUsingPKCE,
     getAuthorizeUrlLegacy,
     getAuthorizeUrlFromRequestUri,
     requestObject: getRequestObject,
