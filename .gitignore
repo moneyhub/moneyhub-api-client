@@ -1,6 +1,9 @@
 node_modules/
 examples/config.js
 examples/config-local.js
+examples/config-dev.js
+examples/config-test.js
+examples/config-prod.js
 examples/config.local.js
 config/local.json
 config/default.json

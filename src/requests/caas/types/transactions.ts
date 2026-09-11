@@ -50,7 +50,7 @@ export interface CaasTransactionInput {
   splits?: CaasTransactionSplit[]
 }
 
-export type CaasRecategorisationType = "single" | "future"
+export type CaasRecategorisationType = "single" | "future" | "past-and-future"
 
 export interface CaasTransactionsRequests {
   caasPatchTransaction: (

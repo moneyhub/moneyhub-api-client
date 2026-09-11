@@ -1,3 +1,10 @@
+Unreleased
+==========
+
+**Bug Fixes**
+
+* `caasPatchTransaction`: add `past-and-future` to `CaasRecategorisationType`.
+
 6.100.1 / 2026-08-18
 ==========
 
