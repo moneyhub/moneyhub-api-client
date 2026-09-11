@@ -2357,7 +2357,7 @@ Example script: `node examples/caas/transactions/get-enhanced-transaction.js -a 
 
 #### `caasPatchTransaction`
 
-Update a transaction's user-defined category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`. The optional `recategorisationType` query parameter (`single` or `future`, defaulting to `single`) controls whether the change applies to this transaction only or to all future matching transactions.
+Update a transaction's user-defined category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`. Pass `recategorisationType` as a query parameter: `single` (this transaction only), `future` (this transaction and future matches), or `past-and-future` (this transaction, historical matches, and future matches). Defaults to `single` when omitted.
 
 ```javascript
 const result = await moneyhub.caasPatchTransaction({
