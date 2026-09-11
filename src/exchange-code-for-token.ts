@@ -32,6 +32,15 @@ export interface LocalParams {
   sub?: any
 }
 
+export interface ExchangeCodeForTokensOptions {
+  paramsFromCallback: ParamsFromCallback
+  localParams: LocalParams
+}
+
+export interface ExchangeCodeForTokensUsingPKCEOptions extends ExchangeCodeForTokensOptions {
+  pkce?: PkceExchangeOptions
+}
+
 type ResponseType = "none" | "code" | "id_token" | "token"
 
 const RESPONSE_TYPE_REQUIRED_PARAMS: {
@@ -41,107 +50,6 @@ const RESPONSE_TYPE_REQUIRED_PARAMS: {
   code: ["code"],
   id_token: ["id_token"],
   token: ["access_token", "token_type"],
-}
-
-const runExchange = ({
-  client,
-  redirectUri,
-  paramsFromCallback,
-  localParams,
-  checks,
-}: {
-  client: Client
-  redirectUri: string
-  paramsFromCallback: ParamsFromCallback
-  localParams: LocalParams
-  checks: LocalParams
-}): Promise<TokenSet> => {
-  const params = R.pick(ALLOWED_PARAMS, paramsFromCallback)
-
-  if (client.default_max_age && !checks.max_age)
-    checks.max_age = client.default_max_age
-
-  if (!params.state && checks.state) {
-    return Promise.reject(new Error("paramsFromCallback.state is missing"))
-  }
-
-  if (params.state && !checks.state) {
-    return Promise.reject(new Error("localParams.state argument is missing"))
-  }
-
-  if (checks.state !== params.state) {
-    return Promise.reject(new Error("state mismatch"))
-  }
-
-  if (params.error) {
-    return Promise.reject(new Error(params.error))
-  }
-
-  if (!params.code) {
-    return Promise.reject(new Error("paramsFromCallback.code is missing"))
-  }
-
-  if (checks.response_type) {
-    for (const type of checks.response_type.split(" ") as ResponseType[]) {
-      if (type === "none") {
-        if (params.code || params.id_token || params.access_token) {
-          return Promise.reject(
-            new Error("unexpected params encountered for 'none' response"),
-          )
-        }
-      } else {
-        for (const param of RESPONSE_TYPE_REQUIRED_PARAMS[type]) {
-          if (!params[param]) {
-            return Promise.reject(new Error(`${param} missing from response`))
-          }
-        }
-      }
-    }
-  }
-
-  let promise
-
-  if (params.id_token) {
-    promise = Promise.resolve(new TokenSet(params))
-      .then((tokenset) => (client as any).decryptIdToken(tokenset))
-      .then<TokenSet>((tokenset) =>
-        (client as any).validateIdToken(
-          tokenset,
-          checks.nonce,
-          "authorization",
-          checks.max_age,
-          checks.state,
-        ),
-      )
-  }
-
-  if (params.code) {
-    const grantCall = () =>
-      client.grant({
-        grant_type: "authorization_code",
-        code: params.code,
-        redirect_uri: redirectUri,
-        code_verifier: checks.code_verifier,
-        sub: localParams.sub,
-      })
-        .then((tokenset) => (client as any).decryptIdToken(tokenset))
-        .then((tokenset) =>
-          (client as any).validateIdToken(tokenset, checks.nonce, "token", checks.max_age),
-        )
-        .then((tokenset) => {
-          if (params.session_state)
-            tokenset.session_state = params.session_state
-          return tokenset
-        })
-
-    if (promise) {
-      promise = promise.then(grantCall)
-    } else {
-      return grantCall()
-    }
-  }
-
-  return promise || Promise.resolve(new TokenSet(params))
 }
 
 export default ({
@@ -154,46 +62,116 @@ export default ({
   const exchangeCodeForTokens = ({
     paramsFromCallback,
     localParams,
-  }: {
-    paramsFromCallback: ParamsFromCallback
-    localParams: LocalParams
-  }): Promise<TokenSet> =>
-    runExchange({
-      client,
-      redirectUri,
-      paramsFromCallback,
-      localParams,
-      checks: localParams,
-    })
+  }: ExchangeCodeForTokensOptions): Promise<TokenSet> => {
+    const params = R.pick(ALLOWED_PARAMS, paramsFromCallback)
+    const checks = localParams
+
+    if (client.default_max_age && !checks.max_age)
+      checks.max_age = client.default_max_age
+
+    if (!params.state && checks.state) {
+      return Promise.reject(new Error("paramsFromCallback.state is missing"))
+    }
+
+    if (params.state && !checks.state) {
+      return Promise.reject(new Error("localParams.state argument is missing"))
+    }
+
+    if (checks.state !== params.state) {
+      return Promise.reject(new Error("state mismatch"))
+    }
+
+    if (params.error) {
+      return Promise.reject(new Error(params.error))
+    }
+
+    if (!params.code) {
+      return Promise.reject(new Error("paramsFromCallback.code is missing"))
+    }
+
+    if (checks.response_type) {
+      for (const type of checks.response_type.split(" ") as ResponseType[]) {
+        if (type === "none") {
+          if (params.code || params.id_token || params.access_token) {
+            return Promise.reject(
+              new Error("unexpected params encountered for 'none' response"),
+            )
+          }
+        } else {
+          for (const param of RESPONSE_TYPE_REQUIRED_PARAMS[type]) {
+            if (!params[param]) {
+              return Promise.reject(new Error(`${param} missing from response`))
+            }
+          }
+        }
+      }
+    }
+
+    let promise
+
+    if (params.id_token) {
+      promise = Promise.resolve(new TokenSet(params))
+        .then((tokenset) => (client as any).decryptIdToken(tokenset))
+        .then<TokenSet>((tokenset) =>
+          (client as any).validateIdToken(
+            tokenset,
+            checks.nonce,
+            "authorization",
+            checks.max_age,
+            checks.state,
+          ),
+        )
+    }
+
+    if (params.code) {
+      const grantCall = () =>
+        client.grant({
+          grant_type: "authorization_code",
+          code: params.code,
+          redirect_uri: redirectUri,
+          code_verifier: checks.code_verifier,
+          sub: localParams.sub,
+        })
+          .then((tokenset) => (client as any).decryptIdToken(tokenset))
+          .then((tokenset) =>
+            (client as any).validateIdToken(tokenset, checks.nonce, "token", checks.max_age),
+          )
+          .then((tokenset) => {
+            if (params.session_state)
+              tokenset.session_state = params.session_state
+            return tokenset
+          })
+
+      if (promise) {
+        promise = promise.then(grantCall)
+      } else {
+        return grantCall()
+      }
+    }
+
+    return promise || Promise.resolve(new TokenSet(params))
+  }
 
   const exchangeCodeForTokensUsingPKCE = async ({
     paramsFromCallback,
     localParams,
     pkce,
-  }: {
-    paramsFromCallback: ParamsFromCallback
-    localParams: LocalParams
-    pkce?: PkceExchangeOptions
-  }): Promise<TokenSet> => {
-    const checks = {...localParams}
-
-    if (pkce?.consumeVerifier && checks.code_verifier) {
+  }: ExchangeCodeForTokensUsingPKCEOptions): Promise<TokenSet> => {
+    if (pkce?.consumeVerifier && localParams.code_verifier) {
       return Promise.reject(
         new Error("Provide code_verifier via pkce.consumeVerifier or localParams.code_verifier, not both"),
       )
     }
 
     if (pkce?.consumeVerifier) {
-      checks.code_verifier = await pkce.consumeVerifier({state: checks.state})
+      const code_verifier = await pkce.consumeVerifier({state: localParams.state})
+      return exchangeCodeForTokens({
+        paramsFromCallback,
+        localParams: {...localParams, code_verifier},
+      })
     }
 
-    return runExchange({
-      client,
-      redirectUri,
-      paramsFromCallback,
-      localParams,
-      checks,
-    })
+    return exchangeCodeForTokens({paramsFromCallback, localParams})
   }
 
   return {

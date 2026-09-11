@@ -130,7 +130,8 @@ export default ({
       return (client as any).authorizationCallback(redirect_uri, requestObj, verify)
     },
 
-    exchangeCodeForTokens: ({paramsFromCallback, localParams}: Parameters<typeof exchangeCodeForTokens>[0]) => {
+    exchangeCodeForTokens: (options: Parameters<typeof exchangeCodeForTokens>[0]) => {
+      const {paramsFromCallback, localParams} = options
       if (!paramsFromCallback || !localParams) {
         console.error(exchangeCodeForTokensErrorMessage)
         throw new Error("Missing parameters")
@@ -138,16 +139,13 @@ export default ({
       return exchangeCodeForTokens({paramsFromCallback, localParams})
     },
 
-    exchangeCodeForTokensUsingPKCE: ({
-      paramsFromCallback,
-      localParams,
-      pkce,
-    }: Parameters<typeof exchangeCodeForTokensUsingPKCE>[0]) => {
+    exchangeCodeForTokensUsingPKCE: (options: Parameters<typeof exchangeCodeForTokensUsingPKCE>[0]) => {
+      const {paramsFromCallback, localParams} = options
       if (!paramsFromCallback || !localParams) {
         console.error(exchangeCodeForTokensErrorMessage)
         throw new Error("Missing parameters")
       }
-      return exchangeCodeForTokensUsingPKCE({paramsFromCallback, localParams, pkce})
+      return exchangeCodeForTokensUsingPKCE(options)
     },
 
     refreshTokens: ({refreshToken}: {refreshToken: string | TokenSet}) => client.refresh(refreshToken),
