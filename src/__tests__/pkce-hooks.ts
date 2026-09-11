@@ -20,12 +20,14 @@ const baseConfig = {
   },
 } as ApiClientConfig
 
-const createMockAuthClient = () => {
+const state = "sample-state"
+const code = "auth-code"
+const scopeOpts = {state, scope: "openid"}
+
+const authUrls = () => {
   const authParams: object[] = []
   const client = {
-    issuer: {
-      authorization_endpoint: "https://identity.example/oidc/auth",
-    },
+    issuer: {authorization_endpoint: "https://identity.example/oidc/auth"},
     requestObject: (params: object) => {
       authParams.push(params)
       return "signed-request"
@@ -33,56 +35,58 @@ const createMockAuthClient = () => {
     pushedAuthorizationRequest: () =>
       Promise.resolve({request_uri: "urn:ietf:params:oauth:request_uri:test"}),
   }
+  return {
+    authParams,
+    ...getAuthUrlsFactory({client: client as any, config: baseConfig}),
+  }
+}
 
-  return {client, authParams}
+const exchange = (grant: (...args: any[]) => Promise<any>) =>
+  exchangeCodeForTokensFactory({
+    client: {
+      default_max_age: undefined,
+      grant,
+      decryptIdToken: (tokenset: any) => tokenset,
+      validateIdToken: (tokenset: any) => tokenset,
+    } as any,
+    redirectUri: baseConfig.client.redirect_uri as string,
+  })
+
+const expectReject = async (run: () => Promise<unknown>, message: string) => {
+  try {
+    await run()
+    expect.fail("expected error")
+  } catch (error) {
+    expect((error as Error).message).to.equal(message)
+  }
 }
 
 describe("PKCE hooks", function() {
   describe("getAuthorizeUrlUsingPKCE", function() {
-    it("omits pkce params when pkce is not provided", async function() {
-      const {client, authParams} = createMockAuthClient()
-      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
-
-      const url = await getAuthorizeUrlUsingPKCE({
-        state: "sample-state",
-        scope: "openid",
-      })
-
-      expect(url).to.be.a("string")
-      expect(authParams[0]).to.not.have.property("code_challenge")
-    })
-
-    it("does not generate pkce when pkce.generate is omitted", async function() {
-      const {client, authParams} = createMockAuthClient()
-      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
-
-      await getAuthorizeUrlUsingPKCE({
-        state: "sample-state",
-        scope: "openid",
-        pkce: {},
-      })
-
-      expect(authParams[0]).to.not.have.property("code_challenge")
+    it("omits code_challenge when pkce is absent or generate is omitted", async function() {
+      for (const pkce of [undefined, {}]) {
+        const {authParams, getAuthorizeUrlUsingPKCE} = authUrls()
+        await getAuthorizeUrlUsingPKCE({...scopeOpts, ...(pkce ? {pkce} : {})})
+        expect(authParams[0]).to.not.have.property("code_challenge")
+      }
     })
 
     it("stores verifier and includes code_challenge when pkce.generate is true", async function() {
-      const {client, authParams} = createMockAuthClient()
-      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
+      const {authParams, getAuthorizeUrlUsingPKCE} = authUrls()
       const stored: {state?: string, codeVerifier?: string} = {}
 
       await getAuthorizeUrlUsingPKCE({
-        state: "sample-state",
-        scope: "openid",
+        ...scopeOpts,
         pkce: {
           generate: true,
-          storeVerifier: async ({state, codeVerifier}) => {
-            stored.state = state
+          storeVerifier: async ({state: oauthState, codeVerifier}) => {
+            stored.state = oauthState
             stored.codeVerifier = codeVerifier
           },
         },
       })
 
-      expect(stored.state).to.equal("sample-state")
+      expect(stored).to.include({state: "sample-state"})
       expect(stored.codeVerifier).to.be.a("string")
       expect(authParams[0]).to.include({
         code_challenge: generators.codeChallenge(stored.codeVerifier as string),
@@ -90,176 +94,66 @@ describe("PKCE hooks", function() {
       })
     })
 
-    it("throws when pkce.generate and codeChallenge are both provided", async function() {
-      const {client} = createMockAuthClient()
-      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
+    it("rejects invalid pkce.generate usage", async function() {
+      const {getAuthorizeUrlUsingPKCE} = authUrls()
+      const storeVerifier = async () => undefined
 
-      try {
-        await getAuthorizeUrlUsingPKCE({
-          state: "sample-state",
-          scope: "openid",
+      await expectReject(
+        () => getAuthorizeUrlUsingPKCE({
+          ...scopeOpts,
           codeChallenge: "challenge",
-          pkce: {
-            generate: true,
-            storeVerifier: async () => undefined,
-          },
-        })
-        expect.fail("expected error")
-      } catch (error) {
-        expect((error as Error).message).to.equal("Provide either pkce.generate or codeChallenge, not both")
-      }
-    })
-
-    it("throws when pkce.generate is true without storeVerifier", async function() {
-      const {client} = createMockAuthClient()
-      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
-
-      try {
-        await getAuthorizeUrlUsingPKCE({
-          state: "sample-state",
-          scope: "openid",
-          pkce: {generate: true},
-        })
-        expect.fail("expected error")
-      } catch (error) {
-        expect((error as Error).message).to.equal("pkce.storeVerifier is required when pkce.generate is true")
-      }
-    })
-
-    it("throws when pkce.generate is true without state", async function() {
-      const {client} = createMockAuthClient()
-      const {getAuthorizeUrlUsingPKCE} = getAuthUrlsFactory({client: client as any, config: baseConfig})
-
-      try {
-        await getAuthorizeUrlUsingPKCE({
-          scope: "openid",
-          pkce: {
-            generate: true,
-            storeVerifier: async () => undefined,
-          },
-        })
-        expect.fail("expected error")
-      } catch (error) {
-        expect((error as Error).message).to.equal("state is required when pkce.generate is true")
-      }
-    })
-  })
-
-  describe("exchangeCodeForTokens", function() {
-    const state = "sample-state"
-    const code = "auth-code"
-
-    const createExchangeClient = (grantStub: (...args: any[]) => Promise<any>) => ({
-      default_max_age: undefined,
-      grant: grantStub,
-      decryptIdToken: (tokenset: any) => tokenset,
-      validateIdToken: (tokenset: any) => tokenset,
-    })
-
-    it("uses localParams.code_verifier", async function() {
-      const grantStub = async (params: {code_verifier?: string}) => {
-        expect(params.code_verifier).to.equal("manual-verifier")
-        return {access_token: "token"}
-      }
-
-      const {exchangeCodeForTokens} = exchangeCodeForTokensFactory({
-        client: createExchangeClient(grantStub) as any,
-        redirectUri: baseConfig.client.redirect_uri as string,
-      })
-
-      await exchangeCodeForTokens({
-        paramsFromCallback: {code, state},
-        localParams: {
-          state,
-          response_type: "code",
-          code_verifier: "manual-verifier",
-        },
-      })
+          pkce: {generate: true, storeVerifier},
+        }),
+        "Provide either pkce.generate or codeChallenge, not both",
+      )
+      await expectReject(
+        () => getAuthorizeUrlUsingPKCE({...scopeOpts, pkce: {generate: true}}),
+        "pkce.storeVerifier is required when pkce.generate is true",
+      )
+      await expectReject(
+        () => getAuthorizeUrlUsingPKCE({scope: "openid", pkce: {generate: true, storeVerifier}}),
+        "state is required when pkce.generate is true",
+      )
     })
   })
 
   describe("exchangeCodeForTokensUsingPKCE", function() {
-    const state = "sample-state"
-    const code = "auth-code"
+    const callback = {paramsFromCallback: {code, state}, localParams: {state, response_type: "code"}}
 
-    const createExchangeClient = (grantStub: (...args: any[]) => Promise<any>) => ({
-      default_max_age: undefined,
-      grant: grantStub,
-      decryptIdToken: (tokenset: any) => tokenset,
-      validateIdToken: (tokenset: any) => tokenset,
-    })
-
-    it("uses pkce.consumeVerifier for code_verifier", async function() {
+    it("passes code_verifier from consumeVerifier or localParams", async function() {
       let consumedState: string | undefined
-      const grantStub = async (params: {code_verifier?: string}) => {
+      const grant = async (params: {code_verifier?: string}) => {
         expect(params.code_verifier).to.equal("stored-verifier")
         return {access_token: "token"}
       }
 
-      const {exchangeCodeForTokensUsingPKCE} = exchangeCodeForTokensFactory({
-        client: createExchangeClient(grantStub) as any,
-        redirectUri: baseConfig.client.redirect_uri as string,
+      await exchange(grant).exchangeCodeForTokensUsingPKCE({
+        ...callback,
+        pkce: {consumeVerifier: async ({state: oauthState}) => {
+          consumedState = oauthState
+          return "stored-verifier"
+        }},
       })
-
-      await exchangeCodeForTokensUsingPKCE({
-        paramsFromCallback: {code, state},
-        localParams: {state, response_type: "code"},
-        pkce: {
-          consumeVerifier: async ({state: oauthState}) => {
-            consumedState = oauthState
-            return "stored-verifier"
-          },
-        },
-      })
-
       expect(consumedState).to.equal(state)
-    })
 
-    it("falls back to localParams.code_verifier when pkce is omitted", async function() {
-      const grantStub = async (params: {code_verifier?: string}) => {
+      await exchange(async (params) => {
         expect(params.code_verifier).to.equal("manual-verifier")
         return {access_token: "token"}
-      }
-
-      const {exchangeCodeForTokensUsingPKCE} = exchangeCodeForTokensFactory({
-        client: createExchangeClient(grantStub) as any,
-        redirectUri: baseConfig.client.redirect_uri as string,
-      })
-
-      await exchangeCodeForTokensUsingPKCE({
-        paramsFromCallback: {code, state},
-        localParams: {
-          state,
-          response_type: "code",
-          code_verifier: "manual-verifier",
-        },
+      }).exchangeCodeForTokens({
+        ...callback,
+        localParams: {...callback.localParams, code_verifier: "manual-verifier"},
       })
     })
 
-    it("throws when pkce.consumeVerifier and localParams.code_verifier are both set", async function() {
-      const {exchangeCodeForTokensUsingPKCE} = exchangeCodeForTokensFactory({
-        client: createExchangeClient(async () => ({access_token: "token"})) as any,
-        redirectUri: baseConfig.client.redirect_uri as string,
-      })
-
-      try {
-        await exchangeCodeForTokensUsingPKCE({
-          paramsFromCallback: {code, state},
-          localParams: {
-            state,
-            response_type: "code",
-            code_verifier: "manual-verifier",
-          },
-          pkce: {
-            consumeVerifier: async () => "stored-verifier",
-          },
-        })
-        expect.fail("expected error")
-      } catch (error) {
-        expect((error as Error).message).to.equal(
-          "Provide code_verifier via pkce.consumeVerifier or localParams.code_verifier, not both",
-        )
-      }
+    it("rejects code_verifier from both consumeVerifier and localParams", async function() {
+      await expectReject(
+        () => exchange(async () => ({access_token: "token"})).exchangeCodeForTokensUsingPKCE({
+          ...callback,
+          localParams: {...callback.localParams, code_verifier: "manual-verifier"},
+          pkce: {consumeVerifier: async () => "stored-verifier"},
+        }),
+        "Provide code_verifier via pkce.consumeVerifier or localParams.code_verifier, not both",
+      )
     })
   })
 })
