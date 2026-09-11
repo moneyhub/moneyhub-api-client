@@ -156,6 +156,39 @@ describe("PKCE hooks", function() {
       validateIdToken: (tokenset: any) => tokenset,
     })
 
+    it("uses localParams.code_verifier", async function() {
+      const grantStub = async (params: {code_verifier?: string}) => {
+        expect(params.code_verifier).to.equal("manual-verifier")
+        return {access_token: "token"}
+      }
+
+      const {exchangeCodeForTokens} = exchangeCodeForTokensFactory({
+        client: createExchangeClient(grantStub) as any,
+        redirectUri: baseConfig.client.redirect_uri as string,
+      })
+
+      await exchangeCodeForTokens({
+        paramsFromCallback: {code, state},
+        localParams: {
+          state,
+          response_type: "code",
+          code_verifier: "manual-verifier",
+        },
+      })
+    })
+  })
+
+  describe("exchangeCodeForTokensUsingPKCE", function() {
+    const state = "sample-state"
+    const code = "auth-code"
+
+    const createExchangeClient = (grantStub: (...args: any[]) => Promise<any>) => ({
+      default_max_age: undefined,
+      grant: grantStub,
+      decryptIdToken: (tokenset: any) => tokenset,
+      validateIdToken: (tokenset: any) => tokenset,
+    })
+
     it("uses pkce.consumeVerifier for code_verifier", async function() {
       let consumedState: string | undefined
       const grantStub = async (params: {code_verifier?: string}) => {
@@ -163,12 +196,12 @@ describe("PKCE hooks", function() {
         return {access_token: "token"}
       }
 
-      const exchange = exchangeCodeForTokensFactory({
+      const {exchangeCodeForTokensUsingPKCE} = exchangeCodeForTokensFactory({
         client: createExchangeClient(grantStub) as any,
         redirectUri: baseConfig.client.redirect_uri as string,
       })
 
-      await exchange({
+      await exchangeCodeForTokensUsingPKCE({
         paramsFromCallback: {code, state},
         localParams: {state, response_type: "code"},
         pkce: {
@@ -188,12 +221,12 @@ describe("PKCE hooks", function() {
         return {access_token: "token"}
       }
 
-      const exchange = exchangeCodeForTokensFactory({
+      const {exchangeCodeForTokensUsingPKCE} = exchangeCodeForTokensFactory({
         client: createExchangeClient(grantStub) as any,
         redirectUri: baseConfig.client.redirect_uri as string,
       })
 
-      await exchange({
+      await exchangeCodeForTokensUsingPKCE({
         paramsFromCallback: {code, state},
         localParams: {
           state,
@@ -204,13 +237,13 @@ describe("PKCE hooks", function() {
     })
 
     it("throws when pkce.consumeVerifier and localParams.code_verifier are both set", async function() {
-      const exchange = exchangeCodeForTokensFactory({
+      const {exchangeCodeForTokensUsingPKCE} = exchangeCodeForTokensFactory({
         client: createExchangeClient(async () => ({access_token: "token"})) as any,
         redirectUri: baseConfig.client.redirect_uri as string,
       })
 
       try {
-        await exchange({
+        await exchangeCodeForTokensUsingPKCE({
           paramsFromCallback: {code, state},
           localParams: {
             state,

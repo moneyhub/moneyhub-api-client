@@ -181,6 +181,7 @@ describe("API client", function() {
         "deleteNotificationThreshold",
         "exchangeCodeForTokensLegacy",
         "exchangeCodeForTokens",
+        "exchangeCodeForTokensUsingPKCE",
         "refreshTokens",
         "getClientCredentialTokens",
         "getConsentHistory",
