@@ -4,6 +4,8 @@ import {TokenSet} from "openid-client"
 import type {Client} from "openid-client"
 import * as R from "ramda"
 
+import type {PkceExchangeOptions} from "./pkce"
+
 const ALLOWED_PARAMS = [
   "access_token",
   "code",
@@ -48,15 +50,27 @@ export default ({
   client: Client
   redirectUri: string
 }) =>
-  ({
+  async ({
     paramsFromCallback,
     localParams,
+    pkce,
   }: {
     paramsFromCallback: ParamsFromCallback
     localParams: LocalParams
+    pkce?: PkceExchangeOptions
   }): Promise<TokenSet> => {
     const params = R.pick(ALLOWED_PARAMS, paramsFromCallback)
-    const checks = localParams
+    const checks = {...localParams}
+
+    if (pkce?.consumeVerifier && checks.code_verifier) {
+      return Promise.reject(
+        new Error("Provide code_verifier via pkce.consumeVerifier or localParams.code_verifier, not both"),
+      )
+    }
+
+    if (pkce?.consumeVerifier) {
+      checks.code_verifier = await pkce.consumeVerifier({state: checks.state})
+    }
 
     if (client.default_max_age && !checks.max_age)
       checks.max_age = client.default_max_age

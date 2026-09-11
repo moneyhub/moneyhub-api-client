@@ -7,6 +7,7 @@ import req from "./request"
 import {getDiscovery, getDiscoveryWithGatewayUrl} from "./discovery"
 import {createGetOpenIdConfig} from "./oidc-config"
 import type {ApiClientConfig} from "./schema/config"
+import type {PkceAuthoriseOptions, PkceExchangeOptions} from "./pkce"
 const DEFAULT_TIMEOUT = 60000
 const DEFAULT_OIDC_CACHE_TTL_MS = 3600000 // 1 hour
 
@@ -157,4 +158,6 @@ export {
   Users,
   ApiClientConfig,
   Moneyhub,
+  PkceAuthoriseOptions,
+  PkceExchangeOptions,
 }

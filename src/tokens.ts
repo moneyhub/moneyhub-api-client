@@ -2,6 +2,7 @@ import type {Client, TokenSet} from "openid-client"
 import * as R from "ramda"
 import * as jose from "jose"
 import type {ApiClientConfig} from "./schema/config"
+import type {PkceExchangeOptions} from "./pkce"
 import type {JWK, KeyLike} from "jose"
 import * as crypto from "crypto"
 import exchangeCodeForTokensFactory from "./exchange-code-for-token"
@@ -67,7 +68,11 @@ This function now requires an object with the following properties:
       "sub", // optional, but without this param, requests where there are missing cookies will fail
       "max_age", // optional
       "response_type" // recommended
-      "code_verifier" // required for PKCE
+      "code_verifier" // required for PKCE (or use pkce.consumeVerifier)
+  },
+  pkce: {
+    Optional PKCE hook for server-side verifier retrieval.
+    consumeVerifier: ({ state }) => load and delete stored code_verifier for state
   }
 }
 `
@@ -125,12 +130,16 @@ export default ({
       return (client as any).authorizationCallback(redirect_uri, requestObj, verify)
     },
 
-    exchangeCodeForTokens: ({paramsFromCallback, localParams}: Parameters<typeof exchangeCodeForTokens>[0]) => {
+    exchangeCodeForTokens: ({
+      paramsFromCallback,
+      localParams,
+      pkce,
+    }: Parameters<typeof exchangeCodeForTokens>[0] & {pkce?: PkceExchangeOptions}) => {
       if (!paramsFromCallback || !localParams) {
         console.error(exchangeCodeForTokensErrorMessage)
         throw new Error("Missing parameters")
       }
-      return exchangeCodeForTokens({paramsFromCallback, localParams})
+      return exchangeCodeForTokens({paramsFromCallback, localParams, pkce})
     },
 
     refreshTokens: ({refreshToken}: {refreshToken: string | TokenSet}) => client.refresh(refreshToken),
