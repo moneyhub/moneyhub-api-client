@@ -40,14 +40,11 @@
     "got": "^11.8.5",
     "jose": "^5.2.3",
     "openid-client": "^5.6.5",
-    "query-string": "^7.1.1",
+    "query-string": "^9.5.1",
     "ramda": "^0.27.2"
   },
   "overrides": {
-    "serialize-javascript": "^7.0.5",
-    "query-string": {
-      "decode-uri-component": "^0.5.0"
-    }
+    "serialize-javascript": "^7.0.5"
   },
   "devDependencies": {
     "@mft/eslint-config-momentumft": "^8.0.0",
