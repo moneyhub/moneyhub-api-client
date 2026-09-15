@@ -2,6 +2,7 @@ node_modules/
 examples/config.js
 examples/config-local.js
 examples/config.local.js
+examples/recurring-payments/*.local.js
 config/local.json
 config/default.json
 config/prod.json
