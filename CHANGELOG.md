@@ -5,6 +5,14 @@ Unreleased
 
 * `caasPatchTransaction`: add `past-and-future` to `CaasRecategorisationType`.
 
+6.101.0 / 2026-09-11
+==========
+
+**Features**
+
+* **`getAuthorizeUrl` PKCE hooks**: optional `pkce.generate` + `pkce.storeVerifier` for server-side PKCE generation and persistence (defaults unchanged when omitted).
+* **`exchangeCodeForTokens` PKCE hooks**: optional `pkce.consumeVerifier` to retrieve and apply a stored `code_verifier` at token exchange.
+
 6.100.1 / 2026-08-18
 ==========
 
