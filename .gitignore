@@ -5,6 +5,7 @@ examples/config-dev.js
 examples/config-test.js
 examples/config-prod.js
 examples/config.local.js
+examples/recurring-payments/*.local.js
 config/local.json
 config/default.json
 config/prod.json
