@@ -130,11 +130,14 @@ export default ({
       return (client as any).authorizationCallback(redirect_uri, requestObj, verify)
     },
 
-    exchangeCodeForTokens: (options: Parameters<typeof exchangeCodeForTokens>[0]) => {
+    exchangeCodeForTokens: (options: Parameters<typeof exchangeCodeForTokensUsingPKCE>[0]) => {
       const {paramsFromCallback, localParams} = options
       if (!paramsFromCallback || !localParams) {
         console.error(exchangeCodeForTokensErrorMessage)
         throw new Error("Missing parameters")
+      }
+      if (options.pkce?.consumeVerifier) {
+        return exchangeCodeForTokensUsingPKCE(options)
       }
       return exchangeCodeForTokens({paramsFromCallback, localParams})
     },

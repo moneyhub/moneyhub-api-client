@@ -5,6 +5,14 @@ Unreleased
 
 * `caasPatchTransaction`: add `past-and-future` to `CaasRecategorisationType`.
 
+6.101.1 / 2026-09-21
+==========
+
+**Bug Fixes**
+
+* **`getAuthorizeUrl`**: honour `pkce.generate` / `pkce.storeVerifier` (same behaviour as `getAuthorizeUrlUsingPKCE`).
+* **`exchangeCodeForTokens`**: honour `pkce.consumeVerifier` (same behaviour as `exchangeCodeForTokensUsingPKCE`).
+
 6.101.0 / 2026-09-11
 ==========
 

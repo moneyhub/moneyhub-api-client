@@ -62,6 +62,30 @@ const expectReject = async (run: () => Promise<unknown>, message: string) => {
 }
 
 describe("PKCE hooks", function() {
+  describe("getAuthorizeUrl", function() {
+    it("stores verifier and includes code_challenge when pkce.generate is true", async function() {
+      const {authParams, getAuthorizeUrl} = authUrls()
+      const stored: {state?: string, codeVerifier?: string} = {}
+
+      await getAuthorizeUrl({
+        ...scopeOpts,
+        pkce: {
+          generate: true,
+          storeVerifier: async ({state: oauthState, codeVerifier}) => {
+            stored.state = oauthState
+            stored.codeVerifier = codeVerifier
+          },
+        },
+      })
+
+      expect(stored).to.include({state: "sample-state"})
+      expect(authParams[0]).to.include({
+        code_challenge: generators.codeChallenge(stored.codeVerifier as string),
+        code_challenge_method: "S256",
+      })
+    })
+  })
+
   describe("getAuthorizeUrlUsingPKCE", function() {
     it("omits code_challenge when pkce is absent or generate is omitted", async function() {
       for (const pkce of [undefined, {}]) {
@@ -154,6 +178,32 @@ describe("PKCE hooks", function() {
         }),
         "Provide code_verifier via pkce.consumeVerifier or localParams.code_verifier, not both",
       )
+    })
+  })
+
+  describe("exchangeCodeForTokens", function() {
+    const callback = {paramsFromCallback: {code, state}, localParams: {state, response_type: "code"}}
+
+    it("delegates pkce.consumeVerifier like exchangeCodeForTokensUsingPKCE", async function() {
+      const grant = async (params: {code_verifier?: string}) => {
+        expect(params.code_verifier).to.equal("stored-verifier")
+        return {access_token: "token"}
+      }
+
+      const tokens = (await import("../tokens")).default({
+        client: {
+          default_max_age: undefined,
+          grant,
+          decryptIdToken: (tokenset: any) => tokenset,
+          validateIdToken: (tokenset: any) => tokenset,
+        } as any,
+        config: baseConfig,
+      })
+
+      await tokens.exchangeCodeForTokens({
+        ...callback,
+        pkce: {consumeVerifier: async () => "stored-verifier"},
+      })
     })
   })
 })

@@ -152,7 +152,8 @@ export default ({
     return url
   }
 
-  const getAuthorizeUrl = ({
+  const getAuthorizeUrl = async ({
+    pkce,
     state,
     scope,
     nonce,
@@ -164,9 +165,14 @@ export default ({
     expirationDateTime,
     transactionFromDateTime,
     codeChallenge,
-  }: GetAuthorizeUrlOptions): Promise<string> => {
-    const pkceParams = codeChallenge ? {
-      code_challenge: codeChallenge,
+  }: GetAuthorizeUrlUsingPKCEOptions): Promise<string> => {
+    const resolvedCodeChallenge = await resolveAuthoriseCodeChallenge({
+      state,
+      codeChallenge,
+      pkce,
+    })
+    const pkceParams = resolvedCodeChallenge ? {
+      code_challenge: resolvedCodeChallenge,
       code_challenge_method: "S256",
     } : undefined
 
@@ -216,18 +222,9 @@ export default ({
     })
   }
 
-  const getAuthorizeUrlUsingPKCE = async ({
-    pkce,
-    ...options
-  }: GetAuthorizeUrlUsingPKCEOptions): Promise<string> => {
-    const codeChallenge = await resolveAuthoriseCodeChallenge({
-      state: options.state,
-      codeChallenge: options.codeChallenge,
-      pkce,
-    })
-
-    return getAuthorizeUrl({...options, codeChallenge})
-  }
+  const getAuthorizeUrlUsingPKCE = (
+    options: GetAuthorizeUrlUsingPKCEOptions,
+  ): Promise<string> => getAuthorizeUrl(options)
 
   const getAuthorizeUrlLegacy = ({
     state,
