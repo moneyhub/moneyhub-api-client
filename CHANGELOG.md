@@ -8,10 +8,9 @@ Unreleased
 6.101.1 / 2026-09-21
 ==========
 
-**Bug Fixes**
+**Documentation**
 
-* **`getAuthorizeUrl`**: honour `pkce.generate` / `pkce.storeVerifier` (same behaviour as `getAuthorizeUrlUsingPKCE`).
-* **`exchangeCodeForTokens`**: honour `pkce.consumeVerifier` (same behaviour as `exchangeCodeForTokensUsingPKCE`).
+* Clarify the two-path PKCE API: use `getAuthorizeUrlUsingPKCE` / `exchangeCodeForTokensUsingPKCE` for server-side `pkce.generate` and `pkce.consumeVerifier`; base `getAuthorizeUrl` / `exchangeCodeForTokens` accept optional `codeChallenge` / `code_verifier` only.
 
 6.101.0 / 2026-09-11
 ==========

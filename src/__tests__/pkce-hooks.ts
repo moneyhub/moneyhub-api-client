@@ -63,24 +63,17 @@ const expectReject = async (run: () => Promise<unknown>, message: string) => {
 
 describe("PKCE hooks", function() {
   describe("getAuthorizeUrl", function() {
-    it("stores verifier and includes code_challenge when pkce.generate is true", async function() {
+    it("omits code_challenge when only codeChallenge is not set", async function() {
       const {authParams, getAuthorizeUrl} = authUrls()
-      const stored: {state?: string, codeVerifier?: string} = {}
+      await getAuthorizeUrl(scopeOpts)
+      expect(authParams[0]).to.not.have.property("code_challenge")
+    })
 
-      await getAuthorizeUrl({
-        ...scopeOpts,
-        pkce: {
-          generate: true,
-          storeVerifier: async ({state: oauthState, codeVerifier}) => {
-            stored.state = oauthState
-            stored.codeVerifier = codeVerifier
-          },
-        },
-      })
-
-      expect(stored).to.include({state: "sample-state"})
+    it("includes code_challenge when codeChallenge is provided", async function() {
+      const {authParams, getAuthorizeUrl} = authUrls()
+      await getAuthorizeUrl({...scopeOpts, codeChallenge: "precomputed-challenge"})
       expect(authParams[0]).to.include({
-        code_challenge: generators.codeChallenge(stored.codeVerifier as string),
+        code_challenge: "precomputed-challenge",
         code_challenge_method: "S256",
       })
     })
@@ -181,29 +174,4 @@ describe("PKCE hooks", function() {
     })
   })
 
-  describe("exchangeCodeForTokens", function() {
-    const callback = {paramsFromCallback: {code, state}, localParams: {state, response_type: "code"}}
-
-    it("delegates pkce.consumeVerifier like exchangeCodeForTokensUsingPKCE", async function() {
-      const grant = async (params: {code_verifier?: string}) => {
-        expect(params.code_verifier).to.equal("stored-verifier")
-        return {access_token: "token"}
-      }
-
-      const tokens = (await import("../tokens")).default({
-        client: {
-          default_max_age: undefined,
-          grant,
-          decryptIdToken: (tokenset: any) => tokenset,
-          validateIdToken: (tokenset: any) => tokenset,
-        } as any,
-        config: baseConfig,
-      })
-
-      await tokens.exchangeCodeForTokens({
-        ...callback,
-        pkce: {consumeVerifier: async () => "stored-verifier"},
-      })
-    })
-  })
 })

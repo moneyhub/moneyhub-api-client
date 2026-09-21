@@ -290,7 +290,7 @@ const url = await moneyhub.getAuthorizeUrl({
 });
 
 // FAPI 2 / PKCE (server-side storage — never expose code_verifier to the browser)
-const url = await moneyhub.getAuthorizeUrl({
+const url = await moneyhub.getAuthorizeUrlUsingPKCE({
   scope: "openid bank-id-scope",
   state: "your-state",
   nonce: "your-nonce",
@@ -489,7 +489,8 @@ This method requires an object with two properties:
 
 - `paramsFromCallback` : an object with all the params received at your redirect uri
 - `localParams` : an object with params that you have in the local session for the user.
-- `pkce` : optional hook to retrieve a stored `code_verifier` server-side (see below)
+
+For server-side PKCE verifier retrieval, use `exchangeCodeForTokensUsingPKCE` instead (see below).
 
 ```javascript
 const tokens = await moneyhub.exchangeCodeForTokens({
@@ -504,12 +505,12 @@ const tokens = await moneyhub.exchangeCodeForTokens({
     "sub": "the user id", // optional, but without this param, requests where there are missing cookies will fail
     "max_age", // optional, not normally required
     "response_type" // recommended to enhance securirty
-    "code_verifier" // required if PKCE is used (or use pkce.consumeVerifier)
+    "code_verifier" // required if PKCE is used (set in localParams, or use exchangeCodeForTokensUsingPKCE)
   }
 })
 
 // FAPI 2 / server-side PKCE — retrieve and delete stored verifier keyed by state
-const tokens = await moneyhub.exchangeCodeForTokens({
+const tokens = await moneyhub.exchangeCodeForTokensUsingPKCE({
   paramsFromCallback: { code, state },
   localParams: { state, nonce, sub: userId, response_type: "code" },
   pkce: {
