@@ -2,6 +2,7 @@
 import {expect} from "chai"
 import {expectTypeOf} from "expect-type"
 import {AccountBalancePost, AccountPatch} from "src/schema/account"
+import {Balance} from "src/schema/balance"
 
 import {Moneyhub, MoneyhubInstance, Accounts, Counterparties, Holdings, Transactions} from ".."
 
@@ -84,6 +85,18 @@ describe("Accounts", function() {
     const {data: account} = await moneyhub.getAccount({userId, accountId})
     expect(account.id).to.eql(accountId)
     expectTypeOf<Accounts.Account>(account)
+  })
+
+  it("post account balance", async function() {
+    const {data: balance} = await moneyhub.postAccountBalance({
+      userId,
+      accountId,
+      balance: {
+        amount: {value: 1},
+        date: "2026-01-01",
+      }})
+    expect(balance.amount.value).to.eql(1)
+    expectTypeOf<Balance>(balance)
   })
 
   it("get counterparties", async function() {
