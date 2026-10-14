@@ -7,7 +7,7 @@ const optionDefinitions = [
   {name: "accountId", alias: "a", type: String, description: "required"},
   {name: "transactionId", alias: "t", type: String, description: "required"},
   {name: "userCategoryId", alias: "c", type: String, description: "required"},
-  {name: "recategorisationType", alias: "r", type: String, description: "optional (single|future)"},
+  {name: "recategorisationType", alias: "r", type: String, description: "optional (single|future|past-and-future)"},
 ]
 
 const usage = commandLineUsage(
@@ -17,7 +17,7 @@ const usage = commandLineUsage(
   }
 )
 
-// example node caas/transactions/patch-transaction.js -a accountId -t transactionId -c 21 -r single
+// example: node caas/transactions/patch-transaction.js -a accountId -t transactionId -c 21 -r past-and-future
 
 console.log(usage)
 

@@ -4,6 +4,8 @@ import {TokenSet} from "openid-client"
 import type {Client} from "openid-client"
 import * as R from "ramda"
 
+import type {PkceExchangeOptions} from "./pkce"
+
 const ALLOWED_PARAMS = [
   "access_token",
   "code",
@@ -30,6 +32,15 @@ export interface LocalParams {
   sub?: any
 }
 
+export interface ExchangeCodeForTokensOptions {
+  paramsFromCallback: ParamsFromCallback
+  localParams: LocalParams
+}
+
+export interface ExchangeCodeForTokensUsingPKCEOptions extends ExchangeCodeForTokensOptions {
+  pkce?: PkceExchangeOptions
+}
+
 type ResponseType = "none" | "code" | "id_token" | "token"
 
 const RESPONSE_TYPE_REQUIRED_PARAMS: {
@@ -47,14 +58,11 @@ export default ({
 }: {
   client: Client
   redirectUri: string
-}) =>
-  ({
+}) => {
+  const exchangeCodeForTokens = ({
     paramsFromCallback,
     localParams,
-  }: {
-    paramsFromCallback: ParamsFromCallback
-    localParams: LocalParams
-  }): Promise<TokenSet> => {
+  }: ExchangeCodeForTokensOptions): Promise<TokenSet> => {
     const params = R.pick(ALLOWED_PARAMS, paramsFromCallback)
     const checks = localParams
 
@@ -143,3 +151,31 @@ export default ({
 
     return promise || Promise.resolve(new TokenSet(params))
   }
+
+  const exchangeCodeForTokensUsingPKCE = async ({
+    paramsFromCallback,
+    localParams,
+    pkce,
+  }: ExchangeCodeForTokensUsingPKCEOptions): Promise<TokenSet> => {
+    if (pkce?.consumeVerifier && localParams.code_verifier) {
+      return Promise.reject(
+        new Error("Provide code_verifier via pkce.consumeVerifier or localParams.code_verifier, not both"),
+      )
+    }
+
+    if (pkce?.consumeVerifier) {
+      const code_verifier = await pkce.consumeVerifier({state: localParams.state})
+      return exchangeCodeForTokens({
+        paramsFromCallback,
+        localParams: {...localParams, code_verifier},
+      })
+    }
+
+    return exchangeCodeForTokens({paramsFromCallback, localParams})
+  }
+
+  return {
+    exchangeCodeForTokens,
+    exchangeCodeForTokensUsingPKCE,
+  }
+}

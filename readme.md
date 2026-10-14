@@ -289,6 +289,19 @@ const url = await moneyhub.getAuthorizeUrl({
   accVerification: false, // optional - adds mh:account_verification independently of enableAsync
 });
 
+// FAPI 2 / PKCE (server-side storage — never expose code_verifier to the browser)
+const url = await moneyhub.getAuthorizeUrl({
+  scope: "openid bank-id-scope",
+  state: "your-state",
+  nonce: "your-nonce",
+  pkce: {
+    generate: true,
+    storeVerifier: async ({state, codeVerifier}) => {
+      await storeVerifierServerSide(state, codeVerifier); // e.g. Redis keyed by state
+    },
+  },
+});
+
 // Default claims if none are provided
 const defaultClaims = {
   id_token: {
@@ -476,6 +489,7 @@ This method requires an object with two properties:
 
 - `paramsFromCallback` : an object with all the params received at your redirect uri
 - `localParams` : an object with params that you have in the local session for the user.
+- `pkce` : optional hook to retrieve a stored `code_verifier` server-side (see below)
 
 ```javascript
 const tokens = await moneyhub.exchangeCodeForTokens({
@@ -490,8 +504,17 @@ const tokens = await moneyhub.exchangeCodeForTokens({
     "sub": "the user id", // optional, but without this param, requests where there are missing cookies will fail
     "max_age", // optional, not normally required
     "response_type" // recommended to enhance securirty
-    "code_verifier" // required if PKCE is used
+    "code_verifier" // required if PKCE is used (or use pkce.consumeVerifier)
   }
+})
+
+// FAPI 2 / server-side PKCE — retrieve and delete stored verifier keyed by state
+const tokens = await moneyhub.exchangeCodeForTokens({
+  paramsFromCallback: { code, state },
+  localParams: { state, nonce, sub: userId, response_type: "code" },
+  pkce: {
+    consumeVerifier: async ({ state }) => consumeVerifierServerSide(state),
+  },
 })
 ```
 
@@ -2357,7 +2380,7 @@ Example script: `node examples/caas/transactions/get-enhanced-transaction.js -a 
 
 #### `caasPatchTransaction`
 
-Update a transaction's user-defined category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`. The optional `recategorisationType` query parameter (`single` or `future`, defaulting to `single`) controls whether the change applies to this transaction only or to all future matching transactions.
+Update a transaction's user-defined category via the CAAS endpoint. This function uses the scope `caas:transactions:write` and returns the updated transaction data under `data`. Pass `recategorisationType` as a query parameter: `single` (this transaction only), `future` (this transaction and future matches), or `past-and-future` (this transaction, historical matches, and future matches). Defaults to `single` when omitted.
 
 ```javascript
 const result = await moneyhub.caasPatchTransaction({
