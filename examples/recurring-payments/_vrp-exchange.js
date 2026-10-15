@@ -3,21 +3,13 @@ process.env.NODE_TLS_REJECT_UNAUTHORIZED = "0"
 
 const {Moneyhub} = require("../../src/index")
 const config = require("../config")
+const {parseCallbackArg} = require("./parse-callback-arg")
 
 // This MUST match the client/config used by _vrp-consent.js (same redirect_uri,
 // state and nonce), otherwise the code exchange will be rejected.
 
 // Pass EITHER the raw `code` OR the whole redirect URL.
-const arg = process.argv[2] || ""
-let code = arg
-let state = "foo"
-try {
-  if (arg.includes("://") || arg.includes("code=")) {
-    const u = new URL(arg.includes("://") ? arg : "https://x/?" + arg.replace(/^\?/, ""))
-    code = u.searchParams.get("code") || code
-    state = u.searchParams.get("state") || state
-  }
-} catch (e) { /* treat arg as a raw code */ }
+const {code, state} = parseCallbackArg(process.argv[2] || "")
 
 const start = async () => {
   if (!code) {
