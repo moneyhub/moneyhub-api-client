@@ -1991,6 +1991,7 @@ const url = await moneyhub.getRecurringPaymentAuthorizeUrl({
   type: [
     "Sweeping", // Specifies that the recurring payment is for the purpose of sweeping payments
     "Other", // Specifies that the recurring payment is for other payments of another purpose
+    "cvrp", // Specifies that the recurring payment is a commercial variable recurring payment
   ],
   context: "Payment context [Other,BillPayment,PartyToParty]", // optional - defaults to PartyToParty
   state: "your state value",
@@ -2020,12 +2021,15 @@ const defaultClaims = {
         maximumIndividualAmount,
         currency,
         periodicLimits,
+        type,
         context,
       },
     },
   },
 };
 ```
+
+Example script: `node examples/recurring-payments/get-authorization-url.js --type cvrp --payee-id payee-id --bank-id bank-id`. Omit `--type` for a sweeping consent.
 
 #### `getRecurringPayments`
 
