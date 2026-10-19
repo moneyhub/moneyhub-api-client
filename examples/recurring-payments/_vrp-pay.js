@@ -16,7 +16,7 @@ const start = async () => {
     const result = await moneyhub.makeRecurringPayment({
       recurringPaymentId,
       payment: {
-        amount: 500,
+        amount: 200,
         payeeRef: "Sweep payee ref",
         payerRef: "Sweep payer ref",
       },
