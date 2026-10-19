@@ -1,7 +1,7 @@
 import got, {Options, Headers, OptionsOfJSONResponseBody, Method, Agents} from "got"
 import {Client} from "openid-client"
+import qs from "query-string"
 import * as R from "ramda"
-import {stringify} from "./stringify-query"
 
 import {rewriteResourceServerResponseUrls, inferCanonicalBaseFromLinkUrl} from "./discovery"
 import type {ApiClientConfig, MutualTLSOptions} from "./schema/config"
@@ -188,9 +188,7 @@ export default ({
   const gotOpts: OptionsOfJSONResponseBody = {
     method: opts.method || "GET",
     headers: opts.headers || {},
-    searchParams: opts.searchParams
-      ? stringify(R.reject(R.isNil)(opts.searchParams) as unknown as Record<string, unknown>)
-      : undefined,
+    searchParams: opts.searchParams ? qs.stringify(R.reject(R.isNil)(opts.searchParams)) : undefined,
     timeout,
     retry: retryOptions,
   }
