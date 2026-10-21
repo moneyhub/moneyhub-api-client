@@ -30,6 +30,7 @@ const optionDefinitions = [
   {name: "maximum-amount", type: Number},
   {name: "currency", defaultValue: "GBP", type: String},
   {name: "context", alias: "c", type: String},
+  {name: "type", alias: "t", type: String, description: "for example cvrp"},
   {
     name: "state",
     alias: "s",
@@ -85,6 +86,7 @@ const start = async () => {
       maximumIndividualAmount: options["maximum-amount"],
       currency: options.currency,
       periodicLimits,
+      type: options.type,
       context: options.context,
       state: options.state,
       nonce: options.nonce,
