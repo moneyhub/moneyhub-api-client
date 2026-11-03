@@ -1,6 +1,6 @@
 import type {ApiResponse, ExtraOptions, SearchParams} from "../../request"
 import type {Account, AccountWithDetails, AccountPost, AccountBalancePost, AccountPatch} from "../../schema/account"
-import type {Balance} from "../../schema/balance"
+import type {Balance, BalancePost} from "../../schema/balance"
 import type {Counterparty} from "../../schema/counterparty"
 import type {HoldingWithMatches, HoldingWithMatchesAndHistory, HoldingsValuation} from "../../schema/holding"
 import type {RecurringTransactionEstimate} from "../../schema/transaction"
@@ -30,6 +30,15 @@ export interface AccountsRequests {
     userId?: string
     accountId: string
   }, options?: ExtraOptions) => Promise<ApiResponse<Balance[]>>
+  postAccountBalance: ({
+    userId,
+    accountId,
+    balance,
+  }: {
+    userId?: string
+    accountId: string
+    balance: BalancePost
+  }, options?: ExtraOptions) => Promise<ApiResponse<Balance>>
   getAccountWithDetails: ({
     userId,
     accountId,
